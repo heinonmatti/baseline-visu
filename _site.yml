@@ -1,0 +1,9 @@
+name: "Visualising baseline characteristics of the Let's Move It intervention cohort"  
+author: "Matti Heino"  
+output_dir: "docs"  
+output:  
+  html_document:  
+    self_contained: no  
+    theme: flatly  
+navbar:  
+  title: "Visualising baseline characteristics" 
