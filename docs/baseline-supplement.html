@@ -15,15 +15,17 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
-<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -101,34 +103,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 60px;
+  padding-top: 66px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 
 .section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 .section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
+  padding-top: 71px;
+  margin-top: -71px;
 }
 </style>
 
@@ -161,8 +163,111 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -179,7 +284,15 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        
+        <li>
+  <a href="index.html">About</a>
+</li>
+<li>
+  <a href="manuscript/baseline-manuscript.pdf">Manuscript</a>
+</li>
+<li>
+  <a href="baseline-supplement.html">Supplement</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -190,6 +303,14 @@ $(document).ready(function () {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Baseline analysis supplement</h1>
@@ -199,13 +320,21 @@ $(document).ready(function () {
 
 <pre class="r"><code>library(papaja)
 library(knitr)
-library(tidyverse)
-opts_chunk$set(echo = TRUE, 
+library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.2.1 --</code></pre>
+<pre><code>## v ggplot2 2.2.1     v purrr   0.2.4
+## v tibble  1.3.4     v dplyr   0.7.4
+## v tidyr   0.7.2     v stringr 1.2.0
+## v readr   1.1.1     v forcats 0.2.0</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>opts_chunk$set(echo = TRUE, 
                warning = FALSE,
                error = TRUE,
                cache = TRUE, 
                collapse = TRUE,
-               eval = FALSE)
+               eval = TRUE)
 opts_chunk$set(root.dir = &quot;.&quot;)  # Always project root as working directory
 opts_knit$set(root.dir = &quot;.&quot;)  # This is needed for some versions of RStudio</code></pre>
 <pre class="r"><code>theme_set(theme_apa())</code></pre>
@@ -219,20 +348,19 @@ if (!require(pacman)) install.packages(&quot;pacman&quot;)
 library(pacman)
 
 p_load(tidyverse, haven, lme4, userfriendlyscience, grid, sm, sjstats, gridExtra, ggridges, igraph, devtools)
-p_load(EstimateGroupNetwork, bootnet, qgraph)
 
-if (!require(devtools)) install.packages(&quot;devtools&quot;)
-p_load_gh(&quot;sachaepskamp/NetworkComparisonTest&quot;)
-# p_load_gh(&quot;rmcelreath/rethinking&quot;)
-
-lmi &lt;- read_sav(&quot;Z:/Desktop/LMI DATA/LMI_data_korjattu_syntaksilla.sav&quot;, user_na = FALSE)
+lmi &lt;- read_sav(&quot;data/LMI_data_korjattu_syntaksilla.sav&quot;, user_na = FALSE)
 # write_csv(lmi, &quot;Z:/Desktop/LMI DATA/LMI_data_korjattu_syntaksilla_CSV.csv&quot;)
 
-# to get rid of DLL warning: 
+# to get rid of DLL warning, these don&#39;t work: 
 # Sys.setenv(&quot;R_MAX_NUM_DLLS&quot; = 1000)
 # remove.packages(c(&quot;rethinking&quot;))
 # detach(&quot;package:rethinking&quot;, unload=TRUE)
-</code></pre>
+
+# Unloading all packages gives LAPACK error:
+# pkgs &lt;- names(sessionInfo()$otherPkgs)
+# pkgs &lt;- paste(&#39;package:&#39;, pkgs, sep = &quot;&quot;)
+# lapply(pkgs, detach, character.only = TRUE, unload = TRUE)</code></pre>
 <div id="package-sm-modifications" class="section level2">
 <h2>Package sm modifications</h2>
 <p><strong>Code to set up the modified function</strong></p>
@@ -386,14 +514,11 @@ sm.density.compare2 &lt;- function (x, group, h, model = &quot;none&quot;, bandc
     est &lt;- list(p = p, upper = upper, lower = lower, h = h)
   }
   invisible(est)
-}
-</code></pre>
+}</code></pre>
 </div>
 </div>
-<div id="plenty-items" class="section level1">
-<h1>Plenty items</h1>
-<div id="data-prep" class="section level2">
-<h2>Data prep</h2>
+<div id="prepare-data-with-variables-of-interest" class="section level1">
+<h1>Prepare data with variables of interest</h1>
 <pre class="r"><code>library(userfriendlyscience)
 
 d &lt;- lmi %&gt;% dplyr::select(id = ID,
@@ -412,14 +537,14 @@ b5neurNeg_02_T1 = Kys0157.1,
 b5open_01_T1 = Kys0153.1,
 b5openNeg_02_T1 = Kys0158.1,
 fatpct_T1 = Rasva,
-PA_actcop_01_T1 = Kys0115.1,
-PA_actcop_01_T3 = Kys0115.3,
-PA_actcop_02_T1 = Kys0116.1,
-PA_actcop_02_T3 = Kys0116.3,
-PA_actcop_03_T1 = Kys0117.1,
-PA_actcop_03_T3 = Kys0117.3,
-PA_actcop_04_T1 = Kys0118.1,
-PA_actcop_04_T3 = Kys0118.3,
+PA_actCop_01_T1 = Kys0115.1,
+PA_actCop_01_T3 = Kys0115.3,
+PA_actCop_02_T1 = Kys0116.1,
+PA_actCop_02_T3 = Kys0116.3,
+PA_actCop_03_T1 = Kys0117.1,
+PA_actCop_03_T3 = Kys0117.3,
+PA_actCop_04_T1 = Kys0118.1,
+PA_actCop_04_T3 = Kys0118.3,
 PA_agrbct_01_T1 = Kys0128.1,
 PA_agrbct_01_T3 = Kys0128.3,
 PA_agrbct_02_T1 = Kys0129.1,
@@ -448,14 +573,14 @@ PA_amotivation_03_T1 = Kys0096.1,
 PA_amotivation_03_T3 = Kys0096.3,
 PA_amotivation_04_T1 = Kys0097.1,
 PA_amotivation_04_T3 = Kys0097.3,
-PA_actcop_05_T1 = Kys0119.1,
-PA_actcop_05_T3 = Kys0119.3,
-PA_actcop_06_T1 = Kys0120.1,
-PA_actcop_06_T3 = Kys0120.3,
-PA_actcop_07_T1 = Kys0121.1,
-PA_actcop_07_T3 = Kys0121.3,
-PA_actcop_08_T1 = Kys0122.1,
-PA_actcop_08_T3 = Kys0122.3,
+PA_actCop_05_T1 = Kys0119.1,
+PA_actCop_05_T3 = Kys0119.3,
+PA_actCop_06_T1 = Kys0120.1,
+PA_actCop_06_T3 = Kys0120.3,
+PA_actCop_07_T1 = Kys0121.1,
+PA_actCop_07_T3 = Kys0121.3,
+PA_actCop_08_T1 = Kys0122.1,
+PA_actCop_08_T3 = Kys0122.3,
 PA_dnorm_02_T1 = Kys0107.1,
 PA_dnormparents_02_T3 = Kys0107.3,
 PA_dnorm_01_T1 = Kys0106.1,
@@ -659,7 +784,9 @@ d &lt;- d %&gt;% mutate_at(dplyr::vars(contains(&quot;Neg_&quot;)), funs(8 - .))
 # To check:
 # d %&gt;% select(contains(&quot;Neg_&quot;)), contains(&quot;Rev&quot;)) %&gt;% View
 identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$b5extNeg_02_T1))
+## [1] TRUE
 identical(as.numeric(8 - lmi$Kys0100.1), as.numeric(d$PA_opportunitiesNeg_03_T1))
+## [1] TRUE
 
 # Group variable has empty missings
 d &lt;- d %&gt;% dplyr::mutate(group = ifelse(group == &quot;&quot;, NA, group))
@@ -685,23 +812,6 @@ track &lt;- lmi %&gt;% select(Kys0016.1, Kys0017.1) %&gt;% mutate(
 
 d &lt;- bind_cols(d, track)
 
-
-
-
-# d &lt;- d %&gt;% dplyr::mutate(group_index = coerce_index(group))
-
-# Create scales
-
-# d_sums &lt;- d %&gt;% rowwise %&gt;% mutate_at(vars(contains(&quot;actcop&quot;)), funs(actcop = mean(., na.rm = T)))
-# 
-# d_sums &lt;- df %&gt;% mutate(scalemean = Matrix::rowMeans(. %&gt;% select(starts_with(&quot;this&quot;), na.rm = T)))
-# 
-# df &lt;- data.frame(this1 = 1:2, this2 = 3:4, that = 5:6)
-# 
-# df %&gt;% rowwise %&gt;% mutate_at(vars(contains(&quot;this&quot;)), funs(mean = mean(., na.rm = T)))
-# 
-# df %&gt;% mutate(scalemean = rowMeans( . %&gt;% select(starts_with(&quot;this&quot;), na.rm = TRUE)))
-
 dT1 &lt;- d %&gt;% select(contains(&quot;T1&quot;))
 dT3 &lt;- d %&gt;% select(contains(&quot;T3&quot;))
 
@@ -712,7 +822,7 @@ b5cons_T1 = grep(&#39;b5cons&#39;, names(dT1), value = TRUE),
 b5ext_T1 = grep(&#39;b5ext&#39;, names(dT1), value = TRUE),
 b5neur_T1 = grep(&#39;b5neur&#39;, names(dT1), value = TRUE),
 b5open_T1 = grep(&#39;b5open&#39;, names(dT1), value = TRUE),
-PA_actcop_T1 = grep(&#39;PA_actcop&#39;, names(dT1), value = TRUE),
+PA_actCop_T1 = grep(&#39;PA_actCop&#39;, names(dT1), value = TRUE),
 PA_agrbct_T1 = grep(&#39;PA_agrbct&#39;, names(dT1), value = TRUE),
 PA_amotivation_T1 = grep(&#39;PA_amotivation&#39;, names(dT1), value = TRUE),
 PA_autonomous_T1 = grep(&#39;PA_autonomous&#39;, names(dT1), value = TRUE),
@@ -736,6 +846,7 @@ PA_actionplan_T1 = grep(&#39;actplan&#39;, names(dT1), value = TRUE),
 PA_copingplan_T1 = grep(&#39;copplan&#39;, names(dT1), value = TRUE)
 )
 
+# Append the aggregate variables to the data frame
 newdf &lt;- makeScales(dT1, scales_T1)
 
 # Create T3 scales
@@ -745,7 +856,7 @@ b5cons_T3 = grep(&#39;b5cons&#39;, names(dT3), value = TRUE),
 b5ext_T3 = grep(&#39;b5ext&#39;, names(dT3), value = TRUE),
 b5neur_T3 = grep(&#39;b5neur&#39;, names(dT3), value = TRUE),
 b5open_T3 = grep(&#39;b5open&#39;, names(dT3), value = TRUE),
-PA_actcop_T3 = grep(&#39;PA_actcop&#39;, names(dT3), value = TRUE),
+PA_actCop_T3 = grep(&#39;PA_actCop&#39;, names(dT3), value = TRUE),
 PA_agrbct_T3 = grep(&#39;PA_agrbct&#39;, names(dT3), value = TRUE),
 PA_amotivation_T3 = grep(&#39;PA_amotivation&#39;, names(dT3), value = TRUE),
 PA_autonomous_T3 = grep(&#39;PA_autonomous&#39;, names(dT3), value = TRUE),
@@ -769,6 +880,7 @@ PA_actionplan_T3 = grep(&#39;actplan&#39;, names(dT3), value = TRUE),
 PA_copingplan_T3 = grep(&#39;copplan&#39;, names(dT3), value = TRUE)
 )
 
+# Append the aggregate variables to the data frame
 newdf2 &lt;- makeScales(dT3, scales_T3)
 
 # Take the demographic variables from d, combine with the variables with T1 or T3 in the name. 
@@ -778,14 +890,17 @@ df &lt;- cbind(d[ , c(&quot;id&quot;, &quot;intervention&quot;, &quot;group&quot
 df &lt;- df %&gt;% rowwise %&gt;%
     mutate(PA_sePbc_T1 = mean(c(PA_pbc_T1, PA_selfefficacy_T1), na.rm = T),
            PA_sePbc_T3 = mean(c(PA_pbc_T3, PA_selfefficacy_T3), na.rm = T))
-# Fix the &quot;NaN&quot;s
+## Fix the &quot;NaN&quot;s
 df$PA_sePbc_T1[is.nan(df$PA_sePbc_T1)] &lt;- NA
 df$PA_sePbc_T3[is.nan(df$PA_sePbc_T3)] &lt;- NA
 
-# df %&gt;% rowwise %&gt;%
-#     mutate(agrmean = mean(c(b5agr_T1, b5agrNeg_T1), na.rm = T)) %&gt;% 
-#   dplyr::select(agrmean, b5agr_T1)
-
+# Create composite of action planning and coping planning
+df &lt;- df %&gt;% rowwise %&gt;%
+    mutate(PA_actCop_T1 = mean(c(PA_actionplan_T1, PA_copingplan_T1), na.rm = T),
+           PA_actCop_T3 = mean(c(PA_actionplan_T3, PA_copingplan_T3), na.rm = T))
+## Fix the &quot;NaN&quot;s
+df$PA_actCop_T1[is.nan(df$PA_actCop_T1)] &lt;- NA
+df$PA_actCop_T3[is.nan(df$PA_actCop_T3)] &lt;- NA
 
 # Create variables for motivational regulations
 
@@ -848,7 +963,6 @@ t3_vars &lt;- grep(&quot;_T3&quot;, colnames(df), value = TRUE)
 df[, paste0(str_sub(t1_vars, end = -4), &quot;_diff&quot;)] &lt;- df[, t3_vars] - df[, t1_vars]
 </code></pre>
 </div>
-</div>
 <div id="means-with-cis-taking-clustering-into-account" class="section level1">
 <h1>Means with CIs taking clustering into account</h1>
 <div id="create-a-table-with-all-variables-their-means-cis-and-iccs" class="section level2">
@@ -909,7 +1023,55 @@ vardatatable &lt;- data_frame(
 options(tibble.print_max = 15)
  
 vardatatable %&gt;% select(Variable, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC class`)) %&gt;% print(n = 20)
+## # A tibble: 471 x 4
+##                  Variable `ICC class` `ICC school`     n
+##                     &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;
+##  1     paAccelerometer_T3        0.14         0.04   499
+##  2     PA_intention_02_T1       0.111      &lt; 0.001  1073
+##  3        PA_intention_T1       0.105      &lt; 0.001  1073
+##  4       pafreqUsually_T1       0.094        0.003  1082
+##  5       PA_autonomous_T3       0.092        0.003   873
+##  6    PA_autonomous_03_T3       0.088        0.001   867
+##  7    PA_identified_03_T3       0.088        0.001   867
+##  8     PA_intention_01_T1       0.088      &lt; 0.001  1073
+##  9 sitLieAccelerometer_T1       0.086        0.145   706
+## 10       pafreqUsually_T3       0.085        0.003   874
+## 11        pahrsUsually_T1       0.085        0.005  1082
+## 12           PA_agrbct_T3       0.084      &lt; 0.001   873
+## 13       PA_integrated_T3       0.083      &lt; 0.001   872
+## 14        PA_intrinsic_T3        0.08        0.004   872
+## 15    PA_autonomous_07_T3       0.079        0.008   869
+## 16     PA_intrinsic_01_T3       0.079        0.008   869
+## 17    PA_autonomous_04_T3       0.076        0.006   870
+## 18    PA_integrated_01_T3       0.076        0.006   870
+## 19       PA_identified_T3       0.075        0.004   873
+## 20           PA_frqbct_T3       0.074      &lt; 0.001   869
+## # ... with 451 more rows
 vardatatable %&gt;% select(Variable, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC school`)) %&gt;% print(n = 20)
+## # A tibble: 471 x 4
+##                         Variable `ICC class` `ICC school`     n
+##                            &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;
+##  1        sitLieAccelerometer_T1       0.086        0.145   706
+##  2                     fatpct_T1       0.003        0.123   942
+##  3            paAccelerometer_T1       0.072        0.096   706
+##  4          paAccelerometer_diff       0.069        0.074   431
+##  5        sitLieAccelerometer_T3       0.067        0.068   499
+##  6                    symptom_T3        0.01        0.048   889
+##  7   symptom_neckShoulderPain_T3       0.001        0.046   874
+##  8        symptom_stomachAche_T3       0.003        0.043   863
+##  9            paAccelerometer_T3        0.14         0.04   499
+## 10                    symptom_T1       0.023        0.039  1084
+## 11 symptom_tensionNervousness_T3     &lt; 0.001        0.037   874
+## 12               SB_intention_T1       0.014        0.035  1064
+## 13 symptom_tirednessFaintness_T3       0.019        0.035   877
+## 14            SB_intention_02_T1     &lt; 0.001        0.034  1056
+## 15           symptom_headAche_T3       0.006        0.034   876
+## 16   symptom_neckShoulderPain_T1       0.011        0.033  1047
+## 17                     b5open_T1        0.01         0.03  1068
+## 18      sitLieAccelerometer_diff       0.047         0.03   431
+## 19              pahrsLastweek_T3       0.042        0.028   843
+## 20                PA_inorm_01_T3       0.011        0.027   869
+## # ... with 451 more rows
 # %&gt;% 
 #     apa_table(
 #         caption = &quot;&quot;,
@@ -980,16 +1142,89 @@ vardatatable &lt;- data_frame(
 options(tibble.print_max = 15)
  
 vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC educational track`)) %&gt;% print(n = 20)
+## # A tibble: 471 x 5
+##                  Variable `ICC educational track` `ICC class` `ICC school`
+##                     &lt;chr&gt;                   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;
+##  1     paAccelerometer_T1                   0.156       0.021      &lt; 0.001
+##  2 sitLieAccelerometer_T3                   0.148        0.01      &lt; 0.001
+##  3     paAccelerometer_T3                   0.127       0.049        0.021
+##  4   PA_amotivation_04_T1                   0.113       0.014      &lt; 0.001
+##  5        PA_extrinsic_T1                   0.096       0.008      &lt; 0.001
+##  6      PA_amotivation_T1                   0.091       0.006      &lt; 0.001
+##  7 sitLieAccelerometer_T1                   0.085       0.039        0.131
+##  8    PA_autonomous_04_T1                   0.084     &lt; 0.001        0.011
+##  9    PA_integrated_01_T1                   0.084     &lt; 0.001        0.011
+## 10       PA_integrated_T1                   0.082     &lt; 0.001        0.008
+## 11           PA_frqbct_T3                   0.081       0.024        0.003
+## 12    PA_controlled_02_T1                    0.08       0.012      &lt; 0.001
+## 13     PA_extrinsic_02_T1                    0.08       0.012      &lt; 0.001
+## 14 symptom_stomachAche_T1                    0.08       0.007      &lt; 0.001
+## 15    PA_controlled_01_T1                   0.077     &lt; 0.001      &lt; 0.001
+## 16     PA_extrinsic_01_T1                   0.077     &lt; 0.001      &lt; 0.001
+## 17            b5ext_01_T1                   0.076       0.005        0.015
+## 18        SB_intention_T1                   0.076     &lt; 0.001      &lt; 0.001
+## 19       PA_autonomous_T1                   0.073       0.005        0.006
+## 20       PA_actplan_01_T3                   0.072     &lt; 0.001      &lt; 0.001
+## # ... with 451 more rows, and 1 more variables: n &lt;int&gt;
 
 vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC class`)) %&gt;% print(n = 20)
+## # A tibble: 471 x 5
+##                    Variable `ICC educational track` `ICC class`
+##                       &lt;chr&gt;                   &lt;chr&gt;       &lt;chr&gt;
+##  1     paAccelerometer_diff                 &lt; 0.001       0.069
+##  2           SB_inorm_01_T3                   0.006       0.057
+##  3           SB_dnorm_01_T3                   0.023       0.053
+##  4              SB_inorm_T3                 &lt; 0.001       0.052
+##  5        PA_agrbct_10_diff                 &lt; 0.001       0.049
+##  6       paAccelerometer_T3                   0.127       0.049
+##  7 sitLieAccelerometer_diff                 &lt; 0.001       0.047
+##  8               PA_oexp_T1                   0.034       0.045
+##  9       PA_intention_02_T1                   0.064       0.044
+## 10           SB_sePbc_01_T3                   0.002       0.042
+## 11              b5agr_01_T1                    0.01       0.041
+## 12              SB_sePbc_T3                   0.007        0.04
+## 13          PA_agrbct_04_T3                   0.029       0.039
+## 14          PA_intention_T1                   0.064       0.039
+## 15   PA_opportunities_01_T3                 &lt; 0.001       0.039
+## 16   sitLieAccelerometer_T1                   0.085       0.039
+## 17            PA_goal_01_T1                   0.007       0.038
+## 18               PA_goal_T1                   0.007       0.038
+## 19     PA_amotivation_04_T3                 &lt; 0.001       0.037
+## 20        PA_pbcNeg_02_diff                   0.008       0.037
+## # ... with 451 more rows, and 2 more variables: `ICC school` &lt;chr&gt;,
+## #   n &lt;int&gt;
 
 vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC school`)) %&gt;% print(n = 20)
+## # A tibble: 471 x 5
+##                         Variable `ICC educational track` `ICC class`
+##                            &lt;chr&gt;                   &lt;chr&gt;       &lt;chr&gt;
+##  1        sitLieAccelerometer_T1                   0.085       0.039
+##  2                     fatpct_T1                   0.007       0.002
+##  3          paAccelerometer_diff                 &lt; 0.001       0.069
+##  4   symptom_neckShoulderPain_T3                 &lt; 0.001       0.001
+##  5 symptom_tensionNervousness_T3                 &lt; 0.001     &lt; 0.001
+##  6              pahrsLastweek_T3                   0.054       0.012
+##  7      sitLieAccelerometer_diff                 &lt; 0.001       0.047
+##  8            SB_intention_01_T3                   0.024       0.032
+##  9                PA_inorm_01_T3                   0.003       0.009
+## 10                   PA_inorm_T3                   0.003       0.009
+## 11                      b5ext_T1                   0.048     &lt; 0.001
+## 12                     b5open_T1                   0.014       0.004
+## 13         PA_autonomous_05_diff                 &lt; 0.001     &lt; 0.001
+## 14             PA_frqbct_02_diff                 &lt; 0.001     &lt; 0.001
+## 15               PA_frqbct_02_T3                   0.061       0.015
+## 16         PA_integrated_02_diff                 &lt; 0.001     &lt; 0.001
+## 17                SB_dnorm_01_T3                   0.023       0.053
+## 18              PA_oexpNeg_09_T3                   0.005       0.006
+## 19     PA_opportunitiesNeg_06_T1                   0.002     &lt; 0.001
+## 20                  PA_pbc_01_T3                 &lt; 0.001       0.004
+## # ... with 451 more rows, and 2 more variables: `ICC school` &lt;chr&gt;,
+## #   n &lt;int&gt;
 # %&gt;% 
 #     apa_table(
 #         caption = &quot;&quot;,
 #         note = &quot;&quot;,
-#         escape = T)
-</code></pre>
+#         escape = T)</code></pre>
 </div>
 <div id="create-a-table-for-all-items-by-gender-and-intervention-allocation" class="section level2">
 <h2>Create a table for all items by gender and intervention allocation</h2>
@@ -1019,6 +1254,7 @@ nonmissings.boys[i] &lt;- length(m.boys@resp$y)
 }
 
 cat(&quot;The labels are arranged such that intercept is not for girls:&quot;, labels(fixef(m.boys))[2] == &quot;boy0&quot;)
+## The labels are arranged such that intercept is not for girls: TRUE
 
 ci_boys &lt;- data.frame(ciLo = ci_low.boys, mean = mean.boys, ciHi = ci_high.boys)
 diamondlabels &lt;- labels(ci_boys)[[1]]
@@ -1046,6 +1282,7 @@ nonmissings.girls[i] &lt;- length(m.girls@resp$y)
 }
 
 cat(&quot;The labels are arranged such that intercept is not for boys:&quot;, labels(fixef(m.girls))[2] == &quot;girl0&quot;)
+## The labels are arranged such that intercept is not for boys: TRUE
 
 ci_girls &lt;- data.frame(ciLo = ci_low.girls, mean = mean.girls, ciHi = ci_high.girls)
 diamondlabels &lt;- labels(ci_girls)[[1]]
@@ -1077,6 +1314,7 @@ nonmissings.intervention[i] &lt;- length(m.intervention@resp$y)
 }
 
 cat(&quot;The labels are arranged such that intercept is not for control:&quot;, labels(fixef(m.intervention))[2] == &quot;intervention0&quot;)
+## The labels are arranged such that intercept is not for control: TRUE
 
 ci_intervention &lt;- data.frame(ciLo = ci_low.intervention, mean = mean.intervention, ciHi = ci_high.intervention)
 diamondlabels &lt;- labels(ci_intervention)[[1]]
@@ -1107,6 +1345,7 @@ nonmissings.control[i] &lt;- length(m.control@resp$y)
 }
 
 cat(&quot;The labels are arranged such that intercept is not for intervention:&quot;, labels(fixef(m.control))[2] == &quot;control0&quot;)
+## The labels are arranged such that intercept is not for intervention: TRUE
 
 ci_control &lt;- data.frame(ciLo = ci_low.control, mean = mean.control, ciHi = ci_high.control)
 diamondlabels &lt;- labels(ci_control)[[1]]
@@ -1147,11 +1386,11 @@ plot2 &lt;- diamondPlot(PA_ci_intervention, color = &#39;red&#39;, alpha=.3, yLa
   scale_x_continuous(limits = c(1, 7), breaks = 1:7)
 
 grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
-# dat2 &lt;- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
+grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code># dat2 &lt;- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
 # diamondPlot(dat1, color = &#39;blue&#39;, alpha=.3, yLabels = dat1$diamondlabels) +
-# diamondPlot(dat2, returnLayerOnly = TRUE, color=&#39;red&#39;, alpha=.3)
-</code></pre>
+# diamondPlot(dat2, returnLayerOnly = TRUE, color=&#39;red&#39;, alpha=.3)</code></pre>
 <p>Note: action and coping planning on a scale from 1 to 4.</p>
 </div>
 <div id="pa-psychosocial-determinants-self-report-scales-t3" class="section level2">
@@ -1175,81 +1414,11 @@ plot2 &lt;- diamondPlot(PA_ci_intervention, color = &#39;red&#39;, alpha=.3, yLa
   scale_x_continuous(limits = c(1, 7), breaks = 1:7)
 
 grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
-# dat2 &lt;- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
+grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code># dat2 &lt;- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
 # diamondPlot(dat1, color = &#39;blue&#39;, alpha=.3, yLabels = dat1$diamondlabels) +
-# diamondPlot(dat2, returnLayerOnly = TRUE, color=&#39;red&#39;, alpha=.3)
-</code></pre>
-</div>
-<div id="leave-out" class="section level2">
-<h2>leave out?</h2>
-<pre class="r"><code># To get the names nicely:
-# cat(names(df)[119:143], sep = &quot;\&quot;,\n\&quot;&quot;)
-
-meansComparisonDiamondPlot(df,
-                           items=c(
-                            &quot;PA_actcop_T1&quot;,
-                            &quot;PA_agrbct_T1&quot;,
-                            &quot;PA_amotivation_T1&quot;,
-                            &quot;PA_autonomous_T1&quot;,
-                            &quot;PA_controlled_T1&quot;,
-                            &quot;PA_dnorm_T1&quot;,
-                            &quot;PA_frqbct_T1&quot;,
-                            &quot;PA_goal_T1&quot;,
-                            &quot;PA_inorm_T1&quot;,
-                            &quot;PA_intention_T1&quot;,
-                            &quot;PA_oexp_T1&quot;,
-                            &quot;PA_opportunities_T1&quot;,
-                            &quot;PA_pbc_T1&quot;,
-                            &quot;PA_selfefficacy_T1&quot;
-                           ),
-                           compareBy=&#39;intervention&#39;,
-                           conf.level=.995)
-
-meansComparisonDiamondPlot(df,
-                           items=c(
-                            &quot;SB_oexp_T1&quot;,
-                            &quot;SB_dnorm_T1&quot;,
-                            &quot;SB_inorm_T1&quot;,
-                            &quot;SB_sePbc_T1&quot;,
-                            &quot;SB_intention_T1&quot;
-                           ),
-                           compareBy=&#39;intervention&#39;,
-                           conf.level=.995)
-
-meansComparisonDiamondPlot(df,
-                           items=c(
-                            &quot;b5agr_T1.1&quot;,
-                            &quot;b5cons_T1.1&quot;,
-                            &quot;b5ext_T1.1&quot;,
-                            &quot;b5neur_T1.1&quot;,
-                            &quot;b5open_T1.1&quot;
-                           ),
-                           compareBy=&#39;intervention&#39;,
-                           conf.level=.995)
-
-meansComparisonDiamondPlot(df,
-                           items=c(
-                            &quot;padaysLastweek_T1&quot;,
-                            &quot;pafreqUsually_T1&quot;,
-                            &quot;pahrsUsually_T1&quot;
-                           ),
-                           compareBy=&#39;intervention&#39;,
-                           conf.level=.995)
-
-meansComparisonDiamondPlot(df,
-                           items=c(
-                            &quot;paLastweek_T1&quot;
-                           ),
-                           compareBy=&#39;intervention&#39;,
-                           conf.level=.995)
-
-meansComparisonDiamondPlot(df,
-                           items=c(
-                            &quot;paAccelerometer_T1&quot;
-                           ),
-                           compareBy=&#39;intervention&#39;,
-                           conf.level=.995)</code></pre>
+# diamondPlot(dat2, returnLayerOnly = TRUE, color=&#39;red&#39;, alpha=.3)</code></pre>
 </div>
 </div>
 <div id="ridge-plots" class="section level1 tabset">
@@ -1269,7 +1438,7 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0)) +
@@ -1293,7 +1462,7 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
@@ -1308,119 +1477,10 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
 # grid.arrange(plot1, plot2, ncol = 2)
 
 grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
-<div id="changes-pa-motivation" class="section level3">
-<h3>Changes: PA motivation</h3>
-<pre class="r"><code>
-plot1 &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;PA autonomous \nmotivation&#39; = PA_autonomous_diff,
-&#39;PA controlled \nmotivation&#39; = PA_controlled_diff,
-&#39;PA amotivation&#39; = PA_amotivation_diff)  %&gt;%
-  # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
-  ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .9, color = &quot;black&quot;, from = -6, to = 6) +
-  labs(x = &quot;&quot;,
-       y = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c(&quot;PA amotivation 0&quot;, &quot;PA amotivation 1&quot;),
-                      labels = c( &#39;PA amotivation 0&#39; = &quot;Boy&quot;, &#39;PA amotivation 1&#39; = &quot;Girl&quot;),
-                      values = c(&quot;#3bc600&quot;, &quot;#0000ff&quot;, &quot;#9cc68b&quot;, &quot;#8080ff&quot;),
-                      name = &quot;&quot;, guide = &quot;legend&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(legend.position=&quot;bottom&quot;)
-
-plot2 &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;PA autonomous motivation&#39; = PA_autonomous_diff,
-&#39;PA controlled motivation&#39; = PA_controlled_diff,
-&#39;PA amotivation&#39; = PA_amotivation_diff) %&gt;%
-  # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
-  ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
-           alpha = .9, color = &quot;black&quot;, from = -6, to = 6) +
-  labs(x = &quot;&quot;,
-       y = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c(&quot;PA amotivation 1&quot;, &quot;PA amotivation 0&quot;),
-                      labels = c(&#39;PA amotivation 1&#39; = &quot;Intervention&quot;, &#39;PA amotivation 0&#39; = &quot;Control&quot;),
-                      values = c(&quot;#ff0000&quot;, &quot;#0000ff&quot;, &quot;#ff8080&quot;, &quot;#8080ff&quot;),
-                      name = &quot;&quot;, guide = &quot;legend&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(legend.position=&quot;bottom&quot;)
-
-# grid.arrange(plot1, plot2, ncol = 2)
-
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
-</div>
-<div id="changes-pa-motivation-by-track" class="section level3">
-<h3>Changes: PA motivation by track</h3>
-<pre class="r"><code>
-plot1 &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  track,
-  girl,
-  &#39;PA autonomous \nmotivation&#39; = PA_autonomous_diff,
-&#39;PA controlled \nmotivation&#39; = PA_controlled_diff,
-&#39;PA amotivation&#39; = PA_amotivation_diff)  %&gt;%
-  # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
-  ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .6, color = &quot;black&quot;, from = -6, to = 6) +
-  labs(x = &quot;&quot;,
-       y = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c(&quot;PA amotivation 0&quot;, &quot;PA amotivation 1&quot;),
-                      labels = c( &#39;PA amotivation 0&#39; = &quot;Boy&quot;, &#39;PA amotivation 1&#39; = &quot;Girl&quot;),
-                      values = c(&quot;#3bc600&quot;, &quot;#0000ff&quot;, &quot;#9cc68b&quot;, &quot;#8080ff&quot;),
-                      name = &quot;&quot;, guide = &quot;legend&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(legend.position=&quot;bottom&quot;)
-
-plot2 &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  track,
-  girl,
-  &#39;PA autonomous motivation&#39; = PA_autonomous_diff,
-&#39;PA controlled motivation&#39; = PA_controlled_diff,
-&#39;PA amotivation&#39; = PA_amotivation_diff) %&gt;%
-  # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
-  ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, track)), 
-           alpha = .6, color = &quot;black&quot;, from = -6, to = 6) +
-  labs(x = &quot;&quot;,
-       y = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c(&quot;PA amotivation 1&quot;, &quot;PA amotivation 0&quot;),
-                      labels = c(&#39;PA amotivation 1&#39; = &quot;Intervention&quot;, &#39;PA amotivation 0&#39; = &quot;Control&quot;),
-                      values = c(&quot;#ff0000&quot;, &quot;#0000ff&quot;, &quot;#ff8080&quot;, &quot;#8080ff&quot;),
-                      name = &quot;&quot;, guide = &quot;legend&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(legend.position=&quot;bottom&quot;)
-
-# grid.arrange(plot1, plot2, ncol = 2)
-
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
-</div>
+grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
+## Picking joint bandwidth of 0.216
+## Picking joint bandwidth of 0.216</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="big-5-personality-traits" class="section level2">
 <h2>Big 5 personality traits</h2>
@@ -1439,7 +1499,7 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0)) +
@@ -1465,7 +1525,7 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
@@ -1480,7 +1540,10 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
 # grid.arrange(plot1, plot2, ncol = 2)
 
 grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
+grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
+## Picking joint bandwidth of 0.315
+## Picking joint bandwidth of 0.305</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="bct-use" class="section level2">
 <h2>BCT use</h2>
@@ -1498,7 +1561,7 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0)) +
@@ -1521,7 +1584,7 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
@@ -1535,63 +1598,13 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
 
 grid.newpage()
 grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
+## Picking joint bandwidth of 0.319
+## Picking joint bandwidth of 0.318</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>
 
 
-
-# grid.arrange(plot1, plot2, ncol = 2)
-</code></pre>
-<div id="changes-bct-use-sums" class="section level4">
-<h4>Changes: BCT use sums</h4>
-<pre class="r"><code>plodiff &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-&#39;Frequency-\nrelated BCTs&#39; = PA_frqbct_diff,
-&#39;Agreement-\nrelated BCTs&#39; = PA_agrbct_diff)  %&gt;%
-  # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
-  ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .8, color = &quot;black&quot;, from = -6, to = 6) +
-  labs(x = &quot;&quot;,
-       y = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c(&quot;Agreement-\nrelated BCTs 0&quot;, &quot;Agreement-\nrelated BCTs 1&quot;),
-                      labels = c( &#39;Agreement-\nrelated BCTs 0&#39; = &quot;Boy&quot;, &#39;Agreement-\nrelated BCTs 1&#39; = &quot;Girl&quot;),
-                      values = c(&quot;#3bc600&quot;, &quot;#0000ff&quot;, &quot;#9cc68b&quot;, &quot;#8080ff&quot;),
-                      name = &quot;&quot;, guide = &quot;legend&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(legend.position=&quot;bottom&quot;)
-
-plot2 &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-&#39;Frequency-\nrelated BCTs&#39; = PA_frqbct_diff,
-&#39;Agreement-\nrelated BCTs&#39; = PA_agrbct_diff) %&gt;%
-  # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
-  ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
-           alpha = .8, color = &quot;black&quot;, from = -6, to = 6) +
-  labs(x = &quot;&quot;,
-       y = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c(&quot;Agreement-\nrelated BCTs 1&quot;, &quot;Agreement-\nrelated BCTs 0&quot;),
-                      labels = c(&#39;Agreement-\nrelated BCTs 1&#39; = &quot;Intervention&quot;, &#39;Agreement-\nrelated BCTs 0&#39; = &quot;Control&quot;),
-                      values = c(&quot;#ff0000&quot;, &quot;#0000ff&quot;, &quot;#ff8080&quot;, &quot;#8080ff&quot;),
-                      name = &quot;&quot;, guide = &quot;legend&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(legend.position=&quot;bottom&quot;)
-
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plodiff), ggplotGrob(plot2), size = &quot;first&quot;))
-</code></pre>
-</div>
+# grid.arrange(plot1, plot2, ncol = 2)</code></pre>
 </div>
 <div id="sm-kernel-density-plots-for-means" class="section level3">
 <h3>sm kernel density plots for means</h3>
@@ -1618,6 +1631,8 @@ set.seed(10)
 
 # Make plot
 sm.PA_frqbct_T1_1 &lt;- sm.density.compare2(as.numeric(dens$PA_frqbct_T1), as.factor(dens$intervention), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0.31
 legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
@@ -1630,6 +1645,8 @@ set.seed(10)
 
 # Make plot
 sm.PA_frqbct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$PA_frqbct_T1), as.factor(dens$girl), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0.11
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
@@ -1645,8 +1662,8 @@ linetypes &lt;- c(1,2,2,1,2)
 
 # Make plot
 sm.PA_frqbct_T1_3 &lt;- sm.density.compare(as.numeric(dens$PA_frqbct_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
-legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
-</code></pre>
+legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="agreement-measured-bcts" class="section level4">
 <h4>Agreement-measured BCTs</h4>
@@ -1671,6 +1688,8 @@ set.seed(10)
 
 # Make plot
 sm.PA_agrbct_T1_1 &lt;- sm.density.compare2(as.numeric(dens$PA_agrbct_T1), as.factor(dens$intervention), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0
 legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
@@ -1683,6 +1702,8 @@ set.seed(10)
 
 # Make plot
 sm.PA_agrbct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$PA_agrbct_T1), as.factor(dens$girl), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0.27
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
@@ -1698,8 +1719,8 @@ linetypes &lt;- c(1,2,2,1,2)
 
 # Make plot
 sm.PA_agrbct_T1_3 &lt;- sm.density.compare(as.numeric(dens$PA_agrbct_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
-legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
-</code></pre>
+legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 </div>
 <div id="histograms-for-individual-items" class="section level3">
@@ -1840,150 +1861,12 @@ coord_cartesian(xlim = c(0.5, 6.5))
 
 # This draws all histograms next to each other:
 grid.newpage()
-grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;))
-
-# This draws 2 histograms per row:
-# grid.newpage()
-# grid.draw(rbind(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), size = &quot;last&quot;), cbind(ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;)))
-</code></pre>
-</div>
-<div id="changes-frequency-bcts" class="section level4">
-<h4>Changes: frequency BCTs</h4>
+grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <pre class="r"><code>
-bctGirls &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-&#39;Reminded self of positive consequences&#39; = PA_frqbct_01_diff,
-&#39;Has logged PA on paper&#39; = PA_frqbct_02_diff,
-&#39;Has monitored PA on smartphone&#39; = PA_frqbct_03_diff,
-&#39;Uses mnemonic cues&#39; = PA_frqbct_04_diff,
-&#39;Has compared actual with goal&#39; = PA_frqbct_05_diff,
-&#39;Has thought of relevance of PA&#39; = PA_frqbct_06_diff,
-&#39;Has made changes at home&#39; = PA_frqbct_07_diff,
-&#39;Has sought social support&#39; = PA_frqbct_08_diff,
-&#39;Has evaluated why goal not reached&#39; = PA_frqbct_09_diff) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(girl == &quot;1&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
-  labs(title = &quot;Girls&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        plot.title = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-bctBoys &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-&#39;Reminded self of positive consequences&#39; = PA_frqbct_01_diff,
-&#39;Has logged PA on paper&#39; = PA_frqbct_02_diff,
-&#39;Has monitored PA on smartphone&#39; = PA_frqbct_03_diff,
-&#39;Uses mnemonic cues&#39; = PA_frqbct_04_diff,
-&#39;Has compared actual with goal&#39; = PA_frqbct_05_diff,
-&#39;Has thought of relevance of PA&#39; = PA_frqbct_06_diff,
-&#39;Has made changes at home&#39; = PA_frqbct_07_diff,
-&#39;Has sought social support&#39; = PA_frqbct_08_diff,
-&#39;Has evaluated why goal not reached&#39; = PA_frqbct_09_diff) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(girl == &quot;0&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
-  labs(title = &quot;Boys&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        plot.title = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-bctInt &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-&#39;Reminded self of positive consequences&#39; = PA_frqbct_01_diff,
-&#39;Has logged PA on paper&#39; = PA_frqbct_02_diff,
-&#39;Has monitored PA on smartphone&#39; = PA_frqbct_03_diff,
-&#39;Uses mnemonic cues&#39; = PA_frqbct_04_diff,
-&#39;Has compared actual with goal&#39; = PA_frqbct_05_diff,
-&#39;Has thought of relevance of PA&#39; = PA_frqbct_06_diff,
-&#39;Has made changes at home&#39; = PA_frqbct_07_diff,
-&#39;Has sought social support&#39; = PA_frqbct_08_diff,
-&#39;Has evaluated why goal not reached&#39; = PA_frqbct_09_diff) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(intervention == &quot;1&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;) +
-  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
-  labs(title = &quot;Intervention&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-bctCont &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-&#39;Reminded self of positive consequences&#39; = PA_frqbct_01_diff,
-&#39;Has logged PA on paper&#39; = PA_frqbct_02_diff,
-&#39;Has monitored PA on smartphone&#39; = PA_frqbct_03_diff,
-&#39;Uses mnemonic cues&#39; = PA_frqbct_04_diff,
-&#39;Has compared actual with goal&#39; = PA_frqbct_05_diff,
-&#39;Has thought of relevance of PA&#39; = PA_frqbct_06_diff,
-&#39;Has made changes at home&#39; = PA_frqbct_07_diff,
-&#39;Has sought social support&#39; = PA_frqbct_08_diff,
-&#39;Has evaluated why goal not reached&#39; = PA_frqbct_09_diff) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(intervention == &quot;0&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
-  labs(title = &quot;Control&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-#grid.arrange(bctInt, bctGirls, bctCont, bctBoys, ncol = 2)
-
-# (&quot;Seldom or never&quot;, &quot;About once a month&quot;, &quot;About once a week&quot;, &quot;Almost daily&quot;)
-
-# This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;))
-
 # This draws 2 histograms per row:
 # grid.newpage()
-# grid.draw(rbind(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), size = &quot;last&quot;), cbind(ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;)))
-</code></pre>
+# grid.draw(rbind(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), size = &quot;last&quot;), cbind(ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;)))</code></pre>
 </div>
 <div id="agreement-measured-bcts-1" class="section level4">
 <h4>Agreement-measured BCTs</h4>
@@ -2126,8 +2009,9 @@ coord_cartesian(xlim = c(0.5, 6.5))
 
 # This draws all histograms next to each other:
 grid.newpage()
-grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;))
-
+grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>
 # This draws 2 histograms per row:
 # grid.newpage()
 # grid.draw(rbind(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), size = &quot;last&quot;), cbind(ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;)))
@@ -2159,388 +2043,6 @@ grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), g
 # mean(bctBoys$`Has thought of PA identity`, na.rm = T)
 # mean(bctBoys$`Has fitted PA to life values`, na.rm = T)</code></pre>
 </div>
-<div id="changes-agreement-bcts" class="section level4">
-<h4>Changes: agreement BCTs</h4>
-<pre class="r"><code>p_load(grid)
-
-bctGirls &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;Has set goals&#39; = PA_agrbct_01_diff,
-  &#39;Has made plan&#39; = PA_agrbct_02_diff,
-  &#39;Plan made by other&#39; = PA_agrbct_03_diff,
-  &#39;Has reminder of plan&#39; = PA_agrbct_04_diff,
-  &#39;Has cut goals to subgoals&#39; = PA_agrbct_05_diff,
-  &#39;Has tried new PA options&#39; = PA_agrbct_06_diff,
-  &#39;Has thought of barriers&#39; = PA_agrbct_07_diff,
-  &#39;Has planned for barriers&#39; = PA_agrbct_08_diff,
-  &#39;Has thought of PA identity&#39; = PA_agrbct_09_diff,
-  &#39;Has fitted PA to life values&#39; = PA_agrbct_10_diff) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(girl == &quot;1&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(-6, -3, 0, 3, 6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
-  labs(title = &quot;Girls&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        plot.title = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-bctBoys &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;Has set goals&#39; = PA_agrbct_01_diff,
-  &#39;Has made plan&#39; = PA_agrbct_02_diff,
-  &#39;Plan made by other&#39; = PA_agrbct_03_diff,
-  &#39;Has reminder of plan&#39; = PA_agrbct_04_diff,
-  &#39;Has cut goals to subgoals&#39; = PA_agrbct_05_diff,
-  &#39;Has tried new PA options&#39; = PA_agrbct_06_diff,
-  &#39;Has thought of barriers&#39; = PA_agrbct_07_diff,
-  &#39;Has planned for barriers&#39; = PA_agrbct_08_diff,
-  &#39;Has thought of PA identity&#39; = PA_agrbct_09_diff,
-  &#39;Has fitted PA to life values&#39; = PA_agrbct_10_diff) %&gt;%
-  gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(girl == &quot;0&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(-6, -3, 0, 3, 6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
-  labs(title = &quot;Boys&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        plot.title = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-bctInt &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;Has set goals&#39; = PA_agrbct_01_diff,
-  &#39;Has made plan&#39; = PA_agrbct_02_diff,
-  &#39;Plan made by other&#39; = PA_agrbct_03_diff,
-  &#39;Has reminder of plan&#39; = PA_agrbct_04_diff,
-  &#39;Has cut goals to subgoals&#39; = PA_agrbct_05_diff,
-  &#39;Has tried new PA options&#39; = PA_agrbct_06_diff,
-  &#39;Has thought of barriers&#39; = PA_agrbct_07_diff,
-  &#39;Has planned for barriers&#39; = PA_agrbct_08_diff,
-  &#39;Has thought of PA identity&#39; = PA_agrbct_09_diff,
-  &#39;Has fitted PA to life values&#39; = PA_agrbct_10_diff) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(intervention == &quot;1&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(-6, -3, 0, 3, 6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;) +
-  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
-  labs(title = &quot;Intervention&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-bctCont &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;Has set goals&#39; = PA_agrbct_01_diff,
-  &#39;Has made plan&#39; = PA_agrbct_02_diff,
-  &#39;Plan made by other&#39; = PA_agrbct_03_diff,
-  &#39;Has reminder of plan&#39; = PA_agrbct_04_diff,
-  &#39;Has cut goals to subgoals&#39; = PA_agrbct_05_diff,
-  &#39;Has tried new PA options&#39; = PA_agrbct_06_diff,
-  &#39;Has thought of barriers&#39; = PA_agrbct_07_diff,
-  &#39;Has planned for barriers&#39; = PA_agrbct_08_diff,
-  &#39;Has thought of PA identity&#39; = PA_agrbct_09_diff,
-  &#39;Has fitted PA to life values&#39; = PA_agrbct_10_diff) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(intervention == &quot;0&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(-6, -3, 0, 3, 6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
-  labs(title = &quot;Control&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        axis.text=element_text(size=10, face=&quot;bold&quot;)) +
-coord_cartesian(xlim = c(-6.5, 6.5))
-
-#grid.arrange(bctInt, bctGirls, bctCont, bctBoys, ncol = 2)
-
-# (&quot;Seldom or never&quot;, &quot;About once a month&quot;, &quot;About once a week&quot;, &quot;Almost daily&quot;)
-
-# This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;))
-</code></pre>
-</div>
-</div>
-<div id="graph-analysis" class="section level3">
-<h3>Graph analysis</h3>
-<pre class="r"><code>nItems &lt;- 19
-
-bctdf &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;goals&#39; = PA_agrbct_01_T1,
-  &#39;plan&#39; = PA_agrbct_02_T1,
-  &#39;plan by other&#39; = PA_agrbct_03_T1,
-  &#39;reminder of plan&#39; = PA_agrbct_04_T1,
-  &#39;subgoals&#39; = PA_agrbct_05_T1,
-  &#39;new PA options&#39; = PA_agrbct_06_T1,
-  &#39;barrier identification&#39; = PA_agrbct_07_T1,
-  &#39;coping planning&#39; = PA_agrbct_08_T1,
-  &#39;PA identity&#39; = PA_agrbct_09_T1,
-  &#39;PA life values&#39; = PA_agrbct_10_T1,
-  &#39;positive consequences&#39; = PA_frqbct_01_T1,
-  &#39;log on paper&#39; = PA_frqbct_02_T1,
-  &#39;smartphone&#39; = PA_frqbct_03_T1,
-  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,
-  &#39;goal contrast&#39; = PA_frqbct_05_T1,
-  &#39;relevance of PA&#39; = PA_frqbct_06_T1,
-  &#39;changes at home&#39; = PA_frqbct_07_T1,
-  &#39;social support&#39; = PA_frqbct_08_T1,
-  &#39;failure contemplated&#39; = PA_frqbct_09_T1) %&gt;%
- mutate(
-  &#39;goals&#39; = ifelse(`goals` == 1, 0, 1),
-  &#39;plan&#39; = ifelse(`plan` == 1, 0, 1),
-  &#39;plan by other&#39; = ifelse(`plan by other` == 1, 0, 1),
-  &#39;reminder of plan&#39; = ifelse(`reminder of plan` == 1, 0, 1),
-  &#39;subgoals&#39; = ifelse(`subgoals` == 1, 0, 1),
-  &#39;new PA options&#39; = ifelse(`new PA options` == 1, 0, 1),
-  &#39;barrier identification&#39; = ifelse(`barrier identification` == 1, 0, 1),
-  &#39;coping planning&#39; = ifelse(`coping planning` == 1, 0, 1),
-  &#39;PA identity&#39; = ifelse(`PA identity` == 1, 0, 1),
-  &#39;PA life values&#39; = ifelse(`PA life values` == 1, 0, 1),
-  &#39;positive consequences&#39; = ifelse(`positive consequences` == 1, 0, 1),
-  &#39;log on paper&#39; = ifelse(`log on paper` == 1, 0, 1),
-  &#39;smartphone&#39; = ifelse(`smartphone` == 1, 0, 1),
-  &#39;mnemonic cues&#39; = ifelse(`mnemonic cues` == 1, 0, 1),
-  &#39;goal contrast&#39; = ifelse(`goal contrast` == 1, 0, 1),
-  &#39;relevance of PA&#39; = ifelse(`relevance of PA` == 1, 0, 1),
-  &#39;changes at home&#39; = ifelse(`changes at home` == 1, 0, 1),
-  &#39;social support&#39; = ifelse(`social support` == 1, 0, 1),
-  &#39;failure contemplated&#39; = ifelse(`failure contemplated` == 1, 0, 1)) %&gt;% 
-  data.frame
-
-S.boys &lt;- bctdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.) 
-S.girls &lt;- bctdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.)
-nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
-nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
-
-# Create means for filling nodes
-
-girlmeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
-  summarise_at(vars(5:(5+nItems-1)),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(girl == 1) %&gt;% 
-  select(-1)
-
-boymeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
-  summarise_at(vars(5:(5+nItems-1)),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(girl == 0) %&gt;% 
-  select(-1)
-
-# Find average layout for comparability and plot graphs next to each other
-
-Layout &lt;- averageLayout(nwGirls, nwBoys)
-
-layout(t(1:2))
-plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
-     pie = girlmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
-     pie = boymeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-
-
-# Network for all participants
-
-S.total &lt;- bctdf %&gt;% select(6:ncol(bctdf))
-nwBCT &lt;- estimateNetwork(S.total, default=&quot;IsingFit&quot;)
-
-# smallworldIndex(plot(nwBCT))
-
-# Create means for filling nodes
-piefill &lt;- S.total %&gt;%
-  summarise_all(funs(mean(., na.rm = TRUE))) 
-
-# Plot network
-plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, label.cex = 0.75,
-     pie = piefill, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-# Estimate ising network without regularisation
-nwBCT_nonreg &lt;- estimateNetwork(S.total, default=&quot;IsingSampler&quot;)
-
-plot(nwBCT_nonreg, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Non-regularised Ising model&quot;, label.cex = 0.75,
-     pie = piefill, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)</code></pre>
-<div id="combine-items" class="section level4">
-<h4>Combine items</h4>
-<pre class="r"><code>nItems &lt;- 17
-
-bctdf &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &#39;goals&#39; = PA_agrbct_01_T1,
-  &#39;plan&#39; = PA_agrbct_02_T1,
-  &#39;plan by other&#39; = PA_agrbct_03_T1,
-  &#39;reminder of plan&#39; = PA_agrbct_04_T1,
-  &#39;subgoals&#39; = PA_agrbct_05_T1,
-  &#39;new PA options&#39; = PA_agrbct_06_T1,
-  &#39;barrier identification&#39; = PA_agrbct_07_T1,
-  &#39;coping planning&#39; = PA_agrbct_08_T1,
-  &#39;PA identity&#39; = PA_agrbct_09_T1,
-  &#39;PA life values&#39; = PA_agrbct_10_T1,
-  &#39;positive consequences&#39; = PA_frqbct_01_T1,
-  &#39;log on paper&#39; = PA_frqbct_02_T1,
-  &#39;smartphone&#39; = PA_frqbct_03_T1,
-#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,
-  &#39;goal contrast&#39; = PA_frqbct_05_T1,
-  &#39;relevance of PA&#39; = PA_frqbct_06_T1,
-  &#39;changes at home&#39; = PA_frqbct_07_T1,
-  &#39;social support&#39; = PA_frqbct_08_T1,
-  &#39;failure contemplated&#39; = PA_frqbct_09_T1) %&gt;%
- mutate(
-  &#39;goals&#39; = ifelse(`goals` == 1, 0, 1),
-  &#39;plan&#39; = ifelse(`plan` == 1 &amp; `plan by other` == 1, 0, 1),
-  &#39;reminder of plan&#39; = ifelse(`reminder of plan` == 1, 0, 1),
-  &#39;subgoals&#39; = ifelse(`subgoals` == 1, 0, 1),
-  &#39;new PA options&#39; = ifelse(`new PA options` == 1, 0, 1),
-  &#39;barrier identification&#39; = ifelse(`barrier identification` == 1, 0, 1),
-  &#39;coping planning&#39; = ifelse(`coping planning` == 1, 0, 1),
-  &#39;PA identity&#39; = ifelse(`PA identity` == 1, 0, 1),
-  &#39;PA life values&#39; = ifelse(`PA life values` == 1, 0, 1),
-  &#39;positive consequences&#39; = ifelse(`positive consequences` == 1, 0, 1),
-  &#39;monitored PA&#39; = ifelse(`log on paper` == 1 &amp; `smartphone` == 1, 0, 1),
-#  &#39;mnemonic cues&#39; = ifelse(`mnemonic cues` == 1, 0, 1),
-  &#39;goal contrast&#39; = ifelse(`goal contrast` == 1, 0, 1),
-  &#39;relevance of PA&#39; = ifelse(`relevance of PA` == 1, 0, 1),
-  &#39;changes at home&#39; = ifelse(`changes at home` == 1, 0, 1),
-  &#39;social support&#39; = ifelse(`social support` == 1, 0, 1),
-  &#39;failure contemplated&#39; = ifelse(`failure contemplated` == 1, 0, 1)) %&gt;%
-  select(-`log on paper`, -`smartphone`, -`plan by other`) %&gt;% 
-  data.frame
-
-# S.boys &lt;- bctdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.) 
-# S.girls &lt;- bctdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.)
-# nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
-# nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
-# 
-# # Create means for filling nodes
-# 
-# girlmeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
-#   summarise_at(vars(5:(5+nItems-1)),
-#   funs(mean(., na.rm = TRUE))) %&gt;% 
-#   filter(girl == 1) %&gt;% 
-#   select(-1)
-# 
-# boymeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
-#   summarise_at(vars(5:(5+nItems-1)),
-#   funs(mean(., na.rm = TRUE))) %&gt;% 
-#   filter(girl == 0) %&gt;% 
-#   select(-1)
-# 
-# # Find average layout for comparability and plot graphs next to each other
-# 
-# Layout &lt;- averageLayout(nwGirls, nwBoys)
-# 
-# layout(t(1:2))
-# plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
-#      pie = girlmeans, 
-#      color = &quot;skyblue&quot;,
-#      pieBorder = 1)
-# 
-# plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
-#      pie = boymeans, 
-#      color = &quot;skyblue&quot;,
-#      pieBorder = 1)
-
-# Network for all participants
-
-S.total &lt;- bctdf %&gt;% select(6:ncol(bctdf))
-nwBCT &lt;- estimateNetwork(S.total, default=&quot;IsingFit&quot;)
-
-# smallworldIndex(plot(nwBCT))
-
-# Create means for filling nodes
-piefill &lt;- S.total %&gt;%
-  summarise_all(funs(mean(., na.rm = TRUE))) 
-
-# Plot network
-plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, label.cex = 0.75,
-     pie = piefill, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-# # Estimate ising network without regularisation
-# nwBCT_nonreg &lt;- estimateNetwork(S.total, default=&quot;IsingSampler&quot;)
-# 
-# plot(nwBCT_nonreg, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Non-regularised Ising model&quot;, label.cex = 0.75,
-#      pie = piefill, 
-#      color = &quot;skyblue&quot;,
-#      pieBorder = 1)</code></pre>
-</div>
-<div id="centrality-and-stability" class="section level4">
-<h4>Centrality and stability</h4>
-<pre class="r"><code>centralityPlot(nwBCT)
-
-boot2 &lt;- bootnet(nwBCT, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
-corStability(boot2)
-
-plot(boot2)
-plot(boot2, &quot;strength&quot;)
-plot(boot2, &quot;betweenness&quot;)
-plot(boot2, &quot;closeness&quot;)
-</code></pre>
-</div>
-<div id="network-comparison-test-boys-vs.girls" class="section level4">
-<h4>Network comparison test: boys vs. girls</h4>
-<pre class="r"><code>
-nct_results &lt;- NCT(nwGirls, nwBoys, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges=&#39;all&#39;, progressbar=TRUE)
-
-nct_results$nwinv.pval  # p value of network structure diff test: 0.424
-nct_results$glstrinv.pval  # p value of global connectivity diff test: 0.071
-nct_results$einv.pvals     #p values testing diffs for all individual edges: lowest p-value 0.017, most = 1
-sum(nct_results$einv.pvals$&quot;p-value&quot; &lt; 0.05)  # how many edges are different0
-</code></pre>
-</div>
 </div>
 </div>
 <div id="pa-determinants" class="section level2">
@@ -2551,7 +2053,7 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
   group,
   school,
   girl,
-&#39;PA action and\ncoping planning&#39; = PA_actcop_T1,
+&#39;PA action and\ncoping planning&#39; = PA_actCop_T1,
 &#39;PA intention&#39; = PA_intention_T1,
 &#39;PA outcome\nexpectations&#39; = PA_oexp_T1,
 &#39;PA perceived\nbehavioural control&#39; = PA_pbc_T1,
@@ -2563,7 +2065,7 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0)) +
@@ -2580,7 +2082,7 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   group,
   school,
   girl,
-&#39;PA action and\ncoping planning&#39; = PA_actcop_T1,
+&#39;PA action and\ncoping planning&#39; = PA_actCop_T1,
 &#39;PA intention&#39; = PA_intention_T1,
 &#39;PA outcome\nexpectations&#39; = PA_oexp_T1,
 &#39;PA perceived\nbehavioural control&#39; = PA_pbc_T1,
@@ -2592,7 +2094,7 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
@@ -2604,7 +2106,7 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   theme_ridges(grid = FALSE) +
   theme(legend.position=&quot;bottom&quot;, axis.text=element_text(size=10))
 
-target = c(&quot;PA_actcop_T1&quot;,
+target = c(&quot;PA_actCop_T1&quot;,
 &quot;PA_intention_T1&quot;,
 &quot;PA_oexp_T1&quot;,
 &quot;PA_pbc_T1&quot;,
@@ -2613,8 +2115,8 @@ target = c(&quot;PA_actcop_T1&quot;,
 &quot;PA_dnorm_T1&quot;,
 &quot;PA_inorm_T1&quot;)
 
-PA_ci_girls &lt;- ci_girls %&gt;% filter(diamondlabels %in% names(scales) &amp; 
-                                     grepl(&quot;PA_actcop_T1&quot;, diamondlabels) | 
+PA_ci_girls &lt;- ci_girls %&gt;% filter(diamondlabels %in% names(scales_T1) &amp; 
+                                     grepl(&quot;PA_actCop_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_intention_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_oexp_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_pbc_T1&quot;, diamondlabels) | 
@@ -2625,8 +2127,8 @@ PA_ci_girls &lt;- ci_girls %&gt;% filter(diamondlabels %in% names(scales) &amp;
 
 PA_ci_girls &lt;- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
 
-PA_ci_boys &lt;- ci_boys %&gt;% filter(diamondlabels %in% names(scales) &amp; 
-                                     grepl(&quot;PA_actcop_T1&quot;, diamondlabels) | 
+PA_ci_boys &lt;- ci_boys %&gt;% filter(diamondlabels %in% names(scales_T1) &amp; 
+                                     grepl(&quot;PA_actCop_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_intention_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_oexp_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_pbc_T1&quot;, diamondlabels) | 
@@ -2641,8 +2143,8 @@ plot1 &lt;- plot1 +
   diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, color=&#39;blue&#39;, alpha=.3, fixedSize = 0.15) +
   diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color=&#39;green&#39;, alpha=.3, fixedSize = 0.15)
 
-PA_ci_intervention &lt;- ci_intervention %&gt;% filter(diamondlabels %in% names(scales) &amp; 
-                                     grepl(&quot;PA_actcop_T1&quot;, diamondlabels) | 
+PA_ci_intervention &lt;- ci_intervention %&gt;% filter(diamondlabels %in% names(scales_T1) &amp; 
+                                     grepl(&quot;PA_actCop_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_intention_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_oexp_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_pbc_T1&quot;, diamondlabels) | 
@@ -2653,8 +2155,8 @@ PA_ci_intervention &lt;- ci_intervention %&gt;% filter(diamondlabels %in% names(
 
 PA_ci_intervention &lt;- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
 
-PA_ci_control &lt;- ci_control %&gt;% filter(diamondlabels %in% names(scales) &amp; 
-                                     grepl(&quot;PA_actcop_T1&quot;, diamondlabels) | 
+PA_ci_control &lt;- ci_control %&gt;% filter(diamondlabels %in% names(scales_T1) &amp; 
+                                     grepl(&quot;PA_actCop_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_intention_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_oexp_T1&quot;, diamondlabels) | 
                                      grepl(&quot;PA_pbc_T1&quot;, diamondlabels) | 
@@ -2671,77 +2173,10 @@ plot2 &lt;- plot2 +
 
 # grid.arrange(plot1, plot2, ncol = 2)
 grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
-</div>
-<div id="tee-tanne-korrelaatioverkosto" class="section level2">
-<h2>TEE TÄNNE KORRELAATIOVERKOSTO</h2>
-</div>
-<div id="pa-determinants-unregularised-correlations-visualised" class="section level2">
-<h2>PA determinants: unregularised correlations visualised</h2>
-<pre class="r"><code># Network without motivation variables
-data &lt;- df %&gt;% select(&#39;PA&#39; = paAccelerometer_T1, &#39;SB&#39; = sitLieAccelerometer_T1,
-&#39;fat%&#39; = fatpct_T1,&#39;action planning&#39; = PA_actionplan_T1, &#39;coping planning&#39; = PA_copingplan_T1, &#39;frequency-related BCTs&#39; = PA_frqbct_T1, &#39;agreement-related BCTs&#39; = PA_agrbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
-  data.frame
-
-names &lt;- df %&gt;% select(&#39;PA&#39; = paAccelerometer_T1, &#39;SB&#39; = sitLieAccelerometer_T1,
-&#39;fat%&#39; = fatpct_T1,&#39;action planning&#39; = PA_actionplan_T1, &#39;coping planning&#39; = PA_copingplan_T1, &#39;frequency-related BCTs&#39; = PA_frqbct_T1, &#39;agreement-related BCTs&#39; = PA_agrbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% names
-
-# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
-
-cormatrix &lt;- cor_auto(data) 
-
-graph1 &lt;- qgraph(cormatrix, layout=&quot;spring&quot;, sampleSize = nrow(data),
-              vsize=7, cut=0, maximum=.45, border.width=1.5)
-
-g &lt;- as.igraph(graph1, attributes = TRUE)
-
-matrix_spinglass &lt;- matrix(NA, nrow=1,ncol=100)
- 
-for (i in 1:100) {
-set.seed(i)
-spinglass &lt;- spinglass.community(g)
-matrix_spinglass[1,i] &lt;- max(spinglass$membership) 
-}
-
-set.seed(1)
-
-sgc &lt;- spinglass.community(g)
-
-communities &lt;- data.frame(sgc$membership, &#39;node number&#39; = 1:ncol(data))
-
-group.spinglass &lt;- list(communities$node.number[communities$sgc.membership == 1], 
-                       communities$node.number[communities$sgc.membership == 2])
-
-piefill &lt;- data %&gt;%
-  summarise_all(funs(mean(., na.rm = TRUE))) %&gt;% 
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  mutate_at(vars(action.planning, coping.planning),
-            funs(. / 4)) %&gt;% 
-  mutate_at(vars(6:ncol(data)),
-            funs(. / 7)) %&gt;% 
-  mutate_at(vars(fat.),
-            funs(. / 100))  
-
-qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, 
-     color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;lightblue&quot;),
-     label.cex = 0.75,
-     label.scale = TRUE,
-     pie = piefill, 
-     color = &quot;skyblue&quot;,
-     nodeNames = names,
-     pieBorder = 1,
-     legend.cex = 0.4)
-
-
-# plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
-
-
-
-lmi %&gt;% select(Kys0016.1, Kys0013.1) %&gt;% group_by(Kys0016.1) %&gt;% summarise(n = n())
-
-lmi %&gt;% count(Kys0016.1, Kys0013.1) %&gt;% group_by(Kys0016.1)</code></pre>
-<!-- Out of a hundred iterations, spinglass algorithm found `  table(matrix_spinglass)[[1]]` instances of ` table(matrix_spinglass)[1] %>% names` communities, `  table(matrix_spinglass)[[2]]` instances of `  table(matrix_spinglass)[2] %>% names` communities, and `  table(matrix_spinglass)[[3]]` instances of `  table(matrix_spinglass)[3] %>% names` communities. Thus, a random seed which found four communities was chosen.   -->
+grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
+## Picking joint bandwidth of 0.347
+## Picking joint bandwidth of 0.349</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 </div>
 <div id="sb-determinants" class="section level2">
 <h2>SB determinants</h2>
@@ -2760,7 +2195,7 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0)) +
@@ -2786,7 +2221,7 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
-           alpha = .6, color = &quot;white&quot;, from = 1, to = 7) +
+           alpha = .6, color = &quot;black&quot;, from = 1, to = 7) +
   labs(x = &quot;&quot;,
        y = &quot;&quot;) +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
@@ -2798,11 +2233,14 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   theme_ridges(grid = FALSE) +
   theme(legend.position=&quot;bottom&quot;)
 
-grid.arrange(plot1, plot2, ncol = 2)</code></pre>
+grid.arrange(plot1, plot2, ncol = 2)
+## Picking joint bandwidth of 0.324
+## Picking joint bandwidth of 0.339</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 </div>
-<div id="ciber" class="section level1">
-<h1>CIBER</h1>
+<div id="ciber-not-included-for-now" class="section level1">
+<h1>CIBER (not included for now)</h1>
 <pre class="r"><code>p_load(userfriendlyscience)
 
 # cat(names(df), sep = &quot;\&quot;,\n\&quot;&quot;)
@@ -2813,7 +2251,7 @@ d_num &lt;- as.data.frame(d_num)
 
 CIBER(data = d_num,
       determinants = c(
-        &quot;actcop_T1&quot;,
+        &quot;actCop_T1&quot;,
         &quot;agrbct_T1&quot;,
         &quot;amotivation_T1&quot;,
         &quot;autonomous_T1&quot;,
@@ -2839,7 +2277,7 @@ CIBER(data = d_num,
 
 CIBER(data = d_num,
       determinants = c(
-        &quot;actcop_T1&quot;,
+        &quot;actCop_T1&quot;,
         &quot;agrbct_T1&quot;,
         &quot;frqbct_T1&quot;,
         &quot;amotivation_T1&quot;,
@@ -2950,6 +2388,8 @@ set.seed(10)
 
 # Make plot
 sm.paAccelerometer_T1_1 &lt;- sm.density.compare2(as.numeric(dens$paAccelerometer_T1), as.factor(dens$intervention), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0.25
 legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
@@ -2962,6 +2402,8 @@ set.seed(10)
 
 # Make plot
 sm.paAccelerometer_T1_2 &lt;- sm.density.compare2(as.numeric(dens$paAccelerometer_T1), as.factor(dens$girl), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
@@ -2977,8 +2419,8 @@ linetypes &lt;- c(1,2,2,1,2)
 
 # Make plot
 sm.paAccelerometer_T1_3 &lt;- sm.density.compare(as.numeric(dens$paAccelerometer_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
-legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
-</code></pre>
+legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>
 <div id="time-spent-sitting-and-lying-down" class="section level2">
 <h2>Time spent sitting and lying down</h2>
@@ -3003,6 +2445,8 @@ set.seed(10)
 
 # Make plot
 sm.sitLieAccelerometer_T1_1 &lt;- sm.density.compare2(as.numeric(dens$sitLieAccelerometer_T1), as.factor(dens$intervention), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0.09
 legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
@@ -3015,6 +2459,8 @@ set.seed(10)
 
 # Make plot
 sm.sitLieAccelerometer_T1_2 &lt;- sm.density.compare2(as.numeric(dens$sitLieAccelerometer_T1), as.factor(dens$girl), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
@@ -3030,8 +2476,8 @@ linetypes &lt;- c(1,2,2,1,2)
 
 # Make plot
 sm.sitLieAccelerometer_T1_3 &lt;- sm.density.compare(as.numeric(dens$sitLieAccelerometer_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
-legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
-</code></pre>
+legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 </div>
 <div id="symptoms" class="section level1">
@@ -3057,6 +2503,8 @@ set.seed(10)
 
 # Make plot
 sm.symptom_T1_1 &lt;- sm.density.compare2(as.numeric(dens$symptom_T1), as.factor(dens$intervention), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0.59
 legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
@@ -3068,6 +2516,8 @@ set.seed(10)
 
 # Make plot
 sm.symptom_T1_2 &lt;- sm.density.compare2(as.numeric(dens$symptom_T1), as.factor(dens$girl), xlab=&quot;&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
@@ -3083,6 +2533,10 @@ linewidths &lt;- c(2,1,1,2,1)
 
 # Make plot
 sm.symptom_T1_3 &lt;- sm.density.compare(dens$`Symptom sum score`, dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;equal&quot;, lwd=linewidths)
+## Reference band available to compare two groups only.</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<pre><code>## 
+## Test of equal densities:  p-value =  0
 xlab = &quot;&quot;
 </code></pre>
 <div id="symptom-histograms" class="section level2">
@@ -3216,8 +2670,9 @@ coord_cartesian(xlim = c(0.5, 4.5))
 
 # This draws all histograms next to each other:
 grid.newpage()
-grid.draw(cbind(ggplotGrob(sympInt), ggplotGrob(sympCont), ggplotGrob(sympGirls), ggplotGrob(sympBoys), size = &quot;last&quot;))
-
+grid.draw(cbind(ggplotGrob(sympInt), ggplotGrob(sympCont), ggplotGrob(sympGirls), ggplotGrob(sympBoys), size = &quot;last&quot;))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre class="r"><code>
 # This draws 2 histograms per row:
 #grid.newpage()
 #grid.draw(rbind(cbind(ggplotGrob(sympInt), ggplotGrob(sympCont), size = &quot;last&quot;), cbind(ggplotGrob(sympGirls), ggplotGrob(sympBoys), size = &quot;last&quot;)))
@@ -3352,957 +2807,22 @@ coord_cartesian(xlim = c(0.5, 4.5))
 
 # This draws all histograms next to each other:
 grid.newpage()
-grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC), ggplotGrob(sympNursing), size = &quot;last&quot;))
-
+grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC), ggplotGrob(sympNursing), size = &quot;last&quot;))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<pre class="r"><code>
 # This draws 2 histograms per row:
 #grid.newpage()
 #grid.draw(rbind(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), size = &quot;last&quot;), cbind(ggplotGrob(sympHRC), ggplotGrob(sympNursing), size = &quot;last&quot;)))
 </code></pre>
-</div>
-</div>
-<div id="symptom-network-all" class="section level2">
-<h2>Symptom network: all</h2>
-<pre class="r"><code>
-sympdf &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &quot;Neck and shoulder pain&quot; = symptom_neckShoulderPain_T1,
-  &quot;Lower back pain&quot; = symptom_lowerBackPain_T1,
-  &quot;Stomach ache&quot; = symptom_stomachAche_T1,
-  &quot;Tension or nervousness&quot; = symptom_tensionNervousness_T1,
-  &quot;Irritability or anger bursts&quot; = symptom_irritabilityAngerbursts_T1,
-  &quot;Difficulty with sleep&quot; = symptom_sleepDifficulty_T1,
-  &quot;Headache&quot; = symptom_headAche_T1,
-  &quot;Tiredness or faintness&quot; = symptom_tirednessFaintness_T1,
-  &quot;Fat pct&quot; = fatpct_T1,
-  &quot;PA&quot; = paAccelerometer_T1,
-  &quot;SB&quot; = sitLieAccelerometer_T1
-) %&gt;% 
-  mutate(
-    &#39;Neck and shoulder pain&#39; = ifelse(`Neck and shoulder pain` == 1, 0, 1),
-    &#39;Lower back pain&#39; = ifelse(`Lower back pain` == 1, 0, 1),
-    &#39;Stomach ache&#39; = ifelse(`Stomach ache` == 1, 0, 1),
-    &#39;Tension or nervousness&#39; = ifelse(`Tension or nervousness` == 1, 0, 1),
-    &#39;Irritability or anger bursts&#39; = ifelse(`Irritability or anger bursts` == 1, 0, 1),
-    &#39;Difficulty with sleep&#39; = ifelse(`Difficulty with sleep` == 1, 0, 1),
-    &#39;Headache&#39; = ifelse(`Headache` == 1, 0, 1),
-    &#39;Tiredness or faintness&#39; = ifelse(`Tiredness or faintness` == 1, 0, 1),
-    &#39;Fat pct&#39; = `Fat pct` / 100) %&gt;% 
-  data.frame
-
-S.all &lt;- sympdf %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.) 
-
-nwAll &lt;- estimateNetwork(S.all, default=&quot;mgm&quot;)
-
-allmeans &lt;- sympdf %&gt;%  
-  summarise_at(vars(6:16),
-  funs(mean(., na.rm = TRUE))) %&gt;%  
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60)))  # proportion of day used doing the behaviour
-
-
-plot(nwAll, label.scale = FALSE, title = &quot;All&quot;, label.cex = 0.75, 
-     pie = allmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-</code></pre>
-</div>
-<div id="symptom-network-boys-and-girls" class="section level2">
-<h2>Symptom network: boys and girls</h2>
-<pre class="r"><code>
-sympdf &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  &quot;Neck and shoulder pain&quot; = symptom_neckShoulderPain_T1,
-  &quot;Lower back pain&quot; = symptom_lowerBackPain_T1,
-  &quot;Stomach ache&quot; = symptom_stomachAche_T1,
-  &quot;Tension or nervousness&quot; = symptom_tensionNervousness_T1,
-  &quot;Irritability or anger bursts&quot; = symptom_irritabilityAngerbursts_T1,
-  &quot;Difficulty with sleep&quot; = symptom_sleepDifficulty_T1,
-  &quot;Headache&quot; = symptom_headAche_T1,
-  &quot;Tiredness or faintness&quot; = symptom_tirednessFaintness_T1,
-  &quot;Fat pct&quot; = fatpct_T1,
-  &quot;PA&quot; = paAccelerometer_T1,
-  &quot;SB&quot; = sitLieAccelerometer_T1
-) %&gt;% 
-  mutate(
-    &#39;Neck and shoulder pain&#39; = ifelse(`Neck and shoulder pain` == 1, 0, 1),
-    &#39;Lower back pain&#39; = ifelse(`Lower back pain` == 1, 0, 1),
-    &#39;Stomach ache&#39; = ifelse(`Stomach ache` == 1, 0, 1),
-    &#39;Tension or nervousness&#39; = ifelse(`Tension or nervousness` == 1, 0, 1),
-    &#39;Irritability or anger bursts&#39; = ifelse(`Irritability or anger bursts` == 1, 0, 1),
-    &#39;Difficulty with sleep&#39; = ifelse(`Difficulty with sleep` == 1, 0, 1),
-    &#39;Headache&#39; = ifelse(`Headache` == 1, 0, 1),
-    &#39;Tiredness or faintness&#39; = ifelse(`Tiredness or faintness` == 1, 0, 1),
-    &#39;Fat pct&#39; = `Fat pct` / 100) %&gt;% 
-  data.frame
-
-S.boys &lt;- sympdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.) 
-S.girls &lt;- sympdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.)
-nwBoys &lt;- estimateNetwork(S.boys, default=&quot;mgm&quot;)
-nwGirls &lt;- estimateNetwork(S.girls, default=&quot;mgm&quot;)
-
-girlmeans &lt;- sympdf %&gt;% group_by(girl) %&gt;% 
-  summarise_at(vars(5:15),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(girl == 1) %&gt;% 
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  select(-1)
-
-boymeans &lt;- sympdf %&gt;% group_by(girl) %&gt;% 
-  summarise_at(vars(5:15),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(girl == 0) %&gt;% 
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  select(-1)
-
-
-layout(t(1:2))
-plot(nwGirls, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
-     pie = girlmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
-     pie = boymeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-</code></pre>
-</div>
-<div id="symptom-network-educational-tracks" class="section level2">
-<h2>symptom network: educational tracks</h2>
-<pre class="r"><code>library(bootnet)
-library(qgraph)
-library(tidyverse)
-
-sympdf &lt;- df %&gt;% dplyr::select(id,
-  intervention,
-  track,
-  school,
-  girl,
-  &quot;Neck and shoulder pain&quot; = symptom_neckShoulderPain_T1,
-  &quot;Lower back pain&quot; = symptom_lowerBackPain_T1,
-  &quot;Stomach ache&quot; = symptom_stomachAche_T1,
-  &quot;Tension or nervousness&quot; = symptom_tensionNervousness_T1,
-  &quot;Irritability or anger bursts&quot; = symptom_irritabilityAngerbursts_T1,
-  &quot;Difficulty with sleep&quot; = symptom_sleepDifficulty_T1,
-  &quot;Headache&quot; = symptom_headAche_T1,
-  &quot;Tiredness or faintness&quot; = symptom_tirednessFaintness_T1,
-  &quot;Fat pct&quot; = fatpct_T1,
-  &quot;PA&quot; = paAccelerometer_T1,
-  &quot;SB&quot; = sitLieAccelerometer_T1
-) %&gt;% 
-  mutate(
-    &#39;Neck and shoulder pain&#39; = ifelse(`Neck and shoulder pain` == 1, 0, 1),
-    &#39;Lower back pain&#39; = ifelse(`Lower back pain` == 1, 0, 1),
-    &#39;Stomach ache&#39; = ifelse(`Stomach ache` == 1, 0, 1),
-    &#39;Tension or nervousness&#39; = ifelse(`Tension or nervousness` == 1, 0, 1),
-    &#39;Irritability or anger bursts&#39; = ifelse(`Irritability or anger bursts` == 1, 0, 1),
-    &#39;Difficulty with sleep&#39; = ifelse(`Difficulty with sleep` == 1, 0, 1),
-    &#39;Headache&#39; = ifelse(`Headache` == 1, 0, 1),
-    &#39;Tiredness or faintness&#39; = ifelse(`Tiredness or faintness` == 1, 0, 1),
-    &#39;Fat pct&#39; = `Fat pct` / 100) %&gt;% 
-  data.frame
-
-# S.other &lt;- sympdf %&gt;% filter(track == &quot;Other&quot;) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.)
-# S.it &lt;- sympdf %&gt;% filter(track == &quot;Business IT&quot;) %&gt;% select(6:ncol(sympdf))
-# S.admin &lt;- sympdf %&gt;% filter(track == &quot;Business Admin&quot;) %&gt;% select(6:ncol(sympdf))
-# S.hrc &lt;- sympdf %&gt;% filter(track == &quot;HRC&quot;) %&gt;% select(6:ncol(sympdf))
-# S.nursing &lt;- sympdf %&gt;% filter(track == &quot;Nursing&quot;) %&gt;% select(6:ncol(sympdf))
-
-# S.other &lt;- sympdf %&gt;% filter(track == 1) %&gt;% select(6:ncol(sympdf))
-S.it &lt;- sympdf %&gt;% filter(track == 2) %&gt;% select(6:ncol(sympdf))
-S.admin &lt;- sympdf %&gt;% filter(track == 3) %&gt;% select(6:ncol(sympdf))
-S.hrc &lt;- sympdf %&gt;% filter(track == 4) %&gt;% select(6:ncol(sympdf))
-S.nursing &lt;- sympdf %&gt;% filter(track == 5) %&gt;% select(6:ncol(sympdf))
-
-# nwOther &lt;- estimateNetwork(S.other, default=&quot;mgm&quot;)
-nwIt &lt;- estimateNetwork(S.it, default=&quot;mgm&quot;)
-nwAdmin &lt;- estimateNetwork(S.admin, default=&quot;mgm&quot;)
-nwHrc &lt;- estimateNetwork(S.hrc, default=&quot;mgm&quot;)
-nwNursing &lt;- estimateNetwork(S.nursing, default=&quot;mgm&quot;)
-
-# othermeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-#   summarise_at(vars(5:15),
-#   funs(mean(., na.rm = TRUE))) %&gt;% 
-#   filter(track == &quot;Other&quot;) %&gt;% 
-#   mutate_at(vars(PA, SB),
-#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-#   select(-1)
-
-# itmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-#   summarise_at(vars(5:15),
-#   funs(mean(., na.rm = TRUE))) %&gt;% 
-#   filter(track == &quot;Business IT&quot;) %&gt;% 
-#   mutate_at(vars(PA, SB),
-#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-#   select(-1)
-
-itmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-  summarise_at(vars(5:15),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(track == 2) %&gt;% 
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  select(-1)
-
-# adminmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-#   summarise_at(vars(5:15),
-#   funs(mean(., na.rm = TRUE))) %&gt;% 
-#   filter(track == &quot;Business Admin&quot;) %&gt;% 
-#   mutate_at(vars(PA, SB),
-#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-#   select(-1)
-
-adminmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-  summarise_at(vars(5:15),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(track == 3) %&gt;% 
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  select(-1)
-
-# hrcmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-#   summarise_at(vars(5:15),
-#   funs(mean(., na.rm = TRUE))) %&gt;% 
-#   filter(track == &quot;HRC&quot;) %&gt;% 
-#   mutate_at(vars(PA, SB),
-#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-#   select(-1)
-
-hrcmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-  summarise_at(vars(5:15),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(track == 4) %&gt;% 
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  select(-1)
-
-# nursingmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-#   summarise_at(vars(5:15),
-#   funs(mean(., na.rm = TRUE))) %&gt;% 
-#   filter(track == &quot;Nursing&quot;) %&gt;% 
-#   mutate_at(vars(PA, SB),
-#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-#   select(-1)
-
-nursingmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
-  summarise_at(vars(5:15),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(track == 5) %&gt;% 
-  mutate_at(vars(PA, SB),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  select(-1)
-
-averagelayout &lt;- averageLayout(nwIt, nwAdmin, nwHrc, nwNursing)
-# plot(nwOther, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
-#      pie = othermeans, 
-#      color = &quot;skyblue&quot;,
-#      pieBorder = 1)
-
-layout(t(1:4))
-plot(nwIt, label.scale = FALSE, title = &quot;Business IT&quot;, layout = averagelayout, label.cex = 0.75, 
-     pie = itmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-plot(nwAdmin, label.scale = FALSE, title = &quot;Business admin&quot;, layout = averagelayout, label.cex = 0.75, 
-     pie = adminmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-plot(nwHrc, label.scale = FALSE, title = &quot;Hotel, restaurant and catering&quot;, layout = averagelayout, label.cex = 0.75, 
-     pie = hrcmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-plot(nwNursing, label.scale = FALSE, title = &quot;Nursing&quot;, layout = averagelayout, label.cex = 0.75, 
-     pie = nursingmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-</code></pre>
-<pre class="r"><code>
-colfill &lt;- c(1,2,3,4,5)
-
-# Create data frame
-densplot &lt;- d
-levels(densplot$intervention) &lt;- list(&quot;Intervention&quot; = &quot;1&quot;, &quot;Control&quot; = &quot;0&quot;)
-levels(densplot$girl) &lt;- list(&quot;Girl&quot; = &quot;1&quot;, &quot;Boy&quot; = &quot;0&quot;)
-
-# This gives side-by-side plots
-layout(t(1:2), 1)
-
-# Intervention vs. control
-# Choose only the variables needed and drop NA
-dens &lt;- densplot %&gt;% select(fatpct_T1, intervention) %&gt;% 
-  filter(complete.cases(.))
-
-# Set random number generator for reproducibility of bootstrap test of equal densities
-set.seed(10)
-
-# Make plot
-sm.fatpct_T1_1 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$intervention), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
-legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
-
-# Girls vs. boys
-# Choose only the variables needed and drop NA
-dens &lt;- densplot %&gt;% select(fatpct_T1, girl) %&gt;% 
-  filter(complete.cases(.))
-
-# Set random number generator for reproducibility of bootstrap test of equal densities
-set.seed(10)
-
-# Make plot
-sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$girl), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
-legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))
-
-sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$girl), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
-legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))</code></pre>
-</div>
-</div>
-<div id="physical-activity-network" class="section level1">
-<h1>Physical activity network</h1>
-<pre class="r"><code>
-data &lt;- df %&gt;% select(PA = paAccelerometer_T1, actCop = actcop_T1, BCT = frqbct_T1, amot = amotivation_T1, auton = autonomous_T1, cont = controlled_T1, dnorm = dnorm_T1, fatpct = fatpct_T1, inorm = inorm_T1, intent = intention_T1, oexp = oexp_T1, opp = opportunities_T1, sePbc = sePbc_T1) %&gt;% data.frame() 
-
-# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
-
-qgraph(cor_auto(data), layout=&quot;spring&quot;)
-
-cormatrix &lt;- cor_auto(data1)
-
-graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
-              vsize=7, cut=0, maximum=.45, border.width=1.5)
-
-g = as.igraph(graph1, attributes=TRUE)
-
-sgc &lt;- spinglass.community(g)
-
-sgc$membership
-
-group.spinglass&lt;- list(c(1, 2, 3, 5, 10), 
-                       c(4, 6, 8), 
-                       c(7, 9), 
-                       c(11, 12, 13))
-
-set.seed(2)
-
-network1 &lt;- estimateNetwork(data1, default=&quot;EBICglasso&quot;)
-
-#bladibla &lt;- averageLayout(network1$graph, network2$graph)
-
-# layout(t(1:2))
-# graph1 &lt;- plot(network1, layout=bladibla, cut=0)
-# graph2 &lt;- plot(network2, layout=bladibla, cut=0)
-# graph1 &lt;- plot(network1, cut=0)
-# graph2 &lt;- plot(network2, cut=0)
-
-plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;))
-</code></pre>
-<div id="pa-network-without-sdt-motivations" class="section level3">
-<h3>PA network without SDT motivations</h3>
-<pre class="r"><code># Network without motivation variables
-data &lt;- df %&gt;% select(PA = paAccelerometer_T1, actCop = PA_actcop_T1, BCT = PA_frqbct_T1, amot = PA_amotivation_T1, auton = PA_autonomous_T1, cont = PA_controlled_T1, dnorm = PA_dnorm_T1, fatpct = fatpct_T1, inorm = PA_inorm_T1, intent = PA_intention_T1, oexp = PA_oexp_T1, opp = PA_opportunities_T1, sePbc = PA_sePbc_T1) %&gt;% data.frame() %&gt;% 
-  select(-auton, -cont, -amot)
-
-# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
-
-cormatrix &lt;- cor_auto(data)
-
-graph1&lt;-qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
-              vsize=7, cut=0, maximum=.45, border.width=1.5)
-
-g = as.igraph(graph1, attributes=TRUE)
-
-sgc &lt;- spinglass.community(g)
-
-sgc$membership
-
-# Without SDT motivations
-group.spinglass&lt;- list(c(1, 2, 3, 7), 
-                       c(4, 6), 
-                       c(5), 
-                       c(8, 9, 10))
-
-set.seed(2)
-
-network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
-
-plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;))
-</code></pre>
-</div>
-<div id="pa-network-without-bcts-and-sdt" class="section level3">
-<h3>PA network without BCTs and SDT</h3>
-<pre class="r"><code># Network without motivation variables
-data &lt;- df %&gt;% select(PA = paAccelerometer_T1, &#39;action and coping planning&#39; = PA_actcop_T1, &#39;Frequency-related BCTs&#39; = PA_frqbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &quot;fat pct&quot; = fatpct_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;Self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
-            select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`) %&gt;% 
-  data.frame
-
-# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
-
-cormatrix &lt;- cor_auto(data)
-
-graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
-              vsize=7, cut=0, maximum=.45, border.width=1.5)
-
-g = as.igraph(graph1, attributes=TRUE)
-
-set.seed(4)
-
-sgc &lt;- spinglass.community(g)
-
-sgc$membership
-
-# Without SDT motivations
-
-group.spinglass&lt;- list(c(1, 2, 6), 
-                       c(3, 4), 
-                       c(5),
-                       c(7, 8, 9))
-
-network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
-
-piefill &lt;- data %&gt;%
-  summarise_all(funs(mean(., na.rm = TRUE))) %&gt;% 
-  mutate_at(vars(PA),
-            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
-  mutate_at(vars(action.and.coping.planning),
-            funs(. / 4)) %&gt;% 
-  mutate_at(vars(3, 4, 6, 7, 8, 9),
-            funs(. / 7)) %&gt;% 
-  mutate_at(vars(5),
-            funs(. / 100))  
-
-plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;),
-     label.cex = 0.75,
-     label.scale = FALSE,
-     pie = piefill, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-
-plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
-     pie = boymeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)</code></pre>
-</div>
-<div id="pa-network-without-bcts-and-sdt-intention-pa-fat" class="section level3">
-<h3>PA network without BCTs and SDT, intention, PA, fat%</h3>
-<pre class="r"><code># Network without motivation variables
-data &lt;- df %&gt;% select(PA = paAccelerometer_T1, &#39;action and coping planning&#39; = PA_actcop_T1, &#39;Frequency-related BCTs&#39; = PA_frqbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &quot;fat pct&quot; = fatpct_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;Self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
-            select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`, -PA, -`intention`, -`fat pct`) %&gt;% 
-  data.frame
-
-# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
-
-cormatrix &lt;- cor_auto(data)
-
-graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
-              vsize=7, cut=0, maximum=.45, border.width=1.5)
-
-g = as.igraph(graph1, attributes=TRUE)
-
-set.seed(1)
-
-sgc &lt;- spinglass.community(g)
-
-sgc$membership
-
-group.spinglass&lt;- list(c(1, 4:6), 
-                       c(2, 3))
-
-# Estimate and plot graph
-
-
-network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
-
-piefill &lt;- data %&gt;%
-  summarise_all(funs(mean(., na.rm = TRUE))) %&gt;%
-  mutate_at(vars(action.and.coping.planning),
-            funs(. / 4)) %&gt;% 
-  mutate_at(vars(2:6),
-            funs(. / 7))
-
-plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;),
-     label.cex = 0.75,
-     label.scale = FALSE,
-     pie = piefill, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-</code></pre>
-</div>
-<div id="robustness-test" class="section level2">
-<h2>Robustness test</h2>
-<pre class="r"><code>
-Network1 &lt;- estimateNetwork(data1, default = &quot;EBICglasso&quot;)
-plot(Network1, layout = &quot;spring&quot;, labels = TRUE)
-
-centralityPlot(Network1)
-
-boot1 &lt;- bootnet(Network1, nBoots = 2500, nCores = 3)
-
-plot(boot1, labels = TRUE, order = &quot;sample&quot;)
-
-Network2 &lt;- estimateNetwork(data1, default = &quot;pcor&quot;)
-plot(Network2, layout = &quot;spring&quot;, labels = TRUE)
-
-boot2 &lt;- bootnet(Network2, nBoots = 2500, nCores = 3)
-
-centralityPlot(Network)
-centralityPlot(Network2)</code></pre>
-</div>
-<div id="centrality-stability" class="section level2">
-<h2>Centrality stability</h2>
-<pre class="r"><code>boot2 &lt;- bootnet(Network1, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
-corStability(boot2)
-
-plot(boot2)
-
-differenceTest(boot1, &quot;auton&quot;, &quot;intent&quot;,  measure = c(&quot;strength&quot;, &quot;closeness&quot;, &quot;betweenness&quot;))
-
-plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, order = &quot;sample&quot;)
-
-plot(boot1, &quot;strength&quot;)
-plot(boot1, &quot;betweenness&quot;)
-plot(boot1, &quot;closeness&quot;)</code></pre>
-</div>
-<div id="network-comparison-test-girls-and-boys" class="section level2">
-<h2>Network comparison test: girls and boys</h2>
-<pre class="r"><code>
-# here goes your data; call it &quot;data&quot;
-data &lt;- df %&gt;% select(paT1, girl, actcop_T1, frqbct_T1, amotivation_T1, autonomous_T1, controlled_T1, dnorm_T1, fatpct_T1, inorm_T1, intention_T1, oexp_T1, opportunities_T1, sePbc_T1) 
-
-### Split data into girls and boys
-data1 &lt;- data %&gt;% filter(girl == 1) %&gt;% select(-girl) %&gt;% as.data.frame
-
-data2 &lt;- data %&gt;% filter(girl == 0) %&gt;% select(-girl) %&gt;% as.data.frame
-
-# ---------------------------------------------------------------------------------------
-# ---------- 3. NCT ------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------
-
-
-### estimate networks and compare visually; use averageLayout function, then plot via layout(t(1:2))
-network1 &lt;- estimateNetwork(data1, default=&quot;EBICglasso&quot;)
-network2 &lt;- estimateNetwork(data2, default=&quot;EBICglasso&quot;)
-
-bladibla &lt;- averageLayout(network1$graph, network2$graph)
-
-layout(t(1:2))
-graph1 &lt;- plot(network1, layout=bladibla, cut=0)
-graph2 &lt;- plot(network2, layout=bladibla, cut=0)
-
-### run NCT 
-
-nct_results &lt;- NCT(data1, data2, it=1000, binary.data=FALSE, paired=TRUE, test.edges=TRUE, edges=&#39;all&#39;, progressbar=TRUE)
-
-nct_results$nwinv.pval  # p value of network structure diff test
-nct_results$glstrinv.pval  # p value of global connectivity diff test
-nct_results$einv.pvals     #p values testing diffs for all individual edges
-sum(nct_results$einv.pvals$&quot;p-value&quot; &lt; 0.05)  # how many edges are different
-</code></pre>
-</div>
-<div id="robustness-test-1" class="section level2">
-<h2>Robustness test</h2>
-<pre class="r"><code>data &lt;- data %&gt;% select(BCT = agrbct_T1,
-    AUT = autonomous_T1,
-    Intn = intention_T1,
-    PBC = pbc_T1,
-    OExp = oexp_T1,
-    DNorm = norm_T1)
-
-Network &lt;- estimateNetwork(data, default = &quot;EBICglasso&quot;)
-
-boot1 &lt;- bootnet(Network, nBoots = 2500, nCores = 3)
-
-plot(boot1, labels = TRUE, order = &quot;sample&quot;)
-
-plot(Network, layout = &quot;spring&quot;, labels = TRUE)
-
-Network2 &lt;- estimateNetwork(data, default = &quot;pcor&quot;)
-plot(Network2, layout = &quot;spring&quot;, labels = TRUE)
-
-boot1 &lt;- bootnet(Network2, nBoots = 2500, nCores = 3)
-
-centralityPlot(Network)
-centralityPlot(Network2)</code></pre>
-</div>
-</div>
-<div id="centrality-stability-1" class="section level1">
-<h1>Centrality stability</h1>
-<pre class="r"><code>boot2 &lt;- bootnet(Network, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
-corStability(boot2)
-
-plot(boot2)
-
-differenceTest(boot1, &quot;AUT&quot;, &quot;Intn&quot;,  measure = c(&quot;strength&quot;, &quot;closeness&quot;, &quot;betweenness&quot;))
-
-plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, order = &quot;sample&quot;)
-
-plot(boot1, &quot;strength&quot;)
-plot(boot1, &quot;betweenness&quot;)
-plot(boot1, &quot;closeness&quot;)</code></pre>
-</div>
-<div id="pa-motivation-examined" class="section level1">
-<h1>PA motivation examined</h1>
-<pre class="r"><code>nItems &lt;- 18
-regulations.df &lt;- lmi %&gt;% select(id = ID,
-  intervention = ryhmä,
-  group = ryhmäkoodi_korjattu,
-  school = Aineisto.1,
-  girl = Kys0013.1,
-  PA_amotivation_02_T1 = Kys0086.1,
-  PA_amotivation_01_T1 = Kys0082.1,
-  PA_amotivation_03_T1 = Kys0096.1,
-  PA_amotivation_04_T1 = Kys0097.1,
-  PA_extrinsic_01_T1 = Kys0080.1,
-  PA_extrinsic_02_T1 = Kys0081.1,
-  PA_extrinsic_03_T1 = Kys0083.1,
-  PA_introjected_01_T1 = Kys0084.1,
-  PA_introjected_02_T1 = Kys0085.1,
-  PA_identified_01_T1 = Kys0087.1,
-  PA_identified_02_T1 = Kys0088.1,
-  PA_identified_03_T1 = Kys0090.1,
-  PA_integrated_01_T1 = Kys0089.1,
-  PA_integrated_02_T1 = Kys0092.1,
-  PA_integrated_03_T1 = Kys0094.1,
-  PA_intrinsic_01_T1 = Kys0091.1,
-  PA_intrinsic_02_T1 = Kys0093.1,
-  PA_intrinsic_03_T1 = Kys0095.1
-)
-
-regulations.df &lt;- regulations.df %&gt;% dplyr::mutate(group = ifelse(group == &quot;&quot;, NA, group))
-
-# Fix intervention and gender variables
-regulations.df &lt;- regulations.df %&gt;% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
-                         intervention = factor(intervention),
-            girl = ifelse(girl == 2, 1, 0),
-            girl = factor(girl, levels = c(&quot;1&quot;, &quot;0&quot;)),
-            school = factor(school, levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;)))
-
-
-motiGirls &lt;- regulations.df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  PA_amotivation_02_T1,
-  PA_amotivation_01_T1,
-  PA_amotivation_03_T1,
-  PA_amotivation_04_T1,
-  PA_extrinsic_01_T1,
-  PA_extrinsic_02_T1,
-  PA_extrinsic_03_T1,
-  PA_introjected_01_T1,
-  PA_introjected_02_T1,
-  PA_identified_01_T1,
-  PA_identified_02_T1,
-  PA_identified_03_T1,
-  PA_integrated_01_T1,
-  PA_integrated_02_T1,
-  PA_integrated_03_T1,
-  PA_intrinsic_01_T1,
-  PA_intrinsic_02_T1,
-  PA_intrinsic_03_T1) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(girl == &quot;1&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
-  labs(title = &quot;Girls&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        plot.title = element_text(hjust = 0.5),
-        axis.text=element_text(size=10)) +
-coord_cartesian(xlim = c(0.5, 5.5))
-
-motiBoys &lt;- regulations.df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  PA_amotivation_02_T1,
-  PA_amotivation_01_T1,
-  PA_amotivation_03_T1,
-  PA_amotivation_04_T1,
-  PA_extrinsic_01_T1,
-  PA_extrinsic_02_T1,
-  PA_extrinsic_03_T1,
-  PA_introjected_01_T1,
-  PA_introjected_02_T1,
-  PA_identified_01_T1,
-  PA_identified_02_T1,
-  PA_identified_03_T1,
-  PA_integrated_01_T1,
-  PA_integrated_02_T1,
-  PA_integrated_03_T1,
-  PA_intrinsic_01_T1,
-  PA_intrinsic_02_T1,
-  PA_intrinsic_03_T1) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(girl == &quot;0&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
-  labs(title = &quot;Boys&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        plot.title = element_text(hjust = 0.5),
-        axis.text=element_text(size=10)) +
-coord_cartesian(xlim = c(0.5, 5.5))
-
-motiInt &lt;- regulations.df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  PA_amotivation_02_T1,
-  PA_amotivation_01_T1,
-  PA_amotivation_03_T1,
-  PA_amotivation_04_T1,
-  PA_extrinsic_01_T1,
-  PA_extrinsic_02_T1,
-  PA_extrinsic_03_T1,
-  PA_introjected_01_T1,
-  PA_introjected_02_T1,
-  PA_identified_01_T1,
-  PA_identified_02_T1,
-  PA_identified_03_T1,
-  PA_integrated_01_T1,
-  PA_integrated_02_T1,
-  PA_integrated_03_T1,
-  PA_intrinsic_01_T1,
-  PA_intrinsic_02_T1,
-  PA_intrinsic_03_T1) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(intervention == &quot;1&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;) +
-  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
-  labs(title = &quot;Intervention&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        axis.text=element_text(size=10)) +
-coord_cartesian(xlim = c(0.5, 5.5))
-
-motiCont &lt;- regulations.df %&gt;% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-  PA_amotivation_02_T1,
-  PA_amotivation_01_T1,
-  PA_amotivation_03_T1,
-  PA_amotivation_04_T1,
-  PA_extrinsic_01_T1,
-  PA_extrinsic_02_T1,
-  PA_extrinsic_03_T1,
-  PA_introjected_01_T1,
-  PA_introjected_02_T1,
-  PA_identified_01_T1,
-  PA_identified_02_T1,
-  PA_identified_03_T1,
-  PA_integrated_01_T1,
-  PA_integrated_02_T1,
-  PA_integrated_03_T1,
-  PA_intrinsic_01_T1,
-  PA_intrinsic_02_T1,
-  PA_intrinsic_03_T1) %&gt;%
- gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
-  filter(intervention == &quot;0&quot;) %&gt;% 
- ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
-  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
-                     name = &quot;&quot;) +
-  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
-  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
-  labs(title = &quot;Control&quot;) +
-  guides(y = &quot;none&quot;) +
-  theme_ridges(grid = FALSE) +
-  theme(axis.title.x = element_text(hjust = 0.5),
-        axis.title.y = element_text(hjust = 0.5),
-        axis.text=element_text(size=10)) +
-coord_cartesian(xlim = c(0.5, 5.5))
-
-#grid.arrange(motiInt, motiGirls, motiCont, motiBoys, ncol = 2)
-
-# (&quot;Seldom or never&quot;, &quot;About once a month&quot;, &quot;About once a week&quot;, &quot;Almost daily&quot;)
-
-# This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = &quot;last&quot;))
-</code></pre>
-<div id="motivational-regulations-network" class="section level2">
-<h2>Motivational regulations network</h2>
-</div>
-<div id="tee-tanne-piefill-tummempi-sama-vari-tai-opacity" class="section level2">
-<h2>TEE TÄNNE PIEFILL; tummempi sama väri tai opacity?</h2>
-<pre class="r"><code># Was going to do fused graphical lasso, but the items not normal...
-
-# s1 &lt;- regulations.df %&gt;% filter(school == 1) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.) 
-# s2 &lt;- regulations.df %&gt;% filter(school == 2) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
-# s3 &lt;- regulations.df %&gt;% filter(school == 3) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.) 
-# s4 &lt;- regulations.df %&gt;% filter(school == 4) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
-# s5 &lt;- regulations.df %&gt;% filter(school == 5) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
-# 
-# network2 &lt;- EstimateGroupNetwork(list(&quot;1&quot; = s1,
-#                                       &quot;2&quot; = s2,
-#                                       &quot;3&quot; = s3,
-#                                       &quot;4&quot; = s4,
-#                                       &quot;5&quot; = s5),
-#                                  n = c(nrow(s1), nrow(s2), nrow(s3), nrow(s4), nrow(s5)))
-# 
-regulations.df &lt;- regulations.df %&gt;% mutate(
-PA_amotivation_02_T1 = ifelse(PA_amotivation_02_T1 == 1, 0, 1),
-PA_amotivation_01_T1 = ifelse(PA_amotivation_01_T1 == 1, 0, 1),
-PA_amotivation_03_T1 = ifelse(PA_amotivation_03_T1 == 1, 0, 1),
-PA_amotivation_04_T1 = ifelse(PA_amotivation_04_T1 == 1, 0, 1),
-PA_extrinsic_01_T1 = ifelse(PA_extrinsic_01_T1 == 1, 0, 1),
-PA_extrinsic_02_T1 = ifelse(PA_extrinsic_02_T1 == 1, 0, 1),
-PA_extrinsic_03_T1 = ifelse(PA_extrinsic_03_T1 == 1, 0, 1),
-PA_introjected_01_T1 = ifelse(PA_introjected_01_T1 == 1, 0, 1),
-PA_introjected_02_T1 = ifelse(PA_introjected_02_T1 == 1, 0, 1),
-PA_identified_01_T1 = ifelse(PA_identified_01_T1 == 1, 0, 1),
-PA_identified_02_T1 = ifelse(PA_identified_02_T1 == 1, 0, 1),
-PA_identified_03_T1 = ifelse(PA_identified_03_T1 == 1, 0, 1),
-PA_integrated_01_T1 = ifelse(PA_integrated_01_T1 == 1, 0, 1),
-PA_integrated_02_T1 = ifelse(PA_integrated_02_T1 == 1, 0, 1),
-PA_integrated_03_T1 = ifelse(PA_integrated_03_T1 == 1, 0, 1),
-PA_intrinsic_01_T1 = ifelse(PA_intrinsic_01_T1 == 1, 0, 1),
-PA_intrinsic_02_T1 = ifelse(PA_intrinsic_02_T1 == 1, 0, 1),
-PA_intrinsic_03_T1 = ifelse(PA_intrinsic_03_T1 == 1, 0, 1))
-
-
-### GIRLS AND BOYS
-
-S.boys &lt;- regulations.df %&gt;% filter(girl == 0) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.) 
-S.girls &lt;- regulations.df %&gt;% filter(girl == 1) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
-nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
-nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
-
-data1 &lt;- regulations.df %&gt;% select(6:ncol(regulations.df))
-names(data1) &lt;- c(paste0(rep(&quot;Amoti&quot;, 4), 1:4),
-                paste0(rep(&quot;Extri&quot;, 3), 1:3),
-                paste0(rep(&quot;Intro&quot;, 2), 1:2),
-                paste0(rep(&quot;Ident&quot;, 3), 1:3),
-                paste0(rep(&quot;Integ&quot;, 3), 1:3),
-                paste0(rep(&quot;Intri&quot;, 3), 1:3))
-nwAll &lt;- estimateNetwork(data1, default=&quot;IsingFit&quot;)
-
-# Create means for filling nodes
-girlmeans &lt;- regulations.df %&gt;% group_by(girl) %&gt;% 
-  summarise_at(vars(5:(5+nItems-1)),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(girl == 1) %&gt;% 
-  select(-1)
-
-boymeans &lt;- regulations.df %&gt;% group_by(girl) %&gt;% 
-  summarise_at(vars(5:(5+nItems-1)),
-  funs(mean(., na.rm = TRUE))) %&gt;% 
-  filter(girl == 0) %&gt;% 
-  select(-1)
-
-# Find average layout for comparability and plot graphs next to each other
-
-Layout &lt;- averageLayout(nwGirls, nwBoys)
-
-
-layout(t(1:2))
-plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
-     pie = girlmeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
-     pie = boymeans, 
-     color = &quot;skyblue&quot;,
-     pieBorder = 1)
-
-itemNames &lt;- c(&#39;I can&#39;t see why I should bother exercising&#39;,
-  &#39;I don&#39;t see why I should have to exercise&#39;,
-  &#39; I don&#39;t see the point in exercising&#39;,
-  &#39; I think exercising is a waste of time&#39;,
-  &#39; I exercise because other people say I should&#39;,
-  &#39; I exercise because others will not be pleased with me if I don&#39;t&#39;,
-  &#39; I feel under pressure from my friends/family to exercise&#39;,
-  &#39; I feel guilty when I don&#39;t exercise&#39;,
-  &#39; I feel like a failure when I haven&#39;t exercised in a while&#39;,
-  &#39; I think it is important to make the effort to exercise regularly&#39;,
-  &#39; I value the benefits of exercise&#39;,
-  &#39; It&#39;s important to me to exercise regularly&#39;,
-  &#39; I exercise because it is consistent with my life goals.&#39;,
-  &#39; I consider exercise consistent with my values.&#39;,
-  &#39; I consider exercise a fundamental part of who I am.&#39;,
-  &#39; I get pleasure and satisfaction from participating in exercise&#39;,
-  &#39; I exercise because it&#39;s fun&#39;,
-  &#39; I enjoy my exercise sessions&#39;)
-
-itemGroups &lt;- c(rep(&quot;Amotivation&quot;, 4),
-                rep(&quot;Extrinsic&quot;, 3),
-                rep(&quot;Introjected&quot;, 2),
-                rep(&quot;Identified&quot;, 3),
-                rep(&quot;Integrated&quot;, 3),
-                rep(&quot;Intrinsic&quot;, 3))
-
-
-plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
-</code></pre>
-</div>
-<div id="community-detection" class="section level2">
-<h2>Community detection</h2>
-<pre class="r"><code>
-# Find communities
-graph1 &lt;- plot(nwBCT)
- 
-g = as.igraph(graph1, attributes=TRUE)
- 
-matrix_spinglass &lt;- matrix(NA, nrow=1,ncol=1000)
-
-set.seed(1)
-for (i in 1:100) {
-set.seed(i)
-spinglass &lt;- spinglass.community(g)
-matrix_spinglass[1,i] &lt;- max(spinglass$membership) 
-} # 1000 took 8 minutes
- 
-mean(as.vector(matrix_spinglass)) 
-max(as.vector(matrix_spinglass)) 
-min(as.vector(matrix_spinglass)) 
-median(as.vector(matrix_spinglass)) 
-
-set.seed(1)
-spinglass &lt;- spinglass.community(g)
-spinglass$membership
-spinglassGroups &lt;- list(rep(2, 6), rep(1, 4), rep(3, 9))
-</code></pre>
-<!-- Of all the iterations of the spinglass algorithm, ` sum(table(matrix_spinglass)[1]) / 100`% gave `names(table(matrix_spinglass)[1])` groups, ` sum(table(matrix_spinglass)[2]) / 100`% gave `names(table(matrix_spinglass)[2])` groups, and ` sum(table(matrix_spinglass)[3]) / 100`% gave ` names(table(matrix_spinglass)[1])` groups,  -->
 <p>sm:n testi: library(sm) dftest &lt;- data.frame(value = sample(seq(from = 1, to = 7, by = 0.2), size = 1000, replace = TRUE), group = sample(1:5, size = 1000, replace = TRUE)) sm.symptom_T1_3 &lt;- sm.density.compare(dftest<span class="math inline">\(value, dftest\)</span>group, xlab=“”, col=colfill, lty=linetypes, model=“equal”, lwd=linewidths)</p>
 </div>
 </div>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 

@@ -2,12 +2,8 @@
 title: "baseline index"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # Welcome!
 
 This site is a companion web page to the description of baseline characteristics of the Let's Move It intervention participants, which will be submitted in 2018.
 
-See [mattiheino.com](www.mattiheino.com) for my personal blog.
+See [mattiheino.com](www.mattiheino.com) for my primary blog.
