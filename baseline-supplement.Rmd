@@ -463,7 +463,8 @@ PA_actplan_04_T3 = Kys0118.3,
 PA_copplan_01_T3 = Kys0119.3,
 PA_copplan_02_T3 = Kys0120.3,
 PA_copplan_03_T3 = Kys0121.3,
-PA_copplan_04_T3 = Kys0122.3
+PA_copplan_04_T3 = Kys0122.3,
+sitBreaks_T1 = YlösT1_ka
 )
 
 # Reverse coded items to normal: 
@@ -645,7 +646,7 @@ df <- cbind(df, motidf1, motidf2)
 
 # Create change scores
 t1_vars <- grep("_T1", colnames(df), value = TRUE)
-t1_vars <- grep("b5|fat|paLastweek|PA_opportunitiesNeg_08", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
+t1_vars <- grep("b5|fat|paLastweek|PA_opportunitiesNeg_08|sitBreaks_T1", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
 t3_vars <- grep("_T3", colnames(df), value = TRUE)
 df[, paste0(str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars]
 
@@ -713,14 +714,25 @@ vardatatable <- data_frame(
 
 options(tibble.print_max = 15)
  
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% print(n = 20)
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% print(n = 20)
 # %>% 
 #     apa_table(
 #         caption = "",
 #         note = "",
 #         escape = T)
 ```
+
+```{r}
+
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% print(n = 20) %>% apa_table(caption = "Intra-class correlations sorted by class ICC")
+
+```
+
+```{r}
+
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% print(n = 20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC")
+
+```
+
 
 ## Find ICC by educational track
 
@@ -797,6 +809,13 @@ vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC sch
 #         escape = T)
 
 ```
+
+```{r}
+
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% print(n = 20) %>%  apa_table(caption = "Intra-class correlations sorted by educational track ICC")
+
+```
+
 
 ## Create a table for all items by gender and intervention allocation
 
@@ -935,15 +954,196 @@ ci_control <- data.frame(ci_control, diamondlabels)
 
 # Descriptive tables
 
-```{r demographics, eval = FALSE}
+## prepare data
 
+```{r demographics-prep}
 
-apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
-  added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
-  placement = "tbp", landscape = FALSE, small = FALSE,
-  na_string = getOption("papaja.na_string"), ...)
+demographics <- lmi %>% dplyr::select(id = ID,
+birthYear = Kys0004.1,
+intervention = ryhmä,
+school = Aineisto.1,
+girl = Kys0013.1,
+ethnicity = Kys0005.1,
+studyYear = Kys0014.1) %>% 
+  mutate(age = 2016 - birthYear,
+         intervention = ifelse(intervention == 1, 1, 0),
+         intervention = as.numeric(intervention),
+         girl = ifelse(girl == 2, 1, 0),
+          girl = as.numeric(girl, levels = c("1", "0")),
+         school = factor(school, levels = c("1", "2", "3", "4", "5")),
+         bornInFinland = as.numeric(ifelse(ethnicity == 1, 1, 0)),
+         studyYear = ifelse(studyYear == 0, NA, studyYear)) # Remove "other" from study year
+
+# Insert track variable with those who answered "other" with one of the actual category labels given the appropriate category:
+Track <- lmi %>% select(Kys0016.1, Kys0017.1) %>% mutate(
+  Kys0016.1 = ifelse(Kys0017.1 == "Merkonomi" | Kys0017.1 == "merkonomi", 3,
+                  ifelse(Kys0017.1 == "Datanomi" | Kys0017.1 == "datanomi", 2, Kys0016.1)),
+  Track = factor(Kys0016.1, # Fix track labels first
+                     levels = c(0, 1, 2, 3, 4),
+                     labels = c("Other", "Business IT", "Business Admin", "HRC", "Nursing"))) %>% 
+  select(-Kys0016.1, -Kys0017.1)
+
+demographics <- bind_cols(demographics, Track)
 ```
 
+## Create demographic tables
+
+### By educational track
+
+```{r demographics-table-track, results = 'asis'}
+demotable <- demographics %>% 
+  group_by(Track) %>% 
+  summarise("Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
+                                        range(age, na.rm = T)[1], "-",
+                                        range(age, na.rm = T)[2], ")"),
+            "Mean study year (sd)" = paste0(round(mean(studyYear, na.rm = T), 1)," (", 
+                                               round(sd(studyYear, na.rm = T), 1), ")"),
+            "% girl" = round(mean(girl, na.rm = T)*100, 1),
+            "% intervention" = round(mean(intervention, na.rm = T)*100, 1),
+            "% born in Finland" = round(mean(bornInFinland, na.rm = T)*100, 1),
+            n = n()) %>% 
+  filter(complete.cases(.)) %>% 
+  arrange(desc(Track)) 
+
+demotable_total <- demographics %>% 
+  summarise("Track" = "Total",
+            "Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
+                                        range(age, na.rm = T)[1], "-",
+                                        range(age, na.rm = T)[2], ")"),
+            "Mean study year (sd)" = paste0(round(mean(studyYear, na.rm = T), 1)," (", 
+                                               round(sd(studyYear, na.rm = T), 1), ")"),
+            "% girl" = round(mean(girl, na.rm = T)*100, 1),
+            "% intervention" = round(mean(intervention, na.rm = T)*100, 1),
+            "% born in Finland" = round(mean(bornInFinland, na.rm = T)*100, 1),
+            n = n())
+
+demotable <- bind_rows(demotable, demotable_total)
+
+demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(Track, val)
+
+# For some reason, sum of n's of all tracks is 1084.
+
+apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 1, 0))
+```
+
+### By gender
+
+```{r demographics-table-gender, results = 'asis'}
+demographics$Girl <- factor(demographics$girl)
+
+demotable <- demographics %>% 
+  group_by(Girl) %>% 
+  summarise("Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
+                                        range(age, na.rm = T)[1], "-",
+                                        range(age, na.rm = T)[2], ")"),
+            "Mean study year (sd)" = paste0(round(mean(studyYear, na.rm = T), 1)," (", 
+                                               round(sd(studyYear, na.rm = T), 1), ")"),
+            "% intervention" = round(mean(intervention, na.rm = T)*100, 1),
+            "% born in Finland" = round(mean(bornInFinland, na.rm = T)*100, 1),
+            n = n()) %>% 
+  filter(complete.cases(.)) %>% 
+  arrange(desc(Girl)) 
+
+demotable_total <- demographics %>% 
+  summarise("Girl" = "Total",
+            "Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
+                                        range(age, na.rm = T)[1], "-",
+                                        range(age, na.rm = T)[2], ")"),
+            "Mean study year (sd)" = paste0(round(mean(studyYear, na.rm = T), 1)," (", 
+                                               round(sd(studyYear, na.rm = T), 1), ")"),
+            "% intervention" = round(mean(intervention, na.rm = T)*100, 1),
+            "% born in Finland" = round(mean(bornInFinland, na.rm = T)*100, 1),
+            n = n())
+
+demotable <- bind_rows(demotable, demotable_total)
+
+demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(girl, val)
+
+# For some reason, sum of n's of all tracks is 1084.
+
+apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
+```
+
+### By intervention participation
+
+```{r demographics-table-intervention, results = 'asis'}
+demographics$intervention <- factor(demographics$intervention)
+demographics$girl <- as.numeric(demographics$girl)
+
+demotable <- demographics %>% 
+  group_by(intervention) %>% 
+  summarise("Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
+                                        range(age, na.rm = T)[1], "-",
+                                        range(age, na.rm = T)[2], ")"),
+            "Mean study year (sd)" = paste0(round(mean(studyYear, na.rm = T), 1)," (", 
+                                               round(sd(studyYear, na.rm = T), 1), ")"),
+            "% girl" = round(mean(girl, na.rm = T)*100, 1),
+            "% born in Finland" = round(mean(bornInFinland, na.rm = T)*100, 1),
+            n = n()) %>% 
+  filter(complete.cases(.)) %>% 
+  arrange(desc(intervention)) 
+
+demotable_total <- demographics %>% 
+  summarise("intervention" = "Total",
+            "Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
+                                        range(age, na.rm = T)[1], "-",
+                                        range(age, na.rm = T)[2], ")"),
+            "Mean study year (sd)" = paste0(round(mean(studyYear, na.rm = T), 1)," (", 
+                                               round(sd(studyYear, na.rm = T), 1), ")"),
+            "% girl" = round(mean(girl, na.rm = T)*100, 1),
+            "% born in Finland" = round(mean(bornInFinland, na.rm = T)*100, 1),
+            n = n())
+
+demotable <- bind_rows(demotable, demotable_total)
+
+demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(intervention, val)
+
+# For some reason, sum of n's of all tracks is 1084.
+
+apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
+```
+
+## Create outcome tables
+
+### By educational track
+
+```{r outcome-table, results = 'asis'}
+outtable <- df %>%
+  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, fatpct_T1, track) %>% 
+  group_by(track) %>% 
+  summarise("Mean daily MVPA minutes (sd)" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(paAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily minutes spent sitting or lying down (sd)" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitLieAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily breaks in sitting (sd)" = paste0(round(mean(fatpct_T1, na.rm = T), 1)," (", 
+                                        round(sd(fatpct_T1, na.rm = T), 1), ")"),
+            "Mean fat-% (sd)" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitBreaks_T1, na.rm = T), 1), ")"),
+            n = n()) %>% 
+  filter(complete.cases(.)) %>% 
+  arrange(desc(track)) 
+
+outtable_total <- df %>% 
+  summarise("track" = "Total",
+            "Mean daily MVPA minutes (sd)" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(paAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily minutes spent sitting or lying down (sd)" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitLieAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily breaks in sitting (sd)" = paste0(round(mean(fatpct_T1, na.rm = T), 1)," (", 
+                                        round(sd(fatpct_T1, na.rm = T), 1), ")"),
+            "Mean fat-% (sd)" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitBreaks_T1, na.rm = T), 1), ")"),
+            n = n())
+
+
+
+outtable1 <- bind_rows(outtable, outtable_total)
+outtable1 <- outtable1 %>% gather(var, val, 2:ncol(outtable1)) %>% spread(track, val)
+
+apa_table(outtable1, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
+
+
+```
 
 # Diamond plots
 

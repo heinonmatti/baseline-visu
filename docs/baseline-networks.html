@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Baseline networks</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Visualising baseline characteristics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">About</a>
+</li>
+<li>
+  <a href="manuscript/baseline-manuscript.pdf">Manuscript</a>
+</li>
+<li>
+  <a href="baseline-supplement.html">Supplement</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Baseline networks</h1>
+
+</div>
+
+
+<pre class="r"><code>opts_chunk$set(echo = TRUE, 
+               warning = FALSE,
+               error = TRUE,
+               cache = TRUE, 
+               collapse = TRUE,
+               eval = TRUE)
+opts_chunk$set(root.dir = &quot;.&quot;)  # Always project root as working directory
+opts_knit$set(root.dir = &quot;.&quot;)  # This is needed for some versions of RStudio</code></pre>
+<pre class="r"><code>theme_set(theme_apa())</code></pre>
+<div id="load-packages-and-data" class="section level1">
+<h1>Load packages and data</h1>
+<pre class="r"><code>#.libPaths(&quot;C:/R/R-3.4.2/library&quot;)
+#.libPaths(&quot;C:/Users/hema/RPackages&quot;)
+#.libPaths(&quot;C:/rlibs/3.4.2&quot;)
+
+if (!require(pacman)) install.packages(&quot;pacman&quot;)
+library(pacman)
+
+p_load(EstimateGroupNetwork, bootnet, qgraph)
+## Error in La_library(): LAPACK routines cannot be loaded
+
+if (!require(devtools)) install.packages(&quot;devtools&quot;)
+p_load_gh(&quot;sachaepskamp/NetworkComparisonTest&quot;)
+# p_load_gh(&quot;rmcelreath/rethinking&quot;)
+
+lmi &lt;- read_sav(&quot;data/LMI_data_korjattu_syntaksilla.sav&quot;, user_na = FALSE)</code></pre>
+</div>
+<div id="bcts" class="section level1">
+<h1>BCTs</h1>
+<div id="graph-analysis" class="section level3">
+<h3>Graph analysis</h3>
+<pre class="r"><code>nItems &lt;- 19
+
+bctdf &lt;- df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  &#39;goals&#39; = PA_agrbct_01_T1,
+  &#39;plan&#39; = PA_agrbct_02_T1,
+  &#39;plan by other&#39; = PA_agrbct_03_T1,
+  &#39;reminder of plan&#39; = PA_agrbct_04_T1,
+  &#39;subgoals&#39; = PA_agrbct_05_T1,
+  &#39;new PA options&#39; = PA_agrbct_06_T1,
+  &#39;barrier identification&#39; = PA_agrbct_07_T1,
+  &#39;coping planning&#39; = PA_agrbct_08_T1,
+  &#39;PA identity&#39; = PA_agrbct_09_T1,
+  &#39;PA life values&#39; = PA_agrbct_10_T1,
+  &#39;positive consequences&#39; = PA_frqbct_01_T1,
+  &#39;log on paper&#39; = PA_frqbct_02_T1,
+  &#39;smartphone&#39; = PA_frqbct_03_T1,
+  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,
+  &#39;goal contrast&#39; = PA_frqbct_05_T1,
+  &#39;relevance of PA&#39; = PA_frqbct_06_T1,
+  &#39;changes at home&#39; = PA_frqbct_07_T1,
+  &#39;social support&#39; = PA_frqbct_08_T1,
+  &#39;failure contemplated&#39; = PA_frqbct_09_T1) %&gt;%
+ mutate(
+  &#39;goals&#39; = ifelse(`goals` == 1, 0, 1),
+  &#39;plan&#39; = ifelse(`plan` == 1, 0, 1),
+  &#39;plan by other&#39; = ifelse(`plan by other` == 1, 0, 1),
+  &#39;reminder of plan&#39; = ifelse(`reminder of plan` == 1, 0, 1),
+  &#39;subgoals&#39; = ifelse(`subgoals` == 1, 0, 1),
+  &#39;new PA options&#39; = ifelse(`new PA options` == 1, 0, 1),
+  &#39;barrier identification&#39; = ifelse(`barrier identification` == 1, 0, 1),
+  &#39;coping planning&#39; = ifelse(`coping planning` == 1, 0, 1),
+  &#39;PA identity&#39; = ifelse(`PA identity` == 1, 0, 1),
+  &#39;PA life values&#39; = ifelse(`PA life values` == 1, 0, 1),
+  &#39;positive consequences&#39; = ifelse(`positive consequences` == 1, 0, 1),
+  &#39;log on paper&#39; = ifelse(`log on paper` == 1, 0, 1),
+  &#39;smartphone&#39; = ifelse(`smartphone` == 1, 0, 1),
+  &#39;mnemonic cues&#39; = ifelse(`mnemonic cues` == 1, 0, 1),
+  &#39;goal contrast&#39; = ifelse(`goal contrast` == 1, 0, 1),
+  &#39;relevance of PA&#39; = ifelse(`relevance of PA` == 1, 0, 1),
+  &#39;changes at home&#39; = ifelse(`changes at home` == 1, 0, 1),
+  &#39;social support&#39; = ifelse(`social support` == 1, 0, 1),
+  &#39;failure contemplated&#39; = ifelse(`failure contemplated` == 1, 0, 1)) %&gt;% 
+  data.frame
+
+S.boys &lt;- bctdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.) 
+S.girls &lt;- bctdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.)
+nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
+## Error in estimateNetwork(S.boys, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
+nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
+## Error in estimateNetwork(S.girls, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
+
+# Create means for filling nodes
+
+girlmeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
+  summarise_at(vars(5:(5+nItems-1)),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(girl == 1) %&gt;% 
+  select(-1)
+
+boymeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
+  summarise_at(vars(5:(5+nItems-1)),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(girl == 0) %&gt;% 
+  select(-1)
+
+# Find average layout for comparability and plot graphs next to each other
+
+Layout &lt;- averageLayout(nwGirls, nwBoys)
+## Error in averageWmat(...): object &#39;nwGirls&#39; not found
+
+layout(t(1:2))
+plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
+     pie = girlmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, : object &#39;nwGirls&#39; not found
+
+plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
+     pie = boymeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, : object &#39;nwBoys&#39; not found
+
+
+
+# Network for all participants
+
+S.total &lt;- bctdf %&gt;% select(6:ncol(bctdf))
+nwBCT &lt;- estimateNetwork(S.total, default=&quot;IsingFit&quot;)
+## Error in estimateNetwork(S.total, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
+
+# smallworldIndex(plot(nwBCT))
+
+# Create means for filling nodes
+piefill &lt;- S.total %&gt;%
+  summarise_all(funs(mean(., na.rm = TRUE))) 
+
+# Plot network
+plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, label.cex = 0.75,
+     pie = piefill, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, : object &#39;nwBCT&#39; not found
+
+# Estimate ising network without regularisation
+nwBCT_nonreg &lt;- estimateNetwork(S.total, default=&quot;IsingSampler&quot;)
+## Error in estimateNetwork(S.total, default = &quot;IsingSampler&quot;): could not find function &quot;estimateNetwork&quot;
+
+plot(nwBCT_nonreg, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Non-regularised Ising model&quot;, label.cex = 0.75,
+     pie = piefill, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwBCT_nonreg, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Non-regularised Ising model&quot;, : object &#39;nwBCT_nonreg&#39; not found</code></pre>
+<div id="combine-items" class="section level4">
+<h4>Combine items</h4>
+<pre class="r"><code>nItems &lt;- 17
+
+bctdf &lt;- df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  &#39;goals&#39; = PA_agrbct_01_T1,
+  &#39;plan&#39; = PA_agrbct_02_T1,
+  &#39;plan by other&#39; = PA_agrbct_03_T1,
+  &#39;reminder of plan&#39; = PA_agrbct_04_T1,
+  &#39;subgoals&#39; = PA_agrbct_05_T1,
+  &#39;new PA options&#39; = PA_agrbct_06_T1,
+  &#39;barrier identification&#39; = PA_agrbct_07_T1,
+  &#39;coping planning&#39; = PA_agrbct_08_T1,
+  &#39;PA identity&#39; = PA_agrbct_09_T1,
+  &#39;PA life values&#39; = PA_agrbct_10_T1,
+  &#39;positive consequences&#39; = PA_frqbct_01_T1,
+  &#39;log on paper&#39; = PA_frqbct_02_T1,
+  &#39;smartphone&#39; = PA_frqbct_03_T1,
+#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,
+  &#39;goal contrast&#39; = PA_frqbct_05_T1,
+  &#39;relevance of PA&#39; = PA_frqbct_06_T1,
+  &#39;changes at home&#39; = PA_frqbct_07_T1,
+  &#39;social support&#39; = PA_frqbct_08_T1,
+  &#39;failure contemplated&#39; = PA_frqbct_09_T1) %&gt;%
+ mutate(
+  &#39;goals&#39; = ifelse(`goals` == 1, 0, 1),
+  &#39;plan&#39; = ifelse(`plan` == 1 &amp; `plan by other` == 1, 0, 1),
+  &#39;reminder of plan&#39; = ifelse(`reminder of plan` == 1, 0, 1),
+  &#39;subgoals&#39; = ifelse(`subgoals` == 1, 0, 1),
+  &#39;new PA options&#39; = ifelse(`new PA options` == 1, 0, 1),
+  &#39;barrier identification&#39; = ifelse(`barrier identification` == 1, 0, 1),
+  &#39;coping planning&#39; = ifelse(`coping planning` == 1, 0, 1),
+  &#39;PA identity&#39; = ifelse(`PA identity` == 1, 0, 1),
+  &#39;PA life values&#39; = ifelse(`PA life values` == 1, 0, 1),
+  &#39;positive consequences&#39; = ifelse(`positive consequences` == 1, 0, 1),
+  &#39;monitored PA&#39; = ifelse(`log on paper` == 1 &amp; `smartphone` == 1, 0, 1),
+#  &#39;mnemonic cues&#39; = ifelse(`mnemonic cues` == 1, 0, 1),
+  &#39;goal contrast&#39; = ifelse(`goal contrast` == 1, 0, 1),
+  &#39;relevance of PA&#39; = ifelse(`relevance of PA` == 1, 0, 1),
+  &#39;changes at home&#39; = ifelse(`changes at home` == 1, 0, 1),
+  &#39;social support&#39; = ifelse(`social support` == 1, 0, 1),
+  &#39;failure contemplated&#39; = ifelse(`failure contemplated` == 1, 0, 1)) %&gt;%
+  select(-`log on paper`, -`smartphone`, -`plan by other`) %&gt;% 
+  data.frame
+
+# S.boys &lt;- bctdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.) 
+# S.girls &lt;- bctdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.)
+# nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
+# nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
+# 
+# # Create means for filling nodes
+# 
+# girlmeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
+#   summarise_at(vars(5:(5+nItems-1)),
+#   funs(mean(., na.rm = TRUE))) %&gt;% 
+#   filter(girl == 1) %&gt;% 
+#   select(-1)
+# 
+# boymeans &lt;- bctdf %&gt;% group_by(girl) %&gt;% 
+#   summarise_at(vars(5:(5+nItems-1)),
+#   funs(mean(., na.rm = TRUE))) %&gt;% 
+#   filter(girl == 0) %&gt;% 
+#   select(-1)
+# 
+# # Find average layout for comparability and plot graphs next to each other
+# 
+# Layout &lt;- averageLayout(nwGirls, nwBoys)
+# 
+# layout(t(1:2))
+# plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
+#      pie = girlmeans, 
+#      color = &quot;skyblue&quot;,
+#      pieBorder = 1)
+# 
+# plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
+#      pie = boymeans, 
+#      color = &quot;skyblue&quot;,
+#      pieBorder = 1)
+
+# Network for all participants
+
+S.total &lt;- bctdf %&gt;% select(6:ncol(bctdf))
+nwBCT &lt;- estimateNetwork(S.total, default=&quot;IsingFit&quot;)
+## Error in estimateNetwork(S.total, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
+
+# smallworldIndex(plot(nwBCT))
+
+# Create means for filling nodes
+piefill &lt;- S.total %&gt;%
+  summarise_all(funs(mean(., na.rm = TRUE))) 
+
+# Plot network
+plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, label.cex = 0.75,
+     pie = piefill, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, : object &#39;nwBCT&#39; not found
+
+# # Estimate ising network without regularisation
+# nwBCT_nonreg &lt;- estimateNetwork(S.total, default=&quot;IsingSampler&quot;)
+# 
+# plot(nwBCT_nonreg, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Non-regularised Ising model&quot;, label.cex = 0.75,
+#      pie = piefill, 
+#      color = &quot;skyblue&quot;,
+#      pieBorder = 1)</code></pre>
+</div>
+<div id="centrality-and-stability" class="section level4">
+<h4>Centrality and stability</h4>
+<pre class="r"><code>centralityPlot(nwBCT)
+## Error in centralityPlot(nwBCT): could not find function &quot;centralityPlot&quot;
+
+boot2 &lt;- bootnet(nwBCT, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
+## Error in bootnet(nwBCT, nBoots = 2500, type = &quot;case&quot;, nCores = 8): could not find function &quot;bootnet&quot;
+corStability(boot2)
+## Error in corStability(boot2): could not find function &quot;corStability&quot;
+
+plot(boot2)
+## Error in plot(boot2): object &#39;boot2&#39; not found
+plot(boot2, &quot;strength&quot;)
+## Error in plot(boot2, &quot;strength&quot;): object &#39;boot2&#39; not found
+plot(boot2, &quot;betweenness&quot;)
+## Error in plot(boot2, &quot;betweenness&quot;): object &#39;boot2&#39; not found
+plot(boot2, &quot;closeness&quot;)
+## Error in plot(boot2, &quot;closeness&quot;): object &#39;boot2&#39; not found</code></pre>
+</div>
+<div id="network-comparison-test-boys-vs.girls" class="section level4">
+<h4>Network comparison test: boys vs. girls</h4>
+<pre class="r"><code>
+nct_results &lt;- NCT(nwGirls, nwBoys, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges=&#39;all&#39;, progressbar=TRUE)
+
+nct_results$nwinv.pval  # p value of network structure diff test: 0.424
+nct_results$glstrinv.pval  # p value of global connectivity diff test: 0.071
+nct_results$einv.pvals     #p values testing diffs for all individual edges: lowest p-value 0.017, most = 1
+sum(nct_results$einv.pvals$&quot;p-value&quot; &lt; 0.05)  # how many edges are different0
+</code></pre>
+</div>
+</div>
+<div id="pa-determinants-unregularised-correlations-visualised" class="section level2">
+<h2>PA determinants: unregularised correlations visualised</h2>
+<pre class="r"><code># Network without motivation variables
+data &lt;- df %&gt;% select(&#39;PA&#39; = paAccelerometer_T1, &#39;SB&#39; = sitLieAccelerometer_T1,
+&#39;fat%&#39; = fatpct_T1,&#39;action planning&#39; = PA_actionplan_T1, &#39;coping planning&#39; = PA_copingplan_T1, &#39;frequency-related BCTs&#39; = PA_frqbct_T1, &#39;agreement-related BCTs&#39; = PA_agrbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
+  data.frame
+
+names &lt;- df %&gt;% select(&#39;PA&#39; = paAccelerometer_T1, &#39;SB&#39; = sitLieAccelerometer_T1,
+&#39;fat%&#39; = fatpct_T1,&#39;action planning&#39; = PA_actionplan_T1, &#39;coping planning&#39; = PA_copingplan_T1, &#39;frequency-related BCTs&#39; = PA_frqbct_T1, &#39;agreement-related BCTs&#39; = PA_agrbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% names
+
+# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
+
+cormatrix &lt;- cor_auto(data) 
+## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
+
+graph1 &lt;- qgraph(cormatrix, layout=&quot;spring&quot;, sampleSize = nrow(data),
+              vsize=7, cut=0, maximum=.45, border.width=1.5)
+## Error in qgraph(cormatrix, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
+
+g &lt;- as.igraph(graph1, attributes = TRUE)
+## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
+
+matrix_spinglass &lt;- matrix(NA, nrow=1,ncol=100)
+ 
+for (i in 1:100) {
+set.seed(i)
+spinglass &lt;- spinglass.community(g)
+matrix_spinglass[1,i] &lt;- max(spinglass$membership) 
+}
+## Error in spinglass.community(g): object &#39;g&#39; not found
+
+set.seed(1)
+
+sgc &lt;- spinglass.community(g)
+## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
+
+communities &lt;- data.frame(sgc$membership, &#39;node number&#39; = 1:ncol(data))
+## Error in data.frame(sgc$membership, `node number` = 1:ncol(data)): object &#39;sgc&#39; not found
+
+group.spinglass &lt;- list(communities$node.number[communities$sgc.membership == 1], 
+                       communities$node.number[communities$sgc.membership == 2])
+## Error in communities$node.number: object of type &#39;closure&#39; is not subsettable
+
+piefill &lt;- data %&gt;%
+  summarise_all(funs(mean(., na.rm = TRUE))) %&gt;% 
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  mutate_at(vars(action.planning, coping.planning),
+            funs(. / 4)) %&gt;% 
+  mutate_at(vars(6:ncol(data)),
+            funs(. / 7)) %&gt;% 
+  mutate_at(vars(fat.),
+            funs(. / 100))  
+
+qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, 
+     color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;lightblue&quot;),
+     label.cex = 0.75,
+     label.scale = TRUE,
+     pie = piefill, 
+     color = &quot;skyblue&quot;,
+     nodeNames = names,
+     pieBorder = 1,
+     legend.cex = 0.4)
+## Error in qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;graph1&#39; not found
+
+
+# plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
+
+
+
+lmi %&gt;% select(Kys0016.1, Kys0013.1) %&gt;% group_by(Kys0016.1) %&gt;% summarise(n = n())
+## # A tibble: 6 x 2
+##   Kys0016.1     n
+##   &lt;dbl+lbl&gt; &lt;int&gt;
+## 1         0    34
+## 2         1   163
+## 3         2   274
+## 4         3   211
+## 5         4   402
+## 6        NA    81
+
+lmi %&gt;% count(Kys0016.1, Kys0013.1) %&gt;% group_by(Kys0016.1)
+## # A tibble: 11 x 3
+## # Groups:   Kys0016.1 [6]
+##    Kys0016.1 Kys0013.1     n
+##    &lt;dbl+lbl&gt; &lt;dbl+lbl&gt; &lt;int&gt;
+##  1         0         1    16
+##  2         0         2    18
+##  3         1         1   137
+##  4         1         2    26
+##  5         2         1   164
+##  6         2         2   110
+##  7         3         1    83
+##  8         3         2   128
+##  9         4         1    71
+## 10         4         2   331
+## 11        NA        NA    81</code></pre>
+<!-- Out of a hundred iterations, spinglass algorithm found `  table(matrix_spinglass)[[1]]` instances of ` table(matrix_spinglass)[1] %>% names` communities, `  table(matrix_spinglass)[[2]]` instances of `  table(matrix_spinglass)[2] %>% names` communities, and `  table(matrix_spinglass)[[3]]` instances of `  table(matrix_spinglass)[3] %>% names` communities. Thus, a random seed which found four communities was chosen.   -->
+</div>
+<div id="symptom-network-all" class="section level2">
+<h2>Symptom network: all</h2>
+<pre class="r"><code>
+sympdf &lt;- df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  &quot;Neck and shoulder pain&quot; = symptom_neckShoulderPain_T1,
+  &quot;Lower back pain&quot; = symptom_lowerBackPain_T1,
+  &quot;Stomach ache&quot; = symptom_stomachAche_T1,
+  &quot;Tension or nervousness&quot; = symptom_tensionNervousness_T1,
+  &quot;Irritability or anger bursts&quot; = symptom_irritabilityAngerbursts_T1,
+  &quot;Difficulty with sleep&quot; = symptom_sleepDifficulty_T1,
+  &quot;Headache&quot; = symptom_headAche_T1,
+  &quot;Tiredness or faintness&quot; = symptom_tirednessFaintness_T1,
+  &quot;Fat pct&quot; = fatpct_T1,
+  &quot;PA&quot; = paAccelerometer_T1,
+  &quot;SB&quot; = sitLieAccelerometer_T1
+) %&gt;% 
+  mutate(
+    &#39;Neck and shoulder pain&#39; = ifelse(`Neck and shoulder pain` == 1, 0, 1),
+    &#39;Lower back pain&#39; = ifelse(`Lower back pain` == 1, 0, 1),
+    &#39;Stomach ache&#39; = ifelse(`Stomach ache` == 1, 0, 1),
+    &#39;Tension or nervousness&#39; = ifelse(`Tension or nervousness` == 1, 0, 1),
+    &#39;Irritability or anger bursts&#39; = ifelse(`Irritability or anger bursts` == 1, 0, 1),
+    &#39;Difficulty with sleep&#39; = ifelse(`Difficulty with sleep` == 1, 0, 1),
+    &#39;Headache&#39; = ifelse(`Headache` == 1, 0, 1),
+    &#39;Tiredness or faintness&#39; = ifelse(`Tiredness or faintness` == 1, 0, 1),
+    &#39;Fat pct&#39; = `Fat pct` / 100) %&gt;% 
+  data.frame
+
+S.all &lt;- sympdf %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.) 
+
+nwAll &lt;- estimateNetwork(S.all, default=&quot;mgm&quot;)
+## Error in estimateNetwork(S.all, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
+
+allmeans &lt;- sympdf %&gt;%  
+  summarise_at(vars(6:16),
+  funs(mean(., na.rm = TRUE))) %&gt;%  
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60)))  # proportion of day used doing the behaviour
+
+
+plot(nwAll, label.scale = FALSE, title = &quot;All&quot;, label.cex = 0.75, 
+     pie = allmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwAll, label.scale = FALSE, title = &quot;All&quot;, label.cex = 0.75, : object &#39;nwAll&#39; not found</code></pre>
+</div>
+<div id="symptom-network-boys-and-girls" class="section level2">
+<h2>Symptom network: boys and girls</h2>
+<pre class="r"><code>
+sympdf &lt;- df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  &quot;Neck and shoulder pain&quot; = symptom_neckShoulderPain_T1,
+  &quot;Lower back pain&quot; = symptom_lowerBackPain_T1,
+  &quot;Stomach ache&quot; = symptom_stomachAche_T1,
+  &quot;Tension or nervousness&quot; = symptom_tensionNervousness_T1,
+  &quot;Irritability or anger bursts&quot; = symptom_irritabilityAngerbursts_T1,
+  &quot;Difficulty with sleep&quot; = symptom_sleepDifficulty_T1,
+  &quot;Headache&quot; = symptom_headAche_T1,
+  &quot;Tiredness or faintness&quot; = symptom_tirednessFaintness_T1,
+  &quot;Fat pct&quot; = fatpct_T1,
+  &quot;PA&quot; = paAccelerometer_T1,
+  &quot;SB&quot; = sitLieAccelerometer_T1
+) %&gt;% 
+  mutate(
+    &#39;Neck and shoulder pain&#39; = ifelse(`Neck and shoulder pain` == 1, 0, 1),
+    &#39;Lower back pain&#39; = ifelse(`Lower back pain` == 1, 0, 1),
+    &#39;Stomach ache&#39; = ifelse(`Stomach ache` == 1, 0, 1),
+    &#39;Tension or nervousness&#39; = ifelse(`Tension or nervousness` == 1, 0, 1),
+    &#39;Irritability or anger bursts&#39; = ifelse(`Irritability or anger bursts` == 1, 0, 1),
+    &#39;Difficulty with sleep&#39; = ifelse(`Difficulty with sleep` == 1, 0, 1),
+    &#39;Headache&#39; = ifelse(`Headache` == 1, 0, 1),
+    &#39;Tiredness or faintness&#39; = ifelse(`Tiredness or faintness` == 1, 0, 1),
+    &#39;Fat pct&#39; = `Fat pct` / 100) %&gt;% 
+  data.frame
+
+S.boys &lt;- sympdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.) 
+S.girls &lt;- sympdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.)
+nwBoys &lt;- estimateNetwork(S.boys, default=&quot;mgm&quot;)
+## Error in estimateNetwork(S.boys, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
+nwGirls &lt;- estimateNetwork(S.girls, default=&quot;mgm&quot;)
+## Error in estimateNetwork(S.girls, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
+
+girlmeans &lt;- sympdf %&gt;% group_by(girl) %&gt;% 
+  summarise_at(vars(5:15),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(girl == 1) %&gt;% 
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  select(-1)
+
+boymeans &lt;- sympdf %&gt;% group_by(girl) %&gt;% 
+  summarise_at(vars(5:15),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(girl == 0) %&gt;% 
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  select(-1)
+
+
+layout(t(1:2))
+plot(nwGirls, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
+     pie = girlmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwGirls, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75, : object &#39;nwGirls&#39; not found
+
+plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
+     pie = boymeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, : object &#39;nwBoys&#39; not found</code></pre>
+</div>
+<div id="symptom-network-educational-tracks" class="section level2">
+<h2>symptom network: educational tracks</h2>
+<pre class="r"><code>library(bootnet)
+## Error: package or namespace load failed for &#39;bootnet&#39; in inDL(x, as.logical(local), as.logical(now), ...):
+##  unable to load shared object &#39;C:/rlibs/3.4.2/IsingSampler/libs/x64/IsingSampler.dll&#39;:
+##   `maximal number of DLLs reached...
+library(qgraph)
+library(tidyverse)
+
+sympdf &lt;- df %&gt;% dplyr::select(id,
+  intervention,
+  track,
+  school,
+  girl,
+  &quot;Neck and shoulder pain&quot; = symptom_neckShoulderPain_T1,
+  &quot;Lower back pain&quot; = symptom_lowerBackPain_T1,
+  &quot;Stomach ache&quot; = symptom_stomachAche_T1,
+  &quot;Tension or nervousness&quot; = symptom_tensionNervousness_T1,
+  &quot;Irritability or anger bursts&quot; = symptom_irritabilityAngerbursts_T1,
+  &quot;Difficulty with sleep&quot; = symptom_sleepDifficulty_T1,
+  &quot;Headache&quot; = symptom_headAche_T1,
+  &quot;Tiredness or faintness&quot; = symptom_tirednessFaintness_T1,
+  &quot;Fat pct&quot; = fatpct_T1,
+  &quot;PA&quot; = paAccelerometer_T1,
+  &quot;SB&quot; = sitLieAccelerometer_T1
+) %&gt;% 
+  mutate(
+    &#39;Neck and shoulder pain&#39; = ifelse(`Neck and shoulder pain` == 1, 0, 1),
+    &#39;Lower back pain&#39; = ifelse(`Lower back pain` == 1, 0, 1),
+    &#39;Stomach ache&#39; = ifelse(`Stomach ache` == 1, 0, 1),
+    &#39;Tension or nervousness&#39; = ifelse(`Tension or nervousness` == 1, 0, 1),
+    &#39;Irritability or anger bursts&#39; = ifelse(`Irritability or anger bursts` == 1, 0, 1),
+    &#39;Difficulty with sleep&#39; = ifelse(`Difficulty with sleep` == 1, 0, 1),
+    &#39;Headache&#39; = ifelse(`Headache` == 1, 0, 1),
+    &#39;Tiredness or faintness&#39; = ifelse(`Tiredness or faintness` == 1, 0, 1),
+    &#39;Fat pct&#39; = `Fat pct` / 100) %&gt;% 
+  data.frame
+
+# S.other &lt;- sympdf %&gt;% filter(track == &quot;Other&quot;) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.)
+# S.it &lt;- sympdf %&gt;% filter(track == &quot;Business IT&quot;) %&gt;% select(6:ncol(sympdf))
+# S.admin &lt;- sympdf %&gt;% filter(track == &quot;Business Admin&quot;) %&gt;% select(6:ncol(sympdf))
+# S.hrc &lt;- sympdf %&gt;% filter(track == &quot;HRC&quot;) %&gt;% select(6:ncol(sympdf))
+# S.nursing &lt;- sympdf %&gt;% filter(track == &quot;Nursing&quot;) %&gt;% select(6:ncol(sympdf))
+
+# S.other &lt;- sympdf %&gt;% filter(track == 1) %&gt;% select(6:ncol(sympdf))
+S.it &lt;- sympdf %&gt;% filter(track == 2) %&gt;% select(6:ncol(sympdf))
+S.admin &lt;- sympdf %&gt;% filter(track == 3) %&gt;% select(6:ncol(sympdf))
+S.hrc &lt;- sympdf %&gt;% filter(track == 4) %&gt;% select(6:ncol(sympdf))
+S.nursing &lt;- sympdf %&gt;% filter(track == 5) %&gt;% select(6:ncol(sympdf))
+
+# nwOther &lt;- estimateNetwork(S.other, default=&quot;mgm&quot;)
+nwIt &lt;- estimateNetwork(S.it, default=&quot;mgm&quot;)
+## Error in estimateNetwork(S.it, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
+nwAdmin &lt;- estimateNetwork(S.admin, default=&quot;mgm&quot;)
+## Error in estimateNetwork(S.admin, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
+nwHrc &lt;- estimateNetwork(S.hrc, default=&quot;mgm&quot;)
+## Error in estimateNetwork(S.hrc, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
+nwNursing &lt;- estimateNetwork(S.nursing, default=&quot;mgm&quot;)
+## Error in estimateNetwork(S.nursing, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
+
+# othermeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+#   summarise_at(vars(5:15),
+#   funs(mean(., na.rm = TRUE))) %&gt;% 
+#   filter(track == &quot;Other&quot;) %&gt;% 
+#   mutate_at(vars(PA, SB),
+#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+#   select(-1)
+
+# itmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+#   summarise_at(vars(5:15),
+#   funs(mean(., na.rm = TRUE))) %&gt;% 
+#   filter(track == &quot;Business IT&quot;) %&gt;% 
+#   mutate_at(vars(PA, SB),
+#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+#   select(-1)
+
+itmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+  summarise_at(vars(5:15),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(track == 2) %&gt;% 
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  select(-1)
+
+# adminmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+#   summarise_at(vars(5:15),
+#   funs(mean(., na.rm = TRUE))) %&gt;% 
+#   filter(track == &quot;Business Admin&quot;) %&gt;% 
+#   mutate_at(vars(PA, SB),
+#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+#   select(-1)
+
+adminmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+  summarise_at(vars(5:15),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(track == 3) %&gt;% 
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  select(-1)
+
+# hrcmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+#   summarise_at(vars(5:15),
+#   funs(mean(., na.rm = TRUE))) %&gt;% 
+#   filter(track == &quot;HRC&quot;) %&gt;% 
+#   mutate_at(vars(PA, SB),
+#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+#   select(-1)
+
+hrcmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+  summarise_at(vars(5:15),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(track == 4) %&gt;% 
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  select(-1)
+
+# nursingmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+#   summarise_at(vars(5:15),
+#   funs(mean(., na.rm = TRUE))) %&gt;% 
+#   filter(track == &quot;Nursing&quot;) %&gt;% 
+#   mutate_at(vars(PA, SB),
+#             funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+#   select(-1)
+
+nursingmeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
+  summarise_at(vars(5:15),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(track == 5) %&gt;% 
+  mutate_at(vars(PA, SB),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  select(-1)
+
+averagelayout &lt;- averageLayout(nwIt, nwAdmin, nwHrc, nwNursing)
+## Error in averageWmat(...): object &#39;nwIt&#39; not found
+# plot(nwOther, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
+#      pie = othermeans, 
+#      color = &quot;skyblue&quot;,
+#      pieBorder = 1)
+
+layout(t(1:4))
+plot(nwIt, label.scale = FALSE, title = &quot;Business IT&quot;, layout = averagelayout, label.cex = 0.75, 
+     pie = itmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwIt, label.scale = FALSE, title = &quot;Business IT&quot;, layout = averagelayout, : object &#39;nwIt&#39; not found
+
+plot(nwAdmin, label.scale = FALSE, title = &quot;Business admin&quot;, layout = averagelayout, label.cex = 0.75, 
+     pie = adminmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwAdmin, label.scale = FALSE, title = &quot;Business admin&quot;, : object &#39;nwAdmin&#39; not found
+
+plot(nwHrc, label.scale = FALSE, title = &quot;Hotel, restaurant and catering&quot;, layout = averagelayout, label.cex = 0.75, 
+     pie = hrcmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwHrc, label.scale = FALSE, title = &quot;Hotel, restaurant and catering&quot;, : object &#39;nwHrc&#39; not found
+
+plot(nwNursing, label.scale = FALSE, title = &quot;Nursing&quot;, layout = averagelayout, label.cex = 0.75, 
+     pie = nursingmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwNursing, label.scale = FALSE, title = &quot;Nursing&quot;, layout = averagelayout, : object &#39;nwNursing&#39; not found</code></pre>
+<pre class="r"><code>
+colfill &lt;- c(1,2,3,4,5)
+
+# Create data frame
+densplot &lt;- d
+levels(densplot$intervention) &lt;- list(&quot;Intervention&quot; = &quot;1&quot;, &quot;Control&quot; = &quot;0&quot;)
+levels(densplot$girl) &lt;- list(&quot;Girl&quot; = &quot;1&quot;, &quot;Boy&quot; = &quot;0&quot;)
+
+# This gives side-by-side plots
+layout(t(1:2), 1)
+
+# Intervention vs. control
+# Choose only the variables needed and drop NA
+dens &lt;- densplot %&gt;% select(fatpct_T1, intervention) %&gt;% 
+  filter(complete.cases(.))
+
+# Set random number generator for reproducibility of bootstrap test of equal densities
+set.seed(10)
+
+# Make plot
+sm.fatpct_T1_1 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$intervention), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0.23
+legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
+
+# Girls vs. boys
+# Choose only the variables needed and drop NA
+dens &lt;- densplot %&gt;% select(fatpct_T1, girl) %&gt;% 
+  filter(complete.cases(.))
+
+# Set random number generator for reproducibility of bootstrap test of equal densities
+set.seed(10)
+
+# Make plot
+sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$girl), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0
+legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))</code></pre>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>
+sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$girl), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
+## 
+## Test of equal densities:  p-value =  0
+legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))</code></pre>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+</div>
+</div>
+<div id="physical-activity-network" class="section level1">
+<h1>Physical activity network</h1>
+<pre class="r"><code>
+data &lt;- df %&gt;% select(PA = paAccelerometer_T1, actCop = actcop_T1, BCT = frqbct_T1, amot = amotivation_T1, auton = autonomous_T1, cont = controlled_T1, dnorm = dnorm_T1, fatpct = fatpct_T1, inorm = inorm_T1, intent = intention_T1, oexp = oexp_T1, opp = opportunities_T1, sePbc = sePbc_T1) %&gt;% data.frame() 
+## Error in overscope_eval_next(overscope, expr): object &#39;actcop_T1&#39; not found
+
+# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
+
+qgraph(cor_auto(data), layout=&quot;spring&quot;)
+## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
+
+cormatrix &lt;- cor_auto(data1)
+## Variables detected as ordinal: Amoti1; Amoti2; Amoti3; Amoti4; Extri1; Extri2; Extri3; Intro1; Intro2; Ident1; Ident2; Ident3; Integ1; Integ2; Integ3; Intri1; Intri2; Intri3
+## Error in eigen(CorMat): LAPACK routines cannot be loaded
+
+graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
+              vsize=7, cut=0, maximum=.45, border.width=1.5)
+## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
+
+g = as.igraph(graph1, attributes=TRUE)
+## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
+
+sgc &lt;- spinglass.community(g)
+## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
+
+sgc$membership
+## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
+
+group.spinglass&lt;- list(c(1, 2, 3, 5, 10), 
+                       c(4, 6, 8), 
+                       c(7, 9), 
+                       c(11, 12, 13))
+
+set.seed(2)
+
+network1 &lt;- estimateNetwork(data1, default=&quot;EBICglasso&quot;)
+## Error in estimateNetwork(data1, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+
+#bladibla &lt;- averageLayout(network1$graph, network2$graph)
+
+# layout(t(1:2))
+# graph1 &lt;- plot(network1, layout=bladibla, cut=0)
+# graph2 &lt;- plot(network2, layout=bladibla, cut=0)
+# graph1 &lt;- plot(network1, cut=0)
+# graph2 &lt;- plot(network2, cut=0)
+
+plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;))
+## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found</code></pre>
+<div id="pa-network-without-sdt-motivations" class="section level3">
+<h3>PA network without SDT motivations</h3>
+<pre class="r"><code># Network without motivation variables
+data &lt;- df %&gt;% select(PA = paAccelerometer_T1, actCop = PA_actcop_T1, BCT = PA_frqbct_T1, amot = PA_amotivation_T1, auton = PA_autonomous_T1, cont = PA_controlled_T1, dnorm = PA_dnorm_T1, fatpct = fatpct_T1, inorm = PA_inorm_T1, intent = PA_intention_T1, oexp = PA_oexp_T1, opp = PA_opportunities_T1, sePbc = PA_sePbc_T1) %&gt;% data.frame() %&gt;% 
+  select(-auton, -cont, -amot)
+## Error in overscope_eval_next(overscope, expr): object &#39;PA_actcop_T1&#39; not found
+
+# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
+
+cormatrix &lt;- cor_auto(data)
+## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
+
+graph1&lt;-qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
+              vsize=7, cut=0, maximum=.45, border.width=1.5)
+## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
+
+g = as.igraph(graph1, attributes=TRUE)
+## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
+
+sgc &lt;- spinglass.community(g)
+## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
+
+sgc$membership
+## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
+
+# Without SDT motivations
+group.spinglass&lt;- list(c(1, 2, 3, 7), 
+                       c(4, 6), 
+                       c(5), 
+                       c(8, 9, 10))
+
+set.seed(2)
+
+network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
+## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+
+plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;))
+## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found</code></pre>
+</div>
+<div id="pa-network-without-bcts-and-sdt" class="section level3">
+<h3>PA network without BCTs and SDT</h3>
+<pre class="r"><code># Network without motivation variables
+data &lt;- df %&gt;% select(PA = paAccelerometer_T1, &#39;action and coping planning&#39; = PA_actcop_T1, &#39;Frequency-related BCTs&#39; = PA_frqbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &quot;fat pct&quot; = fatpct_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;Self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
+            select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`) %&gt;% 
+  data.frame
+## Error in overscope_eval_next(overscope, expr): object &#39;PA_actcop_T1&#39; not found
+
+# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
+
+cormatrix &lt;- cor_auto(data)
+## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
+
+graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
+              vsize=7, cut=0, maximum=.45, border.width=1.5)
+## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
+
+g = as.igraph(graph1, attributes=TRUE)
+## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
+
+set.seed(4)
+
+sgc &lt;- spinglass.community(g)
+## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
+
+sgc$membership
+## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
+
+# Without SDT motivations
+
+group.spinglass&lt;- list(c(1, 2, 6), 
+                       c(3, 4), 
+                       c(5),
+                       c(7, 8, 9))
+
+network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
+## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+
+piefill &lt;- data %&gt;%
+  summarise_all(funs(mean(., na.rm = TRUE))) %&gt;% 
+  mutate_at(vars(PA),
+            funs(. / (24*60))) %&gt;% # proportion of day used doing the behaviour
+  mutate_at(vars(action.and.coping.planning),
+            funs(. / 4)) %&gt;% 
+  mutate_at(vars(3, 4, 6, 7, 8, 9),
+            funs(. / 7)) %&gt;% 
+  mutate_at(vars(5),
+            funs(. / 100))  
+## Error in overscope_eval_next(overscope, expr): object &#39;action.and.coping.planning&#39; not found
+
+plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;),
+     label.cex = 0.75,
+     label.scale = FALSE,
+     pie = piefill, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found
+
+
+plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
+     pie = boymeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, : object &#39;nwBoys&#39; not found</code></pre>
+</div>
+<div id="pa-network-without-bcts-and-sdt-intention-pa-fat" class="section level3">
+<h3>PA network without BCTs and SDT, intention, PA, fat%</h3>
+<pre class="r"><code># Network without motivation variables
+data &lt;- df %&gt;% select(PA = paAccelerometer_T1, &#39;action and coping planning&#39; = PA_actcop_T1, &#39;Frequency-related BCTs&#39; = PA_frqbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &quot;fat pct&quot; = fatpct_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;Self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
+            select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`, -PA, -`intention`, -`fat pct`) %&gt;% 
+  data.frame
+## Error in overscope_eval_next(overscope, expr): object &#39;PA_actcop_T1&#39; not found
+
+# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
+
+cormatrix &lt;- cor_auto(data)
+## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
+
+graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
+              vsize=7, cut=0, maximum=.45, border.width=1.5)
+## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
+
+g = as.igraph(graph1, attributes=TRUE)
+## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
+
+set.seed(1)
+
+sgc &lt;- spinglass.community(g)
+## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
+
+sgc$membership
+## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
+
+group.spinglass&lt;- list(c(1, 4:6), 
+                       c(2, 3))
+
+# Estimate and plot graph
+
+
+network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
+## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+
+piefill &lt;- data %&gt;%
+  summarise_all(funs(mean(., na.rm = TRUE))) %&gt;%
+  mutate_at(vars(action.and.coping.planning),
+            funs(. / 4)) %&gt;% 
+  mutate_at(vars(2:6),
+            funs(. / 7))
+## Error in overscope_eval_next(overscope, expr): object &#39;action.and.coping.planning&#39; not found
+
+plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;),
+     label.cex = 0.75,
+     label.scale = FALSE,
+     pie = piefill, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found</code></pre>
+</div>
+<div id="robustness-test" class="section level2">
+<h2>Robustness test</h2>
+<pre class="r"><code>
+Network1 &lt;- estimateNetwork(data1, default = &quot;EBICglasso&quot;)
+## Error in estimateNetwork(data1, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+plot(Network1, layout = &quot;spring&quot;, labels = TRUE)
+## Error in plot(Network1, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network1&#39; not found
+
+centralityPlot(Network1)
+## Note: z-scores are shown on x-axis rather than raw centrality indices.
+## Error in getWmat(list(...)): object &#39;Network1&#39; not found
+
+boot1 &lt;- bootnet(Network1, nBoots = 2500, nCores = 3)
+## Error in bootnet(Network1, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
+
+plot(boot1, labels = TRUE, order = &quot;sample&quot;)
+## Error in plot(boot1, labels = TRUE, order = &quot;sample&quot;): object &#39;boot1&#39; not found
+
+Network2 &lt;- estimateNetwork(data1, default = &quot;pcor&quot;)
+## Error in estimateNetwork(data1, default = &quot;pcor&quot;): could not find function &quot;estimateNetwork&quot;
+plot(Network2, layout = &quot;spring&quot;, labels = TRUE)
+## Error in plot(Network2, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network2&#39; not found
+
+boot2 &lt;- bootnet(Network2, nBoots = 2500, nCores = 3)
+## Error in bootnet(Network2, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
+
+centralityPlot(Network)
+## Note: z-scores are shown on x-axis rather than raw centrality indices.
+## Error in getWmat(list(...)): object &#39;Network&#39; not found
+centralityPlot(Network2)
+## Note: z-scores are shown on x-axis rather than raw centrality indices.
+## Error in getWmat(list(...)): object &#39;Network2&#39; not found</code></pre>
+</div>
+<div id="centrality-stability" class="section level2">
+<h2>Centrality stability</h2>
+<pre class="r"><code>boot2 &lt;- bootnet(Network1, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
+## Error in bootnet(Network1, nBoots = 2500, type = &quot;case&quot;, nCores = 8): could not find function &quot;bootnet&quot;
+corStability(boot2)
+## Error in corStability(boot2): could not find function &quot;corStability&quot;
+
+plot(boot2)
+## Error in plot(boot2): object &#39;boot2&#39; not found
+
+differenceTest(boot1, &quot;auton&quot;, &quot;intent&quot;,  measure = c(&quot;strength&quot;, &quot;closeness&quot;, &quot;betweenness&quot;))
+## Error in differenceTest(boot1, &quot;auton&quot;, &quot;intent&quot;, measure = c(&quot;strength&quot;, : could not find function &quot;differenceTest&quot;
+
+plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, order = &quot;sample&quot;)
+## Error in plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, : object &#39;boot1&#39; not found
+
+plot(boot1, &quot;strength&quot;)
+## Error in plot(boot1, &quot;strength&quot;): object &#39;boot1&#39; not found
+plot(boot1, &quot;betweenness&quot;)
+## Error in plot(boot1, &quot;betweenness&quot;): object &#39;boot1&#39; not found
+plot(boot1, &quot;closeness&quot;)
+## Error in plot(boot1, &quot;closeness&quot;): object &#39;boot1&#39; not found</code></pre>
+</div>
+<div id="network-comparison-test-girls-and-boys" class="section level2">
+<h2>Network comparison test: girls and boys</h2>
+<pre class="r"><code>
+# here goes your data; call it &quot;data&quot;
+data &lt;- df %&gt;% select(paT1, girl, actcop_T1, frqbct_T1, amotivation_T1, autonomous_T1, controlled_T1, dnorm_T1, fatpct_T1, inorm_T1, intention_T1, oexp_T1, opportunities_T1, sePbc_T1) 
+## Error in overscope_eval_next(overscope, expr): object &#39;paT1&#39; not found
+
+### Split data into girls and boys
+data1 &lt;- data %&gt;% filter(girl == 1) %&gt;% select(-girl) %&gt;% as.data.frame
+## Error in filter_impl(.data, quo): Evaluation error: object &#39;girl&#39; not found.
+
+data2 &lt;- data %&gt;% filter(girl == 0) %&gt;% select(-girl) %&gt;% as.data.frame
+## Error in filter_impl(.data, quo): Evaluation error: object &#39;girl&#39; not found.
+
+# ---------------------------------------------------------------------------------------
+# ---------- 3. NCT ------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------
+
+
+### estimate networks and compare visually; use averageLayout function, then plot via layout(t(1:2))
+network1 &lt;- estimateNetwork(data1, default=&quot;EBICglasso&quot;)
+## Error in estimateNetwork(data1, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+network2 &lt;- estimateNetwork(data2, default=&quot;EBICglasso&quot;)
+## Error in estimateNetwork(data2, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+
+bladibla &lt;- averageLayout(network1$graph, network2$graph)
+## Error in averageWmat(...): object &#39;network1&#39; not found
+
+layout(t(1:2))
+graph1 &lt;- plot(network1, layout=bladibla, cut=0)
+## Error in plot(network1, layout = bladibla, cut = 0): object &#39;network1&#39; not found
+graph2 &lt;- plot(network2, layout=bladibla, cut=0)
+## Error in plot(network2, layout = bladibla, cut = 0): object &#39;network2&#39; not found
+
+### run NCT 
+
+nct_results &lt;- NCT(data1, data2, it=1000, binary.data=FALSE, paired=TRUE, test.edges=TRUE, edges=&#39;all&#39;, progressbar=TRUE)
+## Error in NCT(data1, data2, it = 1000, binary.data = FALSE, paired = TRUE, : could not find function &quot;NCT&quot;
+
+nct_results$nwinv.pval  # p value of network structure diff test
+## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found
+nct_results$glstrinv.pval  # p value of global connectivity diff test
+## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found
+nct_results$einv.pvals     #p values testing diffs for all individual edges
+## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found
+sum(nct_results$einv.pvals$&quot;p-value&quot; &lt; 0.05)  # how many edges are different
+## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found</code></pre>
+</div>
+<div id="robustness-test-1" class="section level2">
+<h2>Robustness test</h2>
+<pre class="r"><code>data &lt;- data %&gt;% select(BCT = agrbct_T1,
+    AUT = autonomous_T1,
+    Intn = intention_T1,
+    PBC = pbc_T1,
+    OExp = oexp_T1,
+    DNorm = norm_T1)
+## Error in overscope_eval_next(overscope, expr): object &#39;agrbct_T1&#39; not found
+
+Network &lt;- estimateNetwork(data, default = &quot;EBICglasso&quot;)
+## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
+
+boot1 &lt;- bootnet(Network, nBoots = 2500, nCores = 3)
+## Error in bootnet(Network, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
+
+plot(boot1, labels = TRUE, order = &quot;sample&quot;)
+## Error in plot(boot1, labels = TRUE, order = &quot;sample&quot;): object &#39;boot1&#39; not found
+
+plot(Network, layout = &quot;spring&quot;, labels = TRUE)
+## Error in plot(Network, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network&#39; not found
+
+Network2 &lt;- estimateNetwork(data, default = &quot;pcor&quot;)
+## Error in estimateNetwork(data, default = &quot;pcor&quot;): could not find function &quot;estimateNetwork&quot;
+plot(Network2, layout = &quot;spring&quot;, labels = TRUE)
+## Error in plot(Network2, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network2&#39; not found
+
+boot1 &lt;- bootnet(Network2, nBoots = 2500, nCores = 3)
+## Error in bootnet(Network2, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
+
+centralityPlot(Network)
+## Note: z-scores are shown on x-axis rather than raw centrality indices.
+## Error in getWmat(list(...)): object &#39;Network&#39; not found
+centralityPlot(Network2)
+## Note: z-scores are shown on x-axis rather than raw centrality indices.
+## Error in getWmat(list(...)): object &#39;Network2&#39; not found</code></pre>
+</div>
+</div>
+<div id="centrality-stability-1" class="section level1">
+<h1>Centrality stability</h1>
+<pre class="r"><code>boot2 &lt;- bootnet(Network, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
+## Error in bootnet(Network, nBoots = 2500, type = &quot;case&quot;, nCores = 8): could not find function &quot;bootnet&quot;
+corStability(boot2)
+## Error in corStability(boot2): could not find function &quot;corStability&quot;
+
+plot(boot2)
+## Error in plot(boot2): object &#39;boot2&#39; not found
+
+differenceTest(boot1, &quot;AUT&quot;, &quot;Intn&quot;,  measure = c(&quot;strength&quot;, &quot;closeness&quot;, &quot;betweenness&quot;))
+## Error in differenceTest(boot1, &quot;AUT&quot;, &quot;Intn&quot;, measure = c(&quot;strength&quot;, : could not find function &quot;differenceTest&quot;
+
+plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, order = &quot;sample&quot;)
+## Error in plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, : object &#39;boot1&#39; not found
+
+plot(boot1, &quot;strength&quot;)
+## Error in plot(boot1, &quot;strength&quot;): object &#39;boot1&#39; not found
+plot(boot1, &quot;betweenness&quot;)
+## Error in plot(boot1, &quot;betweenness&quot;): object &#39;boot1&#39; not found
+plot(boot1, &quot;closeness&quot;)
+## Error in plot(boot1, &quot;closeness&quot;): object &#39;boot1&#39; not found</code></pre>
+</div>
+<div id="pa-motivation-examined" class="section level1">
+<h1>PA motivation examined</h1>
+<pre class="r"><code>nItems &lt;- 18
+regulations.df &lt;- lmi %&gt;% select(id = ID,
+  intervention = ryhmä,
+  group = ryhmäkoodi_korjattu,
+  school = Aineisto.1,
+  girl = Kys0013.1,
+  PA_amotivation_02_T1 = Kys0086.1,
+  PA_amotivation_01_T1 = Kys0082.1,
+  PA_amotivation_03_T1 = Kys0096.1,
+  PA_amotivation_04_T1 = Kys0097.1,
+  PA_extrinsic_01_T1 = Kys0080.1,
+  PA_extrinsic_02_T1 = Kys0081.1,
+  PA_extrinsic_03_T1 = Kys0083.1,
+  PA_introjected_01_T1 = Kys0084.1,
+  PA_introjected_02_T1 = Kys0085.1,
+  PA_identified_01_T1 = Kys0087.1,
+  PA_identified_02_T1 = Kys0088.1,
+  PA_identified_03_T1 = Kys0090.1,
+  PA_integrated_01_T1 = Kys0089.1,
+  PA_integrated_02_T1 = Kys0092.1,
+  PA_integrated_03_T1 = Kys0094.1,
+  PA_intrinsic_01_T1 = Kys0091.1,
+  PA_intrinsic_02_T1 = Kys0093.1,
+  PA_intrinsic_03_T1 = Kys0095.1
+)
+
+regulations.df &lt;- regulations.df %&gt;% dplyr::mutate(group = ifelse(group == &quot;&quot;, NA, group))
+
+# Fix intervention and gender variables
+regulations.df &lt;- regulations.df %&gt;% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
+                         intervention = factor(intervention),
+            girl = ifelse(girl == 2, 1, 0),
+            girl = factor(girl, levels = c(&quot;1&quot;, &quot;0&quot;)),
+            school = factor(school, levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;)))
+
+
+motiGirls &lt;- regulations.df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1,
+  PA_integrated_02_T1,
+  PA_integrated_03_T1,
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1) %&gt;%
+ gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
+  filter(girl == &quot;1&quot;) %&gt;% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = &quot;&quot;) +
+  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
+  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
+  labs(title = &quot;Girls&quot;) +
+  guides(y = &quot;none&quot;) +
+  theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiBoys &lt;- regulations.df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1,
+  PA_integrated_02_T1,
+  PA_integrated_03_T1,
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1) %&gt;%
+ gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
+  filter(girl == &quot;0&quot;) %&gt;% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = &quot;&quot;) +
+  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
+  scale_fill_cyclical(values = c(&quot;darkolivegreen2&quot;, &quot;darkolivegreen4&quot;)) +
+  labs(title = &quot;Boys&quot;) +
+  guides(y = &quot;none&quot;) +
+  theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiInt &lt;- regulations.df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1,
+  PA_integrated_02_T1,
+  PA_integrated_03_T1,
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1) %&gt;%
+ gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
+  filter(intervention == &quot;1&quot;) %&gt;% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = &quot;&quot;) +
+  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;) +
+  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
+  labs(title = &quot;Intervention&quot;) +
+  guides(y = &quot;none&quot;) +
+  theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiCont &lt;- regulations.df %&gt;% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1,
+  PA_integrated_02_T1,
+  PA_integrated_03_T1,
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1) %&gt;%
+ gather(key = Variable, value = Value, 6:ncol(.)) %&gt;%
+  filter(intervention == &quot;0&quot;) %&gt;% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  geom_density_ridges2(aes(fill = Variable), stat = &quot;binline&quot;, binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = &quot;&quot;) +
+  scale_y_discrete(expand = c(0.01, 0), name = &quot;&quot;, labels = NULL) +
+  scale_fill_cyclical(values = c(&quot;deepskyblue&quot;, &quot;deepskyblue4&quot;)) +
+  labs(title = &quot;Control&quot;) +
+  guides(y = &quot;none&quot;) +
+  theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+#grid.arrange(motiInt, motiGirls, motiCont, motiBoys, ncol = 2)
+
+# (&quot;Seldom or never&quot;, &quot;About once a month&quot;, &quot;About once a week&quot;, &quot;Almost daily&quot;)
+
+# This draws all histograms next to each other:
+grid.newpage()
+grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = &quot;last&quot;))</code></pre>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<div id="motivational-regulations-network" class="section level2">
+<h2>Motivational regulations network</h2>
+</div>
+<div id="tee-tanne-piefill-tummempi-sama-vari-tai-opacity" class="section level2">
+<h2>TEE TÄNNE PIEFILL; tummempi sama väri tai opacity?</h2>
+<pre class="r"><code># Was going to do fused graphical lasso, but the items not normal...
+
+# s1 &lt;- regulations.df %&gt;% filter(school == 1) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.) 
+# s2 &lt;- regulations.df %&gt;% filter(school == 2) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
+# s3 &lt;- regulations.df %&gt;% filter(school == 3) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.) 
+# s4 &lt;- regulations.df %&gt;% filter(school == 4) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
+# s5 &lt;- regulations.df %&gt;% filter(school == 5) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
+# 
+# network2 &lt;- EstimateGroupNetwork(list(&quot;1&quot; = s1,
+#                                       &quot;2&quot; = s2,
+#                                       &quot;3&quot; = s3,
+#                                       &quot;4&quot; = s4,
+#                                       &quot;5&quot; = s5),
+#                                  n = c(nrow(s1), nrow(s2), nrow(s3), nrow(s4), nrow(s5)))
+# 
+regulations.df &lt;- regulations.df %&gt;% mutate(
+PA_amotivation_02_T1 = ifelse(PA_amotivation_02_T1 == 1, 0, 1),
+PA_amotivation_01_T1 = ifelse(PA_amotivation_01_T1 == 1, 0, 1),
+PA_amotivation_03_T1 = ifelse(PA_amotivation_03_T1 == 1, 0, 1),
+PA_amotivation_04_T1 = ifelse(PA_amotivation_04_T1 == 1, 0, 1),
+PA_extrinsic_01_T1 = ifelse(PA_extrinsic_01_T1 == 1, 0, 1),
+PA_extrinsic_02_T1 = ifelse(PA_extrinsic_02_T1 == 1, 0, 1),
+PA_extrinsic_03_T1 = ifelse(PA_extrinsic_03_T1 == 1, 0, 1),
+PA_introjected_01_T1 = ifelse(PA_introjected_01_T1 == 1, 0, 1),
+PA_introjected_02_T1 = ifelse(PA_introjected_02_T1 == 1, 0, 1),
+PA_identified_01_T1 = ifelse(PA_identified_01_T1 == 1, 0, 1),
+PA_identified_02_T1 = ifelse(PA_identified_02_T1 == 1, 0, 1),
+PA_identified_03_T1 = ifelse(PA_identified_03_T1 == 1, 0, 1),
+PA_integrated_01_T1 = ifelse(PA_integrated_01_T1 == 1, 0, 1),
+PA_integrated_02_T1 = ifelse(PA_integrated_02_T1 == 1, 0, 1),
+PA_integrated_03_T1 = ifelse(PA_integrated_03_T1 == 1, 0, 1),
+PA_intrinsic_01_T1 = ifelse(PA_intrinsic_01_T1 == 1, 0, 1),
+PA_intrinsic_02_T1 = ifelse(PA_intrinsic_02_T1 == 1, 0, 1),
+PA_intrinsic_03_T1 = ifelse(PA_intrinsic_03_T1 == 1, 0, 1))
+
+
+### GIRLS AND BOYS
+
+S.boys &lt;- regulations.df %&gt;% filter(girl == 0) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.) 
+S.girls &lt;- regulations.df %&gt;% filter(girl == 1) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
+nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
+## Error in estimateNetwork(S.boys, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
+nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
+## Error in estimateNetwork(S.girls, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
+
+data1 &lt;- regulations.df %&gt;% select(6:ncol(regulations.df))
+names(data1) &lt;- c(paste0(rep(&quot;Amoti&quot;, 4), 1:4),
+                paste0(rep(&quot;Extri&quot;, 3), 1:3),
+                paste0(rep(&quot;Intro&quot;, 2), 1:2),
+                paste0(rep(&quot;Ident&quot;, 3), 1:3),
+                paste0(rep(&quot;Integ&quot;, 3), 1:3),
+                paste0(rep(&quot;Intri&quot;, 3), 1:3))
+nwAll &lt;- estimateNetwork(data1, default=&quot;IsingFit&quot;)
+## Error in estimateNetwork(data1, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
+
+# Create means for filling nodes
+girlmeans &lt;- regulations.df %&gt;% group_by(girl) %&gt;% 
+  summarise_at(vars(5:(5+nItems-1)),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(girl == 1) %&gt;% 
+  select(-1)
+
+boymeans &lt;- regulations.df %&gt;% group_by(girl) %&gt;% 
+  summarise_at(vars(5:(5+nItems-1)),
+  funs(mean(., na.rm = TRUE))) %&gt;% 
+  filter(girl == 0) %&gt;% 
+  select(-1)
+
+# Find average layout for comparability and plot graphs next to each other
+
+Layout &lt;- averageLayout(nwGirls, nwBoys)
+## Error in averageWmat(...): object &#39;nwGirls&#39; not found
+
+
+layout(t(1:2))
+plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
+     pie = girlmeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, : object &#39;nwGirls&#39; not found
+
+plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
+     pie = boymeans, 
+     color = &quot;skyblue&quot;,
+     pieBorder = 1)
+## Error in plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, : object &#39;nwBoys&#39; not found
+
+itemNames &lt;- c(&#39;I can\&#39;t see why I should bother exercising&#39;,
+  &#39;I do not see why I should have to exercise&#39;,
+  &#39; I do not see the point in exercising&#39;,
+  &#39; I think exercising is a waste of time&#39;,
+  &#39; I exercise because other people say I should&#39;,
+  &#39; I exercise because others will not be pleased with me if I do not&#39;,
+  &#39; I feel under pressure from my friends/family to exercise&#39;,
+  &#39; I feel guilty when I do not exercise&#39;,
+  &#39; I feel like a failure when I have not exercised in a while&#39;,
+  &#39; I think it is important to make the effort to exercise regularly&#39;,
+  &#39; I value the benefits of exercise&#39;,
+  &#39; it is important to me to exercise regularly&#39;,
+  &#39; I exercise because it is consistent with my life goals.&#39;,
+  &#39; I consider exercise consistent with my values.&#39;,
+  &#39; I consider exercise a fundamental part of who I am.&#39;,
+  &#39; I get pleasure and satisfaction from participating in exercise&#39;,
+  &#39; I exercise because it is fun&#39;,
+  &#39; I enjoy my exercise sessions&#39;)
+
+itemGroups &lt;- c(rep(&quot;Amotivation&quot;, 4),
+                rep(&quot;Extrinsic&quot;, 3),
+                rep(&quot;Introjected&quot;, 2),
+                rep(&quot;Identified&quot;, 3),
+                rep(&quot;Integrated&quot;, 3),
+                rep(&quot;Intrinsic&quot;, 3))
+
+
+plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
+## Error in plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25): object &#39;nwAll&#39; not found</code></pre>
+</div>
+<div id="community-detection" class="section level2">
+<h2>Community detection</h2>
+<pre class="r"><code>
+# Find communities
+graph1 &lt;- plot(nwBCT)
+## Error in plot(nwBCT): object &#39;nwBCT&#39; not found
+ 
+g = as.igraph(graph1, attributes=TRUE)
+## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
+ 
+matrix_spinglass &lt;- matrix(NA, nrow=1,ncol=1000)
+
+set.seed(1)
+for (i in 1:100) {
+set.seed(i)
+spinglass &lt;- spinglass.community(g)
+matrix_spinglass[1,i] &lt;- max(spinglass$membership) 
+} # 1000 took 8 minutes
+## Error in spinglass.community(g): object &#39;g&#39; not found
+ 
+mean(as.vector(matrix_spinglass)) 
+## [1] NA
+max(as.vector(matrix_spinglass)) 
+## [1] NA
+min(as.vector(matrix_spinglass)) 
+## [1] NA
+median(as.vector(matrix_spinglass)) 
+## [1] NA
+
+set.seed(1)
+spinglass &lt;- spinglass.community(g)
+## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
+spinglass$membership
+## Error in eval(expr, envir, enclos): object &#39;spinglass&#39; not found
+spinglassGroups &lt;- list(rep(2, 6), rep(1, 4), rep(3, 9))</code></pre>
+<!-- Of all the iterations of the spinglass algorithm, ` sum(table(matrix_spinglass)[1]) / 100`% gave `names(table(matrix_spinglass)[1])` groups, ` sum(table(matrix_spinglass)[2]) / 100`% gave `names(table(matrix_spinglass)[2])` groups, and ` sum(table(matrix_spinglass)[3]) / 100`% gave ` names(table(matrix_spinglass)[1])` groups,  -->
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
