@@ -1107,6 +1107,8 @@ apa_table(demotable, caption = "Baseline demographics of educational tracks", di
 
 ### By educational track
 
+**MUUTA VAR NÄISTÄ KAIKISTA, ja tyttöihin ja interventioihin numeroiden sijaan sanat**
+
 ```{r outcome-table, results = 'asis'}
 outtable <- df %>%
   select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, fatpct_T1, track) %>% 
