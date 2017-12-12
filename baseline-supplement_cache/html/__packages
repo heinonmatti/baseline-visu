@@ -21,8 +21,4 @@ gridExtra
 ggridges
 igraph
 devtools
-EstimateGroupNetwork
-bootnet
-qgraph
-NetworkComparisonTest
 bindrcpp

@@ -9,7 +9,7 @@ opts_chunk$set(echo = TRUE,
                error = TRUE,
                cache = TRUE, 
                collapse = TRUE,
-               eval = TRUE)
+               eval = FALSE)
 opts_chunk$set(root.dir = ".")  # Always project root as working directory
 opts_knit$set(root.dir = ".")  # This is needed for some versions of RStudio
 ```
@@ -24,17 +24,17 @@ theme_set(theme_apa())
 #.libPaths("C:/R/R-3.4.2/library")
 #.libPaths("C:/Users/hema/RPackages")
 #.libPaths("C:/rlibs/3.4.2")
-
-if (!require(pacman)) install.packages("pacman")
-library(pacman)
-
-p_load(EstimateGroupNetwork, bootnet, qgraph)
-
-if (!require(devtools)) install.packages("devtools")
-p_load_gh("sachaepskamp/NetworkComparisonTest")
-# p_load_gh("rmcelreath/rethinking")
-
-lmi <- read_sav("data/LMI_data_korjattu_syntaksilla.sav", user_na = FALSE)
+# 
+# if (!require(pacman)) install.packages("pacman")
+# library(pacman)
+# 
+# p_load(EstimateGroupNetwork, bootnet, qgraph)
+# 
+# if (!require(devtools)) install.packages("devtools")
+# p_load_gh("sachaepskamp/NetworkComparisonTest")
+# # p_load_gh("rmcelreath/rethinking")
+# 
+# lmi <- read_sav("data/LMI_data_korjattu_syntaksilla.sav", user_na = FALSE)
 ```
 
 # BCTs

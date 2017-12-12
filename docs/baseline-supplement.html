@@ -320,16 +320,8 @@ div.tocify {
 
 <pre class="r"><code>library(papaja)
 library(knitr)
-library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages --------------------------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --</code></pre>
-<pre><code>## v ggplot2 2.2.1     v purrr   0.2.4
-## v tibble  1.3.4     v dplyr   0.7.4
-## v tidyr   0.7.2     v stringr 1.2.0
-## v readr   1.1.1     v forcats 0.2.0</code></pre>
-<pre><code>## -- Conflicts ------------------------------------------------------------------------------------------------------------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>opts_chunk$set(echo = TRUE, 
+library(tidyverse)
+opts_chunk$set(echo = TRUE, 
                warning = TRUE,
                error = TRUE,
                cache = TRUE, 
@@ -345,6 +337,7 @@ opts_knit$set(root.dir = &quot;.&quot;)  # This is needed for some versions of R
 #.libPaths(&quot;C:/rlibs/3.4.2&quot;)
 
 if (!require(pacman)) install.packages(&quot;pacman&quot;)
+## Loading required package: pacman
 library(pacman)
 
 p_load(tidyverse, haven, lme4, userfriendlyscience, grid, sm, sjstats, gridExtra, ggridges, igraph, devtools)
@@ -1137,1017 +1130,89 @@ options(tibble.print_max = 15)
 #         note = &quot;&quot;,
 #         escape = T)</code></pre>
 <pre class="r"><code>
-vardatatable %&gt;% select(Variable, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC class`)) %&gt;% print(n = 20) %&gt;% apa_table(caption = &quot;Intra-class correlations sorted by class ICC&quot;)
-## # A tibble: 475 x 4
-##                  Variable `ICC class` `ICC school`     n
-##                     &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;
-##  1     paAccelerometer_T3        0.14         0.04   499
-##  2     PA_intention_02_T1       0.111      &lt; 0.001  1073
-##  3        PA_intention_T1       0.105      &lt; 0.001  1073
-##  4       pafreqUsually_T1       0.094        0.003  1082
-##  5       PA_autonomous_T3       0.092        0.003   873
-##  6    PA_autonomous_03_T3       0.088        0.001   867
-##  7    PA_identified_03_T3       0.088        0.001   867
-##  8     PA_intention_01_T1       0.088      &lt; 0.001  1073
-##  9 sitLieAccelerometer_T1       0.086        0.145   706
-## 10       pafreqUsually_T3       0.085        0.003   874
-## 11        pahrsUsually_T1       0.085        0.005  1082
-## 12           PA_agrbct_T3       0.084      &lt; 0.001   873
-## 13       PA_integrated_T3       0.083      &lt; 0.001   872
-## 14        PA_intrinsic_T3        0.08        0.004   872
-## 15    PA_autonomous_07_T3       0.079        0.008   869
-## 16     PA_intrinsic_01_T3       0.079        0.008   869
-## 17    PA_autonomous_04_T3       0.076        0.006   870
-## 18    PA_integrated_01_T3       0.076        0.006   870
-## 19       PA_identified_T3       0.075        0.004   873
-## 20           PA_frqbct_T3       0.074      &lt; 0.001   869
-## # ... with 455 more rows
-## &lt;caption&gt;(\#tab:unnamed-chunk-4)*Intra-class correlations sorted by class ICC*&lt;/caption&gt;
+vardatatable %&gt;% select(Variable, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC class`)) %&gt;% top_n(20) %&gt;% apa_table(caption = &quot;Intra-class correlations sorted by classroom ICC&quot;)
+## Selecting by n
+## &lt;caption&gt;(\#tab:unnamed-chunk-4)*Intra-class correlations sorted by classroom ICC*&lt;/caption&gt;
 ## 
 ## 
-## Variable                               ICC class   ICC school   n        
-## -------------------------------------  ----------  -----------  ---------
-## paAccelerometer_T3                     0.14        0.04         499.00   
-## PA_intention_02_T1                     0.111       &lt; 0.001      1,073.00 
-## PA_intention_T1                        0.105       &lt; 0.001      1,073.00 
-## pafreqUsually_T1                       0.094       0.003        1,082.00 
-## PA_autonomous_T3                       0.092       0.003        873.00   
-## PA_autonomous_03_T3                    0.088       0.001        867.00   
-## PA_identified_03_T3                    0.088       0.001        867.00   
-## PA_intention_01_T1                     0.088       &lt; 0.001      1,073.00 
-## sitLieAccelerometer_T1                 0.086       0.145        706.00   
-## pafreqUsually_T3                       0.085       0.003        874.00   
-## pahrsUsually_T1                        0.085       0.005        1,082.00 
-## PA_agrbct_T3                           0.084       &lt; 0.001      873.00   
-## PA_integrated_T3                       0.083       &lt; 0.001      872.00   
-## PA_intrinsic_T3                        0.08        0.004        872.00   
-## PA_autonomous_07_T3                    0.079       0.008        869.00   
-## PA_intrinsic_01_T3                     0.079       0.008        869.00   
-## PA_autonomous_04_T3                    0.076       0.006        870.00   
-## PA_integrated_01_T3                    0.076       0.006        870.00   
-## PA_identified_T3                       0.075       0.004        873.00   
-## PA_frqbct_T3                           0.074       &lt; 0.001      869.00   
-## PA_intrinsic_T1                        0.074       &lt; 0.001      1,074.00 
-## PA_autonomous_T1                       0.073       &lt; 0.001      1,078.00 
-## PA_agrbct_02_T3                        0.072       &lt; 0.001      868.00   
-## PA_autonomous_06_T1                    0.072       &lt; 0.001      1,066.00 
-## PA_autonomous_07_T1                    0.072       0.005        1,070.00 
-## PA_integrated_03_T1                    0.072       &lt; 0.001      1,066.00 
-## PA_intrinsic_01_T1                     0.072       0.005        1,070.00 
-## paAccelerometer_T1                     0.072       0.096        706.00   
-## PA_integrated_T1                       0.071       &lt; 0.001      1,073.00 
-## paAccelerometer_diff                   0.069       0.074        431.00   
-## pahrsUsually_T3                        0.069       &lt; 0.001      869.00   
-## PA_autonomous_05_T3                    0.068       &lt; 0.001      870.00   
-## PA_integrated_02_T3                    0.068       &lt; 0.001      870.00   
-## PA_agrbct_08_T3                        0.067       &lt; 0.001      867.00   
-## PA_autonomous_08_T3                    0.067       &lt; 0.001      866.00   
-## PA_intrinsic_02_T3                     0.067       &lt; 0.001      866.00   
-## SB_dnorm_01_T3                         0.067       0.022        861.00   
-## sitLieAccelerometer_T3                 0.067       0.068        499.00   
-## PA_oexp_T1                             0.065       0.012        1,078.00 
-## PA_agrbct_01_T3                        0.063       &lt; 0.001      869.00   
-## PA_agrbct_04_T3                        0.062       &lt; 0.001      870.00   
-## PA_agrbct_01_T1                        0.061       &lt; 0.001      1,071.00 
-## PA_autonomous_09_T3                    0.061       0.001        863.00   
-## PA_intrinsic_03_T3                     0.061       0.001        863.00   
-## PA_agrbct_10_T3                        0.06        &lt; 0.001      864.00   
-## PA_autonomous_04_T1                    0.059       0.004        1,070.00 
-## PA_integrated_01_T1                    0.059       0.004        1,070.00 
-## PA_autonomous_03_T1                    0.058       &lt; 0.001      1,070.00 
-## PA_autonomous_06_T3                    0.058       &lt; 0.001      869.00   
-## PA_frqbct_07_T3                        0.058       0.004        864.00   
-## PA_identified_03_T1                    0.058       &lt; 0.001      1,070.00 
-## PA_integrated_03_T3                    0.058       &lt; 0.001      869.00   
-## PA_intention_01_T3                     0.058       &lt; 0.001      862.00   
-## PA_oexp_11_T3                          0.058       0.012        868.00   
-## SB_inorm_01_T3                         0.058       0.005        859.00   
-## sitBreaks_T1                           0.058       0.085        706.00   
-## PA_agrbct_09_T3                        0.057       &lt; 0.001      867.00   
-## PA_autonomous_08_T1                    0.057       &lt; 0.001      1,066.00 
-## PA_copingplan_T3                       0.057       &lt; 0.001      872.00   
-## PA_frqbct_04_T3                        0.057       0.004        863.00   
-## PA_intrinsic_02_T1                     0.057       &lt; 0.001      1,066.00 
-## PA_oexp_T3                             0.057       0.02         874.00   
-## PA_agrbct_05_T1                        0.055       &lt; 0.001      1,071.00 
-## PA_autonomous_09_T1                    0.055       &lt; 0.001      1,057.00 
-## PA_intrinsic_03_T1                     0.055       &lt; 0.001      1,057.00 
-## PA_oexp_11_T1                          0.055       0.011        1,063.00 
-## PA_agrbct_05_T3                        0.054       &lt; 0.001      869.00   
-## PA_intention_T3                        0.054       &lt; 0.001      871.00   
-## PA_oexp_01_T3                          0.054       0.012        872.00   
-## PA_autonomous_02_T3                    0.053       0.004        868.00   
-## PA_identified_02_T3                    0.053       0.004        868.00   
-## PA_agrbct_T1                           0.052       &lt; 0.001      1,071.00 
-## PA_frqbct_08_T3                        0.052       &lt; 0.001      865.00   
-## SB_inorm_T3                            0.052       &lt; 0.001      863.00   
-## SB_intention_T3                        0.051       0.02         862.00   
-## PA_copplan_02_T3                       0.05        &lt; 0.001      870.00   
-## PA_copplan_04_T3                       0.05        &lt; 0.001      866.00   
-## PA_dnorm_01_T1                         0.05        0.004        1,073.00 
-## PA_dnorm_T1                            0.05        0.003        1,073.00 
-## SB_intention_01_T3                     0.05        0.018        859.00   
-## SB_oexp_T1                             0.05        0.012        1,064.00 
-## PA_actCop_T3                           0.049       &lt; 0.001      872.00   
-## PA_agrbct_10_diff                      0.049       &lt; 0.001      855.00   
-## PA_frqbct_09_T3                        0.049       &lt; 0.001      857.00   
-## b5ext_01_T1                            0.048       0.013        1,063.00 
-## PA_autonomous_05_T1                    0.048       &lt; 0.001      1,062.00 
-## PA_integrated_02_T1                    0.048       &lt; 0.001      1,062.00 
-## PA_copplan_03_T3                       0.047       0.002        869.00   
-## padaysLastweek_T1                      0.047       &lt; 0.001      1,082.00 
-## SB_oexp_06_T1                          0.047       0.011        1,058.00 
-## sitLieAccelerometer_diff               0.047       0.03         431.00   
-## PA_goal_01_T1                          0.046       &lt; 0.001      1,061.00 
-## PA_goal_T1                             0.046       &lt; 0.001      1,061.00 
-## PA_oexpNeg_02_T1                       0.046       &lt; 0.001      1,066.00 
-## b5agr_01_T1                            0.045       0.002        1,061.00 
-## PA_oexp_12_T3                          0.045       0.008        865.00   
-## PA_agrbct_06_T3                        0.044       &lt; 0.001      860.00   
-## PA_agrbct_07_T3                        0.044       &lt; 0.001      862.00   
-## PA_agrbct_10_T1                        0.044       &lt; 0.001      1,071.00 
-## PA_introjected_T3                      0.044       0.009        871.00   
-## PA_oexp_06_T3                          0.044       0.013        869.00   
-## SB_intention_02_T3                     0.044       0.014        857.00   
-## SB_sePbc_T3                            0.044       &lt; 0.001      861.00   
-## PA_copplan_01_T3                       0.043       &lt; 0.001      872.00   
-## PA_frqbct_06_T3                        0.043       0.002        861.00   
-## PA_goal_01_diff                        0.043       &lt; 0.001      835.00   
-## PA_goal_diff                           0.043       &lt; 0.001      835.00   
-## SB_intention_03_T3                     0.043       0.02         857.00   
-## SB_sePbc_01_T3                         0.043       0.007        857.00   
-## PA_controlled_04_T3                    0.042       0.008        864.00   
-## PA_intention_02_T3                     0.042       &lt; 0.001      866.00   
-## PA_introjected_01_T3                   0.042       0.008        864.00   
-## PA_oexp_01_T1                          0.042       0.011        1,071.00 
-## PA_oexp_12_T1                          0.042       0.014        1,070.00 
-## PA_pbcNeg_02_diff                      0.042       &lt; 0.001      859.00   
-## pahrsLastweek_T3                       0.042       0.028        843.00   
-## SB_inorm_02_T3                         0.042       0.005        854.00   
-## PA_actplan_01_T3                       0.041       &lt; 0.001      864.00   
-## PA_autonomous_01_T3                    0.041       0.005        867.00   
-## PA_identified_01_T3                    0.041       0.005        867.00   
-## PA_identified_T1                       0.04        0.004        1,074.00 
-## padaysLastweek_T3                      0.04        &lt; 0.001      883.00   
-## SB_oexp_05_T1                          0.04        0.004        1,060.00 
-## SB_sePbc_05_T3                         0.04        0.001        852.00   
-## PA_oexp_07_T1                          0.039       0.008        1,062.00 
-## PA_opportunities_01_T3                 0.039       0.015        871.00   
-## SB_dnorm_T3                            0.039       0.021        861.00   
-## PA_actionplan_T1                       0.038       &lt; 0.001      1,073.00 
-## PA_actplan_04_T1                       0.038       &lt; 0.001      1,073.00 
-## PA_frqbct_02_T3                        0.038       0.023        865.00   
-## PA_frqbct_03_T3                        0.038       0.001        865.00   
-## PA_oexpNeg_08_T1                       0.038       0.004        1,063.00 
-## SB_intention_04_T3                     0.038       0.019        858.00   
-## SB_oexp_04_T1                          0.038       0.005        1,063.00 
-## PA_actplan_03_T1                       0.037       &lt; 0.001      1,073.00 
-## PA_amotivation_04_T3                   0.037       0.02         872.00   
-## PA_opportunities_01_T1                 0.037       0.02         1,070.00 
-## PA_actplan_04_T3                       0.036       &lt; 0.001      863.00   
-## PA_actCop_T1                           0.035       &lt; 0.001      1,073.00 
-## PA_actionplan_T3                       0.035       &lt; 0.001      871.00   
-## PA_agrbct_03_T3                        0.035       &lt; 0.001      868.00   
-## PA_agrbct_04_T1                        0.035       &lt; 0.001      1,071.00 
-## PA_amotivation_T1                      0.035       0.002        1,072.00 
-## PA_copplan_03_T1                       0.035       &lt; 0.001      1,073.00 
-## PA_copplan_04_T1                       0.035       &lt; 0.001      1,073.00 
-## PA_frqbct_04_T1                        0.035       &lt; 0.001      1,070.00 
-## PA_actplan_02_T3                       0.034       0.004        861.00   
-## PA_agrbct_diff                         0.034       0.004        864.00   
-## PA_extrinsic_diff                      0.034       0.007        860.00   
-## SB_sePbc_04_T1                         0.034       &lt; 0.001      1,060.00 
-## b5agr_T1                               0.033       0.012        1,068.00 
-## PA_frqbct_05_T1                        0.033       &lt; 0.001      1,070.00 
-## PA_actplan_01_T1                       0.032       &lt; 0.001      1,073.00 
-## PA_agrbct_01_diff                      0.032       &lt; 0.001      861.00   
-## PA_agrbct_09_T1                        0.032       0.001        1,071.00 
-## PA_amotivation_03_T1                   0.032       &lt; 0.001      1,067.00 
-## PA_controlled_05_T3                    0.032       0.008        868.00   
-## PA_introjected_02_T3                   0.032       0.008        868.00   
-## PA_pbc_01_T1                           0.032       &lt; 0.001      1,069.00 
-## PA_amotivation_01_T1                   0.031       &lt; 0.001      1,062.00 
-## PA_autonomous_02_T1                    0.031       &lt; 0.001      1,063.00 
-## PA_controlled_02_diff                  0.031       0.015        859.00   
-## PA_extrinsic_02_diff                   0.031       0.015        859.00   
-## PA_goal_01_T3                          0.031       &lt; 0.001      852.00   
-## PA_goal_T3                             0.031       &lt; 0.001      852.00   
-## PA_identified_02_T1                    0.031       &lt; 0.001      1,063.00 
-## SB_intention_diff                      0.031       0.016        850.00   
-## PA_amotivation_T3                      0.03        0.019        872.00   
-## PA_oexp_03_T3                          0.03        0.012        867.00   
-## PA_oexp_05_T3                          0.03        0.006        870.00   
-## PA_oexp_06_T1                          0.03        0.016        1,071.00 
-## SB_inorm_02_T1                         0.03        0.005        1,053.00 
-## SB_intention_01_diff                   0.03        0.016        844.00   
-## PA_autonomous_08_diff                  0.029       0.011        851.00   
-## PA_intrinsic_02_diff                   0.029       0.011        851.00   
-## PA_actplan_02_T1                       0.028       &lt; 0.001      1,073.00 
-## PA_agrbct_06_T1                        0.028       0.001        1,071.00 
-## PA_amotivation_diff                    0.028       0.017        862.00   
-## PA_oexp_10_diff                        0.028       0.007        858.00   
-## PA_pbc_T1                              0.028       0.004        1,071.00 
-## PA_sePbc_T1                            0.028       0.007        1,071.00 
-## SB_intention_04_T1                     0.028       0.027        1,055.00 
-## SB_sePbc_03_T3                         0.028       0.002        859.00   
-## PA_amotivation_04_T1                   0.027       &lt; 0.001      1,066.00 
-## PA_controlled_diff                     0.027       0.012        863.00   
-## PA_dnorm_02_T1                         0.027       0.004        1,073.00 
-## PA_frqbct_T1                           0.027       &lt; 0.001      1,070.00 
-## PA_oexp_04_T3                          0.027       &lt; 0.001      870.00   
-## PA_amotivation_02_T1                   0.026       0.005        1,057.00 
-## PA_oexp_10_T3                          0.026       0.015        869.00   
-## PA_selfefficacyNeg_02_T3               0.026       0.002        877.00   
-## SB_sePbc_03_T1                         0.026       &lt; 0.001      1,060.00 
-## symptom_irritabilityAngerbursts_T1     0.026       0.01         1,039.00 
-## b5open_01_T1                           0.025       0.016        1,062.00 
-## PA_agrbct_02_T1                        0.025       &lt; 0.001      1,071.00 
-## symptom_tirednessFaintness_T1          0.025       0.009        1,058.00 
-## PA_agrbct_05_diff                      0.024       0.005        860.00   
-## PA_controlled_02_T1                    0.024       &lt; 0.001      1,069.00 
-## PA_extrinsic_02_T1                     0.024       &lt; 0.001      1,069.00 
-## PA_frqbct_02_T1                        0.024       &lt; 0.001      1,070.00 
-## pahrsLastweek_T1                       0.024       0.007        1,082.00 
-## paLastweek_T1                          0.024       0.006        1,082.00 
-## SB_intention_02_diff                   0.024       0.013        839.00   
-## SB_oexp_03_T1                          0.024       0.014        1,058.00 
-## PA_agrbct_08_diff                      0.023       0.006        858.00   
-## PA_agrbct_08_T1                        0.023       &lt; 0.001      1,071.00 
-## PA_copingplan_T1                       0.023       &lt; 0.001      1,073.00 
-## PA_frqbct_05_T3                        0.023       &lt; 0.001      860.00   
-## PA_oexp_05_T1                          0.023       0.011        1,067.00 
-## PA_oexpNeg_09_T1                       0.023       &lt; 0.001      1,064.00 
-## PA_selfefficacy_T3                     0.023       0.009        878.00   
-## SB_intention_03_diff                   0.023       0.007        838.00   
-## SB_intention_03_T1                     0.023       0.027        1,054.00 
-## SB_intention_04_diff                   0.023       0.004        840.00   
-## SB_sePbc_02_T3                         0.023       0.01         859.00   
-## SB_sePbc_03_diff                       0.023       &lt; 0.001      844.00   
-## symptom_T1                             0.023       0.039        1,084.00 
-## PA_agrbct_07_T1                        0.022       &lt; 0.001      1,071.00 
-## PA_extrinsic_T1                        0.022       &lt; 0.001      1,069.00 
-## SB_sePbc_04_T3                         0.022       0.002        858.00   
-## PA_actplan_03_T3                       0.021       &lt; 0.001      860.00   
-## PA_amotivation_04_diff                 0.021       0.015        857.00   
-## PA_oexp_11_diff                        0.021       0.007        852.00   
-## PA_opportunities_04_T1                 0.021       0.008        1,070.00 
-## PA_pbcNeg_02_T3                        0.021       &lt; 0.001      873.00   
-## SB_inorm_diff                          0.021       &lt; 0.001      851.00   
-## SB_sePbc_05_diff                       0.021       0.002        831.00   
-## b5ext_T1                               0.02        0.022        1,068.00 
-## PA_agrbct_04_diff                      0.02        0.007        861.00   
-## PA_agrbct_09_diff                      0.02        0.004        858.00   
-## PA_amotivation_01_diff                 0.02        0.003        848.00   
-## PA_controlled_03_diff                  0.02        0.009        852.00   
-## PA_extrinsic_03_diff                   0.02        0.009        852.00   
-## PA_opportunitiesNeg_08_T1              0.02        &lt; 0.001      1,066.00 
-## symptom_irritabilityAngerbursts_T3     0.02        0.006        869.00   
-## symptom_stomachAche_diff               0.02        0.01         823.00   
-## PA_oexp_07_T3                          0.019       0.002        867.00   
-## PA_oexp_10_T1                          0.019       0.006        1,069.00 
-## SB_inorm_01_diff                       0.019       0.002        840.00   
-## SB_oexp_T3                             0.019       0.013        863.00   
-## SB_sePbc_diff                          0.019       &lt; 0.001      849.00   
-## symptom_tirednessFaintness_diff        0.019       0.004        857.00   
-## symptom_tirednessFaintness_T3          0.019       0.035        877.00   
-## PA_amotivation_03_T3                   0.018       0.019        866.00   
-## PA_dnorm_01_T3                         0.018       0.015        872.00   
-## PA_oexp_07_diff                        0.018       &lt; 0.001      852.00   
-## PA_oexpNeg_02_T3                       0.018       &lt; 0.001      870.00   
-## PA_opportunities_02_T1                 0.018       &lt; 0.001      1,067.00 
-## PA_opportunities_T1                    0.018       &lt; 0.001      1,075.00 
-## SB_inorm_02_diff                       0.018       &lt; 0.001      835.00   
-## b5neur_01_T1                           0.017       0.014        1,064.00 
-## PA_introjected_diff                    0.017       0.013        863.00   
-## SB_oexp_02_T1                          0.017       0.014        1,056.00 
-## PA_amotivation_01_T3                   0.016       0.008        863.00   
-## PA_controlled_04_diff                  0.016       0.009        856.00   
-## PA_controlled_05_diff                  0.016       0.01         856.00   
-## PA_dnorm_T3                            0.016       0.017        873.00   
-## PA_frqbct_03_diff                      0.016       0.006        856.00   
-## PA_frqbct_06_T1                        0.016       &lt; 0.001      1,070.00 
-## PA_introjected_01_diff                 0.016       0.009        856.00   
-## PA_introjected_02_diff                 0.016       0.01         856.00   
-## PA_frqbct_01_T3                        0.015       &lt; 0.001      869.00   
-## PA_opportunitiesNeg_06_diff            0.015       0.007        853.00   
-## pafreqUsually_diff                     0.015       &lt; 0.001      873.00   
-## SB_oexpNeg_01_T3                       0.015       0.016        862.00   
-## SB_oexpNeg_07_T3                       0.015       0.01         859.00   
-## SB_sePbc_T1                            0.015       0.011        1,064.00 
-## symptom_headAche_diff                  0.015       &lt; 0.001      853.00   
-## symptom_stomachAche_T1                 0.015       0.023        1,026.00 
-## b5cons_01_T1                           0.014       0.015        1,059.00 
-## b5neur_T1                              0.014       0.012        1,068.00 
-## PA_frqbct_01_T1                        0.014       &lt; 0.001      1,070.00 
-## PA_frqbct_08_T1                        0.014       &lt; 0.001      1,070.00 
-## PA_opportunities_01_diff               0.014       0.004        859.00   
-## PA_pbc_03_T1                           0.014       0.01         1,066.00 
-## SB_intention_T1                        0.014       0.035        1,064.00 
-## symptom_lowerBackPain_diff             0.014       0.004        851.00   
-## symptom_sleepDifficulty_T3             0.014       0.017        872.00   
-## PA_dnorm_02_diff                       0.013       &lt; 0.001      862.00   
-## PA_oexpNeg_08_T3                       0.013       0.014        871.00   
-## PA_opportunities_05_T3                 0.013       0.007        871.00   
-## SB_dnorm_02_diff                       0.013       0.007        841.00   
-## SB_oexp_06_T3                          0.013       0.006        857.00   
-## PA_agrbct_02_diff                      0.012       0.006        859.00   
-## PA_intention_02_diff                   0.012       &lt; 0.001      858.00   
-## PA_opportunities_02_T3                 0.012       0.012        874.00   
-## SB_dnorm_02_T3                         0.012       0.016        856.00   
-## SB_dnorm_diff                          0.012       0.018        848.00   
-## SB_inorm_T1                            0.012       0.004        1,064.00 
-## SB_oexpNeg_07_T1                       0.012       0.003        1,057.00 
-## SB_sePbc_02_diff                       0.012       &lt; 0.001      844.00   
-## b5neurNeg_02_T1                        0.011       0.002        1,061.00 
-## PA_amotivation_02_diff                 0.011       0.008        847.00   
-## PA_controlled_03_T1                    0.011       &lt; 0.001      1,064.00 
-## PA_extrinsic_03_T1                     0.011       &lt; 0.001      1,064.00 
-## PA_inorm_01_T3                         0.011       0.027        869.00   
-## PA_inorm_T3                            0.011       0.027        869.00   
-## PA_opportunities_T3                    0.011       0.007        876.00   
-## PA_pbc_diff                            0.011       0.011        867.00   
-## SB_oexp_04_diff                        0.011       0.001        846.00   
-## symptom_neckShoulderPain_T1            0.011       0.033        1,047.00 
-## b5open_T1                              0.01        0.03         1,068.00 
-## PA_controlled_01_T1                    0.01        &lt; 0.001      1,068.00 
-## PA_extrinsic_01_T1                     0.01        &lt; 0.001      1,068.00 
-## PA_oexpNeg_09_T3                       0.01        0.019        867.00   
-## paminLastweek_T3                       0.01        0.014        678.00   
-## SB_dnorm_02_T1                         0.01        0.007        1,060.00 
-## SB_sePbc_01_T1                         0.01        0.014        1,062.00 
-## symptom_sleepDifficulty_T1             0.01        0.023        1,052.00 
-## symptom_T3                             0.01        0.048        889.00   
-## PA_agrbct_03_T1                        0.009       &lt; 0.001      1,071.00 
-## PA_oexp_04_T1                          0.009       0.007        1,071.00 
-## PA_opportunities_07_T1                 0.009       0.001        1,068.00 
-## PA_selfefficacy_01_T1                  0.009       &lt; 0.001      1,071.00 
-## SB_dnorm_01_diff                       0.009       0.021        846.00   
-## SB_oexp_04_T3                          0.009       0.011        859.00   
-## symptom_diff                           0.009       &lt; 0.001      889.00   
-## PA_copplan_03_diff                     0.008       0.001        861.00   
-## PA_oexp_03_T1                          0.008       0.018        1,064.00 
-## SB_oexp_03_T3                          0.008       0.007        856.00   
-## SB_oexpNeg_01_T1                       0.008       &lt; 0.001      1,063.00 
-## PA_controlled_01_diff                  0.007       &lt; 0.001      859.00   
-## PA_copingplan_diff                     0.007       &lt; 0.001      864.00   
-## PA_copplan_01_T1                       0.007       &lt; 0.001      1,073.00 
-## PA_extrinsic_01_diff                   0.007       &lt; 0.001      859.00   
-## PA_frqbct_03_T1                        0.007       &lt; 0.001      1,070.00 
-## PA_frqbct_09_T1                        0.007       &lt; 0.001      1,070.00 
-## PA_selfefficacy_T1                     0.007       0.005        1,071.00 
-## SB_oexp_05_diff                        0.007       &lt; 0.001      842.00   
-## symptom_headAche_T1                    0.007       0.027        1,055.00 
-## symptom_tensionNervousness_T1          0.007       0.024        1,051.00 
-## PA_autonomous_02_diff                  0.006       0.004        853.00   
-## PA_controlled_05_T1                    0.006       &lt; 0.001      1,066.00 
-## PA_controlled_T3                       0.006       &lt; 0.001      871.00   
-## PA_copplan_01_diff                     0.006       &lt; 0.001      864.00   
-## PA_dnormparents_02_T3                  0.006       0.009        870.00   
-## PA_frqbct_09_diff                      0.006       &lt; 0.001      848.00   
-## PA_identified_02_diff                  0.006       0.004        853.00   
-## PA_inorm_01_T1                         0.006       0.003        1,073.00 
-## PA_inorm_T1                            0.006       0.003        1,073.00 
-## PA_introjected_02_T1                   0.006       &lt; 0.001      1,066.00 
-## PA_oexpNeg_08_diff                     0.006       0.017        856.00   
-## SB_sePbc_04_diff                       0.006       &lt; 0.001      842.00   
-## symptom_headAche_T3                    0.006       0.034        876.00   
-## b5agrNeg_02_T1                         0.005       0.01         1,064.00 
-## PA_controlled_T1                       0.005       &lt; 0.001      1,073.00 
-## PA_oexp_05_diff                        0.005       &lt; 0.001      858.00   
-## PA_pbcNeg_02_T1                        0.005       0.005        1,063.00 
-## pahrsLastweek_diff                     0.005       0.001        842.00   
-## SB_oexp_06_diff                        0.005       0.003        843.00   
-## SB_oexp_diff                           0.005       &lt; 0.001      851.00   
-## SB_sePbc_05_T1                         0.005       0.012        1,054.00 
-## PA_copplan_02_T1                       0.004       &lt; 0.001      1,073.00 
-## PA_opportunities_04_diff               0.004       0.003        863.00   
-## PA_opportunities_07_T3                 0.004       &lt; 0.001      876.00   
-## PA_opportunitiesNeg_06_T3              0.004       0.012        874.00   
-## PA_pbc_01_T3                           0.004       0.021        875.00   
-## SB_oexp_05_T3                          0.004       0.001        858.00   
-## SB_sePbc_01_diff                       0.004       &lt; 0.001      844.00   
-## symptom_lowerBackPain_T1               0.004       0.005        1,053.00 
-## symptom_lowerBackPain_T3               0.004       0.011        870.00   
-## fatpct_T1                              0.003       0.123        942.00   
-## PA_autonomous_06_diff                  0.003       &lt; 0.001      855.00   
-## PA_autonomous_09_diff                  0.003       0.002        844.00   
-## PA_frqbct_07_T1                        0.003       &lt; 0.001      1,070.00 
-## PA_integrated_03_diff                  0.003       &lt; 0.001      855.00   
-## PA_intrinsic_03_diff                   0.003       0.002        844.00   
-## PA_oexp_01_diff                        0.003       0.009        861.00   
-## PA_opportunities_02_diff               0.003       0.003        859.00   
-## SB_dnorm_T1                            0.003       0.007        1,062.00 
-## SB_sePbc_02_T1                         0.003       0.015        1,061.00 
-## symptom_stomachAche_T3                 0.003       0.043        863.00   
-## b5extNeg_02_T1                         0.002       0.012        1,062.00 
-## PA_amotivation_02_T3                   0.002       0.005        863.00   
-## PA_autonomous_01_T1                    0.002       0.012        1,063.00 
-## PA_identified_01_T1                    0.002       0.012        1,063.00 
-## PA_intention_diff                      0.002       0.001        863.00   
-## PA_oexp_04_diff                        0.002       &lt; 0.001      860.00   
-## PA_oexpNeg_09_diff                     0.002       0.012        851.00   
-## PA_selfefficacyNeg_02_T1               0.002       0.005        1,071.00 
-## symptom_irritabilityAngerbursts_diff   0.002       &lt; 0.001      840.00   
-## PA_amotivation_03_diff                 0.001       0.008        853.00   
-## PA_dnorm_diff                          0.001       0.001        865.00   
-## PA_intrinsic_diff                      0.001       0.006        865.00   
-## PA_oexp_12_diff                        0.001       0.003        854.00   
-## PA_sePbc_T3                            0.001       0.013        878.00   
-## SB_oexp_03_diff                        0.001       &lt; 0.001      839.00   
-## symptom_neckShoulderPain_T3            0.001       0.046        874.00   
-## b5cons_T1                              &lt; 0.001     0.007        1,067.00 
-## b5consNeg_02_T1                        &lt; 0.001     0.002        1,065.00 
-## b5openNeg_02_T1                        &lt; 0.001     0.016        1,066.00 
-## PA_actCop_diff                         &lt; 0.001     0.001        864.00   
-## PA_actionplan_diff                     &lt; 0.001     0.001        863.00   
-## PA_actplan_01_diff                     &lt; 0.001     &lt; 0.001      856.00   
-## PA_actplan_02_diff                     &lt; 0.001     0.003        854.00   
-## PA_actplan_03_diff                     &lt; 0.001     0.006        852.00   
-## PA_actplan_04_diff                     &lt; 0.001     &lt; 0.001      855.00   
-## PA_agrbct_03_diff                      &lt; 0.001     &lt; 0.001      859.00   
-## PA_agrbct_06_diff                      &lt; 0.001     0.002        851.00   
-## PA_agrbct_07_diff                      &lt; 0.001     0.007        853.00   
-## PA_autonomous_01_diff                  &lt; 0.001     &lt; 0.001      851.00   
-## PA_autonomous_03_diff                  &lt; 0.001     0.005        855.00   
-## PA_autonomous_04_diff                  &lt; 0.001     0.001        859.00   
-## PA_autonomous_05_diff                  &lt; 0.001     0.024        853.00   
-## PA_autonomous_07_diff                  &lt; 0.001     &lt; 0.001      859.00   
-## PA_autonomous_diff                     &lt; 0.001     0.008        868.00   
-## PA_controlled_01_T3                    &lt; 0.001     &lt; 0.001      869.00   
-## PA_controlled_02_T3                    &lt; 0.001     0.006        868.00   
-## PA_controlled_03_T3                    &lt; 0.001     0.003        864.00   
-## PA_controlled_04_T1                    &lt; 0.001     0.001        1,068.00 
-## PA_copplan_02_diff                     &lt; 0.001     &lt; 0.001      862.00   
-## PA_copplan_04_diff                     &lt; 0.001     0.003        858.00   
-## PA_dnorm_01_diff                       &lt; 0.001     0.001        864.00   
-## PA_extrinsic_01_T3                     &lt; 0.001     &lt; 0.001      869.00   
-## PA_extrinsic_02_T3                     &lt; 0.001     0.006        868.00   
-## PA_extrinsic_03_T3                     &lt; 0.001     0.003        864.00   
-## PA_extrinsic_T3                        &lt; 0.001     0.002        869.00   
-## PA_frqbct_01_diff                      &lt; 0.001     &lt; 0.001      860.00   
-## PA_frqbct_02_diff                      &lt; 0.001     0.024        856.00   
-## PA_frqbct_04_diff                      &lt; 0.001     0.018        854.00   
-## PA_frqbct_05_diff                      &lt; 0.001     0.006        851.00   
-## PA_frqbct_06_diff                      &lt; 0.001     &lt; 0.001      852.00   
-## PA_frqbct_07_diff                      &lt; 0.001     0.011        855.00   
-## PA_frqbct_08_diff                      &lt; 0.001     0.001        856.00   
-## PA_frqbct_diff                         &lt; 0.001     0.012        860.00   
-## PA_identified_01_diff                  &lt; 0.001     &lt; 0.001      851.00   
-## PA_identified_03_diff                  &lt; 0.001     0.005        855.00   
-## PA_identified_diff                     &lt; 0.001     &lt; 0.001      865.00   
-## PA_inorm_01_diff                       &lt; 0.001     0.007        861.00   
-## PA_inorm_diff                          &lt; 0.001     0.007        861.00   
-## PA_integrated_01_diff                  &lt; 0.001     0.001        859.00   
-## PA_integrated_02_diff                  &lt; 0.001     0.024        853.00   
-## PA_integrated_diff                     &lt; 0.001     0.013        863.00   
-## PA_intention_01_diff                   &lt; 0.001     0.002        854.00   
-## PA_intrinsic_01_diff                   &lt; 0.001     &lt; 0.001      859.00   
-## PA_introjected_01_T1                   &lt; 0.001     0.001        1,068.00 
-## PA_introjected_T1                      &lt; 0.001     &lt; 0.001      1,073.00 
-## PA_oexp_03_diff                        &lt; 0.001     &lt; 0.001      851.00   
-## PA_oexp_06_diff                        &lt; 0.001     &lt; 0.001      858.00   
-## PA_oexp_diff                           &lt; 0.001     0.01         869.00   
-## PA_oexpNeg_02_diff                     &lt; 0.001     &lt; 0.001      854.00   
-## PA_opportunities_04_T3                 &lt; 0.001     0.01         873.00   
-## PA_opportunities_05_diff               &lt; 0.001     0.006        856.00   
-## PA_opportunities_05_T1                 &lt; 0.001     &lt; 0.001      1,064.00 
-## PA_opportunities_07_diff               &lt; 0.001     0.001        862.00   
-## PA_opportunities_diff                  &lt; 0.001     0.006        868.00   
-## PA_opportunitiesNeg_03_diff            &lt; 0.001     &lt; 0.001      856.00   
-## PA_opportunitiesNeg_03_T1              &lt; 0.001     &lt; 0.001      1,065.00 
-## PA_opportunitiesNeg_03_T3              &lt; 0.001     &lt; 0.001      872.00   
-## PA_opportunitiesNeg_06_T1              &lt; 0.001     0.024        1,059.00 
-## PA_pbc_01_diff                         &lt; 0.001     0.014        865.00   
-## PA_pbc_03_diff                         &lt; 0.001     0.007        861.00   
-## PA_pbc_03_T3                           &lt; 0.001     0.01         874.00   
-## PA_pbc_T3                              &lt; 0.001     0.013        876.00   
-## PA_selfefficacy_01_diff                &lt; 0.001     0.009        863.00   
-## PA_selfefficacy_01_T3                  &lt; 0.001     0.012        873.00   
-## PA_selfefficacy_diff                   &lt; 0.001     0.001        868.00   
-## PA_selfefficacyNeg_02_diff             &lt; 0.001     &lt; 0.001      867.00   
-## PA_sePbc_diff                          &lt; 0.001     0.007        868.00   
-## padaysLastweek_diff                    &lt; 0.001     &lt; 0.001      882.00   
-## pahrsUsually_diff                      &lt; 0.001     0.002        868.00   
-## paminLastweek_diff                     &lt; 0.001     &lt; 0.001      677.00   
-## paminLastweek_T1                       &lt; 0.001     0.01         1,082.00 
-## SB_dnorm_01_T1                         &lt; 0.001     0.004        1,059.00 
-## SB_inorm_01_T1                         &lt; 0.001     0.008        1,056.00 
-## SB_intention_01_T1                     &lt; 0.001     0.025        1,059.00 
-## SB_intention_02_T1                     &lt; 0.001     0.034        1,056.00 
-## SB_oexp_02_diff                        &lt; 0.001     &lt; 0.001      839.00   
-## SB_oexp_02_T3                          &lt; 0.001     &lt; 0.001      858.00   
-## SB_oexpNeg_01_diff                     &lt; 0.001     0.003        849.00   
-## SB_oexpNeg_07_diff                     &lt; 0.001     &lt; 0.001      842.00   
-## symptom_neckShoulderPain_diff          &lt; 0.001     0.01         848.00   
-## symptom_sleepDifficulty_diff           &lt; 0.001     &lt; 0.001      849.00   
-## symptom_tensionNervousness_diff        &lt; 0.001     0.001        851.00   
-## symptom_tensionNervousness_T3          &lt; 0.001     0.037        874.00</code></pre>
+## Variable              ICC class   ICC school   n        
+## --------------------  ----------  -----------  ---------
+## PA_intention_02_T1    0.111       &lt; 0.001      1,073.00 
+## PA_intention_T1       0.105       &lt; 0.001      1,073.00 
+## pafreqUsually_T1      0.094       0.003        1,082.00 
+## PA_intention_01_T1    0.088       &lt; 0.001      1,073.00 
+## pahrsUsually_T1       0.085       0.005        1,082.00 
+## PA_intrinsic_T1       0.074       &lt; 0.001      1,074.00 
+## PA_autonomous_T1      0.073       &lt; 0.001      1,078.00 
+## PA_integrated_T1      0.071       &lt; 0.001      1,073.00 
+## PA_oexp_T1            0.065       0.012        1,078.00 
+## PA_dnorm_01_T1        0.05        0.004        1,073.00 
+## PA_dnorm_T1           0.05        0.003        1,073.00 
+## padaysLastweek_T1     0.047       &lt; 0.001      1,082.00 
+## PA_identified_T1      0.04        0.004        1,074.00 
+## PA_actionplan_T1      0.038       &lt; 0.001      1,073.00 
+## PA_actplan_04_T1      0.038       &lt; 0.001      1,073.00 
+## PA_actplan_03_T1      0.037       &lt; 0.001      1,073.00 
+## PA_actCop_T1          0.035       &lt; 0.001      1,073.00 
+## PA_copplan_03_T1      0.035       &lt; 0.001      1,073.00 
+## PA_copplan_04_T1      0.035       &lt; 0.001      1,073.00 
+## PA_actplan_01_T1      0.032       &lt; 0.001      1,073.00 
+## PA_actplan_02_T1      0.028       &lt; 0.001      1,073.00 
+## PA_dnorm_02_T1        0.027       0.004        1,073.00 
+## pahrsLastweek_T1      0.024       0.007        1,082.00 
+## paLastweek_T1         0.024       0.006        1,082.00 
+## PA_copingplan_T1      0.023       &lt; 0.001      1,073.00 
+## symptom_T1            0.023       0.039        1,084.00 
+## PA_opportunities_T1   0.018       &lt; 0.001      1,075.00 
+## PA_copplan_01_T1      0.007       &lt; 0.001      1,073.00 
+## PA_inorm_01_T1        0.006       0.003        1,073.00 
+## PA_inorm_T1           0.006       0.003        1,073.00 
+## PA_controlled_T1      0.005       &lt; 0.001      1,073.00 
+## PA_copplan_02_T1      0.004       &lt; 0.001      1,073.00 
+## PA_introjected_T1     &lt; 0.001     &lt; 0.001      1,073.00 
+## paminLastweek_T1      &lt; 0.001     0.01         1,082.00</code></pre>
 <pre class="r"><code>
-vardatatable %&gt;% select(Variable, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC school`)) %&gt;% print(n = 20) %&gt;% apa_table(caption = &quot;Intra-class correlations sorted by school ICC&quot;)
-## # A tibble: 475 x 4
-##                         Variable `ICC class` `ICC school`     n
-##                            &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;
-##  1        sitLieAccelerometer_T1       0.086        0.145   706
-##  2                     fatpct_T1       0.003        0.123   942
-##  3            paAccelerometer_T1       0.072        0.096   706
-##  4                  sitBreaks_T1       0.058        0.085   706
-##  5          paAccelerometer_diff       0.069        0.074   431
-##  6        sitLieAccelerometer_T3       0.067        0.068   499
-##  7                    symptom_T3        0.01        0.048   889
-##  8   symptom_neckShoulderPain_T3       0.001        0.046   874
-##  9        symptom_stomachAche_T3       0.003        0.043   863
-## 10            paAccelerometer_T3        0.14         0.04   499
-## 11                    symptom_T1       0.023        0.039  1084
-## 12 symptom_tensionNervousness_T3     &lt; 0.001        0.037   874
-## 13               SB_intention_T1       0.014        0.035  1064
-## 14 symptom_tirednessFaintness_T3       0.019        0.035   877
-## 15            SB_intention_02_T1     &lt; 0.001        0.034  1056
-## 16           symptom_headAche_T3       0.006        0.034   876
-## 17   symptom_neckShoulderPain_T1       0.011        0.033  1047
-## 18                     b5open_T1        0.01         0.03  1068
-## 19      sitLieAccelerometer_diff       0.047         0.03   431
-## 20              pahrsLastweek_T3       0.042        0.028   843
-## # ... with 455 more rows
+vardatatable %&gt;% select(Variable, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC school`)) %&gt;% top_n(20) %&gt;% apa_table(caption = &quot;Intra-class correlations sorted by school ICC&quot;)
+## Selecting by n
 ## &lt;caption&gt;(\#tab:unnamed-chunk-5)*Intra-class correlations sorted by school ICC*&lt;/caption&gt;
 ## 
 ## 
-## Variable                               ICC class   ICC school   n        
-## -------------------------------------  ----------  -----------  ---------
-## sitLieAccelerometer_T1                 0.086       0.145        706.00   
-## fatpct_T1                              0.003       0.123        942.00   
-## paAccelerometer_T1                     0.072       0.096        706.00   
-## sitBreaks_T1                           0.058       0.085        706.00   
-## paAccelerometer_diff                   0.069       0.074        431.00   
-## sitLieAccelerometer_T3                 0.067       0.068        499.00   
-## symptom_T3                             0.01        0.048        889.00   
-## symptom_neckShoulderPain_T3            0.001       0.046        874.00   
-## symptom_stomachAche_T3                 0.003       0.043        863.00   
-## paAccelerometer_T3                     0.14        0.04         499.00   
-## symptom_T1                             0.023       0.039        1,084.00 
-## symptom_tensionNervousness_T3          &lt; 0.001     0.037        874.00   
-## SB_intention_T1                        0.014       0.035        1,064.00 
-## symptom_tirednessFaintness_T3          0.019       0.035        877.00   
-## SB_intention_02_T1                     &lt; 0.001     0.034        1,056.00 
-## symptom_headAche_T3                    0.006       0.034        876.00   
-## symptom_neckShoulderPain_T1            0.011       0.033        1,047.00 
-## b5open_T1                              0.01        0.03         1,068.00 
-## sitLieAccelerometer_diff               0.047       0.03         431.00   
-## pahrsLastweek_T3                       0.042       0.028        843.00   
-## PA_inorm_01_T3                         0.011       0.027        869.00   
-## PA_inorm_T3                            0.011       0.027        869.00   
-## SB_intention_03_T1                     0.023       0.027        1,054.00 
-## SB_intention_04_T1                     0.028       0.027        1,055.00 
-## symptom_headAche_T1                    0.007       0.027        1,055.00 
-## SB_intention_01_T1                     &lt; 0.001     0.025        1,059.00 
-## PA_autonomous_05_diff                  &lt; 0.001     0.024        853.00   
-## PA_frqbct_02_diff                      &lt; 0.001     0.024        856.00   
-## PA_integrated_02_diff                  &lt; 0.001     0.024        853.00   
-## PA_opportunitiesNeg_06_T1              &lt; 0.001     0.024        1,059.00 
-## symptom_tensionNervousness_T1          0.007       0.024        1,051.00 
-## PA_frqbct_02_T3                        0.038       0.023        865.00   
-## symptom_sleepDifficulty_T1             0.01        0.023        1,052.00 
-## symptom_stomachAche_T1                 0.015       0.023        1,026.00 
-## b5ext_T1                               0.02        0.022        1,068.00 
-## SB_dnorm_01_T3                         0.067       0.022        861.00   
-## PA_pbc_01_T3                           0.004       0.021        875.00   
-## SB_dnorm_01_diff                       0.009       0.021        846.00   
-## SB_dnorm_T3                            0.039       0.021        861.00   
-## PA_amotivation_04_T3                   0.037       0.02         872.00   
-## PA_oexp_T3                             0.057       0.02         874.00   
-## PA_opportunities_01_T1                 0.037       0.02         1,070.00 
-## SB_intention_03_T3                     0.043       0.02         857.00   
-## SB_intention_T3                        0.051       0.02         862.00   
-## PA_amotivation_03_T3                   0.018       0.019        866.00   
-## PA_amotivation_T3                      0.03        0.019        872.00   
-## PA_oexpNeg_09_T3                       0.01        0.019        867.00   
-## SB_intention_04_T3                     0.038       0.019        858.00   
-## PA_frqbct_04_diff                      &lt; 0.001     0.018        854.00   
-## PA_oexp_03_T1                          0.008       0.018        1,064.00 
-## SB_dnorm_diff                          0.012       0.018        848.00   
-## SB_intention_01_T3                     0.05        0.018        859.00   
-## PA_amotivation_diff                    0.028       0.017        862.00   
-## PA_dnorm_T3                            0.016       0.017        873.00   
-## PA_oexpNeg_08_diff                     0.006       0.017        856.00   
-## symptom_sleepDifficulty_T3             0.014       0.017        872.00   
-## b5open_01_T1                           0.025       0.016        1,062.00 
-## b5openNeg_02_T1                        &lt; 0.001     0.016        1,066.00 
-## PA_oexp_06_T1                          0.03        0.016        1,071.00 
-## SB_dnorm_02_T3                         0.012       0.016        856.00   
-## SB_intention_01_diff                   0.03        0.016        844.00   
-## SB_intention_diff                      0.031       0.016        850.00   
-## SB_oexpNeg_01_T3                       0.015       0.016        862.00   
-## b5cons_01_T1                           0.014       0.015        1,059.00 
-## PA_amotivation_04_diff                 0.021       0.015        857.00   
-## PA_controlled_02_diff                  0.031       0.015        859.00   
-## PA_dnorm_01_T3                         0.018       0.015        872.00   
-## PA_extrinsic_02_diff                   0.031       0.015        859.00   
-## PA_oexp_10_T3                          0.026       0.015        869.00   
-## PA_opportunities_01_T3                 0.039       0.015        871.00   
-## SB_sePbc_02_T1                         0.003       0.015        1,061.00 
-## b5neur_01_T1                           0.017       0.014        1,064.00 
-## PA_oexp_12_T1                          0.042       0.014        1,070.00 
-## PA_oexpNeg_08_T3                       0.013       0.014        871.00   
-## PA_pbc_01_diff                         &lt; 0.001     0.014        865.00   
-## paminLastweek_T3                       0.01        0.014        678.00   
-## SB_intention_02_T3                     0.044       0.014        857.00   
-## SB_oexp_02_T1                          0.017       0.014        1,056.00 
-## SB_oexp_03_T1                          0.024       0.014        1,058.00 
-## SB_sePbc_01_T1                         0.01        0.014        1,062.00 
-## b5ext_01_T1                            0.048       0.013        1,063.00 
-## PA_integrated_diff                     &lt; 0.001     0.013        863.00   
-## PA_introjected_diff                    0.017       0.013        863.00   
-## PA_oexp_06_T3                          0.044       0.013        869.00   
-## PA_pbc_T3                              &lt; 0.001     0.013        876.00   
-## PA_sePbc_T3                            0.001       0.013        878.00   
-## SB_intention_02_diff                   0.024       0.013        839.00   
-## SB_oexp_T3                             0.019       0.013        863.00   
-## b5agr_T1                               0.033       0.012        1,068.00 
-## b5extNeg_02_T1                         0.002       0.012        1,062.00 
-## b5neur_T1                              0.014       0.012        1,068.00 
-## PA_autonomous_01_T1                    0.002       0.012        1,063.00 
-## PA_controlled_diff                     0.027       0.012        863.00   
-## PA_frqbct_diff                         &lt; 0.001     0.012        860.00   
-## PA_identified_01_T1                    0.002       0.012        1,063.00 
-## PA_oexp_01_T3                          0.054       0.012        872.00   
-## PA_oexp_03_T3                          0.03        0.012        867.00   
-## PA_oexp_11_T3                          0.058       0.012        868.00   
-## PA_oexp_T1                             0.065       0.012        1,078.00 
-## PA_oexpNeg_09_diff                     0.002       0.012        851.00   
-## PA_opportunities_02_T3                 0.012       0.012        874.00   
-## PA_opportunitiesNeg_06_T3              0.004       0.012        874.00   
-## PA_selfefficacy_01_T3                  &lt; 0.001     0.012        873.00   
-## SB_oexp_T1                             0.05        0.012        1,064.00 
-## SB_sePbc_05_T1                         0.005       0.012        1,054.00 
-## PA_autonomous_08_diff                  0.029       0.011        851.00   
-## PA_frqbct_07_diff                      &lt; 0.001     0.011        855.00   
-## PA_intrinsic_02_diff                   0.029       0.011        851.00   
-## PA_oexp_01_T1                          0.042       0.011        1,071.00 
-## PA_oexp_05_T1                          0.023       0.011        1,067.00 
-## PA_oexp_11_T1                          0.055       0.011        1,063.00 
-## PA_pbc_diff                            0.011       0.011        867.00   
-## SB_oexp_04_T3                          0.009       0.011        859.00   
-## SB_oexp_06_T1                          0.047       0.011        1,058.00 
-## SB_sePbc_T1                            0.015       0.011        1,064.00 
-## symptom_lowerBackPain_T3               0.004       0.011        870.00   
-## b5agrNeg_02_T1                         0.005       0.01         1,064.00 
-## PA_controlled_05_diff                  0.016       0.01         856.00   
-## PA_introjected_02_diff                 0.016       0.01         856.00   
-## PA_oexp_diff                           &lt; 0.001     0.01         869.00   
-## PA_opportunities_04_T3                 &lt; 0.001     0.01         873.00   
-## PA_pbc_03_T1                           0.014       0.01         1,066.00 
-## PA_pbc_03_T3                           &lt; 0.001     0.01         874.00   
-## paminLastweek_T1                       &lt; 0.001     0.01         1,082.00 
-## SB_oexpNeg_07_T3                       0.015       0.01         859.00   
-## SB_sePbc_02_T3                         0.023       0.01         859.00   
-## symptom_irritabilityAngerbursts_T1     0.026       0.01         1,039.00 
-## symptom_neckShoulderPain_diff          &lt; 0.001     0.01         848.00   
-## symptom_stomachAche_diff               0.02        0.01         823.00   
-## PA_controlled_03_diff                  0.02        0.009        852.00   
-## PA_controlled_04_diff                  0.016       0.009        856.00   
-## PA_dnormparents_02_T3                  0.006       0.009        870.00   
-## PA_extrinsic_03_diff                   0.02        0.009        852.00   
-## PA_introjected_01_diff                 0.016       0.009        856.00   
-## PA_introjected_T3                      0.044       0.009        871.00   
-## PA_oexp_01_diff                        0.003       0.009        861.00   
-## PA_selfefficacy_01_diff                &lt; 0.001     0.009        863.00   
-## PA_selfefficacy_T3                     0.023       0.009        878.00   
-## symptom_tirednessFaintness_T1          0.025       0.009        1,058.00 
-## PA_amotivation_01_T3                   0.016       0.008        863.00   
-## PA_amotivation_02_diff                 0.011       0.008        847.00   
-## PA_amotivation_03_diff                 0.001       0.008        853.00   
-## PA_autonomous_07_T3                    0.079       0.008        869.00   
-## PA_autonomous_diff                     &lt; 0.001     0.008        868.00   
-## PA_controlled_04_T3                    0.042       0.008        864.00   
-## PA_controlled_05_T3                    0.032       0.008        868.00   
-## PA_intrinsic_01_T3                     0.079       0.008        869.00   
-## PA_introjected_01_T3                   0.042       0.008        864.00   
-## PA_introjected_02_T3                   0.032       0.008        868.00   
-## PA_oexp_07_T1                          0.039       0.008        1,062.00 
-## PA_oexp_12_T3                          0.045       0.008        865.00   
-## PA_opportunities_04_T1                 0.021       0.008        1,070.00 
-## SB_inorm_01_T1                         &lt; 0.001     0.008        1,056.00 
-## b5cons_T1                              &lt; 0.001     0.007        1,067.00 
-## PA_agrbct_04_diff                      0.02        0.007        861.00   
-## PA_agrbct_07_diff                      &lt; 0.001     0.007        853.00   
-## PA_extrinsic_diff                      0.034       0.007        860.00   
-## PA_inorm_01_diff                       &lt; 0.001     0.007        861.00   
-## PA_inorm_diff                          &lt; 0.001     0.007        861.00   
-## PA_oexp_04_T1                          0.009       0.007        1,071.00 
-## PA_oexp_10_diff                        0.028       0.007        858.00   
-## PA_oexp_11_diff                        0.021       0.007        852.00   
-## PA_opportunities_05_T3                 0.013       0.007        871.00   
-## PA_opportunities_T3                    0.011       0.007        876.00   
-## PA_opportunitiesNeg_06_diff            0.015       0.007        853.00   
-## PA_pbc_03_diff                         &lt; 0.001     0.007        861.00   
-## PA_sePbc_diff                          &lt; 0.001     0.007        868.00   
-## PA_sePbc_T1                            0.028       0.007        1,071.00 
-## pahrsLastweek_T1                       0.024       0.007        1,082.00 
-## SB_dnorm_02_diff                       0.013       0.007        841.00   
-## SB_dnorm_02_T1                         0.01        0.007        1,060.00 
-## SB_dnorm_T1                            0.003       0.007        1,062.00 
-## SB_intention_03_diff                   0.023       0.007        838.00   
-## SB_oexp_03_T3                          0.008       0.007        856.00   
-## SB_sePbc_01_T3                         0.043       0.007        857.00   
-## PA_actplan_03_diff                     &lt; 0.001     0.006        852.00   
-## PA_agrbct_02_diff                      0.012       0.006        859.00   
-## PA_agrbct_08_diff                      0.023       0.006        858.00   
-## PA_autonomous_04_T3                    0.076       0.006        870.00   
-## PA_controlled_02_T3                    &lt; 0.001     0.006        868.00   
-## PA_extrinsic_02_T3                     &lt; 0.001     0.006        868.00   
-## PA_frqbct_03_diff                      0.016       0.006        856.00   
-## PA_frqbct_05_diff                      &lt; 0.001     0.006        851.00   
-## PA_integrated_01_T3                    0.076       0.006        870.00   
-## PA_intrinsic_diff                      0.001       0.006        865.00   
-## PA_oexp_05_T3                          0.03        0.006        870.00   
-## PA_oexp_10_T1                          0.019       0.006        1,069.00 
-## PA_opportunities_05_diff               &lt; 0.001     0.006        856.00   
-## PA_opportunities_diff                  &lt; 0.001     0.006        868.00   
-## paLastweek_T1                          0.024       0.006        1,082.00 
-## SB_oexp_06_T3                          0.013       0.006        857.00   
-## symptom_irritabilityAngerbursts_T3     0.02        0.006        869.00   
-## PA_agrbct_05_diff                      0.024       0.005        860.00   
-## PA_amotivation_02_T1                   0.026       0.005        1,057.00 
-## PA_amotivation_02_T3                   0.002       0.005        863.00   
-## PA_autonomous_01_T3                    0.041       0.005        867.00   
-## PA_autonomous_03_diff                  &lt; 0.001     0.005        855.00   
-## PA_autonomous_07_T1                    0.072       0.005        1,070.00 
-## PA_identified_01_T3                    0.041       0.005        867.00   
-## PA_identified_03_diff                  &lt; 0.001     0.005        855.00   
-## PA_intrinsic_01_T1                     0.072       0.005        1,070.00 
-## PA_pbcNeg_02_T1                        0.005       0.005        1,063.00 
-## PA_selfefficacy_T1                     0.007       0.005        1,071.00 
-## PA_selfefficacyNeg_02_T1               0.002       0.005        1,071.00 
-## pahrsUsually_T1                        0.085       0.005        1,082.00 
-## SB_inorm_01_T3                         0.058       0.005        859.00   
-## SB_inorm_02_T1                         0.03        0.005        1,053.00 
-## SB_inorm_02_T3                         0.042       0.005        854.00   
-## SB_oexp_04_T1                          0.038       0.005        1,063.00 
-## symptom_lowerBackPain_T1               0.004       0.005        1,053.00 
-## PA_actplan_02_T3                       0.034       0.004        861.00   
-## PA_agrbct_09_diff                      0.02        0.004        858.00   
-## PA_agrbct_diff                         0.034       0.004        864.00   
-## PA_autonomous_02_diff                  0.006       0.004        853.00   
-## PA_autonomous_02_T3                    0.053       0.004        868.00   
-## PA_autonomous_04_T1                    0.059       0.004        1,070.00 
-## PA_dnorm_01_T1                         0.05        0.004        1,073.00 
-## PA_dnorm_02_T1                         0.027       0.004        1,073.00 
-## PA_frqbct_04_T3                        0.057       0.004        863.00   
-## PA_frqbct_07_T3                        0.058       0.004        864.00   
-## PA_identified_02_diff                  0.006       0.004        853.00   
-## PA_identified_02_T3                    0.053       0.004        868.00   
-## PA_identified_T1                       0.04        0.004        1,074.00 
-## PA_identified_T3                       0.075       0.004        873.00   
-## PA_integrated_01_T1                    0.059       0.004        1,070.00 
-## PA_intrinsic_T3                        0.08        0.004        872.00   
-## PA_oexpNeg_08_T1                       0.038       0.004        1,063.00 
-## PA_opportunities_01_diff               0.014       0.004        859.00   
-## PA_pbc_T1                              0.028       0.004        1,071.00 
-## SB_dnorm_01_T1                         &lt; 0.001     0.004        1,059.00 
-## SB_inorm_T1                            0.012       0.004        1,064.00 
-## SB_intention_04_diff                   0.023       0.004        840.00   
-## SB_oexp_05_T1                          0.04        0.004        1,060.00 
-## symptom_lowerBackPain_diff             0.014       0.004        851.00   
-## symptom_tirednessFaintness_diff        0.019       0.004        857.00   
-## PA_actplan_02_diff                     &lt; 0.001     0.003        854.00   
-## PA_amotivation_01_diff                 0.02        0.003        848.00   
-## PA_autonomous_T3                       0.092       0.003        873.00   
-## PA_controlled_03_T3                    &lt; 0.001     0.003        864.00   
-## PA_copplan_04_diff                     &lt; 0.001     0.003        858.00   
-## PA_dnorm_T1                            0.05        0.003        1,073.00 
-## PA_extrinsic_03_T3                     &lt; 0.001     0.003        864.00   
-## PA_inorm_01_T1                         0.006       0.003        1,073.00 
-## PA_inorm_T1                            0.006       0.003        1,073.00 
-## PA_oexp_12_diff                        0.001       0.003        854.00   
-## PA_opportunities_02_diff               0.003       0.003        859.00   
-## PA_opportunities_04_diff               0.004       0.003        863.00   
-## pafreqUsually_T1                       0.094       0.003        1,082.00 
-## pafreqUsually_T3                       0.085       0.003        874.00   
-## SB_oexp_06_diff                        0.005       0.003        843.00   
-## SB_oexpNeg_01_diff                     &lt; 0.001     0.003        849.00   
-## SB_oexpNeg_07_T1                       0.012       0.003        1,057.00 
-## b5agr_01_T1                            0.045       0.002        1,061.00 
-## b5consNeg_02_T1                        &lt; 0.001     0.002        1,065.00 
-## b5neurNeg_02_T1                        0.011       0.002        1,061.00 
-## PA_agrbct_06_diff                      &lt; 0.001     0.002        851.00   
-## PA_amotivation_T1                      0.035       0.002        1,072.00 
-## PA_autonomous_09_diff                  0.003       0.002        844.00   
-## PA_copplan_03_T3                       0.047       0.002        869.00   
-## PA_extrinsic_T3                        &lt; 0.001     0.002        869.00   
-## PA_frqbct_06_T3                        0.043       0.002        861.00   
-## PA_intention_01_diff                   &lt; 0.001     0.002        854.00   
-## PA_intrinsic_03_diff                   0.003       0.002        844.00   
-## PA_oexp_07_T3                          0.019       0.002        867.00   
-## PA_selfefficacyNeg_02_T3               0.026       0.002        877.00   
-## pahrsUsually_diff                      &lt; 0.001     0.002        868.00   
-## SB_inorm_01_diff                       0.019       0.002        840.00   
-## SB_sePbc_03_T3                         0.028       0.002        859.00   
-## SB_sePbc_04_T3                         0.022       0.002        858.00   
-## SB_sePbc_05_diff                       0.021       0.002        831.00   
-## PA_actCop_diff                         &lt; 0.001     0.001        864.00   
-## PA_actionplan_diff                     &lt; 0.001     0.001        863.00   
-## PA_agrbct_06_T1                        0.028       0.001        1,071.00 
-## PA_agrbct_09_T1                        0.032       0.001        1,071.00 
-## PA_autonomous_03_T3                    0.088       0.001        867.00   
-## PA_autonomous_04_diff                  &lt; 0.001     0.001        859.00   
-## PA_autonomous_09_T3                    0.061       0.001        863.00   
-## PA_controlled_04_T1                    &lt; 0.001     0.001        1,068.00 
-## PA_copplan_03_diff                     0.008       0.001        861.00   
-## PA_dnorm_01_diff                       &lt; 0.001     0.001        864.00   
-## PA_dnorm_diff                          0.001       0.001        865.00   
-## PA_frqbct_03_T3                        0.038       0.001        865.00   
-## PA_frqbct_08_diff                      &lt; 0.001     0.001        856.00   
-## PA_identified_03_T3                    0.088       0.001        867.00   
-## PA_integrated_01_diff                  &lt; 0.001     0.001        859.00   
-## PA_intention_diff                      0.002       0.001        863.00   
-## PA_intrinsic_03_T3                     0.061       0.001        863.00   
-## PA_introjected_01_T1                   &lt; 0.001     0.001        1,068.00 
-## PA_opportunities_07_diff               &lt; 0.001     0.001        862.00   
-## PA_opportunities_07_T1                 0.009       0.001        1,068.00 
-## PA_selfefficacy_diff                   &lt; 0.001     0.001        868.00   
-## pahrsLastweek_diff                     0.005       0.001        842.00   
-## SB_oexp_04_diff                        0.011       0.001        846.00   
-## SB_oexp_05_T3                          0.004       0.001        858.00   
-## SB_sePbc_05_T3                         0.04        0.001        852.00   
-## symptom_tensionNervousness_diff        &lt; 0.001     0.001        851.00   
-## PA_actCop_T1                           0.035       &lt; 0.001      1,073.00 
-## PA_actCop_T3                           0.049       &lt; 0.001      872.00   
-## PA_actionplan_T1                       0.038       &lt; 0.001      1,073.00 
-## PA_actionplan_T3                       0.035       &lt; 0.001      871.00   
-## PA_actplan_01_diff                     &lt; 0.001     &lt; 0.001      856.00   
-## PA_actplan_01_T1                       0.032       &lt; 0.001      1,073.00 
-## PA_actplan_01_T3                       0.041       &lt; 0.001      864.00   
-## PA_actplan_02_T1                       0.028       &lt; 0.001      1,073.00 
-## PA_actplan_03_T1                       0.037       &lt; 0.001      1,073.00 
-## PA_actplan_03_T3                       0.021       &lt; 0.001      860.00   
-## PA_actplan_04_diff                     &lt; 0.001     &lt; 0.001      855.00   
-## PA_actplan_04_T1                       0.038       &lt; 0.001      1,073.00 
-## PA_actplan_04_T3                       0.036       &lt; 0.001      863.00   
-## PA_agrbct_01_diff                      0.032       &lt; 0.001      861.00   
-## PA_agrbct_01_T1                        0.061       &lt; 0.001      1,071.00 
-## PA_agrbct_01_T3                        0.063       &lt; 0.001      869.00   
-## PA_agrbct_02_T1                        0.025       &lt; 0.001      1,071.00 
-## PA_agrbct_02_T3                        0.072       &lt; 0.001      868.00   
-## PA_agrbct_03_diff                      &lt; 0.001     &lt; 0.001      859.00   
-## PA_agrbct_03_T1                        0.009       &lt; 0.001      1,071.00 
-## PA_agrbct_03_T3                        0.035       &lt; 0.001      868.00   
-## PA_agrbct_04_T1                        0.035       &lt; 0.001      1,071.00 
-## PA_agrbct_04_T3                        0.062       &lt; 0.001      870.00   
-## PA_agrbct_05_T1                        0.055       &lt; 0.001      1,071.00 
-## PA_agrbct_05_T3                        0.054       &lt; 0.001      869.00   
-## PA_agrbct_06_T3                        0.044       &lt; 0.001      860.00   
-## PA_agrbct_07_T1                        0.022       &lt; 0.001      1,071.00 
-## PA_agrbct_07_T3                        0.044       &lt; 0.001      862.00   
-## PA_agrbct_08_T1                        0.023       &lt; 0.001      1,071.00 
-## PA_agrbct_08_T3                        0.067       &lt; 0.001      867.00   
-## PA_agrbct_09_T3                        0.057       &lt; 0.001      867.00   
-## PA_agrbct_10_diff                      0.049       &lt; 0.001      855.00   
-## PA_agrbct_10_T1                        0.044       &lt; 0.001      1,071.00 
-## PA_agrbct_10_T3                        0.06        &lt; 0.001      864.00   
-## PA_agrbct_T1                           0.052       &lt; 0.001      1,071.00 
-## PA_agrbct_T3                           0.084       &lt; 0.001      873.00   
-## PA_amotivation_01_T1                   0.031       &lt; 0.001      1,062.00 
-## PA_amotivation_03_T1                   0.032       &lt; 0.001      1,067.00 
-## PA_amotivation_04_T1                   0.027       &lt; 0.001      1,066.00 
-## PA_autonomous_01_diff                  &lt; 0.001     &lt; 0.001      851.00   
-## PA_autonomous_02_T1                    0.031       &lt; 0.001      1,063.00 
-## PA_autonomous_03_T1                    0.058       &lt; 0.001      1,070.00 
-## PA_autonomous_05_T1                    0.048       &lt; 0.001      1,062.00 
-## PA_autonomous_05_T3                    0.068       &lt; 0.001      870.00   
-## PA_autonomous_06_diff                  0.003       &lt; 0.001      855.00   
-## PA_autonomous_06_T1                    0.072       &lt; 0.001      1,066.00 
-## PA_autonomous_06_T3                    0.058       &lt; 0.001      869.00   
-## PA_autonomous_07_diff                  &lt; 0.001     &lt; 0.001      859.00   
-## PA_autonomous_08_T1                    0.057       &lt; 0.001      1,066.00 
-## PA_autonomous_08_T3                    0.067       &lt; 0.001      866.00   
-## PA_autonomous_09_T1                    0.055       &lt; 0.001      1,057.00 
-## PA_autonomous_T1                       0.073       &lt; 0.001      1,078.00 
-## PA_controlled_01_diff                  0.007       &lt; 0.001      859.00   
-## PA_controlled_01_T1                    0.01        &lt; 0.001      1,068.00 
-## PA_controlled_01_T3                    &lt; 0.001     &lt; 0.001      869.00   
-## PA_controlled_02_T1                    0.024       &lt; 0.001      1,069.00 
-## PA_controlled_03_T1                    0.011       &lt; 0.001      1,064.00 
-## PA_controlled_05_T1                    0.006       &lt; 0.001      1,066.00 
-## PA_controlled_T1                       0.005       &lt; 0.001      1,073.00 
-## PA_controlled_T3                       0.006       &lt; 0.001      871.00   
-## PA_copingplan_diff                     0.007       &lt; 0.001      864.00   
-## PA_copingplan_T1                       0.023       &lt; 0.001      1,073.00 
-## PA_copingplan_T3                       0.057       &lt; 0.001      872.00   
-## PA_copplan_01_diff                     0.006       &lt; 0.001      864.00   
-## PA_copplan_01_T1                       0.007       &lt; 0.001      1,073.00 
-## PA_copplan_01_T3                       0.043       &lt; 0.001      872.00   
-## PA_copplan_02_diff                     &lt; 0.001     &lt; 0.001      862.00   
-## PA_copplan_02_T1                       0.004       &lt; 0.001      1,073.00 
-## PA_copplan_02_T3                       0.05        &lt; 0.001      870.00   
-## PA_copplan_03_T1                       0.035       &lt; 0.001      1,073.00 
-## PA_copplan_04_T1                       0.035       &lt; 0.001      1,073.00 
-## PA_copplan_04_T3                       0.05        &lt; 0.001      866.00   
-## PA_dnorm_02_diff                       0.013       &lt; 0.001      862.00   
-## PA_extrinsic_01_diff                   0.007       &lt; 0.001      859.00   
-## PA_extrinsic_01_T1                     0.01        &lt; 0.001      1,068.00 
-## PA_extrinsic_01_T3                     &lt; 0.001     &lt; 0.001      869.00   
-## PA_extrinsic_02_T1                     0.024       &lt; 0.001      1,069.00 
-## PA_extrinsic_03_T1                     0.011       &lt; 0.001      1,064.00 
-## PA_extrinsic_T1                        0.022       &lt; 0.001      1,069.00 
-## PA_frqbct_01_diff                      &lt; 0.001     &lt; 0.001      860.00   
-## PA_frqbct_01_T1                        0.014       &lt; 0.001      1,070.00 
-## PA_frqbct_01_T3                        0.015       &lt; 0.001      869.00   
-## PA_frqbct_02_T1                        0.024       &lt; 0.001      1,070.00 
-## PA_frqbct_03_T1                        0.007       &lt; 0.001      1,070.00 
-## PA_frqbct_04_T1                        0.035       &lt; 0.001      1,070.00 
-## PA_frqbct_05_T1                        0.033       &lt; 0.001      1,070.00 
-## PA_frqbct_05_T3                        0.023       &lt; 0.001      860.00   
-## PA_frqbct_06_diff                      &lt; 0.001     &lt; 0.001      852.00   
-## PA_frqbct_06_T1                        0.016       &lt; 0.001      1,070.00 
-## PA_frqbct_07_T1                        0.003       &lt; 0.001      1,070.00 
-## PA_frqbct_08_T1                        0.014       &lt; 0.001      1,070.00 
-## PA_frqbct_08_T3                        0.052       &lt; 0.001      865.00   
-## PA_frqbct_09_diff                      0.006       &lt; 0.001      848.00   
-## PA_frqbct_09_T1                        0.007       &lt; 0.001      1,070.00 
-## PA_frqbct_09_T3                        0.049       &lt; 0.001      857.00   
-## PA_frqbct_T1                           0.027       &lt; 0.001      1,070.00 
-## PA_frqbct_T3                           0.074       &lt; 0.001      869.00   
-## PA_goal_01_diff                        0.043       &lt; 0.001      835.00   
-## PA_goal_01_T1                          0.046       &lt; 0.001      1,061.00 
-## PA_goal_01_T3                          0.031       &lt; 0.001      852.00   
-## PA_goal_diff                           0.043       &lt; 0.001      835.00   
-## PA_goal_T1                             0.046       &lt; 0.001      1,061.00 
-## PA_goal_T3                             0.031       &lt; 0.001      852.00   
-## PA_identified_01_diff                  &lt; 0.001     &lt; 0.001      851.00   
-## PA_identified_02_T1                    0.031       &lt; 0.001      1,063.00 
-## PA_identified_03_T1                    0.058       &lt; 0.001      1,070.00 
-## PA_identified_diff                     &lt; 0.001     &lt; 0.001      865.00   
-## PA_integrated_02_T1                    0.048       &lt; 0.001      1,062.00 
-## PA_integrated_02_T3                    0.068       &lt; 0.001      870.00   
-## PA_integrated_03_diff                  0.003       &lt; 0.001      855.00   
-## PA_integrated_03_T1                    0.072       &lt; 0.001      1,066.00 
-## PA_integrated_03_T3                    0.058       &lt; 0.001      869.00   
-## PA_integrated_T1                       0.071       &lt; 0.001      1,073.00 
-## PA_integrated_T3                       0.083       &lt; 0.001      872.00   
-## PA_intention_01_T1                     0.088       &lt; 0.001      1,073.00 
-## PA_intention_01_T3                     0.058       &lt; 0.001      862.00   
-## PA_intention_02_diff                   0.012       &lt; 0.001      858.00   
-## PA_intention_02_T1                     0.111       &lt; 0.001      1,073.00 
-## PA_intention_02_T3                     0.042       &lt; 0.001      866.00   
-## PA_intention_T1                        0.105       &lt; 0.001      1,073.00 
-## PA_intention_T3                        0.054       &lt; 0.001      871.00   
-## PA_intrinsic_01_diff                   &lt; 0.001     &lt; 0.001      859.00   
-## PA_intrinsic_02_T1                     0.057       &lt; 0.001      1,066.00 
-## PA_intrinsic_02_T3                     0.067       &lt; 0.001      866.00   
-## PA_intrinsic_03_T1                     0.055       &lt; 0.001      1,057.00 
-## PA_intrinsic_T1                        0.074       &lt; 0.001      1,074.00 
-## PA_introjected_02_T1                   0.006       &lt; 0.001      1,066.00 
-## PA_introjected_T1                      &lt; 0.001     &lt; 0.001      1,073.00 
-## PA_oexp_03_diff                        &lt; 0.001     &lt; 0.001      851.00   
-## PA_oexp_04_diff                        0.002       &lt; 0.001      860.00   
-## PA_oexp_04_T3                          0.027       &lt; 0.001      870.00   
-## PA_oexp_05_diff                        0.005       &lt; 0.001      858.00   
-## PA_oexp_06_diff                        &lt; 0.001     &lt; 0.001      858.00   
-## PA_oexp_07_diff                        0.018       &lt; 0.001      852.00   
-## PA_oexpNeg_02_diff                     &lt; 0.001     &lt; 0.001      854.00   
-## PA_oexpNeg_02_T1                       0.046       &lt; 0.001      1,066.00 
-## PA_oexpNeg_02_T3                       0.018       &lt; 0.001      870.00   
-## PA_oexpNeg_09_T1                       0.023       &lt; 0.001      1,064.00 
-## PA_opportunities_02_T1                 0.018       &lt; 0.001      1,067.00 
-## PA_opportunities_05_T1                 &lt; 0.001     &lt; 0.001      1,064.00 
-## PA_opportunities_07_T3                 0.004       &lt; 0.001      876.00   
-## PA_opportunities_T1                    0.018       &lt; 0.001      1,075.00 
-## PA_opportunitiesNeg_03_diff            &lt; 0.001     &lt; 0.001      856.00   
-## PA_opportunitiesNeg_03_T1              &lt; 0.001     &lt; 0.001      1,065.00 
-## PA_opportunitiesNeg_03_T3              &lt; 0.001     &lt; 0.001      872.00   
-## PA_opportunitiesNeg_08_T1              0.02        &lt; 0.001      1,066.00 
-## PA_pbc_01_T1                           0.032       &lt; 0.001      1,069.00 
-## PA_pbcNeg_02_diff                      0.042       &lt; 0.001      859.00   
-## PA_pbcNeg_02_T3                        0.021       &lt; 0.001      873.00   
-## PA_selfefficacy_01_T1                  0.009       &lt; 0.001      1,071.00 
-## PA_selfefficacyNeg_02_diff             &lt; 0.001     &lt; 0.001      867.00   
-## padaysLastweek_diff                    &lt; 0.001     &lt; 0.001      882.00   
-## padaysLastweek_T1                      0.047       &lt; 0.001      1,082.00 
-## padaysLastweek_T3                      0.04        &lt; 0.001      883.00   
-## pafreqUsually_diff                     0.015       &lt; 0.001      873.00   
-## pahrsUsually_T3                        0.069       &lt; 0.001      869.00   
-## paminLastweek_diff                     &lt; 0.001     &lt; 0.001      677.00   
-## SB_inorm_02_diff                       0.018       &lt; 0.001      835.00   
-## SB_inorm_diff                          0.021       &lt; 0.001      851.00   
-## SB_inorm_T3                            0.052       &lt; 0.001      863.00   
-## SB_oexp_02_diff                        &lt; 0.001     &lt; 0.001      839.00   
-## SB_oexp_02_T3                          &lt; 0.001     &lt; 0.001      858.00   
-## SB_oexp_03_diff                        0.001       &lt; 0.001      839.00   
-## SB_oexp_05_diff                        0.007       &lt; 0.001      842.00   
-## SB_oexp_diff                           0.005       &lt; 0.001      851.00   
-## SB_oexpNeg_01_T1                       0.008       &lt; 0.001      1,063.00 
-## SB_oexpNeg_07_diff                     &lt; 0.001     &lt; 0.001      842.00   
-## SB_sePbc_01_diff                       0.004       &lt; 0.001      844.00   
-## SB_sePbc_02_diff                       0.012       &lt; 0.001      844.00   
-## SB_sePbc_03_diff                       0.023       &lt; 0.001      844.00   
-## SB_sePbc_03_T1                         0.026       &lt; 0.001      1,060.00 
-## SB_sePbc_04_diff                       0.006       &lt; 0.001      842.00   
-## SB_sePbc_04_T1                         0.034       &lt; 0.001      1,060.00 
-## SB_sePbc_diff                          0.019       &lt; 0.001      849.00   
-## SB_sePbc_T3                            0.044       &lt; 0.001      861.00   
-## symptom_diff                           0.009       &lt; 0.001      889.00   
-## symptom_headAche_diff                  0.015       &lt; 0.001      853.00   
-## symptom_irritabilityAngerbursts_diff   0.002       &lt; 0.001      840.00   
-## symptom_sleepDifficulty_diff           &lt; 0.001     &lt; 0.001      849.00</code></pre>
+## Variable              ICC class   ICC school   n        
+## --------------------  ----------  -----------  ---------
+## symptom_T1            0.023       0.039        1,084.00 
+## PA_oexp_T1            0.065       0.012        1,078.00 
+## paminLastweek_T1      &lt; 0.001     0.01         1,082.00 
+## pahrsLastweek_T1      0.024       0.007        1,082.00 
+## paLastweek_T1         0.024       0.006        1,082.00 
+## pahrsUsually_T1       0.085       0.005        1,082.00 
+## PA_dnorm_01_T1        0.05        0.004        1,073.00 
+## PA_dnorm_02_T1        0.027       0.004        1,073.00 
+## PA_identified_T1      0.04        0.004        1,074.00 
+## PA_dnorm_T1           0.05        0.003        1,073.00 
+## PA_inorm_01_T1        0.006       0.003        1,073.00 
+## PA_inorm_T1           0.006       0.003        1,073.00 
+## pafreqUsually_T1      0.094       0.003        1,082.00 
+## PA_actCop_T1          0.035       &lt; 0.001      1,073.00 
+## PA_actionplan_T1      0.038       &lt; 0.001      1,073.00 
+## PA_actplan_01_T1      0.032       &lt; 0.001      1,073.00 
+## PA_actplan_02_T1      0.028       &lt; 0.001      1,073.00 
+## PA_actplan_03_T1      0.037       &lt; 0.001      1,073.00 
+## PA_actplan_04_T1      0.038       &lt; 0.001      1,073.00 
+## PA_autonomous_T1      0.073       &lt; 0.001      1,078.00 
+## PA_controlled_T1      0.005       &lt; 0.001      1,073.00 
+## PA_copingplan_T1      0.023       &lt; 0.001      1,073.00 
+## PA_copplan_01_T1      0.007       &lt; 0.001      1,073.00 
+## PA_copplan_02_T1      0.004       &lt; 0.001      1,073.00 
+## PA_copplan_03_T1      0.035       &lt; 0.001      1,073.00 
+## PA_copplan_04_T1      0.035       &lt; 0.001      1,073.00 
+## PA_integrated_T1      0.071       &lt; 0.001      1,073.00 
+## PA_intention_01_T1    0.088       &lt; 0.001      1,073.00 
+## PA_intention_02_T1    0.111       &lt; 0.001      1,073.00 
+## PA_intention_T1       0.105       &lt; 0.001      1,073.00 
+## PA_intrinsic_T1       0.074       &lt; 0.001      1,074.00 
+## PA_introjected_T1     &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_opportunities_T1   0.018       &lt; 0.001      1,075.00 
+## padaysLastweek_T1     0.047       &lt; 0.001      1,082.00</code></pre>
 </div>
 <div id="find-icc-by-educational-track" class="section level2">
 <h2>Find ICC by educational track</h2>
@@ -2667,598 +1732,133 @@ vardatatable &lt;- data_frame(
   dplyr::arrange(Variable) %&gt;% 
   filter(Variable != &quot;&quot;) #remove first row, which is empty
 
-options(tibble.print_max = 15)
- 
-vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC educational track`)) %&gt;% print(n = 20)
-## # A tibble: 475 x 5
-##                  Variable `ICC educational track` `ICC class` `ICC school`
-##                     &lt;chr&gt;                   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;
-##  1     paAccelerometer_T1                   0.156       0.021      &lt; 0.001
-##  2 sitLieAccelerometer_T3                   0.148        0.01      &lt; 0.001
-##  3           sitBreaks_T1                    0.14       0.014      &lt; 0.001
-##  4     paAccelerometer_T3                   0.127       0.049        0.021
-##  5   PA_amotivation_04_T1                   0.113       0.014      &lt; 0.001
-##  6        PA_extrinsic_T1                   0.096       0.008      &lt; 0.001
-##  7      PA_amotivation_T1                   0.091       0.006      &lt; 0.001
-##  8 sitLieAccelerometer_T1                   0.085       0.039        0.131
-##  9    PA_autonomous_04_T1                   0.084     &lt; 0.001        0.011
-## 10    PA_integrated_01_T1                   0.084     &lt; 0.001        0.011
-## 11       PA_integrated_T1                   0.082     &lt; 0.001        0.008
-## 12           PA_frqbct_T3                   0.081       0.024        0.003
-## 13    PA_controlled_02_T1                    0.08       0.012      &lt; 0.001
-## 14     PA_extrinsic_02_T1                    0.08       0.012      &lt; 0.001
-## 15 symptom_stomachAche_T1                    0.08       0.007      &lt; 0.001
-## 16    PA_controlled_01_T1                   0.077     &lt; 0.001      &lt; 0.001
-## 17     PA_extrinsic_01_T1                   0.077     &lt; 0.001      &lt; 0.001
-## 18            b5ext_01_T1                   0.076       0.005        0.015
-## 19        SB_intention_T1                   0.076     &lt; 0.001      &lt; 0.001
-## 20       PA_autonomous_T1                   0.073       0.005        0.006
-## # ... with 455 more rows, and 1 more variables: n &lt;int&gt;
-
-vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC class`)) %&gt;% print(n = 20)
-## # A tibble: 475 x 5
-##                    Variable `ICC educational track` `ICC class`
-##                       &lt;chr&gt;                   &lt;chr&gt;       &lt;chr&gt;
-##  1     paAccelerometer_diff                 &lt; 0.001       0.069
-##  2           SB_inorm_01_T3                   0.006       0.057
-##  3           SB_dnorm_01_T3                   0.023       0.053
-##  4              SB_inorm_T3                 &lt; 0.001       0.052
-##  5        PA_agrbct_10_diff                 &lt; 0.001       0.049
-##  6       paAccelerometer_T3                   0.127       0.049
-##  7 sitLieAccelerometer_diff                 &lt; 0.001       0.047
-##  8               PA_oexp_T1                   0.034       0.045
-##  9       PA_intention_02_T1                   0.064       0.044
-## 10           SB_sePbc_01_T3                   0.002       0.042
-## 11              b5agr_01_T1                    0.01       0.041
-## 12              SB_sePbc_T3                   0.007        0.04
-## 13          PA_agrbct_04_T3                   0.029       0.039
-## 14          PA_intention_T1                   0.064       0.039
-## 15   PA_opportunities_01_T3                 &lt; 0.001       0.039
-## 16   sitLieAccelerometer_T1                   0.085       0.039
-## 17            PA_goal_01_T1                   0.007       0.038
-## 18               PA_goal_T1                   0.007       0.038
-## 19     PA_amotivation_04_T3                 &lt; 0.001       0.037
-## 20        PA_pbcNeg_02_diff                   0.008       0.037
-## # ... with 455 more rows, and 2 more variables: `ICC school` &lt;chr&gt;,
-## #   n &lt;int&gt;
-
-vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC school`)) %&gt;% print(n = 20)
-## # A tibble: 475 x 5
-##                         Variable `ICC educational track` `ICC class`
-##                            &lt;chr&gt;                   &lt;chr&gt;       &lt;chr&gt;
-##  1        sitLieAccelerometer_T1                   0.085       0.039
-##  2                     fatpct_T1                   0.007       0.002
-##  3          paAccelerometer_diff                 &lt; 0.001       0.069
-##  4   symptom_neckShoulderPain_T3                 &lt; 0.001       0.001
-##  5 symptom_tensionNervousness_T3                 &lt; 0.001     &lt; 0.001
-##  6              pahrsLastweek_T3                   0.054       0.012
-##  7      sitLieAccelerometer_diff                 &lt; 0.001       0.047
-##  8            SB_intention_01_T3                   0.024       0.032
-##  9                PA_inorm_01_T3                   0.003       0.009
-## 10                   PA_inorm_T3                   0.003       0.009
-## 11                      b5ext_T1                   0.048     &lt; 0.001
-## 12                     b5open_T1                   0.014       0.004
-## 13         PA_autonomous_05_diff                 &lt; 0.001     &lt; 0.001
-## 14             PA_frqbct_02_diff                 &lt; 0.001     &lt; 0.001
-## 15               PA_frqbct_02_T3                   0.061       0.015
-## 16         PA_integrated_02_diff                 &lt; 0.001     &lt; 0.001
-## 17                SB_dnorm_01_T3                   0.023       0.053
-## 18              PA_oexpNeg_09_T3                   0.005       0.006
-## 19     PA_opportunitiesNeg_06_T1                   0.002     &lt; 0.001
-## 20                  PA_pbc_01_T3                 &lt; 0.001       0.004
-## # ... with 455 more rows, and 2 more variables: `ICC school` &lt;chr&gt;,
-## #   n &lt;int&gt;
-# %&gt;% 
-#     apa_table(
-#         caption = &quot;&quot;,
-#         note = &quot;&quot;,
-#         escape = T)</code></pre>
+options(tibble.print_max = 15)</code></pre>
 <pre class="r"><code>
-vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC educational track`)) %&gt;% print(n = 20) %&gt;%  apa_table(caption = &quot;Intra-class correlations sorted by educational track ICC&quot;)
-## # A tibble: 475 x 5
-##                  Variable `ICC educational track` `ICC class` `ICC school`
-##                     &lt;chr&gt;                   &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt;
-##  1     paAccelerometer_T1                   0.156       0.021      &lt; 0.001
-##  2 sitLieAccelerometer_T3                   0.148        0.01      &lt; 0.001
-##  3           sitBreaks_T1                    0.14       0.014      &lt; 0.001
-##  4     paAccelerometer_T3                   0.127       0.049        0.021
-##  5   PA_amotivation_04_T1                   0.113       0.014      &lt; 0.001
-##  6        PA_extrinsic_T1                   0.096       0.008      &lt; 0.001
-##  7      PA_amotivation_T1                   0.091       0.006      &lt; 0.001
-##  8 sitLieAccelerometer_T1                   0.085       0.039        0.131
-##  9    PA_autonomous_04_T1                   0.084     &lt; 0.001        0.011
-## 10    PA_integrated_01_T1                   0.084     &lt; 0.001        0.011
-## 11       PA_integrated_T1                   0.082     &lt; 0.001        0.008
-## 12           PA_frqbct_T3                   0.081       0.024        0.003
-## 13    PA_controlled_02_T1                    0.08       0.012      &lt; 0.001
-## 14     PA_extrinsic_02_T1                    0.08       0.012      &lt; 0.001
-## 15 symptom_stomachAche_T1                    0.08       0.007      &lt; 0.001
-## 16    PA_controlled_01_T1                   0.077     &lt; 0.001      &lt; 0.001
-## 17     PA_extrinsic_01_T1                   0.077     &lt; 0.001      &lt; 0.001
-## 18            b5ext_01_T1                   0.076       0.005        0.015
-## 19        SB_intention_T1                   0.076     &lt; 0.001      &lt; 0.001
-## 20       PA_autonomous_T1                   0.073       0.005        0.006
-## # ... with 455 more rows, and 1 more variables: n &lt;int&gt;
-## &lt;caption&gt;(\#tab:unnamed-chunk-7)*Intra-class correlations sorted by educational track ICC*&lt;/caption&gt;
+vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC school`)) %&gt;% top_n(20) %&gt;% apa_table(caption = &quot;Intra-class correlations sorted by school ICC&quot;)
+## Selecting by n
+## &lt;caption&gt;(\#tab:icc-school)*Intra-class correlations sorted by school ICC*&lt;/caption&gt;
 ## 
 ## 
-## Variable                               ICC educational track   ICC class   ICC school   n        
-## -------------------------------------  ----------------------  ----------  -----------  ---------
-## paAccelerometer_T1                     0.156                   0.021       &lt; 0.001      706.00   
-## sitLieAccelerometer_T3                 0.148                   0.01        &lt; 0.001      499.00   
-## sitBreaks_T1                           0.14                    0.014       &lt; 0.001      706.00   
-## paAccelerometer_T3                     0.127                   0.049       0.021        499.00   
-## PA_amotivation_04_T1                   0.113                   0.014       &lt; 0.001      1,066.00 
-## PA_extrinsic_T1                        0.096                   0.008       &lt; 0.001      1,069.00 
-## PA_amotivation_T1                      0.091                   0.006       &lt; 0.001      1,072.00 
-## sitLieAccelerometer_T1                 0.085                   0.039       0.131        706.00   
-## PA_autonomous_04_T1                    0.084                   &lt; 0.001     0.011        1,070.00 
-## PA_integrated_01_T1                    0.084                   &lt; 0.001     0.011        1,070.00 
-## PA_integrated_T1                       0.082                   &lt; 0.001     0.008        1,073.00 
-## PA_frqbct_T3                           0.081                   0.024       0.003        869.00   
-## PA_controlled_02_T1                    0.08                    0.012       &lt; 0.001      1,069.00 
-## PA_extrinsic_02_T1                     0.08                    0.012       &lt; 0.001      1,069.00 
-## symptom_stomachAche_T1                 0.08                    0.007       &lt; 0.001      1,026.00 
-## PA_controlled_01_T1                    0.077                   &lt; 0.001     &lt; 0.001      1,068.00 
-## PA_extrinsic_01_T1                     0.077                   &lt; 0.001     &lt; 0.001      1,068.00 
-## b5ext_01_T1                            0.076                   0.005       0.015        1,063.00 
-## SB_intention_T1                        0.076                   &lt; 0.001     &lt; 0.001      1,064.00 
-## PA_autonomous_T1                       0.073                   0.005       0.006        1,078.00 
-## PA_actplan_01_T3                       0.072                   &lt; 0.001     &lt; 0.001      864.00   
-## PA_intrinsic_T1                        0.071                   0.009       0.006        1,074.00 
-## PA_autonomous_07_T1                    0.069                   0.012       0.007        1,070.00 
-## PA_intrinsic_01_T1                     0.069                   0.012       0.007        1,070.00 
-## pafreqUsually_T1                       0.069                   0.023       0.005        1,082.00 
-## symptom_T3                             0.069                   0.001       &lt; 0.001      889.00   
-## PA_autonomous_T3                       0.067                   0.027       &lt; 0.001      873.00   
-## PA_agrbct_T3                           0.066                   0.027       &lt; 0.001      873.00   
-## symptom_T1                             0.066                   0.013       &lt; 0.001      1,084.00 
-## PA_intention_02_T1                     0.064                   0.044       &lt; 0.001      1,073.00 
-## PA_intention_T1                        0.064                   0.039       &lt; 0.001      1,073.00 
-## SB_intention_03_T1                     0.064                   0.005       &lt; 0.001      1,054.00 
-## PA_agrbct_05_T3                        0.063                   0.006       0.003        869.00   
-## PA_agrbct_T1                           0.063                   0.004       0.003        1,071.00 
-## PA_autonomous_04_T3                    0.063                   0.02        &lt; 0.001      870.00   
-## PA_integrated_01_T3                    0.063                   0.02        &lt; 0.001      870.00   
-## PA_agrbct_01_T1                        0.062                   0.007       &lt; 0.001      1,071.00 
-## PA_autonomous_07_T3                    0.062                   0.025       0.001        869.00   
-## PA_autonomous_09_T1                    0.062                   0.002       0.001        1,057.00 
-## PA_identified_T3                       0.062                   0.021       &lt; 0.001      873.00   
-## PA_intrinsic_01_T3                     0.062                   0.025       0.001        869.00   
-## PA_intrinsic_03_T1                     0.062                   0.002       0.001        1,057.00 
-## pafreqUsually_T3                       0.062                   0.025       &lt; 0.001      874.00   
-## PA_frqbct_02_T3                        0.061                   0.015       0.024        865.00   
-## PA_integrated_T3                       0.061                   0.024       &lt; 0.001      872.00   
-## PA_intention_01_T1                     0.061                   0.027       &lt; 0.001      1,073.00 
-## SB_intention_02_T1                     0.061                   &lt; 0.001     0.006        1,056.00 
-## PA_actCop_T3                           0.06                    0.003       0.001        872.00   
-## PA_agrbct_02_T3                        0.059                   0.032       &lt; 0.001      868.00   
-## PA_autonomous_03_T3                    0.059                   0.036       &lt; 0.001      867.00   
-## PA_identified_03_T3                    0.059                   0.036       &lt; 0.001      867.00   
-## PA_intrinsic_T3                        0.059                   0.023       0.002        872.00   
-## PA_autonomous_08_T1                    0.058                   0.004       0.007        1,066.00 
-## PA_intrinsic_02_T1                     0.058                   0.004       0.007        1,066.00 
-## PA_autonomous_08_T3                    0.057                   0.013       &lt; 0.001      866.00   
-## PA_intrinsic_02_T3                     0.057                   0.013       &lt; 0.001      866.00   
-## padaysLastweek_T3                      0.056                   0.002       &lt; 0.001      883.00   
-## PA_agrbct_09_T3                        0.055                   0.018       &lt; 0.001      867.00   
-## PA_amotivation_02_T1                   0.055                   0.004       &lt; 0.001      1,057.00 
-## PA_autonomous_05_T3                    0.055                   0.02        &lt; 0.001      870.00   
-## PA_copingplan_T3                       0.055                   0.015       &lt; 0.001      872.00   
-## PA_copplan_04_T3                       0.055                   0.013       &lt; 0.001      866.00   
-## PA_integrated_02_T3                    0.055                   0.02        &lt; 0.001      870.00   
-## SB_intention_04_T1                     0.055                   0.012       &lt; 0.001      1,055.00 
-## PA_copplan_03_T3                       0.054                   0.003       0.007        869.00   
-## PA_dnorm_01_T1                         0.054                   &lt; 0.001     0.012        1,073.00 
-## pahrsLastweek_T3                       0.054                   0.012       0.036        843.00   
-## PA_autonomous_03_T1                    0.053                   0.013       0.007        1,070.00 
-## PA_autonomous_05_T1                    0.053                   &lt; 0.001     0.006        1,062.00 
-## PA_identified_03_T1                    0.053                   0.013       0.007        1,070.00 
-## PA_integrated_02_T1                    0.053                   &lt; 0.001     0.006        1,062.00 
-## PA_dnorm_T1                            0.052                   0.005       0.004        1,073.00 
-## PA_intention_T3                        0.052                   0.017       &lt; 0.001      871.00   
-## PA_controlled_T1                       0.051                   0.004       &lt; 0.001      1,073.00 
-## PA_intention_01_T3                     0.051                   0.022       &lt; 0.001      862.00   
-## pahrsUsually_T1                        0.051                   0.033       0.004        1,082.00 
-## PA_actionplan_T3                       0.05                    &lt; 0.001     &lt; 0.001      871.00   
-## PA_frqbct_08_T3                        0.05                    0.023       &lt; 0.001      865.00   
-## SB_intention_01_T1                     0.05                    &lt; 0.001     &lt; 0.001      1,059.00 
-## PA_autonomous_06_T1                    0.049                   0.021       0.001        1,066.00 
-## PA_frqbct_07_T3                        0.049                   0.031       0.009        864.00   
-## PA_integrated_03_T1                    0.049                   0.021       0.001        1,066.00 
-## pahrsUsually_T3                        0.049                   0.026       &lt; 0.001      869.00   
-## b5ext_T1                               0.048                   &lt; 0.001     0.026        1,068.00 
-## PA_amotivation_01_T1                   0.048                   &lt; 0.001     &lt; 0.001      1,062.00 
-## PA_autonomous_02_T3                    0.048                   0.014       0.004        868.00   
-## PA_identified_02_T3                    0.048                   0.014       0.004        868.00   
-## PA_intention_02_T3                     0.048                   0.008       &lt; 0.001      866.00   
-## symptom_headAche_T3                    0.048                   &lt; 0.001     &lt; 0.001      876.00   
-## PA_actplan_04_T3                       0.046                   0.004       0.002        863.00   
-## PA_frqbct_05_T3                        0.045                   &lt; 0.001     &lt; 0.001      860.00   
-## PA_oexp_03_T3                          0.045                   0.011       &lt; 0.001      867.00   
-## PA_autonomous_09_T3                    0.044                   0.019       0.002        863.00   
-## PA_identified_T1                       0.044                   0.006       &lt; 0.001      1,074.00 
-## PA_intrinsic_03_T3                     0.044                   0.019       0.002        863.00   
-## PA_oexpNeg_02_T1                       0.044                   0.031       &lt; 0.001      1,066.00 
-## PA_actplan_02_T3                       0.043                   &lt; 0.001     0.002        861.00   
-## PA_agrbct_01_T3                        0.042                   0.032       &lt; 0.001      869.00   
-## PA_agrbct_03_T1                        0.042                   &lt; 0.001     &lt; 0.001      1,071.00 
-## PA_agrbct_03_T3                        0.042                   0.003       &lt; 0.001      868.00   
-## PA_copplan_02_T3                       0.042                   0.013       0.007        870.00   
-## PA_agrbct_04_T1                        0.041                   0.014       0.004        1,071.00 
-## PA_autonomous_06_T3                    0.041                   0.018       &lt; 0.001      869.00   
-## PA_frqbct_09_T3                        0.041                   0.021       &lt; 0.001      857.00   
-## PA_integrated_03_T3                    0.041                   0.018       &lt; 0.001      869.00   
-## SB_oexp_03_T1                          0.041                   0.01        &lt; 0.001      1,058.00 
-## PA_oexp_06_T1                          0.04                    0.013       0.002        1,071.00 
-## padaysLastweek_T1                      0.04                    0.006       &lt; 0.001      1,082.00 
-## PA_agrbct_02_T1                        0.039                   &lt; 0.001     &lt; 0.001      1,071.00 
-## PA_actplan_04_T1                       0.038                   0.008       &lt; 0.001      1,073.00 
-## PA_introjected_T3                      0.038                   0.03        0.001        871.00   
-## symptom_headAche_T1                    0.038                   0.002       &lt; 0.001      1,055.00 
-## PA_dnorm_01_T3                         0.037                   &lt; 0.001     0.012        872.00   
-## PA_frqbct_06_T3                        0.037                   0.015       &lt; 0.001      861.00   
-## paLastweek_T1                          0.037                   0.004       &lt; 0.001      1,082.00 
-## PA_actCop_T1                           0.036                   0.006       &lt; 0.001      1,073.00 
-## PA_agrbct_07_T1                        0.036                   &lt; 0.001     &lt; 0.001      1,071.00 
-## PA_controlled_05_T3                    0.036                   0.018       &lt; 0.001      868.00   
-## PA_copplan_01_T3                       0.036                   0.015       &lt; 0.001      872.00   
-## PA_introjected_02_T3                   0.036                   0.018       &lt; 0.001      868.00   
-## PA_oexp_T3                             0.036                   0.034       0.017        874.00   
-## pahrsLastweek_T1                       0.036                   0.004       &lt; 0.001      1,082.00 
-## symptom_tirednessFaintness_T3          0.036                   0.014       &lt; 0.001      877.00   
-## PA_agrbct_05_T1                        0.035                   0.03        &lt; 0.001      1,071.00 
-## PA_oexp_01_T3                          0.035                   0.028       0.015        872.00   
-## PA_oexp_11_T3                          0.035                   0.036       0.008        868.00   
-## PA_agrbct_08_T1                        0.034                   &lt; 0.001     0.004        1,071.00 
-## PA_agrbct_09_T1                        0.034                   0.007       0.001        1,071.00 
-## PA_autonomous_01_T1                    0.034                   &lt; 0.001     &lt; 0.001      1,063.00 
-## PA_autonomous_01_T3                    0.034                   0.014       &lt; 0.001      867.00   
-## PA_copingplan_T1                       0.034                   &lt; 0.001     &lt; 0.001      1,073.00 
-## PA_copplan_03_T1                       0.034                   0.011       &lt; 0.001      1,073.00 
-## PA_frqbct_T1                           0.034                   0.002       &lt; 0.001      1,070.00 
-## PA_identified_01_T1                    0.034                   &lt; 0.001     &lt; 0.001      1,063.00 
-## PA_identified_01_T3                    0.034                   0.014       &lt; 0.001      867.00   
-## PA_oexp_T1                             0.034                   0.045       &lt; 0.001      1,078.00 
-## PA_actplan_01_T1                       0.033                   0.006       &lt; 0.001      1,073.00 
-## PA_agrbct_08_T3                        0.033                   0.034       &lt; 0.001      867.00   
-## PA_copplan_04_T1                       0.033                   0.01        &lt; 0.001      1,073.00 
-## SB_intention_04_T3                     0.033                   0.022       0.002        858.00   
-## SB_oexp_T1                             0.033                   0.035       &lt; 0.001      1,064.00 
-## PA_agrbct_06_T3                        0.032                   0.016       &lt; 0.001      860.00   
-## PA_frqbct_01_T3                        0.032                   &lt; 0.001     &lt; 0.001      869.00   
-## PA_oexp_11_T1                          0.032                   0.035       &lt; 0.001      1,063.00 
-## SB_oexp_03_T3                          0.032                   &lt; 0.001     &lt; 0.001      856.00   
-## symptom_neckShoulderPain_T1            0.032                   0.012       &lt; 0.001      1,047.00 
-## PA_actionplan_T1                       0.031                   0.013       &lt; 0.001      1,073.00 
-## PA_agrbct_07_T3                        0.031                   0.015       &lt; 0.001      862.00   
-## symptom_sleepDifficulty_T3             0.031                   0.005       &lt; 0.001      872.00   
-## SB_dnorm_02_T1                         0.03                    0.002       &lt; 0.001      1,060.00 
-## PA_agrbct_04_T3                        0.029                   0.039       0.001        870.00   
-## PA_agrbct_10_T1                        0.029                   0.019       0.003        1,071.00 
-## PA_amotivation_03_T1                   0.029                   0.015       &lt; 0.001      1,067.00 
-## PA_frqbct_04_T3                        0.029                   0.036       0.008        863.00   
-## PA_frqbct_05_T1                        0.029                   0.008       0.002        1,070.00 
-## PA_oexp_12_T3                          0.029                   0.029       0.002        865.00   
-## PA_oexp_diff                           0.029                   &lt; 0.001     0.019        869.00   
-## SB_intention_03_T3                     0.029                   0.027       0.009        857.00   
-## SB_intention_T3                        0.029                   0.031       0.017        862.00   
-## SB_oexp_06_T1                          0.029                   0.033       &lt; 0.001      1,058.00 
-## symptom_stomachAche_T3                 0.029                   &lt; 0.001     0.009        863.00   
-## b5open_01_T1                           0.028                   0.011       0.009        1,062.00 
-## PA_agrbct_06_T1                        0.028                   0.009       0.005        1,071.00 
-## symptom_irritabilityAngerbursts_T1     0.028                   0.011       0.002        1,039.00 
-## PA_agrbct_10_T3                        0.027                   0.033       &lt; 0.001      864.00   
-## PA_amotivation_02_T3                   0.027                   &lt; 0.001     &lt; 0.001      863.00   
-## PA_oexp_01_T1                          0.027                   0.021       0.009        1,071.00 
-## PA_oexp_03_T1                          0.027                   0.004       &lt; 0.001      1,064.00 
-## SB_dnorm_T3                            0.027                   0.025       0.018        861.00   
-## SB_oexp_T3                             0.027                   0.008       &lt; 0.001      863.00   
-## PA_controlled_03_T1                    0.026                   0.005       &lt; 0.001      1,064.00 
-## PA_extrinsic_03_T1                     0.026                   0.005       &lt; 0.001      1,064.00 
-## PA_frqbct_03_T3                        0.026                   0.026       0.003        865.00   
-## SB_dnorm_T1                            0.026                   &lt; 0.001     &lt; 0.001      1,062.00 
-## b5neur_01_T1                           0.025                   0.009       &lt; 0.001      1,064.00 
-## PA_actplan_03_T3                       0.025                   &lt; 0.001     &lt; 0.001      860.00   
-## PA_dnorm_T3                            0.025                   0.001       0.008        873.00   
-## PA_frqbct_06_T1                        0.025                   &lt; 0.001     0.002        1,070.00 
-## PA_pbc_01_diff                         0.025                   &lt; 0.001     0.007        865.00   
-## SB_oexp_04_T3                          0.025                   &lt; 0.001     &lt; 0.001      859.00   
-## PA_autonomous_02_T1                    0.024                   0.012       &lt; 0.001      1,063.00 
-## PA_frqbct_01_T1                        0.024                   &lt; 0.001     &lt; 0.001      1,070.00 
-## PA_identified_02_T1                    0.024                   0.012       &lt; 0.001      1,063.00 
-## PA_oexp_12_T1                          0.024                   0.031       &lt; 0.001      1,070.00 
-## SB_intention_01_T3                     0.024                   0.032       0.029        859.00   
-## b5neur_T1                              0.023                   0.006       &lt; 0.001      1,068.00 
-## PA_amotivation_T3                      0.023                   0.024       0.011        872.00   
-## PA_dnorm_02_T1                         0.023                   0.013       &lt; 0.001      1,073.00 
-## PA_oexp_07_T3                          0.023                   0.006       &lt; 0.001      867.00   
-## SB_dnorm_01_T3                         0.023                   0.053       0.024        861.00   
-## SB_dnorm_02_T3                         0.023                   0.002       0.009        856.00   
-## SB_intention_02_T3                     0.023                   0.029       0.011        857.00   
-## PA_copplan_01_T1                       0.022                   &lt; 0.001     &lt; 0.001      1,073.00 
-## PA_frqbct_04_T1                        0.021                   0.02        0.003        1,070.00 
-## PA_actplan_03_T1                       0.02                    0.021       &lt; 0.001      1,073.00 
-## PA_frqbct_09_T1                        0.02                    &lt; 0.001     &lt; 0.001      1,070.00 
-## PA_opportunities_01_T1                 0.02                    0.033       &lt; 0.001      1,070.00 
-## PA_controlled_04_T3                    0.019                   0.034       0.002        864.00   
-## PA_introjected_01_T3                   0.019                   0.034       0.002        864.00   
-## PA_oexp_05_T1                          0.019                   0.013       0.007        1,067.00 
-## PA_oexp_06_T3                          0.019                   0.033       0.013        869.00   
-## SB_oexp_06_T3                          0.019                   0.005       &lt; 0.001      857.00   
-## symptom_tensionNervousness_T1          0.019                   0.005       0.006        1,051.00 
-## PA_actplan_02_T1                       0.018                   0.015       &lt; 0.001      1,073.00 
-## PA_frqbct_03_diff                      0.018                   0.014       0.006        856.00   
-## SB_oexpNeg_07_T3                       0.018                   0.01        &lt; 0.001      859.00   
-## symptom_lowerBackPain_T1               0.018                   &lt; 0.001     &lt; 0.001      1,053.00 
-## symptom_sleepDifficulty_T1             0.018                   0.008       0.007        1,052.00 
-## b5agr_T1                               0.017                   0.032       &lt; 0.001      1,068.00 
-## PA_controlled_02_diff                  0.017                   0.021       0.018        859.00   
-## PA_extrinsic_02_diff                   0.017                   0.021       0.018        859.00   
-## PA_goal_01_diff                        0.017                   0.026       &lt; 0.001      835.00   
-## PA_goal_diff                           0.017                   0.026       &lt; 0.001      835.00   
-## PA_oexp_10_T3                          0.017                   0.019       0.013        869.00   
-## SB_oexp_02_T1                          0.017                   0.013       &lt; 0.001      1,056.00 
-## PA_amotivation_03_T3                   0.016                   0.012       0.013        866.00   
-## PA_oexpNeg_09_T1                       0.016                   0.015       &lt; 0.001      1,064.00 
-## SB_oexp_05_T1                          0.016                   0.033       &lt; 0.001      1,060.00 
-## symptom_irritabilityAngerbursts_T3     0.016                   0.009       0.004        869.00   
-## b5agrNeg_02_T1                         0.015                   0.002       &lt; 0.001      1,064.00 
-## PA_copplan_02_T1                       0.015                   &lt; 0.001     &lt; 0.001      1,073.00 
-## PA_frqbct_08_T1                        0.015                   0.004       &lt; 0.001      1,070.00 
-## PA_oexpNeg_02_T3                       0.015                   0.008       &lt; 0.001      870.00   
-## PA_oexpNeg_08_T1                       0.015                   0.028       &lt; 0.001      1,063.00 
-## paminLastweek_T3                       0.015                   0.001       0.017        678.00   
-## SB_dnorm_01_T1                         0.015                   &lt; 0.001     &lt; 0.001      1,059.00 
-## b5open_T1                              0.014                   0.004       0.026        1,068.00 
-## PA_frqbct_02_T1                        0.014                   0.013       0.002        1,070.00 
-## PA_intention_diff                      0.014                   &lt; 0.001     0.003        863.00   
-## PA_oexp_05_T3                          0.014                   0.022       0.003        870.00   
-## PA_opportunities_07_T1                 0.014                   0.004       &lt; 0.001      1,068.00 
-## SB_inorm_01_T1                         0.014                   &lt; 0.001     &lt; 0.001      1,056.00 
-## SB_oexp_04_T1                          0.014                   0.028       &lt; 0.001      1,063.00 
-## SB_sePbc_02_T3                         0.014                   0.022       &lt; 0.001      859.00   
-## PA_agrbct_09_diff                      0.013                   0.013       &lt; 0.001      858.00   
-## PA_amotivation_01_diff                 0.013                   0.007       0.005        848.00   
-## PA_amotivation_diff                    0.013                   0.017       0.02         862.00   
-## PA_extrinsic_diff                      0.013                   0.023       0.01         860.00   
-## PA_intention_02_diff                   0.013                   0.004       0.002        858.00   
-## PA_dnorm_diff                          0.012                   &lt; 0.001     &lt; 0.001      865.00   
-## SB_inorm_02_T3                         0.012                   0.036       &lt; 0.001      854.00   
-## SB_oexp_05_T3                          0.012                   &lt; 0.001     &lt; 0.001      858.00   
-## symptom_lowerBackPain_T3               0.012                   0.001       0.004        870.00   
-## PA_opportunities_04_T1                 0.011                   0.012       0.01         1,070.00 
-## SB_sePbc_05_T3                         0.011                   0.036       &lt; 0.001      852.00   
-## b5agr_01_T1                            0.01                    0.041       &lt; 0.001      1,061.00 
-## PA_dnormparents_02_T3                  0.01                    0.004       &lt; 0.001      870.00   
-## PA_intention_01_diff                   0.01                    &lt; 0.001     0.003        854.00   
-## PA_oexp_07_T1                          0.01                    0.036       &lt; 0.001      1,062.00 
-## PA_amotivation_01_T3                   0.009                   0.012       0.003        863.00   
-## PA_amotivation_02_diff                 0.009                   0.006       0.009        847.00   
-## PA_autonomous_08_diff                  0.009                   0.028       0.009        851.00   
-## PA_intrinsic_02_diff                   0.009                   0.028       0.009        851.00   
-## PA_oexpNeg_08_T3                       0.009                   0.009       0.014        871.00   
-## PA_pbc_diff                            0.009                   0.007       0.011        867.00   
-## PA_pbcNeg_02_T3                        0.009                   0.019       &lt; 0.001      873.00   
-## b5cons_T1                              0.008                   &lt; 0.001     0.004        1,067.00 
-## PA_autonomous_09_diff                  0.008                   &lt; 0.001     &lt; 0.001      844.00   
-## PA_dnorm_01_diff                       0.008                   &lt; 0.001     &lt; 0.001      864.00   
-## PA_intrinsic_03_diff                   0.008                   &lt; 0.001     &lt; 0.001      844.00   
-## PA_oexp_10_T1                          0.008                   0.016       &lt; 0.001      1,069.00 
-## PA_pbcNeg_02_diff                      0.008                   0.037       0.001        859.00   
-## SB_oexpNeg_07_T1                       0.008                   0.008       &lt; 0.001      1,057.00 
-## fatpct_T1                              0.007                   0.002       0.106        942.00   
-## PA_amotivation_03_diff                 0.007                   &lt; 0.001     0.009        853.00   
-## PA_controlled_03_diff                  0.007                   0.016       0.008        852.00   
-## PA_controlled_diff                     0.007                   0.022       0.014        863.00   
-## PA_extrinsic_03_diff                   0.007                   0.016       0.008        852.00   
-## PA_frqbct_07_diff                      0.007                   &lt; 0.001     0.011        855.00   
-## PA_goal_01_T1                          0.007                   0.038       &lt; 0.001      1,061.00 
-## PA_goal_T1                             0.007                   0.038       &lt; 0.001      1,061.00 
-## PA_intrinsic_diff                      0.007                   &lt; 0.001     0.005        865.00   
-## PA_pbc_03_T3                           0.007                   &lt; 0.001     0.009        874.00   
-## SB_sePbc_T3                            0.007                   0.04        &lt; 0.001      861.00   
-## symptom_tirednessFaintness_diff        0.007                   0.016       &lt; 0.001      857.00   
-## symptom_tirednessFaintness_T1          0.007                   0.023       0.004        1,058.00 
-## b5cons_01_T1                           0.006                   0.012       0.013        1,059.00 
-## PA_agrbct_01_diff                      0.006                   0.028       &lt; 0.001      861.00   
-## PA_dnorm_02_diff                       0.006                   0.01        &lt; 0.001      862.00   
-## PA_oexp_03_diff                        0.006                   &lt; 0.001     &lt; 0.001      851.00   
-## PA_opportunitiesNeg_06_diff            0.006                   0.012       0.004        853.00   
-## SB_inorm_01_T3                         0.006                   0.057       &lt; 0.001      859.00   
-## PA_agrbct_03_diff                      0.005                   &lt; 0.001     &lt; 0.001      859.00   
-## PA_controlled_05_T1                    0.005                   0.002       &lt; 0.001      1,066.00 
-## PA_introjected_02_T1                   0.005                   0.002       &lt; 0.001      1,066.00 
-## PA_oexp_11_diff                        0.005                   0.021       0.008        852.00   
-## PA_oexpNeg_09_T3                       0.005                   0.006       0.022        867.00   
-## PA_pbcNeg_02_T1                        0.005                   0.005       0.003        1,063.00 
-## paminLastweek_T1                       0.005                   &lt; 0.001     0.011        1,082.00 
-## SB_inorm_02_T1                         0.005                   0.025       0.006        1,053.00 
-## SB_inorm_T1                            0.005                   0.009       0.003        1,064.00 
-## SB_sePbc_04_T3                         0.005                   0.02        0.002        858.00   
-## b5consNeg_02_T1                        0.004                   &lt; 0.001     &lt; 0.001      1,065.00 
-## PA_autonomous_06_diff                  0.004                   0.001       &lt; 0.001      855.00   
-## PA_copingplan_diff                     0.004                   0.004       &lt; 0.001      864.00   
-## PA_copplan_03_diff                     0.004                   0.006       &lt; 0.001      861.00   
-## PA_frqbct_07_T1                        0.004                   0.001       &lt; 0.001      1,070.00 
-## PA_integrated_03_diff                  0.004                   0.001       &lt; 0.001      855.00   
-## PA_integrated_diff                     0.004                   &lt; 0.001     0.014        863.00   
-## PA_opportunities_04_diff               0.004                   0.004       0.003        863.00   
-## pahrsLastweek_diff                     0.004                   0.001       0.004        842.00   
-## SB_oexp_02_diff                        0.004                   &lt; 0.001     &lt; 0.001      839.00   
-## SB_oexp_02_T3                          0.004                   &lt; 0.001     &lt; 0.001      858.00   
-## symptom_tensionNervousness_diff        0.004                   &lt; 0.001     0.001        851.00   
-## b5extNeg_02_T1                         0.003                   0.001       0.013        1,062.00 
-## PA_amotivation_04_diff                 0.003                   0.019       0.017        857.00   
-## PA_controlled_01_diff                  0.003                   0.004       &lt; 0.001      859.00   
-## PA_controlled_03_T3                    0.003                   &lt; 0.001     &lt; 0.001      864.00   
-## PA_extrinsic_01_diff                   0.003                   0.004       &lt; 0.001      859.00   
-## PA_extrinsic_03_T3                     0.003                   &lt; 0.001     &lt; 0.001      864.00   
-## PA_frqbct_08_diff                      0.003                   &lt; 0.001     0.001        856.00   
-## PA_frqbct_diff                         0.003                   &lt; 0.001     0.012        860.00   
-## PA_inorm_01_T3                         0.003                   0.009       0.027        869.00   
-## PA_inorm_T3                            0.003                   0.009       0.027        869.00   
-## PA_oexp_01_diff                        0.003                   0.003       0.01         861.00   
-## PA_oexpNeg_02_diff                     0.003                   &lt; 0.001     &lt; 0.001      854.00   
-## PA_opportunities_04_T3                 0.003                   &lt; 0.001     0.011        873.00   
-## PA_opportunitiesNeg_08_T1              0.003                   0.02        &lt; 0.001      1,066.00 
-## PA_selfefficacy_T1                     0.003                   0.005       0.004        1,071.00 
-## PA_sePbc_diff                          0.003                   &lt; 0.001     0.007        868.00   
-## SB_oexpNeg_01_diff                     0.003                   &lt; 0.001     &lt; 0.001      849.00   
-## SB_sePbc_03_T1                         0.003                   0.025       &lt; 0.001      1,060.00 
-## SB_sePbc_04_T1                         0.003                   0.033       &lt; 0.001      1,060.00 
-## PA_actCop_diff                         0.002                   &lt; 0.001     &lt; 0.001      864.00   
-## PA_actplan_01_diff                     0.002                   &lt; 0.001     &lt; 0.001      856.00   
-## PA_copplan_01_diff                     0.002                   0.004       &lt; 0.001      864.00   
-## PA_frqbct_03_T1                        0.002                   0.006       &lt; 0.001      1,070.00 
-## PA_opportunities_07_diff               0.002                   &lt; 0.001     &lt; 0.001      862.00   
-## PA_opportunitiesNeg_06_T1              0.002                   &lt; 0.001     0.022        1,059.00 
-## PA_pbc_T1                              0.002                   0.027       0.003        1,071.00 
-## PA_sePbc_T1                            0.002                   0.026       0.006        1,071.00 
-## SB_inorm_02_diff                       0.002                   0.017       &lt; 0.001      835.00   
-## SB_sePbc_01_T3                         0.002                   0.042       0.007        857.00   
-## PA_agrbct_05_diff                      0.001                   0.023       0.004        860.00   
-## PA_copplan_04_diff                     0.001                   &lt; 0.001     0.002        858.00   
-## PA_goal_01_T3                          0.001                   0.03        &lt; 0.001      852.00   
-## PA_goal_T3                             0.001                   0.03        &lt; 0.001      852.00   
-## PA_introjected_T1                      0.001                   &lt; 0.001     &lt; 0.001      1,073.00 
-## PA_opportunities_01_diff               0.001                   0.013       0.004        859.00   
-## PA_opportunities_07_T3                 0.001                   0.003       &lt; 0.001      876.00   
-## PA_pbc_01_T1                           0.001                   0.031       &lt; 0.001      1,069.00 
-## PA_selfefficacy_01_diff                0.001                   &lt; 0.001     0.009        863.00   
-## PA_selfefficacy_01_T1                  0.001                   0.007       &lt; 0.001      1,071.00 
-## pahrsUsually_diff                      0.001                   &lt; 0.001     0.002        868.00   
-## SB_sePbc_05_diff                       0.001                   0.021       0.002        831.00   
-## b5neurNeg_02_T1                        &lt; 0.001                 0.011       0.002        1,061.00 
-## b5openNeg_02_T1                        &lt; 0.001                 &lt; 0.001     0.016        1,066.00 
-## PA_actionplan_diff                     &lt; 0.001                 &lt; 0.001     0.001        863.00   
-## PA_actplan_02_diff                     &lt; 0.001                 &lt; 0.001     0.003        854.00   
-## PA_actplan_03_diff                     &lt; 0.001                 &lt; 0.001     0.006        852.00   
-## PA_actplan_04_diff                     &lt; 0.001                 &lt; 0.001     &lt; 0.001      855.00   
-## PA_agrbct_02_diff                      &lt; 0.001                 0.012       0.006        859.00   
-## PA_agrbct_04_diff                      &lt; 0.001                 0.02        0.007        861.00   
-## PA_agrbct_06_diff                      &lt; 0.001                 &lt; 0.001     0.002        851.00   
-## PA_agrbct_07_diff                      &lt; 0.001                 &lt; 0.001     0.007        853.00   
-## PA_agrbct_08_diff                      &lt; 0.001                 0.023       0.006        858.00   
-## PA_agrbct_10_diff                      &lt; 0.001                 0.049       &lt; 0.001      855.00   
-## PA_agrbct_diff                         &lt; 0.001                 0.034       0.004        864.00   
-## PA_amotivation_04_T3                   &lt; 0.001                 0.037       0.02         872.00   
-## PA_autonomous_01_diff                  &lt; 0.001                 &lt; 0.001     &lt; 0.001      851.00   
-## PA_autonomous_02_diff                  &lt; 0.001                 0.006       0.004        853.00   
-## PA_autonomous_03_diff                  &lt; 0.001                 &lt; 0.001     0.005        855.00   
-## PA_autonomous_04_diff                  &lt; 0.001                 &lt; 0.001     0.001        859.00   
-## PA_autonomous_05_diff                  &lt; 0.001                 &lt; 0.001     0.024        853.00   
-## PA_autonomous_07_diff                  &lt; 0.001                 &lt; 0.001     &lt; 0.001      859.00   
-## PA_autonomous_diff                     &lt; 0.001                 &lt; 0.001     0.008        868.00   
-## PA_controlled_01_T3                    &lt; 0.001                 &lt; 0.001     &lt; 0.001      869.00   
-## PA_controlled_02_T3                    &lt; 0.001                 &lt; 0.001     0.006        868.00   
-## PA_controlled_04_diff                  &lt; 0.001                 0.016       0.009        856.00   
-## PA_controlled_04_T1                    &lt; 0.001                 &lt; 0.001     0.001        1,068.00 
-## PA_controlled_05_diff                  &lt; 0.001                 0.016       0.01         856.00   
-## PA_controlled_T3                       &lt; 0.001                 0.006       &lt; 0.001      871.00   
-## PA_copplan_02_diff                     &lt; 0.001                 &lt; 0.001     &lt; 0.001      862.00   
-## PA_extrinsic_01_T3                     &lt; 0.001                 &lt; 0.001     &lt; 0.001      869.00   
-## PA_extrinsic_02_T3                     &lt; 0.001                 &lt; 0.001     0.006        868.00   
-## PA_extrinsic_T3                        &lt; 0.001                 &lt; 0.001     0.002        869.00   
-## PA_frqbct_01_diff                      &lt; 0.001                 &lt; 0.001     &lt; 0.001      860.00   
-## PA_frqbct_02_diff                      &lt; 0.001                 &lt; 0.001     0.024        856.00   
-## PA_frqbct_04_diff                      &lt; 0.001                 &lt; 0.001     0.018        854.00   
-## PA_frqbct_05_diff                      &lt; 0.001                 &lt; 0.001     0.006        851.00   
-## PA_frqbct_06_diff                      &lt; 0.001                 &lt; 0.001     &lt; 0.001      852.00   
-## PA_frqbct_09_diff                      &lt; 0.001                 0.006       &lt; 0.001      848.00   
-## PA_identified_01_diff                  &lt; 0.001                 &lt; 0.001     &lt; 0.001      851.00   
-## PA_identified_02_diff                  &lt; 0.001                 0.006       0.004        853.00   
-## PA_identified_03_diff                  &lt; 0.001                 &lt; 0.001     0.005        855.00   
-## PA_identified_diff                     &lt; 0.001                 &lt; 0.001     &lt; 0.001      865.00   
-## PA_inorm_01_diff                       &lt; 0.001                 &lt; 0.001     0.007        861.00   
-## PA_inorm_01_T1                         &lt; 0.001                 0.006       0.003        1,073.00 
-## PA_inorm_diff                          &lt; 0.001                 &lt; 0.001     0.007        861.00   
-## PA_inorm_T1                            &lt; 0.001                 0.006       0.003        1,073.00 
-## PA_integrated_01_diff                  &lt; 0.001                 &lt; 0.001     0.001        859.00   
-## PA_integrated_02_diff                  &lt; 0.001                 &lt; 0.001     0.024        853.00   
-## PA_intrinsic_01_diff                   &lt; 0.001                 &lt; 0.001     &lt; 0.001      859.00   
-## PA_introjected_01_diff                 &lt; 0.001                 0.016       0.009        856.00   
-## PA_introjected_01_T1                   &lt; 0.001                 &lt; 0.001     0.001        1,068.00 
-## PA_introjected_02_diff                 &lt; 0.001                 0.016       0.01         856.00   
-## PA_introjected_diff                    &lt; 0.001                 0.017       0.013        863.00   
-## PA_oexp_04_diff                        &lt; 0.001                 0.002       &lt; 0.001      860.00   
-## PA_oexp_04_T1                          &lt; 0.001                 0.009       0.007        1,071.00 
-## PA_oexp_04_T3                          &lt; 0.001                 0.027       &lt; 0.001      870.00   
-## PA_oexp_05_diff                        &lt; 0.001                 0.005       &lt; 0.001      858.00   
-## PA_oexp_06_diff                        &lt; 0.001                 &lt; 0.001     &lt; 0.001      858.00   
-## PA_oexp_07_diff                        &lt; 0.001                 0.018       &lt; 0.001      852.00   
-## PA_oexp_10_diff                        &lt; 0.001                 0.028       0.007        858.00   
-## PA_oexp_12_diff                        &lt; 0.001                 0.001       0.003        854.00   
-## PA_oexpNeg_08_diff                     &lt; 0.001                 0.006       0.017        856.00   
-## PA_oexpNeg_09_diff                     &lt; 0.001                 0.002       0.012        851.00   
-## PA_opportunities_01_T3                 &lt; 0.001                 0.039       0.015        871.00   
-## PA_opportunities_02_diff               &lt; 0.001                 0.003       0.003        859.00   
-## PA_opportunities_02_T1                 &lt; 0.001                 0.018       &lt; 0.001      1,067.00 
-## PA_opportunities_02_T3                 &lt; 0.001                 0.012       0.011        874.00   
-## PA_opportunities_05_diff               &lt; 0.001                 &lt; 0.001     0.006        856.00   
-## PA_opportunities_05_T1                 &lt; 0.001                 &lt; 0.001     &lt; 0.001      1,064.00 
-## PA_opportunities_05_T3                 &lt; 0.001                 0.013       0.007        871.00   
-## PA_opportunities_diff                  &lt; 0.001                 &lt; 0.001     0.006        868.00   
-## PA_opportunities_T1                    &lt; 0.001                 0.018       &lt; 0.001      1,075.00 
-## PA_opportunities_T3                    &lt; 0.001                 0.011       0.007        876.00   
-## PA_opportunitiesNeg_03_diff            &lt; 0.001                 &lt; 0.001     &lt; 0.001      856.00   
-## PA_opportunitiesNeg_03_T1              &lt; 0.001                 &lt; 0.001     &lt; 0.001      1,065.00 
-## PA_opportunitiesNeg_03_T3              &lt; 0.001                 &lt; 0.001     &lt; 0.001      872.00   
-## PA_opportunitiesNeg_06_T3              &lt; 0.001                 0.004       0.012        874.00   
-## PA_pbc_01_T3                           &lt; 0.001                 0.004       0.021        875.00   
-## PA_pbc_03_diff                         &lt; 0.001                 &lt; 0.001     0.007        861.00   
-## PA_pbc_03_T1                           &lt; 0.001                 0.014       0.01         1,066.00 
-## PA_pbc_T3                              &lt; 0.001                 &lt; 0.001     0.013        876.00   
-## PA_selfefficacy_01_T3                  &lt; 0.001                 &lt; 0.001     0.012        873.00   
-## PA_selfefficacy_diff                   &lt; 0.001                 &lt; 0.001     0.001        868.00   
-## PA_selfefficacy_T3                     &lt; 0.001                 0.023       0.009        878.00   
-## PA_selfefficacyNeg_02_diff             &lt; 0.001                 &lt; 0.001     &lt; 0.001      867.00   
-## PA_selfefficacyNeg_02_T1               &lt; 0.001                 0.002       0.005        1,071.00 
-## PA_selfefficacyNeg_02_T3               &lt; 0.001                 0.026       0.002        877.00   
-## PA_sePbc_T3                            &lt; 0.001                 0.001       0.013        878.00   
-## paAccelerometer_diff                   &lt; 0.001                 0.069       0.074        431.00   
-## padaysLastweek_diff                    &lt; 0.001                 &lt; 0.001     &lt; 0.001      882.00   
-## pafreqUsually_diff                     &lt; 0.001                 0.015       &lt; 0.001      873.00   
-## paminLastweek_diff                     &lt; 0.001                 &lt; 0.001     &lt; 0.001      677.00   
-## SB_dnorm_01_diff                       &lt; 0.001                 0.009       0.021        846.00   
-## SB_dnorm_02_diff                       &lt; 0.001                 0.013       0.007        841.00   
-## SB_dnorm_diff                          &lt; 0.001                 0.012       0.018        848.00   
-## SB_inorm_01_diff                       &lt; 0.001                 0.019       0.002        840.00   
-## SB_inorm_diff                          &lt; 0.001                 0.021       &lt; 0.001      851.00   
-## SB_inorm_T3                            &lt; 0.001                 0.052       &lt; 0.001      863.00   
-## SB_intention_01_diff                   &lt; 0.001                 0.03        0.016        844.00   
-## SB_intention_02_diff                   &lt; 0.001                 0.024       0.013        839.00   
-## SB_intention_03_diff                   &lt; 0.001                 0.023       0.007        838.00   
-## SB_intention_04_diff                   &lt; 0.001                 0.023       0.004        840.00   
-## SB_intention_diff                      &lt; 0.001                 0.031       0.016        850.00   
-## SB_oexp_03_diff                        &lt; 0.001                 0.001       &lt; 0.001      839.00   
-## SB_oexp_04_diff                        &lt; 0.001                 0.011       0.001        846.00   
-## SB_oexp_05_diff                        &lt; 0.001                 0.007       &lt; 0.001      842.00   
-## SB_oexp_06_diff                        &lt; 0.001                 0.005       0.003        843.00   
-## SB_oexp_diff                           &lt; 0.001                 0.005       &lt; 0.001      851.00   
-## SB_oexpNeg_01_T1                       &lt; 0.001                 0.008       &lt; 0.001      1,063.00 
-## SB_oexpNeg_01_T3                       &lt; 0.001                 0.015       0.016        862.00   
-## SB_oexpNeg_07_diff                     &lt; 0.001                 &lt; 0.001     &lt; 0.001      842.00   
-## SB_sePbc_01_diff                       &lt; 0.001                 0.004       &lt; 0.001      844.00   
-## SB_sePbc_01_T1                         &lt; 0.001                 0.01        0.014        1,062.00 
-## SB_sePbc_02_diff                       &lt; 0.001                 0.012       &lt; 0.001      844.00   
-## SB_sePbc_02_T1                         &lt; 0.001                 0.003       0.015        1,061.00 
-## SB_sePbc_03_diff                       &lt; 0.001                 0.023       &lt; 0.001      844.00   
-## SB_sePbc_03_T3                         &lt; 0.001                 0.028       0.002        859.00   
-## SB_sePbc_04_diff                       &lt; 0.001                 0.006       &lt; 0.001      842.00   
-## SB_sePbc_05_T1                         &lt; 0.001                 0.005       0.012        1,054.00 
-## SB_sePbc_diff                          &lt; 0.001                 0.019       &lt; 0.001      849.00   
-## SB_sePbc_T1                            &lt; 0.001                 0.015       0.011        1,064.00 
-## sitLieAccelerometer_diff               &lt; 0.001                 0.047       0.03         431.00   
-## symptom_diff                           &lt; 0.001                 0.009       &lt; 0.001      889.00   
-## symptom_headAche_diff                  &lt; 0.001                 0.015       &lt; 0.001      853.00   
-## symptom_irritabilityAngerbursts_diff   &lt; 0.001                 0.002       &lt; 0.001      840.00   
-## symptom_lowerBackPain_diff             &lt; 0.001                 0.014       0.004        851.00   
-## symptom_neckShoulderPain_diff          &lt; 0.001                 &lt; 0.001     0.01         848.00   
-## symptom_neckShoulderPain_T3            &lt; 0.001                 0.001       0.046        874.00   
-## symptom_sleepDifficulty_diff           &lt; 0.001                 &lt; 0.001     &lt; 0.001      849.00   
-## symptom_stomachAche_diff               &lt; 0.001                 0.02        0.01         823.00   
-## symptom_tensionNervousness_T3          &lt; 0.001                 &lt; 0.001     0.037        874.00</code></pre>
+## Variable              ICC educational track   ICC class   ICC school   n        
+## --------------------  ----------------------  ----------  -----------  ---------
+## PA_dnorm_01_T1        0.054                   &lt; 0.001     0.012        1,073.00 
+## paminLastweek_T1      0.005                   &lt; 0.001     0.011        1,082.00 
+## PA_integrated_T1      0.082                   &lt; 0.001     0.008        1,073.00 
+## PA_autonomous_T1      0.073                   0.005       0.006        1,078.00 
+## PA_intrinsic_T1       0.071                   0.009       0.006        1,074.00 
+## pafreqUsually_T1      0.069                   0.023       0.005        1,082.00 
+## PA_dnorm_T1           0.052                   0.005       0.004        1,073.00 
+## pahrsUsually_T1       0.051                   0.033       0.004        1,082.00 
+## PA_inorm_01_T1        &lt; 0.001                 0.006       0.003        1,073.00 
+## PA_inorm_T1           &lt; 0.001                 0.006       0.003        1,073.00 
+## PA_actCop_T1          0.036                   0.006       &lt; 0.001      1,073.00 
+## PA_actionplan_T1      0.031                   0.013       &lt; 0.001      1,073.00 
+## PA_actplan_01_T1      0.033                   0.006       &lt; 0.001      1,073.00 
+## PA_actplan_02_T1      0.018                   0.015       &lt; 0.001      1,073.00 
+## PA_actplan_03_T1      0.02                    0.021       &lt; 0.001      1,073.00 
+## PA_actplan_04_T1      0.038                   0.008       &lt; 0.001      1,073.00 
+## PA_controlled_T1      0.051                   0.004       &lt; 0.001      1,073.00 
+## PA_copingplan_T1      0.034                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_copplan_01_T1      0.022                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_copplan_02_T1      0.015                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_copplan_03_T1      0.034                   0.011       &lt; 0.001      1,073.00 
+## PA_copplan_04_T1      0.033                   0.01        &lt; 0.001      1,073.00 
+## PA_dnorm_02_T1        0.023                   0.013       &lt; 0.001      1,073.00 
+## PA_identified_T1      0.044                   0.006       &lt; 0.001      1,074.00 
+## PA_intention_01_T1    0.061                   0.027       &lt; 0.001      1,073.00 
+## PA_intention_02_T1    0.064                   0.044       &lt; 0.001      1,073.00 
+## PA_intention_T1       0.064                   0.039       &lt; 0.001      1,073.00 
+## PA_introjected_T1     0.001                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_oexp_T1            0.034                   0.045       &lt; 0.001      1,078.00 
+## PA_opportunities_T1   &lt; 0.001                 0.018       &lt; 0.001      1,075.00 
+## padaysLastweek_T1     0.04                    0.006       &lt; 0.001      1,082.00 
+## pahrsLastweek_T1      0.036                   0.004       &lt; 0.001      1,082.00 
+## paLastweek_T1         0.037                   0.004       &lt; 0.001      1,082.00 
+## symptom_T1            0.066                   0.013       &lt; 0.001      1,084.00</code></pre>
+<pre class="r"><code>
+vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC class`)) %&gt;% top_n(20) %&gt;% apa_table(caption = &quot;Intra-class correlations sorted by classroom ICC&quot;)
+## Selecting by n
+## &lt;caption&gt;(\#tab:icc-classroom)*Intra-class correlations sorted by classroom ICC*&lt;/caption&gt;
+## 
+## 
+## Variable              ICC educational track   ICC class   ICC school   n        
+## --------------------  ----------------------  ----------  -----------  ---------
+## PA_oexp_T1            0.034                   0.045       &lt; 0.001      1,078.00 
+## PA_intention_02_T1    0.064                   0.044       &lt; 0.001      1,073.00 
+## PA_intention_T1       0.064                   0.039       &lt; 0.001      1,073.00 
+## pahrsUsually_T1       0.051                   0.033       0.004        1,082.00 
+## PA_intention_01_T1    0.061                   0.027       &lt; 0.001      1,073.00 
+## pafreqUsually_T1      0.069                   0.023       0.005        1,082.00 
+## PA_actplan_03_T1      0.02                    0.021       &lt; 0.001      1,073.00 
+## PA_opportunities_T1   &lt; 0.001                 0.018       &lt; 0.001      1,075.00 
+## PA_actplan_02_T1      0.018                   0.015       &lt; 0.001      1,073.00 
+## PA_actionplan_T1      0.031                   0.013       &lt; 0.001      1,073.00 
+## PA_dnorm_02_T1        0.023                   0.013       &lt; 0.001      1,073.00 
+## symptom_T1            0.066                   0.013       &lt; 0.001      1,084.00 
+## PA_copplan_03_T1      0.034                   0.011       &lt; 0.001      1,073.00 
+## PA_copplan_04_T1      0.033                   0.01        &lt; 0.001      1,073.00 
+## PA_intrinsic_T1       0.071                   0.009       0.006        1,074.00 
+## PA_actplan_04_T1      0.038                   0.008       &lt; 0.001      1,073.00 
+## PA_actCop_T1          0.036                   0.006       &lt; 0.001      1,073.00 
+## PA_actplan_01_T1      0.033                   0.006       &lt; 0.001      1,073.00 
+## PA_identified_T1      0.044                   0.006       &lt; 0.001      1,074.00 
+## PA_inorm_01_T1        &lt; 0.001                 0.006       0.003        1,073.00 
+## PA_inorm_T1           &lt; 0.001                 0.006       0.003        1,073.00 
+## padaysLastweek_T1     0.04                    0.006       &lt; 0.001      1,082.00 
+## PA_autonomous_T1      0.073                   0.005       0.006        1,078.00 
+## PA_dnorm_T1           0.052                   0.005       0.004        1,073.00 
+## PA_controlled_T1      0.051                   0.004       &lt; 0.001      1,073.00 
+## pahrsLastweek_T1      0.036                   0.004       &lt; 0.001      1,082.00 
+## paLastweek_T1         0.037                   0.004       &lt; 0.001      1,082.00 
+## PA_copingplan_T1      0.034                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_copplan_01_T1      0.022                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_copplan_02_T1      0.015                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_dnorm_01_T1        0.054                   &lt; 0.001     0.012        1,073.00 
+## PA_integrated_T1      0.082                   &lt; 0.001     0.008        1,073.00 
+## PA_introjected_T1     0.001                   &lt; 0.001     &lt; 0.001      1,073.00 
+## paminLastweek_T1      0.005                   &lt; 0.001     0.011        1,082.00</code></pre>
+<pre class="r"><code>
+vardatatable %&gt;% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %&gt;% arrange(desc(`ICC educational track`)) %&gt;% top_n(20) %&gt;% apa_table(caption = &quot;Intra-class correlations sorted by educational track ICC&quot;)
+## Selecting by n
+## &lt;caption&gt;(\#tab:icc-track)*Intra-class correlations sorted by educational track ICC*&lt;/caption&gt;
+## 
+## 
+## Variable              ICC educational track   ICC class   ICC school   n        
+## --------------------  ----------------------  ----------  -----------  ---------
+## PA_integrated_T1      0.082                   &lt; 0.001     0.008        1,073.00 
+## PA_autonomous_T1      0.073                   0.005       0.006        1,078.00 
+## PA_intrinsic_T1       0.071                   0.009       0.006        1,074.00 
+## pafreqUsually_T1      0.069                   0.023       0.005        1,082.00 
+## symptom_T1            0.066                   0.013       &lt; 0.001      1,084.00 
+## PA_intention_02_T1    0.064                   0.044       &lt; 0.001      1,073.00 
+## PA_intention_T1       0.064                   0.039       &lt; 0.001      1,073.00 
+## PA_intention_01_T1    0.061                   0.027       &lt; 0.001      1,073.00 
+## PA_dnorm_01_T1        0.054                   &lt; 0.001     0.012        1,073.00 
+## PA_dnorm_T1           0.052                   0.005       0.004        1,073.00 
+## PA_controlled_T1      0.051                   0.004       &lt; 0.001      1,073.00 
+## pahrsUsually_T1       0.051                   0.033       0.004        1,082.00 
+## PA_identified_T1      0.044                   0.006       &lt; 0.001      1,074.00 
+## padaysLastweek_T1     0.04                    0.006       &lt; 0.001      1,082.00 
+## PA_actplan_04_T1      0.038                   0.008       &lt; 0.001      1,073.00 
+## paLastweek_T1         0.037                   0.004       &lt; 0.001      1,082.00 
+## PA_actCop_T1          0.036                   0.006       &lt; 0.001      1,073.00 
+## pahrsLastweek_T1      0.036                   0.004       &lt; 0.001      1,082.00 
+## PA_copingplan_T1      0.034                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_copplan_03_T1      0.034                   0.011       &lt; 0.001      1,073.00 
+## PA_oexp_T1            0.034                   0.045       &lt; 0.001      1,078.00 
+## PA_actplan_01_T1      0.033                   0.006       &lt; 0.001      1,073.00 
+## PA_copplan_04_T1      0.033                   0.01        &lt; 0.001      1,073.00 
+## PA_actionplan_T1      0.031                   0.013       &lt; 0.001      1,073.00 
+## PA_dnorm_02_T1        0.023                   0.013       &lt; 0.001      1,073.00 
+## PA_copplan_01_T1      0.022                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_actplan_03_T1      0.02                    0.021       &lt; 0.001      1,073.00 
+## PA_actplan_02_T1      0.018                   0.015       &lt; 0.001      1,073.00 
+## PA_copplan_02_T1      0.015                   &lt; 0.001     &lt; 0.001      1,073.00 
+## paminLastweek_T1      0.005                   &lt; 0.001     0.011        1,082.00 
+## PA_introjected_T1     0.001                   &lt; 0.001     &lt; 0.001      1,073.00 
+## PA_inorm_01_T1        &lt; 0.001                 0.006       0.003        1,073.00 
+## PA_inorm_T1           &lt; 0.001                 0.006       0.003        1,073.00 
+## PA_opportunities_T1   &lt; 0.001                 0.018       &lt; 0.001      1,075.00</code></pre>
 </div>
 <div id="create-a-table-for-all-items-by-gender-and-intervention-allocation" class="section level2">
 <h2>Create a table for all items by gender and intervention allocation</h2>
@@ -24031,8 +22631,7 @@ demotable &lt;- bind_rows(demotable, demotable_total)
 ## Warning in bind_rows_(x, .id): binding character and factor vector,
 ## coercing into character vector
 
-demotable &lt;- demotable %&gt;% gather(var, val, 2:ncol(demotable)) %&gt;% spread(girl, val)
-## Error in overscope_eval_next(overscope, expr): object &#39;girl&#39; not found
+demotable &lt;- demotable %&gt;% gather(var, val, 2:ncol(demotable)) %&gt;% spread(Girl, val)
 
 # For some reason, sum of n&#39;s of all tracks is 1084.
 
@@ -24043,38 +22642,42 @@ apa_table(demotable, caption = &quot;Baseline demographics of educational tracks
 <table>
 <thead>
 <tr class="header">
-<th align="left">Girl</th>
-<th align="left">Mean age (range)</th>
-<th align="left">Mean study year (sd)</th>
-<th align="left">% intervention</th>
-<th align="left">% born in Finland</th>
-<th align="left">n</th>
+<th align="left">var</th>
+<th align="left">0</th>
+<th align="left">1</th>
+<th align="left">Total</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">1</td>
-<td align="left">19.5 (17-50)</td>
-<td align="left">1.7 (0.8)</td>
-<td align="left">56.0</td>
+<td align="left">% born in Finland</td>
+<td align="left">88.2</td>
 <td align="left">80.1</td>
-<td align="left">613</td>
+<td align="left">83.1</td>
 </tr>
 <tr class="even">
-<td align="left">0</td>
-<td align="left">19.1 (17-36)</td>
-<td align="left">1.7 (0.9)</td>
+<td align="left">% intervention</td>
 <td align="left">50.5</td>
-<td align="left">88.2</td>
-<td align="left">471</td>
+<td align="left">56</td>
+<td align="left">53.6</td>
 </tr>
 <tr class="odd">
-<td align="left">Total</td>
+<td align="left">Mean age (range)</td>
+<td align="left">19.1 (17-36)</td>
+<td align="left">19.5 (17-50)</td>
 <td align="left">19.3 (17-50)</td>
+</tr>
+<tr class="even">
+<td align="left">Mean study year (sd)</td>
 <td align="left">1.7 (0.9)</td>
-<td align="left">53.6</td>
-<td align="left">83.1</td>
-<td align="left">1,165</td>
+<td align="left">1.7 (0.8)</td>
+<td align="left">1.7 (0.9)</td>
+</tr>
+<tr class="odd">
+<td align="left">n</td>
+<td align="left">471</td>
+<td align="left">613</td>
+<td align="left">1165</td>
 </tr>
 </tbody>
 </table>
@@ -24174,6 +22777,7 @@ apa_table(demotable, caption = &quot;Baseline demographics of educational tracks
 <h2>Create outcome tables</h2>
 <div id="by-educational-track-1" class="section level3">
 <h3>By educational track</h3>
+<p><strong>MUUTA VAR NÄISTÄ KAIKISTA, ja tyttöihin ja interventioihin numeroiden sijaan sanat</strong></p>
 <pre class="r"><code>outtable &lt;- df %&gt;%
   select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, fatpct_T1, track) %&gt;% 
   group_by(track) %&gt;% 
@@ -24300,10 +22904,9 @@ plot2 &lt;- diamondPlot(PA_ci_intervention, color = &#39;red&#39;, alpha=.3, yLa
   scale_x_continuous(limits = c(1, 7), breaks = 1:7)
 
 grid.newpage()
-## Error in grid.newpage(): could not find function &quot;grid.newpage&quot;
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
-## Error in grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;)): could not find function &quot;grid.draw&quot;
-# dat2 &lt;- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
+grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code># dat2 &lt;- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
 # diamondPlot(dat1, color = &#39;blue&#39;, alpha=.3, yLabels = dat1$diamondlabels) +
 # diamondPlot(dat2, returnLayerOnly = TRUE, color=&#39;red&#39;, alpha=.3)</code></pre>
 <p>Note: action and coping planning on a scale from 1 to 4.</p>
@@ -24365,9 +22968,14 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
 # grid.arrange(plot1, plot2, ncol = 2)
 
 grid.newpage()
-## Error in grid.newpage(): could not find function &quot;grid.newpage&quot;
 grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
-## Error in grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;)): could not find function &quot;grid.draw&quot;</code></pre>
+## Picking joint bandwidth of 0.216
+## Warning: Removed 272 rows containing non-finite values
+## (stat_density_ridges).
+## Picking joint bandwidth of 0.216
+## Warning: Removed 272 rows containing non-finite values
+## (stat_density_ridges).</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="big-5-personality-traits" class="section level2">
 <h2>Big 5 personality traits</h2>
@@ -24427,9 +23035,14 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
 # grid.arrange(plot1, plot2, ncol = 2)
 
 grid.newpage()
-## Error in grid.newpage(): could not find function &quot;grid.newpage&quot;
 grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
-## Error in grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;)): could not find function &quot;grid.draw&quot;</code></pre>
+## Picking joint bandwidth of 0.315
+## Warning: Removed 486 rows containing non-finite values
+## (stat_density_ridges).
+## Picking joint bandwidth of 0.305
+## Warning: Removed 486 rows containing non-finite values
+## (stat_density_ridges).</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="bct-use" class="section level2">
 <h2>BCT use</h2>
@@ -24483,10 +23096,15 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
   theme(legend.position=&quot;bottom&quot;)
 
 grid.newpage()
-## Error in grid.newpage(): could not find function &quot;grid.newpage&quot;
 grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
-## Error in grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;)): could not find function &quot;grid.draw&quot;
-
+## Picking joint bandwidth of 0.319
+## Warning: Removed 189 rows containing non-finite values
+## (stat_density_ridges).
+## Picking joint bandwidth of 0.318
+## Warning: Removed 189 rows containing non-finite values
+## (stat_density_ridges).</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>
 
 
 # grid.arrange(plot1, plot2, ncol = 2)</code></pre>
@@ -24548,7 +23166,7 @@ linetypes &lt;- c(1,2,2,1,2)
 # Make plot
 sm.PA_frqbct_T1_3 &lt;- sm.density.compare(as.numeric(dens$PA_frqbct_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
 legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="agreement-measured-bcts" class="section level4">
 <h4>Agreement-measured BCTs</h4>
@@ -24605,7 +23223,7 @@ linetypes &lt;- c(1,2,2,1,2)
 # Make plot
 sm.PA_agrbct_T1_3 &lt;- sm.density.compare(as.numeric(dens$PA_agrbct_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
 legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 </div>
 <div id="histograms-for-individual-items" class="section level3">
@@ -24754,10 +23372,13 @@ coord_cartesian(xlim = c(0.5, 6.5))
 
 # This draws all histograms next to each other:
 grid.newpage()
-## Error in grid.newpage(): could not find function &quot;grid.newpage&quot;
 grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;))
-## Error in grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), : could not find function &quot;grid.draw&quot;
-
+## Warning: Removed 54 rows containing non-finite values (stat_binline).
+## Warning: Removed 72 rows containing non-finite values (stat_binline).
+## Warning: Removed 54 rows containing non-finite values (stat_binline).
+## Warning: Removed 72 rows containing non-finite values (stat_binline).</code></pre>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>
 # This draws 2 histograms per row:
 # grid.newpage()
 # grid.draw(rbind(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), size = &quot;last&quot;), cbind(ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = &quot;last&quot;)))</code></pre>
@@ -24916,7 +23537,7 @@ grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), g
 ## Warning: Removed 70 rows containing non-finite values (stat_binline).
 ## Warning: Removed 60 rows containing non-finite values (stat_binline).
 ## Warning: Removed 70 rows containing non-finite values (stat_binline).</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <pre class="r"><code>
 # This draws 2 histograms per row:
 # grid.newpage()
@@ -25090,7 +23711,7 @@ grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
 ## Picking joint bandwidth of 0.349
 ## Warning: Removed 733 rows containing non-finite values
 ## (stat_density_ridges).</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 <div id="sb-determinants" class="section level2">
 <h2>SB determinants</h2>
@@ -25154,7 +23775,7 @@ grid.arrange(plot1, plot2, ncol = 2)
 ## Picking joint bandwidth of 0.339
 ## Warning: Removed 507 rows containing non-finite values
 ## (stat_density_ridges).</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 </div>
 <div id="ciber-not-included-for-now" class="section level1">
@@ -25338,7 +23959,7 @@ linetypes &lt;- c(1,2,2,1,2)
 # Make plot
 sm.paAccelerometer_T1_3 &lt;- sm.density.compare(as.numeric(dens$paAccelerometer_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
 legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 <div id="time-spent-sitting-and-lying-down" class="section level2">
 <h2>Time spent sitting and lying down</h2>
@@ -25395,7 +24016,7 @@ linetypes &lt;- c(1,2,2,1,2)
 # Make plot
 sm.sitLieAccelerometer_T1_3 &lt;- sm.density.compare(as.numeric(dens$sitLieAccelerometer_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
 legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
 </div>
 <div id="symptoms" class="section level1">
@@ -25452,7 +24073,7 @@ linewidths &lt;- c(2,1,1,2,1)
 # Make plot
 sm.symptom_T1_3 &lt;- sm.density.compare(dens$`Symptom sum score`, dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;equal&quot;, lwd=linewidths)
 ## Reference band available to compare two groups only.</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <pre><code>## 
 ## Test of equal densities:  p-value =  0
 xlab = &quot;&quot;
@@ -25601,7 +24222,7 @@ grid.draw(cbind(ggplotGrob(sympInt), ggplotGrob(sympCont), ggplotGrob(sympGirls)
 ## Warning: Removed 93 rows containing non-finite values (stat_binline).
 ## Warning: Removed 197 rows containing non-finite values (stat_binline).
 ## Warning: Removed 94 rows containing non-finite values (stat_binline).</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <pre class="r"><code>
 # This draws 2 histograms per row:
 #grid.newpage()
@@ -25751,7 +24372,7 @@ grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC), ggp
 
 ## Warning: Removed 49 rows containing non-finite values (stat_binline).
 ## Warning: Removed 141 rows containing non-finite values (stat_binline).</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <pre class="r"><code>
 # This draws 2 histograms per row:
 #grid.newpage()

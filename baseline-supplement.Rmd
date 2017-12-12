@@ -723,13 +723,13 @@ options(tibble.print_max = 15)
 
 ```{r}
 
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% print(n = 20) %>% apa_table(caption = "Intra-class correlations sorted by class ICC")
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by classroom ICC")
 
 ```
 
 ```{r}
 
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% print(n = 20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC")
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC")
 
 ```
 
@@ -796,23 +796,24 @@ vardatatable <- data_frame(
   filter(Variable != "") #remove first row, which is empty
 
 options(tibble.print_max = 15)
- 
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% print(n = 20)
-
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% print(n = 20)
-
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% print(n = 20)
-# %>% 
-#     apa_table(
-#         caption = "",
-#         note = "",
-#         escape = T)
 
 ```
 
-```{r}
+```{r icc-school}
 
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% print(n = 20) %>%  apa_table(caption = "Intra-class correlations sorted by educational track ICC")
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC")
+
+```
+
+```{r icc-classroom}
+
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by classroom ICC")
+
+```
+
+```{r icc-track}
+
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by educational track ICC")
 
 ```
 
@@ -1057,7 +1058,7 @@ demotable_total <- demographics %>%
 
 demotable <- bind_rows(demotable, demotable_total)
 
-demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(girl, val)
+demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(Girl, val)
 
 # For some reason, sum of n's of all tracks is 1084.
 

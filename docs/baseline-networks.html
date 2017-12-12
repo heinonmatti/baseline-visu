@@ -323,7 +323,7 @@ div.tocify {
                error = TRUE,
                cache = TRUE, 
                collapse = TRUE,
-               eval = TRUE)
+               eval = FALSE)
 opts_chunk$set(root.dir = &quot;.&quot;)  # Always project root as working directory
 opts_knit$set(root.dir = &quot;.&quot;)  # This is needed for some versions of RStudio</code></pre>
 <pre class="r"><code>theme_set(theme_apa())</code></pre>
@@ -332,18 +332,17 @@ opts_knit$set(root.dir = &quot;.&quot;)  # This is needed for some versions of R
 <pre class="r"><code>#.libPaths(&quot;C:/R/R-3.4.2/library&quot;)
 #.libPaths(&quot;C:/Users/hema/RPackages&quot;)
 #.libPaths(&quot;C:/rlibs/3.4.2&quot;)
-
-if (!require(pacman)) install.packages(&quot;pacman&quot;)
-library(pacman)
-
-p_load(EstimateGroupNetwork, bootnet, qgraph)
-## Error in La_library(): LAPACK routines cannot be loaded
-
-if (!require(devtools)) install.packages(&quot;devtools&quot;)
-p_load_gh(&quot;sachaepskamp/NetworkComparisonTest&quot;)
-# p_load_gh(&quot;rmcelreath/rethinking&quot;)
-
-lmi &lt;- read_sav(&quot;data/LMI_data_korjattu_syntaksilla.sav&quot;, user_na = FALSE)</code></pre>
+# 
+# if (!require(pacman)) install.packages(&quot;pacman&quot;)
+# library(pacman)
+# 
+# p_load(EstimateGroupNetwork, bootnet, qgraph)
+# 
+# if (!require(devtools)) install.packages(&quot;devtools&quot;)
+# p_load_gh(&quot;sachaepskamp/NetworkComparisonTest&quot;)
+# # p_load_gh(&quot;rmcelreath/rethinking&quot;)
+# 
+# lmi &lt;- read_sav(&quot;data/LMI_data_korjattu_syntaksilla.sav&quot;, user_na = FALSE)</code></pre>
 </div>
 <div id="bcts" class="section level1">
 <h1>BCTs</h1>
@@ -400,9 +399,7 @@ bctdf &lt;- df %&gt;% dplyr::select(id,
 S.boys &lt;- bctdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.) 
 S.girls &lt;- bctdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(bctdf)) %&gt;% na.omit(.)
 nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
-## Error in estimateNetwork(S.boys, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
 nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
-## Error in estimateNetwork(S.girls, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
 
 # Create means for filling nodes
 
@@ -421,20 +418,17 @@ boymeans &lt;- bctdf %&gt;% group_by(girl) %&gt;%
 # Find average layout for comparability and plot graphs next to each other
 
 Layout &lt;- averageLayout(nwGirls, nwBoys)
-## Error in averageWmat(...): object &#39;nwGirls&#39; not found
 
 layout(t(1:2))
 plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
      pie = girlmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, : object &#39;nwGirls&#39; not found
 
 plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
      pie = boymeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, : object &#39;nwBoys&#39; not found
 
 
 
@@ -442,7 +436,6 @@ plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, lab
 
 S.total &lt;- bctdf %&gt;% select(6:ncol(bctdf))
 nwBCT &lt;- estimateNetwork(S.total, default=&quot;IsingFit&quot;)
-## Error in estimateNetwork(S.total, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
 
 # smallworldIndex(plot(nwBCT))
 
@@ -455,17 +448,14 @@ plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Isin
      pie = piefill, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, : object &#39;nwBCT&#39; not found
 
 # Estimate ising network without regularisation
 nwBCT_nonreg &lt;- estimateNetwork(S.total, default=&quot;IsingSampler&quot;)
-## Error in estimateNetwork(S.total, default = &quot;IsingSampler&quot;): could not find function &quot;estimateNetwork&quot;
 
 plot(nwBCT_nonreg, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Non-regularised Ising model&quot;, label.cex = 0.75,
      pie = piefill, 
      color = &quot;skyblue&quot;,
-     pieBorder = 1)
-## Error in plot(nwBCT_nonreg, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Non-regularised Ising model&quot;, : object &#39;nwBCT_nonreg&#39; not found</code></pre>
+     pieBorder = 1)</code></pre>
 <div id="combine-items" class="section level4">
 <h4>Combine items</h4>
 <pre class="r"><code>nItems &lt;- 17
@@ -553,7 +543,6 @@ bctdf &lt;- df %&gt;% dplyr::select(id,
 
 S.total &lt;- bctdf %&gt;% select(6:ncol(bctdf))
 nwBCT &lt;- estimateNetwork(S.total, default=&quot;IsingFit&quot;)
-## Error in estimateNetwork(S.total, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
 
 # smallworldIndex(plot(nwBCT))
 
@@ -566,7 +555,6 @@ plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Isin
      pie = piefill, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Ising fit&quot;, : object &#39;nwBCT&#39; not found
 
 # # Estimate ising network without regularisation
 # nwBCT_nonreg &lt;- estimateNetwork(S.total, default=&quot;IsingSampler&quot;)
@@ -579,21 +567,15 @@ plot(nwBCT, layout = &quot;spring&quot;, label.scale = FALSE, title = &quot;Isin
 <div id="centrality-and-stability" class="section level4">
 <h4>Centrality and stability</h4>
 <pre class="r"><code>centralityPlot(nwBCT)
-## Error in centralityPlot(nwBCT): could not find function &quot;centralityPlot&quot;
 
 boot2 &lt;- bootnet(nwBCT, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
-## Error in bootnet(nwBCT, nBoots = 2500, type = &quot;case&quot;, nCores = 8): could not find function &quot;bootnet&quot;
 corStability(boot2)
-## Error in corStability(boot2): could not find function &quot;corStability&quot;
 
 plot(boot2)
-## Error in plot(boot2): object &#39;boot2&#39; not found
 plot(boot2, &quot;strength&quot;)
-## Error in plot(boot2, &quot;strength&quot;): object &#39;boot2&#39; not found
 plot(boot2, &quot;betweenness&quot;)
-## Error in plot(boot2, &quot;betweenness&quot;): object &#39;boot2&#39; not found
 plot(boot2, &quot;closeness&quot;)
-## Error in plot(boot2, &quot;closeness&quot;): object &#39;boot2&#39; not found</code></pre>
+</code></pre>
 </div>
 <div id="network-comparison-test-boys-vs.girls" class="section level4">
 <h4>Network comparison test: boys vs. girls</h4>
@@ -620,14 +602,11 @@ names &lt;- df %&gt;% select(&#39;PA&#39; = paAccelerometer_T1, &#39;SB&#39; = s
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
 cormatrix &lt;- cor_auto(data) 
-## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
 
 graph1 &lt;- qgraph(cormatrix, layout=&quot;spring&quot;, sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
-## Error in qgraph(cormatrix, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
 
 g &lt;- as.igraph(graph1, attributes = TRUE)
-## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
 
 matrix_spinglass &lt;- matrix(NA, nrow=1,ncol=100)
  
@@ -636,19 +615,15 @@ set.seed(i)
 spinglass &lt;- spinglass.community(g)
 matrix_spinglass[1,i] &lt;- max(spinglass$membership) 
 }
-## Error in spinglass.community(g): object &#39;g&#39; not found
 
 set.seed(1)
 
 sgc &lt;- spinglass.community(g)
-## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
 
 communities &lt;- data.frame(sgc$membership, &#39;node number&#39; = 1:ncol(data))
-## Error in data.frame(sgc$membership, `node number` = 1:ncol(data)): object &#39;sgc&#39; not found
 
 group.spinglass &lt;- list(communities$node.number[communities$sgc.membership == 1], 
                        communities$node.number[communities$sgc.membership == 2])
-## Error in communities$node.number: object of type &#39;closure&#39; is not subsettable
 
 piefill &lt;- data %&gt;%
   summarise_all(funs(mean(., na.rm = TRUE))) %&gt;% 
@@ -670,7 +645,6 @@ qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spingl
      nodeNames = names,
      pieBorder = 1,
      legend.cex = 0.4)
-## Error in qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;graph1&#39; not found
 
 
 # plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
@@ -678,32 +652,8 @@ qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spingl
 
 
 lmi %&gt;% select(Kys0016.1, Kys0013.1) %&gt;% group_by(Kys0016.1) %&gt;% summarise(n = n())
-## # A tibble: 6 x 2
-##   Kys0016.1     n
-##   &lt;dbl+lbl&gt; &lt;int&gt;
-## 1         0    34
-## 2         1   163
-## 3         2   274
-## 4         3   211
-## 5         4   402
-## 6        NA    81
 
-lmi %&gt;% count(Kys0016.1, Kys0013.1) %&gt;% group_by(Kys0016.1)
-## # A tibble: 11 x 3
-## # Groups:   Kys0016.1 [6]
-##    Kys0016.1 Kys0013.1     n
-##    &lt;dbl+lbl&gt; &lt;dbl+lbl&gt; &lt;int&gt;
-##  1         0         1    16
-##  2         0         2    18
-##  3         1         1   137
-##  4         1         2    26
-##  5         2         1   164
-##  6         2         2   110
-##  7         3         1    83
-##  8         3         2   128
-##  9         4         1    71
-## 10         4         2   331
-## 11        NA        NA    81</code></pre>
+lmi %&gt;% count(Kys0016.1, Kys0013.1) %&gt;% group_by(Kys0016.1)</code></pre>
 <!-- Out of a hundred iterations, spinglass algorithm found `  table(matrix_spinglass)[[1]]` instances of ` table(matrix_spinglass)[1] %>% names` communities, `  table(matrix_spinglass)[[2]]` instances of `  table(matrix_spinglass)[2] %>% names` communities, and `  table(matrix_spinglass)[[3]]` instances of `  table(matrix_spinglass)[3] %>% names` communities. Thus, a random seed which found four communities was chosen.   -->
 </div>
 <div id="symptom-network-all" class="section level2">
@@ -741,7 +691,6 @@ sympdf &lt;- df %&gt;% dplyr::select(id,
 S.all &lt;- sympdf %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.) 
 
 nwAll &lt;- estimateNetwork(S.all, default=&quot;mgm&quot;)
-## Error in estimateNetwork(S.all, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
 
 allmeans &lt;- sympdf %&gt;%  
   summarise_at(vars(6:16),
@@ -754,7 +703,7 @@ plot(nwAll, label.scale = FALSE, title = &quot;All&quot;, label.cex = 0.75,
      pie = allmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwAll, label.scale = FALSE, title = &quot;All&quot;, label.cex = 0.75, : object &#39;nwAll&#39; not found</code></pre>
+</code></pre>
 </div>
 <div id="symptom-network-boys-and-girls" class="section level2">
 <h2>Symptom network: boys and girls</h2>
@@ -791,9 +740,7 @@ sympdf &lt;- df %&gt;% dplyr::select(id,
 S.boys &lt;- sympdf %&gt;% filter(girl == 0) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.) 
 S.girls &lt;- sympdf %&gt;% filter(girl == 1) %&gt;% select(6:ncol(sympdf)) %&gt;% na.omit(.)
 nwBoys &lt;- estimateNetwork(S.boys, default=&quot;mgm&quot;)
-## Error in estimateNetwork(S.boys, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
 nwGirls &lt;- estimateNetwork(S.girls, default=&quot;mgm&quot;)
-## Error in estimateNetwork(S.girls, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
 
 girlmeans &lt;- sympdf %&gt;% group_by(girl) %&gt;% 
   summarise_at(vars(5:15),
@@ -817,20 +764,16 @@ plot(nwGirls, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
      pie = girlmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwGirls, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75, : object &#39;nwGirls&#39; not found
 
 plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
      pie = boymeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, : object &#39;nwBoys&#39; not found</code></pre>
+</code></pre>
 </div>
 <div id="symptom-network-educational-tracks" class="section level2">
 <h2>symptom network: educational tracks</h2>
 <pre class="r"><code>library(bootnet)
-## Error: package or namespace load failed for &#39;bootnet&#39; in inDL(x, as.logical(local), as.logical(now), ...):
-##  unable to load shared object &#39;C:/rlibs/3.4.2/IsingSampler/libs/x64/IsingSampler.dll&#39;:
-##   `maximal number of DLLs reached...
 library(qgraph)
 library(tidyverse)
 
@@ -877,13 +820,9 @@ S.nursing &lt;- sympdf %&gt;% filter(track == 5) %&gt;% select(6:ncol(sympdf))
 
 # nwOther &lt;- estimateNetwork(S.other, default=&quot;mgm&quot;)
 nwIt &lt;- estimateNetwork(S.it, default=&quot;mgm&quot;)
-## Error in estimateNetwork(S.it, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
 nwAdmin &lt;- estimateNetwork(S.admin, default=&quot;mgm&quot;)
-## Error in estimateNetwork(S.admin, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
 nwHrc &lt;- estimateNetwork(S.hrc, default=&quot;mgm&quot;)
-## Error in estimateNetwork(S.hrc, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
 nwNursing &lt;- estimateNetwork(S.nursing, default=&quot;mgm&quot;)
-## Error in estimateNetwork(S.nursing, default = &quot;mgm&quot;): could not find function &quot;estimateNetwork&quot;
 
 # othermeans &lt;- sympdf %&gt;% group_by(track) %&gt;% 
 #   summarise_at(vars(5:15),
@@ -958,7 +897,6 @@ nursingmeans &lt;- sympdf %&gt;% group_by(track) %&gt;%
   select(-1)
 
 averagelayout &lt;- averageLayout(nwIt, nwAdmin, nwHrc, nwNursing)
-## Error in averageWmat(...): object &#39;nwIt&#39; not found
 # plot(nwOther, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
 #      pie = othermeans, 
 #      color = &quot;skyblue&quot;,
@@ -969,25 +907,22 @@ plot(nwIt, label.scale = FALSE, title = &quot;Business IT&quot;, layout = averag
      pie = itmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwIt, label.scale = FALSE, title = &quot;Business IT&quot;, layout = averagelayout, : object &#39;nwIt&#39; not found
 
 plot(nwAdmin, label.scale = FALSE, title = &quot;Business admin&quot;, layout = averagelayout, label.cex = 0.75, 
      pie = adminmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwAdmin, label.scale = FALSE, title = &quot;Business admin&quot;, : object &#39;nwAdmin&#39; not found
 
 plot(nwHrc, label.scale = FALSE, title = &quot;Hotel, restaurant and catering&quot;, layout = averagelayout, label.cex = 0.75, 
      pie = hrcmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwHrc, label.scale = FALSE, title = &quot;Hotel, restaurant and catering&quot;, : object &#39;nwHrc&#39; not found
 
 plot(nwNursing, label.scale = FALSE, title = &quot;Nursing&quot;, layout = averagelayout, label.cex = 0.75, 
      pie = nursingmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwNursing, label.scale = FALSE, title = &quot;Nursing&quot;, layout = averagelayout, : object &#39;nwNursing&#39; not found</code></pre>
+</code></pre>
 <pre class="r"><code>
 colfill &lt;- c(1,2,3,4,5)
 
@@ -1009,8 +944,6 @@ set.seed(10)
 
 # Make plot
 sm.fatpct_T1_1 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$intervention), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
-## 
-## Test of equal densities:  p-value =  0.23
 legend(&quot;topright&quot;, levels(dens$intervention), fill=c(1, 2))
 
 # Girls vs. boys
@@ -1023,45 +956,31 @@ set.seed(10)
 
 # Make plot
 sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$girl), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
-## 
-## Test of equal densities:  p-value =  0
-legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))</code></pre>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<pre class="r"><code>
+legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))
+
 sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$girl), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
-## 
-## Test of equal densities:  p-value =  0
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))</code></pre>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
 </div>
 </div>
 <div id="physical-activity-network" class="section level1">
 <h1>Physical activity network</h1>
 <pre class="r"><code>
 data &lt;- df %&gt;% select(PA = paAccelerometer_T1, actCop = actcop_T1, BCT = frqbct_T1, amot = amotivation_T1, auton = autonomous_T1, cont = controlled_T1, dnorm = dnorm_T1, fatpct = fatpct_T1, inorm = inorm_T1, intent = intention_T1, oexp = oexp_T1, opp = opportunities_T1, sePbc = sePbc_T1) %&gt;% data.frame() 
-## Error in overscope_eval_next(overscope, expr): object &#39;actcop_T1&#39; not found
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
 qgraph(cor_auto(data), layout=&quot;spring&quot;)
-## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
 
 cormatrix &lt;- cor_auto(data1)
-## Variables detected as ordinal: Amoti1; Amoti2; Amoti3; Amoti4; Extri1; Extri2; Extri3; Intro1; Intro2; Ident1; Ident2; Ident3; Integ1; Integ2; Integ3; Intri1; Intri2; Intri3
-## Error in eigen(CorMat): LAPACK routines cannot be loaded
 
 graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
-## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
 
 g = as.igraph(graph1, attributes=TRUE)
-## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
 
 sgc &lt;- spinglass.community(g)
-## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
 
 sgc$membership
-## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
 
 group.spinglass&lt;- list(c(1, 2, 3, 5, 10), 
                        c(4, 6, 8), 
@@ -1071,7 +990,6 @@ group.spinglass&lt;- list(c(1, 2, 3, 5, 10),
 set.seed(2)
 
 network1 &lt;- estimateNetwork(data1, default=&quot;EBICglasso&quot;)
-## Error in estimateNetwork(data1, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 
 #bladibla &lt;- averageLayout(network1$graph, network2$graph)
 
@@ -1082,31 +1000,25 @@ network1 &lt;- estimateNetwork(data1, default=&quot;EBICglasso&quot;)
 # graph2 &lt;- plot(network2, cut=0)
 
 plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;))
-## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found</code></pre>
+</code></pre>
 <div id="pa-network-without-sdt-motivations" class="section level3">
 <h3>PA network without SDT motivations</h3>
 <pre class="r"><code># Network without motivation variables
 data &lt;- df %&gt;% select(PA = paAccelerometer_T1, actCop = PA_actcop_T1, BCT = PA_frqbct_T1, amot = PA_amotivation_T1, auton = PA_autonomous_T1, cont = PA_controlled_T1, dnorm = PA_dnorm_T1, fatpct = fatpct_T1, inorm = PA_inorm_T1, intent = PA_intention_T1, oexp = PA_oexp_T1, opp = PA_opportunities_T1, sePbc = PA_sePbc_T1) %&gt;% data.frame() %&gt;% 
   select(-auton, -cont, -amot)
-## Error in overscope_eval_next(overscope, expr): object &#39;PA_actcop_T1&#39; not found
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
 cormatrix &lt;- cor_auto(data)
-## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
 
 graph1&lt;-qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
-## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
 
 g = as.igraph(graph1, attributes=TRUE)
-## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
 
 sgc &lt;- spinglass.community(g)
-## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
 
 sgc$membership
-## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
 
 # Without SDT motivations
 group.spinglass&lt;- list(c(1, 2, 3, 7), 
@@ -1117,10 +1029,9 @@ group.spinglass&lt;- list(c(1, 2, 3, 7),
 set.seed(2)
 
 network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
-## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 
 plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;))
-## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found</code></pre>
+</code></pre>
 </div>
 <div id="pa-network-without-bcts-and-sdt" class="section level3">
 <h3>PA network without BCTs and SDT</h3>
@@ -1128,27 +1039,21 @@ plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spingl
 data &lt;- df %&gt;% select(PA = paAccelerometer_T1, &#39;action and coping planning&#39; = PA_actcop_T1, &#39;Frequency-related BCTs&#39; = PA_frqbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &quot;fat pct&quot; = fatpct_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;Self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
             select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`) %&gt;% 
   data.frame
-## Error in overscope_eval_next(overscope, expr): object &#39;PA_actcop_T1&#39; not found
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
 cormatrix &lt;- cor_auto(data)
-## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
 
 graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
-## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
 
 g = as.igraph(graph1, attributes=TRUE)
-## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
 
 set.seed(4)
 
 sgc &lt;- spinglass.community(g)
-## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
 
 sgc$membership
-## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
 
 # Without SDT motivations
 
@@ -1158,7 +1063,6 @@ group.spinglass&lt;- list(c(1, 2, 6),
                        c(7, 8, 9))
 
 network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
-## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 
 piefill &lt;- data %&gt;%
   summarise_all(funs(mean(., na.rm = TRUE))) %&gt;% 
@@ -1170,7 +1074,6 @@ piefill &lt;- data %&gt;%
             funs(. / 7)) %&gt;% 
   mutate_at(vars(5),
             funs(. / 100))  
-## Error in overscope_eval_next(overscope, expr): object &#39;action.and.coping.planning&#39; not found
 
 plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;),
      label.cex = 0.75,
@@ -1178,14 +1081,12 @@ plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spingl
      pie = piefill, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found
 
 
 plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
      pie = boymeans, 
      color = &quot;skyblue&quot;,
-     pieBorder = 1)
-## Error in plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, : object &#39;nwBoys&#39; not found</code></pre>
+     pieBorder = 1)</code></pre>
 </div>
 <div id="pa-network-without-bcts-and-sdt-intention-pa-fat" class="section level3">
 <h3>PA network without BCTs and SDT, intention, PA, fat%</h3>
@@ -1193,27 +1094,21 @@ plot(nwBoys, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75,
 data &lt;- df %&gt;% select(PA = paAccelerometer_T1, &#39;action and coping planning&#39; = PA_actcop_T1, &#39;Frequency-related BCTs&#39; = PA_frqbct_T1, &#39;amotivation&#39; = PA_amotivation_T1, &#39;autonomous motivation&#39; = PA_autonomous_T1, &#39;controlled motivation&#39; = PA_controlled_T1, &#39;descriptive norm&#39; = PA_dnorm_T1, &#39;injunctive norm&#39; = PA_inorm_T1, &quot;fat pct&quot; = fatpct_T1, &#39;intention&#39; = PA_intention_T1, &#39;outcome expectations&#39; = PA_oexp_T1, &#39;Self-efficacy / PBC&#39; = PA_sePbc_T1, &#39;perceived opportunities&#39; = PA_opportunities_T1) %&gt;% 
             select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`, -PA, -`intention`, -`fat pct`) %&gt;% 
   data.frame
-## Error in overscope_eval_next(overscope, expr): object &#39;PA_actcop_T1&#39; not found
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
 cormatrix &lt;- cor_auto(data)
-## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
 
 graph1 &lt;- qgraph(cormatrix, graph=&quot;glasso&quot;, layout=&quot;spring&quot;, sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
-## Error in qgraph(cormatrix, graph = &quot;glasso&quot;, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
 
 g = as.igraph(graph1, attributes=TRUE)
-## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
 
 set.seed(1)
 
 sgc &lt;- spinglass.community(g)
-## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
 
 sgc$membership
-## Error in eval(expr, envir, enclos): object &#39;sgc&#39; not found
 
 group.spinglass&lt;- list(c(1, 4:6), 
                        c(2, 3))
@@ -1222,7 +1117,6 @@ group.spinglass&lt;- list(c(1, 4:6),
 
 
 network1 &lt;- estimateNetwork(data, default=&quot;EBICglasso&quot;)
-## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 
 piefill &lt;- data %&gt;%
   summarise_all(funs(mean(., na.rm = TRUE))) %&gt;%
@@ -1230,7 +1124,6 @@ piefill &lt;- data %&gt;%
             funs(. / 4)) %&gt;% 
   mutate_at(vars(2:6),
             funs(. / 7))
-## Error in overscope_eval_next(overscope, expr): object &#39;action.and.coping.planning&#39; not found
 
 plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, color=c(&quot;olivedrab2&quot;, &quot;orange&quot;, &quot;mediumpurple1&quot;, &quot;lightblue&quot;),
      label.cex = 0.75,
@@ -1238,77 +1131,53 @@ plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spingl
      pie = piefill, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(network1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;network1&#39; not found</code></pre>
+</code></pre>
 </div>
 <div id="robustness-test" class="section level2">
 <h2>Robustness test</h2>
 <pre class="r"><code>
 Network1 &lt;- estimateNetwork(data1, default = &quot;EBICglasso&quot;)
-## Error in estimateNetwork(data1, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 plot(Network1, layout = &quot;spring&quot;, labels = TRUE)
-## Error in plot(Network1, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network1&#39; not found
 
 centralityPlot(Network1)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.
-## Error in getWmat(list(...)): object &#39;Network1&#39; not found
 
 boot1 &lt;- bootnet(Network1, nBoots = 2500, nCores = 3)
-## Error in bootnet(Network1, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
 
 plot(boot1, labels = TRUE, order = &quot;sample&quot;)
-## Error in plot(boot1, labels = TRUE, order = &quot;sample&quot;): object &#39;boot1&#39; not found
 
 Network2 &lt;- estimateNetwork(data1, default = &quot;pcor&quot;)
-## Error in estimateNetwork(data1, default = &quot;pcor&quot;): could not find function &quot;estimateNetwork&quot;
 plot(Network2, layout = &quot;spring&quot;, labels = TRUE)
-## Error in plot(Network2, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network2&#39; not found
 
 boot2 &lt;- bootnet(Network2, nBoots = 2500, nCores = 3)
-## Error in bootnet(Network2, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
 
 centralityPlot(Network)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.
-## Error in getWmat(list(...)): object &#39;Network&#39; not found
-centralityPlot(Network2)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.
-## Error in getWmat(list(...)): object &#39;Network2&#39; not found</code></pre>
+centralityPlot(Network2)</code></pre>
 </div>
 <div id="centrality-stability" class="section level2">
 <h2>Centrality stability</h2>
 <pre class="r"><code>boot2 &lt;- bootnet(Network1, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
-## Error in bootnet(Network1, nBoots = 2500, type = &quot;case&quot;, nCores = 8): could not find function &quot;bootnet&quot;
 corStability(boot2)
-## Error in corStability(boot2): could not find function &quot;corStability&quot;
 
 plot(boot2)
-## Error in plot(boot2): object &#39;boot2&#39; not found
 
 differenceTest(boot1, &quot;auton&quot;, &quot;intent&quot;,  measure = c(&quot;strength&quot;, &quot;closeness&quot;, &quot;betweenness&quot;))
-## Error in differenceTest(boot1, &quot;auton&quot;, &quot;intent&quot;, measure = c(&quot;strength&quot;, : could not find function &quot;differenceTest&quot;
 
 plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, order = &quot;sample&quot;)
-## Error in plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, : object &#39;boot1&#39; not found
 
 plot(boot1, &quot;strength&quot;)
-## Error in plot(boot1, &quot;strength&quot;): object &#39;boot1&#39; not found
 plot(boot1, &quot;betweenness&quot;)
-## Error in plot(boot1, &quot;betweenness&quot;): object &#39;boot1&#39; not found
-plot(boot1, &quot;closeness&quot;)
-## Error in plot(boot1, &quot;closeness&quot;): object &#39;boot1&#39; not found</code></pre>
+plot(boot1, &quot;closeness&quot;)</code></pre>
 </div>
 <div id="network-comparison-test-girls-and-boys" class="section level2">
 <h2>Network comparison test: girls and boys</h2>
 <pre class="r"><code>
 # here goes your data; call it &quot;data&quot;
 data &lt;- df %&gt;% select(paT1, girl, actcop_T1, frqbct_T1, amotivation_T1, autonomous_T1, controlled_T1, dnorm_T1, fatpct_T1, inorm_T1, intention_T1, oexp_T1, opportunities_T1, sePbc_T1) 
-## Error in overscope_eval_next(overscope, expr): object &#39;paT1&#39; not found
 
 ### Split data into girls and boys
 data1 &lt;- data %&gt;% filter(girl == 1) %&gt;% select(-girl) %&gt;% as.data.frame
-## Error in filter_impl(.data, quo): Evaluation error: object &#39;girl&#39; not found.
 
 data2 &lt;- data %&gt;% filter(girl == 0) %&gt;% select(-girl) %&gt;% as.data.frame
-## Error in filter_impl(.data, quo): Evaluation error: object &#39;girl&#39; not found.
 
 # ---------------------------------------------------------------------------------------
 # ---------- 3. NCT ------------------------------------------------------------------
@@ -1317,32 +1186,23 @@ data2 &lt;- data %&gt;% filter(girl == 0) %&gt;% select(-girl) %&gt;% as.data.fr
 
 ### estimate networks and compare visually; use averageLayout function, then plot via layout(t(1:2))
 network1 &lt;- estimateNetwork(data1, default=&quot;EBICglasso&quot;)
-## Error in estimateNetwork(data1, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 network2 &lt;- estimateNetwork(data2, default=&quot;EBICglasso&quot;)
-## Error in estimateNetwork(data2, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 
 bladibla &lt;- averageLayout(network1$graph, network2$graph)
-## Error in averageWmat(...): object &#39;network1&#39; not found
 
 layout(t(1:2))
 graph1 &lt;- plot(network1, layout=bladibla, cut=0)
-## Error in plot(network1, layout = bladibla, cut = 0): object &#39;network1&#39; not found
 graph2 &lt;- plot(network2, layout=bladibla, cut=0)
-## Error in plot(network2, layout = bladibla, cut = 0): object &#39;network2&#39; not found
 
 ### run NCT 
 
 nct_results &lt;- NCT(data1, data2, it=1000, binary.data=FALSE, paired=TRUE, test.edges=TRUE, edges=&#39;all&#39;, progressbar=TRUE)
-## Error in NCT(data1, data2, it = 1000, binary.data = FALSE, paired = TRUE, : could not find function &quot;NCT&quot;
 
 nct_results$nwinv.pval  # p value of network structure diff test
-## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found
 nct_results$glstrinv.pval  # p value of global connectivity diff test
-## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found
 nct_results$einv.pvals     #p values testing diffs for all individual edges
-## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found
 sum(nct_results$einv.pvals$&quot;p-value&quot; &lt; 0.05)  # how many edges are different
-## Error in eval(expr, envir, enclos): object &#39;nct_results&#39; not found</code></pre>
+</code></pre>
 </div>
 <div id="robustness-test-1" class="section level2">
 <h2>Robustness test</h2>
@@ -1352,58 +1212,38 @@ sum(nct_results$einv.pvals$&quot;p-value&quot; &lt; 0.05)  # how many edges are 
     PBC = pbc_T1,
     OExp = oexp_T1,
     DNorm = norm_T1)
-## Error in overscope_eval_next(overscope, expr): object &#39;agrbct_T1&#39; not found
 
 Network &lt;- estimateNetwork(data, default = &quot;EBICglasso&quot;)
-## Error in estimateNetwork(data, default = &quot;EBICglasso&quot;): could not find function &quot;estimateNetwork&quot;
 
 boot1 &lt;- bootnet(Network, nBoots = 2500, nCores = 3)
-## Error in bootnet(Network, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
 
 plot(boot1, labels = TRUE, order = &quot;sample&quot;)
-## Error in plot(boot1, labels = TRUE, order = &quot;sample&quot;): object &#39;boot1&#39; not found
 
 plot(Network, layout = &quot;spring&quot;, labels = TRUE)
-## Error in plot(Network, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network&#39; not found
 
 Network2 &lt;- estimateNetwork(data, default = &quot;pcor&quot;)
-## Error in estimateNetwork(data, default = &quot;pcor&quot;): could not find function &quot;estimateNetwork&quot;
 plot(Network2, layout = &quot;spring&quot;, labels = TRUE)
-## Error in plot(Network2, layout = &quot;spring&quot;, labels = TRUE): object &#39;Network2&#39; not found
 
 boot1 &lt;- bootnet(Network2, nBoots = 2500, nCores = 3)
-## Error in bootnet(Network2, nBoots = 2500, nCores = 3): could not find function &quot;bootnet&quot;
 
 centralityPlot(Network)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.
-## Error in getWmat(list(...)): object &#39;Network&#39; not found
-centralityPlot(Network2)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.
-## Error in getWmat(list(...)): object &#39;Network2&#39; not found</code></pre>
+centralityPlot(Network2)</code></pre>
 </div>
 </div>
 <div id="centrality-stability-1" class="section level1">
 <h1>Centrality stability</h1>
 <pre class="r"><code>boot2 &lt;- bootnet(Network, nBoots = 2500, type = &quot;case&quot;, nCores = 8)
-## Error in bootnet(Network, nBoots = 2500, type = &quot;case&quot;, nCores = 8): could not find function &quot;bootnet&quot;
 corStability(boot2)
-## Error in corStability(boot2): could not find function &quot;corStability&quot;
 
 plot(boot2)
-## Error in plot(boot2): object &#39;boot2&#39; not found
 
 differenceTest(boot1, &quot;AUT&quot;, &quot;Intn&quot;,  measure = c(&quot;strength&quot;, &quot;closeness&quot;, &quot;betweenness&quot;))
-## Error in differenceTest(boot1, &quot;AUT&quot;, &quot;Intn&quot;, measure = c(&quot;strength&quot;, : could not find function &quot;differenceTest&quot;
 
 plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, order = &quot;sample&quot;)
-## Error in plot(boot1, &quot;edge&quot;, plot = &quot;difference&quot;, onlyNonZero = TRUE, : object &#39;boot1&#39; not found
 
 plot(boot1, &quot;strength&quot;)
-## Error in plot(boot1, &quot;strength&quot;): object &#39;boot1&#39; not found
 plot(boot1, &quot;betweenness&quot;)
-## Error in plot(boot1, &quot;betweenness&quot;): object &#39;boot1&#39; not found
-plot(boot1, &quot;closeness&quot;)
-## Error in plot(boot1, &quot;closeness&quot;): object &#39;boot1&#39; not found</code></pre>
+plot(boot1, &quot;closeness&quot;)</code></pre>
 </div>
 <div id="pa-motivation-examined" class="section level1">
 <h1>PA motivation examined</h1>
@@ -1607,8 +1447,8 @@ coord_cartesian(xlim = c(0.5, 5.5))
 
 # This draws all histograms next to each other:
 grid.newpage()
-grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = &quot;last&quot;))</code></pre>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = &quot;last&quot;))
+</code></pre>
 <div id="motivational-regulations-network" class="section level2">
 <h2>Motivational regulations network</h2>
 </div>
@@ -1655,9 +1495,7 @@ PA_intrinsic_03_T1 = ifelse(PA_intrinsic_03_T1 == 1, 0, 1))
 S.boys &lt;- regulations.df %&gt;% filter(girl == 0) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.) 
 S.girls &lt;- regulations.df %&gt;% filter(girl == 1) %&gt;% select(6:ncol(regulations.df)) # %&gt;% na.omit(.)
 nwBoys &lt;- estimateNetwork(S.boys, default=&quot;IsingFit&quot;)
-## Error in estimateNetwork(S.boys, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
 nwGirls &lt;- estimateNetwork(S.girls, default=&quot;IsingFit&quot;)
-## Error in estimateNetwork(S.girls, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
 
 data1 &lt;- regulations.df %&gt;% select(6:ncol(regulations.df))
 names(data1) &lt;- c(paste0(rep(&quot;Amoti&quot;, 4), 1:4),
@@ -1667,7 +1505,6 @@ names(data1) &lt;- c(paste0(rep(&quot;Amoti&quot;, 4), 1:4),
                 paste0(rep(&quot;Integ&quot;, 3), 1:3),
                 paste0(rep(&quot;Intri&quot;, 3), 1:3))
 nwAll &lt;- estimateNetwork(data1, default=&quot;IsingFit&quot;)
-## Error in estimateNetwork(data1, default = &quot;IsingFit&quot;): could not find function &quot;estimateNetwork&quot;
 
 # Create means for filling nodes
 girlmeans &lt;- regulations.df %&gt;% group_by(girl) %&gt;% 
@@ -1685,7 +1522,6 @@ boymeans &lt;- regulations.df %&gt;% group_by(girl) %&gt;%
 # Find average layout for comparability and plot graphs next to each other
 
 Layout &lt;- averageLayout(nwGirls, nwBoys)
-## Error in averageWmat(...): object &#39;nwGirls&#39; not found
 
 
 layout(t(1:2))
@@ -1693,13 +1529,11 @@ plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, l
      pie = girlmeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, : object &#39;nwGirls&#39; not found
 
 plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, label.cex = 0.75, 
      pie = boymeans, 
      color = &quot;skyblue&quot;,
      pieBorder = 1)
-## Error in plot(nwBoys, layout = Layout, label.scale = FALSE, title = &quot;Boys&quot;, : object &#39;nwBoys&#39; not found
 
 itemNames &lt;- c(&#39;I can\&#39;t see why I should bother exercising&#39;,
   &#39;I do not see why I should have to exercise&#39;,
@@ -1729,17 +1563,15 @@ itemGroups &lt;- c(rep(&quot;Amotivation&quot;, 4),
 
 
 plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
-## Error in plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25): object &#39;nwAll&#39; not found</code></pre>
+</code></pre>
 </div>
 <div id="community-detection" class="section level2">
 <h2>Community detection</h2>
 <pre class="r"><code>
 # Find communities
 graph1 &lt;- plot(nwBCT)
-## Error in plot(nwBCT): object &#39;nwBCT&#39; not found
  
 g = as.igraph(graph1, attributes=TRUE)
-## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
  
 matrix_spinglass &lt;- matrix(NA, nrow=1,ncol=1000)
 
@@ -1749,23 +1581,17 @@ set.seed(i)
 spinglass &lt;- spinglass.community(g)
 matrix_spinglass[1,i] &lt;- max(spinglass$membership) 
 } # 1000 took 8 minutes
-## Error in spinglass.community(g): object &#39;g&#39; not found
  
 mean(as.vector(matrix_spinglass)) 
-## [1] NA
 max(as.vector(matrix_spinglass)) 
-## [1] NA
 min(as.vector(matrix_spinglass)) 
-## [1] NA
 median(as.vector(matrix_spinglass)) 
-## [1] NA
 
 set.seed(1)
 spinglass &lt;- spinglass.community(g)
-## Error in &quot;igraph&quot; %in% class(graph): object &#39;g&#39; not found
 spinglass$membership
-## Error in eval(expr, envir, enclos): object &#39;spinglass&#39; not found
-spinglassGroups &lt;- list(rep(2, 6), rep(1, 4), rep(3, 9))</code></pre>
+spinglassGroups &lt;- list(rep(2, 6), rep(1, 4), rep(3, 9))
+</code></pre>
 <!-- Of all the iterations of the spinglass algorithm, ` sum(table(matrix_spinglass)[1]) / 100`% gave `names(table(matrix_spinglass)[1])` groups, ` sum(table(matrix_spinglass)[2]) / 100`% gave `names(table(matrix_spinglass)[2])` groups, and ` sum(table(matrix_spinglass)[3]) / 100`% gave ` names(table(matrix_spinglass)[1])` groups,  -->
 </div>
 </div>
