@@ -933,6 +933,18 @@ ci_control <- data.frame(ci_control, diamondlabels)
 
 ```
 
+# Descriptive tables
+
+```{r demographics, eval = FALSE}
+
+
+apa_table(x, caption = NULL, note = NULL, stub_indents = NULL,
+  added_stub_head = NULL, col_spanners = NULL, midrules = NULL,
+  placement = "tbp", landscape = FALSE, small = FALSE,
+  na_string = getOption("papaja.na_string"), ...)
+```
+
+
 # Diamond plots
 
 ## PA psychosocial determinants: self report scales T1
@@ -965,36 +977,6 @@ grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 ```
 
 Note: action and coping planning on a scale from 1 to 4.
-
-
-## PA psychosocial determinants: self report scales T3
-
-```{r}
-PA_ci_girls <- ci_girls %>% filter(diamondlabels %in% names(scales_T3) & grepl("PA_", diamondlabels) & !grepl("bct", diamondlabels))
-
-PA_ci_boys <- ci_boys %>% filter(diamondlabels %in% names(scales_T3) & grepl("PA_", diamondlabels) & !grepl("bct", diamondlabels))
-
-PA_ci_intervention <- ci_intervention %>% filter(diamondlabels %in% names(scales_T3) & grepl("PA_", diamondlabels) & !grepl("bct", diamondlabels))
-
-PA_ci_control <- ci_control %>% filter(diamondlabels %in% names(scales_T3) & grepl("PA_", diamondlabels) & !grepl("bct", diamondlabels))
-
-ICClabels <- vardatatable %>% filter(Variable %in% PA_ci_control$diamondlabels)
-
-plot1 <- diamondPlot(PA_ci_girls, color = 'green', alpha=.3, yLabels = PA_ci_girls$diamondlabels, fixedSize = 0.3, xlab = NULL) +
-  diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color='blue', alpha=.3, fixedSize = 0.3) +
-  scale_x_continuous(limits = c(1, 7), breaks = 1:7)
-
-plot2 <- diamondPlot(PA_ci_intervention, color = 'red', alpha=.3, yLabels = c(rep("", length(PA_ci_girls$diamondlabels))), fixedSize = 0.3, xlab = NULL, ylab = NULL) +
-  diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color='black', alpha=.3, fixedSize = 0.3) +
-  scale_x_continuous(limits = c(1, 7), breaks = 1:7)
-
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
-# dat2 <- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
-# diamondPlot(dat1, color = 'blue', alpha=.3, yLabels = dat1$diamondlabels) +
-# diamondPlot(dat2, returnLayerOnly = TRUE, color='red', alpha=.3)
-
-```
 
 # Ridge plots
 

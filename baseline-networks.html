@@ -421,7 +421,7 @@ boymeans &lt;- bctdf %&gt;% group_by(girl) %&gt;%
 # Find average layout for comparability and plot graphs next to each other
 
 Layout &lt;- averageLayout(nwGirls, nwBoys)
-## Error in averageLayout(nwGirls, nwBoys): could not find function &quot;averageLayout&quot;
+## Error in averageWmat(...): object &#39;nwGirls&#39; not found
 
 layout(t(1:2))
 plot(nwGirls, layout = Layout, label.scale = FALSE, title = &quot;Girls&quot;, label.cex = 0.75,
@@ -620,11 +620,11 @@ names &lt;- df %&gt;% select(&#39;PA&#39; = paAccelerometer_T1, &#39;SB&#39; = s
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
 cormatrix &lt;- cor_auto(data) 
-## Error in cor_auto(data): could not find function &quot;cor_auto&quot;
+## Error in lav_samplestats_icov(COV = cov[[g]], ridge = ridge, x.idx = x.idx[[g]], : lavaan ERROR: sample covariance matrix is not positive-definite
 
 graph1 &lt;- qgraph(cormatrix, layout=&quot;spring&quot;, sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
-## Error in qgraph(cormatrix, layout = &quot;spring&quot;, sampleSize = nrow(data), : could not find function &quot;qgraph&quot;
+## Error in qgraph(cormatrix, layout = &quot;spring&quot;, sampleSize = nrow(data), : object &#39;cormatrix&#39; not found
 
 g &lt;- as.igraph(graph1, attributes = TRUE)
 ## Error in as.igraph(graph1, attributes = TRUE): object &#39;graph1&#39; not found
@@ -670,7 +670,7 @@ qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spingl
      nodeNames = names,
      pieBorder = 1,
      legend.cex = 0.4)
-## Error in qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : could not find function &quot;qgraph&quot;
+## Error in qgraph(graph1, layout = &quot;spring&quot;, labels = TRUE, groups = group.spinglass, : object &#39;graph1&#39; not found
 
 
 # plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
@@ -1026,13 +1026,13 @@ sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(d
 ## 
 ## Test of equal densities:  p-value =  0
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))</code></pre>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>
 sm.fatpct_T1_2 &lt;- sm.density.compare2(as.numeric(dens$fatpct_T1), as.factor(dens$girl), xlab=&quot;Percentage&quot;, col=colfill, lty=c(1,2), bandcol=&#39;LightGray&#39;, model=&quot;equal&quot;, lwd=(c(2,2)))
 ## 
 ## Test of equal densities:  p-value =  0
 legend(&quot;topright&quot;, levels(dens$girl), fill=c(1, 2))</code></pre>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-59-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
 </div>
 </div>
 <div id="physical-activity-network" class="section level1">
@@ -1608,7 +1608,7 @@ coord_cartesian(xlim = c(0.5, 5.5))
 # This draws all histograms next to each other:
 grid.newpage()
 grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = &quot;last&quot;))</code></pre>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-69-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <div id="motivational-regulations-network" class="section level2">
 <h2>Motivational regulations network</h2>
 </div>
