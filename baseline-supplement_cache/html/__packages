@@ -22,3 +22,8 @@ ggridges
 igraph
 devtools
 bindrcpp
+EstimateGroupNetwork
+qgraph
+bookdown
+viridisLite
+viridis

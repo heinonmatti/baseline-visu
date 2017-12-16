@@ -2,36 +2,45 @@
 title: "Baseline analysis supplement"
 ---
 
+Welcome to the LMI baseline supplement! This supplement will walk you through the paper and provides additional graphs.
+
+Clicking the "Code"-buttons on the right shows code for each chunk.
+
+First, we set up the basics to enable compiling the document:
+
 ```{r setup}
-library(papaja)
-library(knitr)
-library(tidyverse)
+## Remember to tell R where your packages are.
+#.libPaths("C:/R/R-3.4.2/library")
+#.libPaths("C:/Users/hema/RPackages")
+# .libPaths("C:/rlibs/3.4.2")
+
+# If pacman-package is not installed, install it and then load it.
+if (!require(pacman)) install.packages("pacman")
+library(pacman)
+
+# Use pacman to check and load the needed packages.
+p_load(viridis, bookdown, papaja, knitr, tidyverse, haven, lme4, userfriendlyscience, grid, sm, sjstats, gridExtra, ggridges, igraph, devtools, grid)
+
 opts_chunk$set(echo = TRUE, 
                warning = TRUE,
                error = TRUE,
-               cache = TRUE, 
+               cache = FALSE, 
                collapse = TRUE,
                eval = TRUE)
 opts_chunk$set(root.dir = ".")  # Always project root as working directory
 opts_knit$set(root.dir = ".")  # This is needed for some versions of RStudio
-```
 
-```{r set-viz-theme}
 theme_set(theme_apa())
+
 ```
 
 # Load packages and data
 
+Code chunk below loads needed packages.
+
 ```{r}
-#.libPaths("C:/R/R-3.4.2/library")
-#.libPaths("C:/Users/hema/RPackages")
-#.libPaths("C:/rlibs/3.4.2")
 
-if (!require(pacman)) install.packages("pacman")
-library(pacman)
-
-p_load(tidyverse, haven, lme4, userfriendlyscience, grid, sm, sjstats, gridExtra, ggridges, igraph, devtools)
-
+# Read data.
 lmi <- read_sav("data/LMI_data_korjattu_syntaksilla.sav", user_na = FALSE)
 # write_csv(lmi, "Z:/Desktop/LMI DATA/LMI_data_korjattu_syntaksilla_CSV.csv")
 
@@ -48,7 +57,7 @@ lmi <- read_sav("data/LMI_data_korjattu_syntaksilla.sav", user_na = FALSE)
 
 ## Package sm modifications
 
-**Code to set up the modified function**
+The package sm has a nice tool for visualising densities and doing a bootstrap test on their equivalence. We modify the function so that we can change the color of the equivalence band.
 
 ```{r sm, verbose = FALSE}
 
@@ -206,6 +215,8 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
 ```
 
 # Prepare data with variables of interest
+
+We do data manipulation and cleaning to come up with a dataaset with our variables of interests.
 
 ```{r}
 library(userfriendlyscience)
@@ -655,16 +666,16 @@ df[, paste0(str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_var
 
 # Means with CIs taking clustering into account
 
+The code chunks below create linear models for all variables. The results are used to estimate confidence intervals and intra-class correlations (ICC)
 
-## Create a table with all variables, their means, CIs and ICCs
+## Create a table with all variables, their means, CIs and ICCs.
+
+This table contains all variables with their ICCs.
+
 
 ```{r}
-
-names <- df %>% select(-id, -intervention, -group, -school, -girl, -track) %>% names(.)
-
-# model1 = lmer(paAccelerometer_T1 ~ (1|school) + (1|group) + b5open_T1.1, data=df)
-# m_p <- profile(model1, which = "beta_")
-# confint(m_p)
+# Create a vector with all names of the variables we want. Exclude T3 variables.
+names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -contains("_T3"), -contains("_diff")) %>% names(.)
 
 # Create empty soon-to-be-filled objects
 m <- NA
@@ -675,6 +686,18 @@ ci_high <- NA
 ICC_group <- NA
 ICC_School <- NA
 nonmissings <- NA
+
+## Use this to test a single variable:
+# dftest <- df #%>% na.omit()
+# m <- lmer(sitLieAccelerometer_diff ~ (1|school) + (1|group), data=dftest)
+# mean <- fixef(m)
+# m_p <- profile(m)
+# ci_low <- confint(m_p)[, 1]
+# ci_high <- confint(m_p)[, 2]
+# ICC_group <- icc(m)[1]
+# ICC_School <- icc(m)[2]
+# nonmissings <- length(m@resp$y)
+
 
 # Loop over each variable name, extract statistics: 
 
@@ -690,20 +713,9 @@ ICC_School[i] <- icc(m)[2]
 nonmissings[i] <- length(m@resp$y)
 }
 
-# dftest <- df #%>% na.omit()
-# m <- lmer(sitLieAccelerometer_diff ~ (1|school) + (1|group), data=dftest)
-# mean <- fixef(m)
-# m_p <- profile(m)
-# ci_low <- confint(m_p)[, 1]
-# ci_high <- confint(m_p)[, 2]
-# ICC_group <- icc(m)[1]
-# ICC_School <- icc(m)[2]
-# nonmissings <- length(m@resp$y)
-
-
 
 vardatatable <- data_frame(
-  Variable = c(names(mean)), 
+  Variable = str_sub(names(mean), end = -4), #remove "_T1" from names
   Mean = round(mean, 2), 
   CI95 = paste(round(ci_low, 2), "-", round(ci_high, 2)), 
   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
@@ -712,41 +724,66 @@ vardatatable <- data_frame(
   dplyr::arrange(Variable) %>% 
   filter(Variable != "") #remove first row, which is empty
 
-options(tibble.print_max = 15)
+
+```
+
+### Selected items
+
+```{r selected-total, results = 'asis'}
+options(tibble.print_max = 1000)
  
-# %>% 
-#     apa_table(
-#         caption = "",
-#         note = "",
-#         escape = T)
+vardatatable %>% 
+  filter(Variable == "paAccelerometer" | Variable == "fatpct" | Variable == "sitLieAccelerometer" | Variable == "sitBreaks") %>% 
+    apa_table(
+        caption = "All variables with their class and school ICCs",
+        escape = T,
+        digits = c(1, 2, 2, 3, 3, 0))
 ```
 
-```{r}
+### All items
 
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by classroom ICC")
+```{r allvars-total, results = 'asis'}
+options(tibble.print_max = 1000)
+ 
+vardatatable %>%
+    apa_table(
+        caption = "All variables with their class and school ICCs",
+        escape = T,
+        digits = c(1, 2, 2, 3, 3, 0))
+```
+
+### Top 20 items, sorted by classroom
+
+```{r icc-school-class-sortbyclass, results = 'asis'}
+
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% slice(1:20) %>% as.tbl() %>%  apa_table(caption = "Intra-class correlations sorted by classroom ICC",
+        digits = c(1, 3, 3, 0))
 
 ```
 
-```{r}
+### Top 20 items, sorted by school
 
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC")
+```{r icc-school-class-sortbyschool, results = 'asis'}
+
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% slice(1:20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC",
+        digits = c(0, 3, 3, 0))
 
 ```
 
+## Add educational track
 
-## Find ICC by educational track
+The model below is the same as the one above, except it adds educational track. 
 
-## Create a table with all variables, their means, CIs and ICCs
+**IT MAY NOT MAKE SENSE TO HAVE BOTH TRACK AND SCHOOL HERE, AS THEY'RE ALMOST THE SAME?**
+
+As before, we create a table with all variables, their means, CIs and ICCs.
+
 
 ```{r}
 library(sjstats)
 library(lme4)
 
-names <- df %>% select(-id, -intervention, -group, -school, -girl, -track) %>% names(.)
-
-# model1 = lmer(paAccelerometer_T1 ~ (1|school) + (1|group) + b5open_T1.1, data=df)
-# m_p <- profile(model1, which = "beta_")
-# confint(m_p)
+names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -contains("_T3"), -contains("_diff")) %>% names(.)
 
 # Create empty soon-to-be-filled objects
 m <- NA
@@ -758,6 +795,18 @@ ICC_group <- NA
 ICC_School <- NA
 nonmissings <- NA
 ICC_track <- NA
+
+
+## To test the code with a single variable:
+# dftest <- df #%>% na.omit()
+# m <- lmer(sitLieAccelerometer_T1 ~ (1|school) + (1|group) + (1|track), data=df)
+# mean <- fixef(m)
+# m_p <- profile(m)
+# ci_low <- confint(m_p)[5]
+# ci_high <- confint(m_p)[10]
+# ICC_group <- icc(m)[1]
+# ICC_School <- icc(m)[2]
+# nonmissings <- length(m@resp$y)
 
 # Loop over each variable name, extract statistics: 
 
@@ -774,18 +823,8 @@ ICC_track[i] <- icc(m)[2]
 nonmissings[i] <- length(m@resp$y)
 }
 
-# dftest <- df #%>% na.omit()
-# m <- lmer(sitLieAccelerometer_T1 ~ (1|school) + (1|group) + (1|track), data=df)
-# mean <- fixef(m)
-# m_p <- profile(m)
-# ci_low <- confint(m_p)[5]
-# ci_high <- confint(m_p)[10]
-# ICC_group <- icc(m)[1]
-# ICC_School <- icc(m)[2]
-# nonmissings <- length(m@resp$y)
-
 vardatatable <- data_frame(
-  Variable = c(names(mean)), 
+  Variable = str_sub(names(mean), end = -4), #remove "_T1" from names
   Mean = round(mean, 2), 
   CI95 = paste(round(ci_low, 2), "-", round(ci_high, 2)), 
   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
@@ -799,29 +838,39 @@ options(tibble.print_max = 15)
 
 ```
 
-```{r icc-school}
+### Top 20 items, sorted by school
 
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC")
+```{r icc-school-class-track-sortbyschool, results = 'asis'}
 
-```
-
-```{r icc-classroom}
-
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by classroom ICC")
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC",
+        digits = c(0, 3, 3, 3, 0))
 
 ```
 
-```{r icc-track}
+### Top 20 items, sorted by classroom
 
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by educational track ICC")
+```{r icc-school-class-track-sortbyclass, results = 'asis'}
+
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by classroom ICC",
+        digits = c(0, 3, 3, 3, 0))
 
 ```
 
+### Top 20 items, sorted by educational track
 
-## Create a table for all items by gender and intervention allocation
+```{r icc-school-class-track-sortbytrack, results = 'asis'}
+
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by educational track ICC",
+        digits = c(0, 3, 3, 3, 0))
+
+```
+
+## Create confidence bounds for all items by gender and intervention allocation
+
+These numbers are visualised with diamond plots later.
 
 ```{r}
-names <- df %>% select(-id, -intervention, -group, -school, -girl, -track) %>% names(.)
+names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -contains("_T3"), -contains("_diff")) %>% names(.)
 
 # Intercepts for boys; when boy is 1, girl is 0, but boy is a factor, so intercept is for boys even though boy is 1 for boys and 0 for girls.
 m.boys <- NA
@@ -1108,7 +1157,7 @@ apa_table(demotable, caption = "Baseline demographics of educational tracks", di
 
 ### By educational track
 
-**MUUTA VAR NÄISTÄ KAIKISTA, ja tyttöihin ja interventioihin numeroiden sijaan sanat**
+#**MUUTA VAR NÄISTÄ KAIKISTA, ja tyttöihin ja interventioihin numeroiden sijaan sanat**
 
 ```{r outcome-table, results = 'asis'}
 outtable <- df %>%
@@ -1118,10 +1167,10 @@ outtable <- df %>%
                                         round(sd(paAccelerometer_T1, na.rm = T), 1), ")"),
             "Mean daily minutes spent sitting or lying down (sd)" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
                                         round(sd(sitLieAccelerometer_T1, na.rm = T), 1), ")"),
-            "Mean daily breaks in sitting (sd)" = paste0(round(mean(fatpct_T1, na.rm = T), 1)," (", 
-                                        round(sd(fatpct_T1, na.rm = T), 1), ")"),
-            "Mean fat-% (sd)" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
+            "Mean daily breaks in sitting (sd)" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
                                         round(sd(sitBreaks_T1, na.rm = T), 1), ")"),
+            "Mean fat-% (sd)" = paste0(round(mean(fatpct_T1, na.rm = T), 1)," (", 
+                                        round(sd(fatpct_T1, na.rm = T), 1), ")"),
             n = n()) %>% 
   filter(complete.cases(.)) %>% 
   arrange(desc(track)) 
@@ -1173,10 +1222,11 @@ plot2 <- diamondPlot(PA_ci_intervention, color = 'red', alpha=.3, yLabels = c(re
 
 grid.newpage()
 grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
+
 # dat2 <- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
 # diamondPlot(dat1, color = 'blue', alpha=.3, yLabels = dat1$diamondlabels) +
 # diamondPlot(dat2, returnLayerOnly = TRUE, color='red', alpha=.3)
-
+ 
 ```
 
 Note: action and coping planning on a scale from 1 to 4.
@@ -1495,15 +1545,15 @@ The answer scale was as follows:
 
 Items are as follows: 
 
-I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life.
-I have monitored my PA by marking the PA occasions on an exercise log on paper.
-I have monitored my PA by using a smart phone, e.g. the Moves-app.
-I use mnemonic cues with which I remember to implement my PA intention.
-I have compared my actualized PA with the PA goal I have set.
-I have thought about which reasons to do PA are important to me personally.
-I have made changes in my home (e.g. my room or my computer), so that starting PA would be easier.
-I have asked my friends or family for support to reach my PA goals.
-If I haven't reached my PA goal, I have evaluated, what went wrong.
+1. I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life.
+2. I have monitored my PA by marking the PA occasions on an exercise log on paper.
+3. I have monitored my PA by using a smart phone, e.g. the Moves-app.
+4. I use mnemonic cues with which I remember to implement my PA intention.
+5. I have compared my actualized PA with the PA goal I have set.
+6. I have thought about which reasons to do PA are important to me personally.
+7. I have made changes in my home (e.g. my room or my computer), so that starting PA would be easier.
+8. I have asked my friends or family for support to reach my PA goals.
+9. If I haven't reached my PA goal, I have evaluated, what went wrong.
 
 ```{r}
 
@@ -1656,20 +1706,19 @@ The answer scale was as follows:
 
 Items are as follows: 
 
-I have set PA goals for myself.
-I have personally made a specific plan ("what, where, how") to implement my PA.
-I have a PA plan, which has been made by someone else, e.g. my sports club (e.g. a workout schedule).
-I have a way by which I remind myself of my PA plan, e.g. I write it down in the calendar.
-I have cut larger PA goals to smaller subgoals.
-I have tried out new ways for me to be physically active.
-I have pondered, what kind of difficult situations or barriers prevent me from implementing my PA plan.
-I have planned for ways to overcome barriers to doing PA.
-I have thought about how PA fits my identity (self concept).
-I have attempted to find ways to exercise so, that it won't obstruct but instead helps actualise my other life values.
+1. I have set PA goals for myself.
+2. I have personally made a specific plan ("what, where, how") to implement my PA.
+3. I have a PA plan, which has been made by someone else, e.g. my sports club (e.g. a workout schedule).
+4. I have a way by which I remind myself of my PA plan, e.g. I write it down in the calendar.
+5. I have cut larger PA goals to smaller subgoals.
+6. I have tried out new ways for me to be physically active.
+7. I have pondered, what kind of difficult situations or barriers prevent me from implementing my PA plan.
+8. I have planned for ways to overcome barriers to doing PA.
+9. I have thought about how PA fits my identity (self concept).
+10. I have attempted to find ways to exercise so, that it won't obstruct but instead helps actualise my other life values.
 
 
 ```{r}
-p_load(grid)
 
 bctGirls <- df %>% dplyr::select(id,
   intervention,
@@ -1860,14 +1909,14 @@ plot1 <- df %>% dplyr::select(id,
   gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
   ggplot(aes(y = Variable)) +
   geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
-           alpha = .6, color = "black", from = 1, to = 7) +
+           alpha = .3, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0)) +
   scale_x_continuous(expand = c(0.01, 0)) +
   scale_fill_cyclical(breaks = c("PA injunctive\nnorm 0", "PA injunctive\nnorm 1"),
                       labels = c( 'PA injunctive\nnorm 0' = "Boy", 'PA injunctive\nnorm 1' = "Girl"),
-                      values = c("#3bc600", "#0000ff", "#9cc68b", "#8080ff"),
+                      values = viridis(4)[1:2], #c("#3bc600", "#0000ff", "#9cc68b", "#8080ff"),
                       name = "", guide = "legend") +
   theme_ridges(grid = FALSE) +
   theme(legend.position="bottom", axis.text=element_text(size=10))
@@ -1896,7 +1945,7 @@ plot2 <- df %>% dplyr::select(id,
   scale_x_continuous(expand = c(0.01, 0)) +
   scale_fill_cyclical(breaks = c("PA injunctive\nnorm 1", "PA injunctive\nnorm 0"),
                       labels = c('PA injunctive\nnorm 1' = "Intervention", 'PA injunctive\nnorm 0' = "Control"),
-                      values = c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
+                      values = viridis(4)[3:4], #c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
                       name = "", guide = "legend") +
   theme_ridges(grid = FALSE) +
   theme(legend.position="bottom", axis.text=element_text(size=10))
@@ -1935,8 +1984,10 @@ PA_ci_boys <- ci_boys %>% filter(diamondlabels %in% names(scales_T1) &
 PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
 
 plot1 <- plot1 + 
-  diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, color='blue', alpha=.3, fixedSize = 0.15) +
-  diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color='green', alpha=.3, fixedSize = 0.15)
+  diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, color=viridis(4)[1],# 'blue', 
+                alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
+  diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color=viridis(4)[2], #'green', 
+                alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
 
 PA_ci_intervention <- ci_intervention %>% filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_actCop_T1", diamondlabels) | 
@@ -1963,8 +2014,10 @@ PA_ci_control <- ci_control %>% filter(diamondlabels %in% names(scales_T1) &
 PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
 
 plot2 <- plot2 + 
-  diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, color='blue', alpha=.3, fixedSize = 0.15) +
-  diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color='red', alpha=.3, fixedSize = 0.15)
+  diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, color=viridis(4)[4],# 'blue',
+              alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
+  diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color=viridis(4)[3], #'red', 
+              alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
 
 # grid.arrange(plot1, plot2, ncol = 2)
 grid.newpage()
@@ -2271,7 +2324,6 @@ legend("topright", c("Intervention school", "Control school"), col = c(4, 3), lt
 # Symptoms
 
 ```{r}
-p_load(grid)
 
 colfill <- c(1,2,3,4,5)
 
@@ -2603,10 +2655,3 @@ grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC), ggp
 
 ```
 
-
-
-sm:n testi:
-library(sm)
-dftest <- data.frame(value = sample(seq(from = 1, to = 7, by = 0.2), size = 1000, replace = TRUE),
-                     group = sample(1:5, size = 1000, replace = TRUE))
-sm.symptom_T1_3 <- sm.density.compare(dftest$value, dftest$group, xlab="", col=colfill, lty=linetypes, model="equal", lwd=linewidths)

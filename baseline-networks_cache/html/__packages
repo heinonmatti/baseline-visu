@@ -1,5 +1,6 @@
 base
-pacman
+papaja
+knitr
 tidyverse
 ggplot2
 tibble
@@ -9,6 +10,7 @@ purrr
 dplyr
 stringr
 forcats
+pacman
 haven
 Matrix
 lme4
@@ -20,7 +22,8 @@ ggridges
 igraph
 devtools
 bindrcpp
-papaja
-knitr
 EstimateGroupNetwork
 qgraph
+bookdown
+viridisLite
+viridis
