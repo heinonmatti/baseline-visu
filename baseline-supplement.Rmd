@@ -20,11 +20,12 @@ library(pacman)
 
 # Use pacman to check and load the needed packages.
 p_load(viridis, bookdown, papaja, knitr, tidyverse, haven, lme4, userfriendlyscience, grid, sm, sjstats, gridExtra, ggridges, igraph, devtools, grid)
+# p_load(rstanarm, mlmRev)
 
 opts_chunk$set(echo = TRUE, 
                warning = TRUE,
                error = TRUE,
-               cache = FALSE, 
+               cache = TRUE, 
                collapse = TRUE,
                eval = TRUE)
 opts_chunk$set(root.dir = ".")  # Always project root as working directory
@@ -227,15 +228,15 @@ d <- lmi %>% dplyr::select(id = ID,
   school = Aineisto.1,
   girl = Kys0013.1,
 b5agr_01_T1 = Kys0155.1,
-b5agrNeg_02_T1 = Kys0150.1,
+b5agrReverseCoded_02_T1 = Kys0150.1,
 b5cons_01_T1 = Kys0151.1,
-b5consNeg_02_T1 = Kys0156.1,
+b5consReverseCoded_02_T1 = Kys0156.1,
 b5ext_01_T1 = Kys0149.1,
-b5extNeg_02_T1 = Kys0154.1,
+b5extReverseCoded_02_T1 = Kys0154.1,
 b5neur_01_T1 = Kys0152.1,
-b5neurNeg_02_T1 = Kys0157.1,
+b5neurReverseCoded_02_T1 = Kys0157.1,
 b5open_01_T1 = Kys0153.1,
-b5openNeg_02_T1 = Kys0158.1,
+b5openReverseCoded_02_T1 = Kys0158.1,
 fatpct_T1 = Rasva,
 PA_actCop_01_T1 = Kys0115.1,
 PA_actCop_01_T3 = Kys0115.3,
@@ -339,30 +340,30 @@ PA_controlled_04_T1 = Kys0084.1,
 PA_controlled_04_T3 = Kys0084.3,
 PA_controlled_05_T1 = Kys0085.1,
 PA_controlled_05_T3 = Kys0085.3,
-PA_oexp_01_T1 = Kys0068.1,
-PA_oexp_01_T3 = Kys0068.3,
-PA_oexp_03_T1 = Kys0070.1,
-PA_oexp_03_T3 = Kys0070.3,
-PA_oexp_04_T1 = Kys0071.1,
-PA_oexp_04_T3 = Kys0071.3,
-PA_oexp_05_T1 = Kys0072.1,
-PA_oexp_05_T3 = Kys0072.3,
-PA_oexp_06_T1 = Kys0073.1,
-PA_oexp_06_T3 = Kys0073.3,
-PA_oexp_07_T1 = Kys0074.1,
-PA_oexp_07_T3 = Kys0074.3,
-PA_oexp_10_T1 = Kys0077.1,
-PA_oexp_10_T3 = Kys0077.3,
-PA_oexp_11_T1 = Kys0078.1,
-PA_oexp_11_T3 = Kys0078.3,
-PA_oexp_12_T1 = Kys0079.1,
-PA_oexp_12_T3 = Kys0079.3,
-PA_oexpNeg_02_T1 = Kys0069.1,
-PA_oexpNeg_02_T3 = Kys0069.3,
-PA_oexpNeg_08_T1 = Kys0075.1,
-PA_oexpNeg_08_T3 = Kys0075.3,
-PA_oexpNeg_09_T1 = Kys0076.1,
-PA_oexpNeg_09_T3 = Kys0076.3,
+PA_outcomeExpectations_01_T1 = Kys0068.1,
+PA_outcomeExpectations_01_T3 = Kys0068.3,
+PA_outcomeExpectations_03_T1 = Kys0070.1,
+PA_outcomeExpectations_03_T3 = Kys0070.3,
+PA_outcomeExpectations_04_T1 = Kys0071.1,
+PA_outcomeExpectations_04_T3 = Kys0071.3,
+PA_outcomeExpectations_05_T1 = Kys0072.1,
+PA_outcomeExpectations_05_T3 = Kys0072.3,
+PA_outcomeExpectations_06_T1 = Kys0073.1,
+PA_outcomeExpectations_06_T3 = Kys0073.3,
+PA_outcomeExpectations_07_T1 = Kys0074.1,
+PA_outcomeExpectations_07_T3 = Kys0074.3,
+PA_outcomeExpectations_10_T1 = Kys0077.1,
+PA_outcomeExpectations_10_T3 = Kys0077.3,
+PA_outcomeExpectations_11_T1 = Kys0078.1,
+PA_outcomeExpectations_11_T3 = Kys0078.3,
+PA_outcomeExpectations_12_T1 = Kys0079.1,
+PA_outcomeExpectations_12_T3 = Kys0079.3,
+PA_outcomeExpectationsNegative_02_T1 = Kys0069.1,
+PA_outcomeExpectationsNegative_02_T3 = Kys0069.3,
+PA_outcomeExpectationsNegative_08_T1 = Kys0075.1,
+PA_outcomeExpectationsNegative_08_T3 = Kys0075.3,
+PA_outcomeExpectationsNegative_09_T1 = Kys0076.1,
+PA_outcomeExpectationsNegative_09_T3 = Kys0076.3,
 PA_opportunities_01_T1 = Kys0098.1,
 PA_opportunities_01_T3 = Kys0098.3,
 PA_opportunities_02_T1 = Kys0099.1,
@@ -373,22 +374,22 @@ PA_opportunities_05_T1 = Kys0102.1,
 PA_opportunities_05_T3 = Kys0102.3,
 PA_opportunities_07_T1 = Kys0104.1,
 PA_opportunities_07_T3 = Kys0104.3,
-PA_opportunitiesNeg_03_T1 = Kys0100.1,
-PA_opportunitiesNeg_03_T3 = Kys0100.3,
-PA_opportunitiesNeg_06_T1 = Kys0103.1,
-PA_opportunitiesNeg_06_T3 = Kys0103.3,
-PA_opportunitiesNeg_08_T1 = Kys0105.1,
-# No answers or not asked T3: PA_opportunitiesNeg_08_T3 = Kys0105.3,
+PA_opportunitiesReverseCoded_03_T1 = Kys0100.1,
+PA_opportunitiesReverseCoded_03_T3 = Kys0100.3,
+PA_opportunitiesReverseCoded_06_T1 = Kys0103.1,
+PA_opportunitiesReverseCoded_06_T3 = Kys0103.3,
+PA_opportunitiesReverseCoded_08_T1 = Kys0105.1,
+# No answers or not asked T3: PA_opportunitiesReverseCoded_08_T3 = Kys0105.3,
 PA_pbc_01_T1 = Kys0125.1,
 PA_pbc_01_T3 = Kys0125.3,
 PA_pbc_03_T1 = Kys0127.1,
 PA_pbc_03_T3 = Kys0127.3,
-PA_pbcNeg_02_T1 = Kys0126.1,
-PA_pbcNeg_02_T3 = Kys0126.3,
+PA_pbcReverseCoded_02_T1 = Kys0126.1,
+PA_pbcReverseCoded_02_T3 = Kys0126.3,
 PA_selfefficacy_01_T1 = Kys0123.1,
 PA_selfefficacy_01_T3 = Kys0123.3,
-PA_selfefficacyNeg_02_T1 = Kys0124.1,
-PA_selfefficacyNeg_02_T3 = Kys0124.3,
+PA_selfefficacyReverseCoded_02_T1 = Kys0124.1,
+PA_selfefficacyReverseCoded_02_T3 = Kys0124.3,
 paAccelerometer_T1 = LiikuntaT1_ka,
 paAccelerometer_T3 = LiikuntaT3_ka,
 padaysLastweek_T1 = Kys0045.1,
@@ -417,20 +418,20 @@ SB_intention_03_T1 = Kys0189.1,
 SB_intention_03_T3 = Kys0189.3,
 SB_intention_04_T1 = Kys0190.1,
 SB_intention_04_T3 = Kys0190.3,
-SB_oexpNeg_01_T1 = Kys0171.1,
-SB_oexpNeg_01_T3 = Kys0171.3,
-SB_oexp_02_T1 = Kys0172.1,
-SB_oexp_02_T3 = Kys0172.3,
-SB_oexp_03_T1 = Kys0173.1,
-SB_oexp_03_T3 = Kys0173.3,
-SB_oexp_04_T1 = Kys0174.1,
-SB_oexp_04_T3 = Kys0174.3,
-SB_oexp_05_T1 = Kys0175.1,
-SB_oexp_05_T3 = Kys0175.3,
-SB_oexp_06_T1 = Kys0176.1,
-SB_oexp_06_T3 = Kys0176.3,
-SB_oexpNeg_07_T1 = Kys0177.1,
-SB_oexpNeg_07_T3 = Kys0177.3,
+SB_outcomeExpectationsNegative_01_T1 = Kys0171.1,
+SB_outcomeExpectationsNegative_01_T3 = Kys0171.3,
+SB_outcomeExpectations_02_T1 = Kys0172.1,
+SB_outcomeExpectations_02_T3 = Kys0172.3,
+SB_outcomeExpectations_03_T1 = Kys0173.1,
+SB_outcomeExpectations_03_T3 = Kys0173.3,
+SB_outcomeExpectations_04_T1 = Kys0174.1,
+SB_outcomeExpectations_04_T3 = Kys0174.3,
+SB_outcomeExpectations_05_T1 = Kys0175.1,
+SB_outcomeExpectations_05_T3 = Kys0175.3,
+SB_outcomeExpectations_06_T1 = Kys0176.1,
+SB_outcomeExpectations_06_T3 = Kys0176.3,
+SB_outcomeExpectationsNegative_07_T1 = Kys0177.1,
+SB_outcomeExpectationsNegative_07_T3 = Kys0177.3,
 SB_sePbc_01_T1 = Kys0182.1,
 SB_sePbc_01_T3 = Kys0182.3,
 SB_sePbc_02_T1 = Kys0183.1,
@@ -479,13 +480,13 @@ sitBreaks_T1 = YlösT1_ka
 )
 
 # Reverse coded items to normal: 
-# Take vars that contain "Neg_", substract them from 8 (each scale is 1-7)
-d <- d %>% mutate_at(dplyr::vars(contains("Neg_")), funs(8 - .))
+# Take vars that contain "ReverseCoded_", substract them from 8 (each scale is 1-7)
+d <- d %>% mutate_at(dplyr::vars(contains("ReverseCoded_")), funs(8 - .))
 
 # To check:
-# d %>% select(contains("Neg_")), contains("Rev")) %>% View
-identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$b5extNeg_02_T1))
-identical(as.numeric(8 - lmi$Kys0100.1), as.numeric(d$PA_opportunitiesNeg_03_T1))
+# d %>% select(contains("ReverseCoded_")), contains("Rev")) %>% View
+identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$b5extReverseCoded_02_T1))
+identical(as.numeric(8 - lmi$Kys0100.1), as.numeric(d$PA_opportunitiesReverseCoded_03_T1))
 
 # Group variable has empty missings
 d <- d %>% dplyr::mutate(group = ifelse(group == "", NA, group))
@@ -531,14 +532,14 @@ PA_frqbct_T1 = grep('PA_frqbct', names(dT1), value = TRUE),
 PA_goal_T1 = grep('PA_goal', names(dT1), value = TRUE),
 PA_inorm_T1 = grep('PA_inorm', names(dT1), value = TRUE),
 PA_intention_T1 = grep('PA_intention', names(dT1), value = TRUE),
-PA_oexp_T1 = grep('PA_oexp', names(dT1), value = TRUE),
+PA_outcomeExpectations_T1 = grep('PA_outcomeExpectations', names(dT1), value = TRUE),
 PA_opportunities_T1 = grep('PA_opportunities', names(dT1), value = TRUE),
 PA_pbc_T1 = grep('PA_pbc', names(dT1), value = TRUE),
 PA_selfefficacy_T1 = grep('PA_selfefficacy', names(dT1), value = TRUE),
 SB_dnorm_T1 = grep('SB_dnorm', names(dT1), value = TRUE),
 SB_inorm_T1 = grep('SB_inorm', names(dT1), value = TRUE),
 SB_intention_T1 = grep('SB_intention', names(dT1), value = TRUE),
-SB_oexp_T1 = grep('SB_oexp', names(dT1), value = TRUE),
+SB_outcomeExpectations_T1 = grep('SB_outcomeExpectations', names(dT1), value = TRUE),
 SB_sePbc_T1 = grep('SB_sePbc', names(dT1), value = TRUE),
 symptom_T1 = grep('symptom', names(dT1), value = TRUE),
 PA_actionplan_T1 = grep('actplan', names(dT1), value = TRUE),
@@ -565,14 +566,14 @@ PA_frqbct_T3 = grep('PA_frqbct', names(dT3), value = TRUE),
 PA_goal_T3 = grep('PA_goal', names(dT3), value = TRUE),
 PA_inorm_T3 = grep('PA_inorm', names(dT3), value = TRUE),
 PA_intention_T3 = grep('PA_intention', names(dT3), value = TRUE),
-PA_oexp_T3 = grep('PA_oexp', names(dT3), value = TRUE),
+PA_outcomeExpectations_T3 = grep('PA_outcomeExpectations', names(dT3), value = TRUE),
 PA_opportunities_T3 = grep('PA_opportunities', names(dT3), value = TRUE),
 PA_pbc_T3 = grep('PA_pbc', names(dT3), value = TRUE),
 PA_selfefficacy_T3 = grep('PA_selfefficacy', names(dT3), value = TRUE),
 SB_dnorm_T3 = grep('SB_dnorm', names(dT3), value = TRUE),
 SB_inorm_T3 = grep('SB_inorm', names(dT3), value = TRUE),
 SB_intention_T3 = grep('SB_intention', names(dT3), value = TRUE),
-SB_oexp_T3 = grep('SB_oexp', names(dT3), value = TRUE),
+SB_outcomeExpectations_T3 = grep('SB_outcomeExpectations', names(dT3), value = TRUE),
 SB_sePbc_T3 = grep('SB_sePbc', names(dT3), value = TRUE),
 symptom_T3 = grep('symptom', names(dT3), value = TRUE),
 PA_actionplan_T3 = grep('actplan', names(dT3), value = TRUE),
@@ -657,7 +658,7 @@ df <- cbind(df, motidf1, motidf2)
 
 # Create change scores
 t1_vars <- grep("_T1", colnames(df), value = TRUE)
-t1_vars <- grep("b5|fat|paLastweek|PA_opportunitiesNeg_08|sitBreaks_T1", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
+t1_vars <- grep("b5|fat|paLastweek|PA_opportunitiesReverseCoded_08|sitBreaks_T1", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
 t3_vars <- grep("_T3", colnames(df), value = TRUE)
 df[, paste0(str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars]
 
@@ -1056,7 +1057,7 @@ demotable <- demographics %>%
   arrange(desc(Track)) 
 
 demotable_total <- demographics %>% 
-  summarise("Track" = "Total",
+  summarise("Track" = "Full sample",
             "Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
                                         range(age, na.rm = T)[1], "-",
                                         range(age, na.rm = T)[2], ")"),
@@ -1069,7 +1070,7 @@ demotable_total <- demographics %>%
 
 demotable <- bind_rows(demotable, demotable_total)
 
-demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(Track, val)
+demotable <- demotable %>% gather(Variable, val, 2:ncol(demotable)) %>% spread(Track, val)
 
 # For some reason, sum of n's of all tracks is 1084.
 
@@ -1095,7 +1096,7 @@ demotable <- demographics %>%
   arrange(desc(Girl)) 
 
 demotable_total <- demographics %>% 
-  summarise("Girl" = "Total",
+  summarise("Girl" = "Full sample",
             "Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
                                         range(age, na.rm = T)[1], "-",
                                         range(age, na.rm = T)[2], ")"),
@@ -1107,7 +1108,9 @@ demotable_total <- demographics %>%
 
 demotable <- bind_rows(demotable, demotable_total)
 
-demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(Girl, val)
+demotable <- demotable %>% gather(Variable, val, 2:ncol(demotable)) %>% spread(Girl, val)
+
+names(demotable) <- c("", "Boy", "Girl", "Full sample")
 
 # For some reason, sum of n's of all tracks is 1084.
 
@@ -1134,7 +1137,7 @@ demotable <- demographics %>%
   arrange(desc(intervention)) 
 
 demotable_total <- demographics %>% 
-  summarise("intervention" = "Total",
+  summarise("intervention" = "Full sample",
             "Mean age (range)" = paste0(round(mean(age, na.rm = T), 1)," (", 
                                         range(age, na.rm = T)[1], "-",
                                         range(age, na.rm = T)[2], ")"),
@@ -1146,7 +1149,9 @@ demotable_total <- demographics %>%
 
 demotable <- bind_rows(demotable, demotable_total)
 
-demotable <- demotable %>% gather(var, val, 2:ncol(demotable)) %>% spread(intervention, val)
+demotable <- demotable %>% gather(Variable, val, 2:ncol(demotable)) %>% spread(intervention, val)
+
+names(demotable) <- c("", "Control", "Intervention", "Full sample")
 
 # For some reason, sum of n's of all tracks is 1084.
 
@@ -1155,44 +1160,232 @@ apa_table(demotable, caption = "Baseline demographics of educational tracks", di
 
 ## Create outcome tables
 
-### By educational track
-
-#**MUUTA VAR NÄISTÄ KAIKISTA, ja tyttöihin ja interventioihin numeroiden sijaan sanat**
-
 ```{r outcome-table, results = 'asis'}
-outtable <- df %>%
-  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, fatpct_T1, track) %>% 
+
+outtable_track <- df %>%
+  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
+          PA_actionplan_T1,
+          PA_copingplan_T1,
+          PA_agrbct_T1,
+          PA_frqbct_T1,
+          PA_amotivation_T1,
+          PA_autonomous_T1,
+          PA_controlled_T1,
+          PA_goal_T1,
+          PA_inorm_T1,
+          PA_dnorm_T1,
+          PA_intention_T1,
+          PA_outcomeExpectations_T1,
+          PA_opportunities_T1,
+          PA_pbc_T1,
+          PA_selfefficacy_T1,
+          SB_dnorm_T1,
+          SB_inorm_T1,
+          SB_intention_T1,
+          SB_outcomeExpectations_T1,
+          SB_sePbc_T1,
+         track, girl, intervention) %>% 
   group_by(track) %>% 
-  summarise("Mean daily MVPA minutes (sd)" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
+  summarise(
+            'PA action planning' = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1), " (", round(sd(PA_actionplan_T1, na.rm = T), 1), ")"),
+            'PA coping planning' = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1), ' (', round(sd(PA_copingplan_T1, na.rm = T), 1), ')'),
+            'PA agreement-BCTs' = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_agrbct_T1, na.rm = T), 1), ')'),
+            'PA frequency-BCTs' = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_frqbct_T1, na.rm = T), 1), ')'),
+            'PA amotivation' = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1), ' (', round(sd(PA_amotivation_T1, na.rm = T), 1), ')'),
+            'PA autonomous regulation' = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1), ' (', round(sd(PA_autonomous_T1, na.rm = T), 1), ')'),
+            'PA controlled regulation' = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1), ' (', round(sd(PA_controlled_T1, na.rm = T), 1), ')'),
+            'PA injunctive norm' = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_inorm_T1, na.rm = T), 1), ')'),
+            'PA descriptive norm' = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_dnorm_T1, na.rm = T), 1), ')'),
+            'PA intention' = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1), ' (', round(sd(PA_intention_T1, na.rm = T), 1), ')'),
+            'PA outcome expectations' = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(PA_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'PA opportunities' = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1), ' (', round(sd(PA_opportunities_T1, na.rm = T), 1), ')'),
+            'PA perceived behavioural control' = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1), ' (', round(sd(PA_pbc_T1, na.rm = T), 1), ')'),
+            'PA self-efficacy' = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1), ' (', round(sd(PA_selfefficacy_T1, na.rm = T), 1), ')'),
+            'SB descriptive norm' = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_dnorm_T1, na.rm = T), 1), ')'),
+            'SB injunctive norm' = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_inorm_T1, na.rm = T), 1), ')'),
+            'SB intention' = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1), ' (', round(sd(SB_intention_T1, na.rm = T), 1), ')'),
+            'SB outcome expectations' = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(SB_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'SB self-efficacy & perceived behavioural control' = paste0(round(mean(SB_sePbc_T1, na.rm = TRUE), 1), ' (', round(sd(SB_sePbc_T1, na.rm = T), 1), ')'),
+
+            "Mean daily MVPA minutes" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
                                         round(sd(paAccelerometer_T1, na.rm = T), 1), ")"),
-            "Mean daily minutes spent sitting or lying down (sd)" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
+            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
                                         round(sd(sitLieAccelerometer_T1, na.rm = T), 1), ")"),
-            "Mean daily breaks in sitting (sd)" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
+            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
                                         round(sd(sitBreaks_T1, na.rm = T), 1), ")"),
-            "Mean fat-% (sd)" = paste0(round(mean(fatpct_T1, na.rm = T), 1)," (", 
-                                        round(sd(fatpct_T1, na.rm = T), 1), ")"),
             n = n()) %>% 
   filter(complete.cases(.)) %>% 
-  arrange(desc(track)) 
+  arrange(desc(track)) %>% 
+  filter(track != "Other")
+
+outtable_intervention <- df %>%
+  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
+          PA_actionplan_T1,
+          PA_copingplan_T1,
+          PA_agrbct_T1,
+          PA_frqbct_T1,
+          PA_amotivation_T1,
+          PA_autonomous_T1,
+          PA_controlled_T1,
+          PA_goal_T1,
+          PA_inorm_T1,
+          PA_dnorm_T1,
+          PA_intention_T1,
+          PA_outcomeExpectations_T1,
+          PA_opportunities_T1,
+          PA_pbc_T1,
+          PA_selfefficacy_T1,
+          SB_dnorm_T1,
+          SB_inorm_T1,
+          SB_intention_T1,
+          SB_outcomeExpectations_T1,
+          SB_sePbc_T1,
+         track, girl, intervention) %>% 
+  group_by(intervention) %>% 
+  summarise(
+            'PA action planning' = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1), " (", round(sd(PA_actionplan_T1, na.rm = T), 1), ")"),
+            'PA coping planning' = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1), ' (', round(sd(PA_copingplan_T1, na.rm = T), 1), ')'),
+            'PA agreement-BCTs' = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_agrbct_T1, na.rm = T), 1), ')'),
+            'PA frequency-BCTs' = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_frqbct_T1, na.rm = T), 1), ')'),
+            'PA amotivation' = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1), ' (', round(sd(PA_amotivation_T1, na.rm = T), 1), ')'),
+            'PA autonomous regulation' = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1), ' (', round(sd(PA_autonomous_T1, na.rm = T), 1), ')'),
+            'PA controlled regulation' = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1), ' (', round(sd(PA_controlled_T1, na.rm = T), 1), ')'),
+            'PA injunctive norm' = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_inorm_T1, na.rm = T), 1), ')'),
+            'PA descriptive norm' = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_dnorm_T1, na.rm = T), 1), ')'),
+            'PA intention' = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1), ' (', round(sd(PA_intention_T1, na.rm = T), 1), ')'),
+            'PA outcome expectations' = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(PA_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'PA opportunities' = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1), ' (', round(sd(PA_opportunities_T1, na.rm = T), 1), ')'),
+            'PA perceived behavioural control' = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1), ' (', round(sd(PA_pbc_T1, na.rm = T), 1), ')'),
+            'PA self-efficacy' = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1), ' (', round(sd(PA_selfefficacy_T1, na.rm = T), 1), ')'),
+            'SB descriptive norm' = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_dnorm_T1, na.rm = T), 1), ')'),
+            'SB injunctive norm' = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_inorm_T1, na.rm = T), 1), ')'),
+            'SB intention' = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1), ' (', round(sd(SB_intention_T1, na.rm = T), 1), ')'),
+            'SB outcome expectations' = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(SB_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'SB self-efficacy & perceived behavioural control' = paste0(round(mean(SB_sePbc_T1, na.rm = TRUE), 1), ' (', round(sd(SB_sePbc_T1, na.rm = T), 1), ')'),
+
+            "Mean daily MVPA minutes" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(paAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitLieAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitBreaks_T1, na.rm = T), 1), ")"),
+            n = n()) %>% 
+  filter(complete.cases(.))
+
+outtable_girl <- df %>%
+  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
+          PA_actionplan_T1,
+          PA_copingplan_T1,
+          PA_agrbct_T1,
+          PA_frqbct_T1,
+          PA_amotivation_T1,
+          PA_autonomous_T1,
+          PA_controlled_T1,
+          PA_goal_T1,
+          PA_inorm_T1,
+          PA_dnorm_T1,
+          PA_intention_T1,
+          PA_outcomeExpectations_T1,
+          PA_opportunities_T1,
+          PA_pbc_T1,
+          PA_selfefficacy_T1,
+          SB_dnorm_T1,
+          SB_inorm_T1,
+          SB_intention_T1,
+          SB_outcomeExpectations_T1,
+          SB_sePbc_T1,
+         track, girl, intervention) %>% 
+  group_by(girl) %>% 
+  summarise(
+            'PA action planning' = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1), " (", round(sd(PA_actionplan_T1, na.rm = T), 1), ")"),
+            'PA coping planning' = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1), ' (', round(sd(PA_copingplan_T1, na.rm = T), 1), ')'),
+            'PA agreement-BCTs' = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_agrbct_T1, na.rm = T), 1), ')'),
+            'PA frequency-BCTs' = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_frqbct_T1, na.rm = T), 1), ')'),
+            'PA amotivation' = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1), ' (', round(sd(PA_amotivation_T1, na.rm = T), 1), ')'),
+            'PA autonomous regulation' = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1), ' (', round(sd(PA_autonomous_T1, na.rm = T), 1), ')'),
+            'PA controlled regulation' = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1), ' (', round(sd(PA_controlled_T1, na.rm = T), 1), ')'),
+            'PA injunctive norm' = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_inorm_T1, na.rm = T), 1), ')'),
+            'PA descriptive norm' = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_dnorm_T1, na.rm = T), 1), ')'),
+            'PA intention' = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1), ' (', round(sd(PA_intention_T1, na.rm = T), 1), ')'),
+            'PA outcome expectations' = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(PA_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'PA opportunities' = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1), ' (', round(sd(PA_opportunities_T1, na.rm = T), 1), ')'),
+            'PA perceived behavioural control' = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1), ' (', round(sd(PA_pbc_T1, na.rm = T), 1), ')'),
+            'PA self-efficacy' = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1), ' (', round(sd(PA_selfefficacy_T1, na.rm = T), 1), ')'),
+            'SB descriptive norm' = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_dnorm_T1, na.rm = T), 1), ')'),
+            'SB injunctive norm' = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_inorm_T1, na.rm = T), 1), ')'),
+            'SB intention' = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1), ' (', round(sd(SB_intention_T1, na.rm = T), 1), ')'),
+            'SB outcome expectations' = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(SB_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'SB self-efficacy & perceived behavioural control' = paste0(round(mean(SB_sePbc_T1, na.rm = TRUE), 1), ' (', round(sd(SB_sePbc_T1, na.rm = T), 1), ')'),
+
+            "Mean daily MVPA minutes" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(paAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitLieAccelerometer_T1, na.rm = T), 1), ")"),
+            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
+                                        round(sd(sitBreaks_T1, na.rm = T), 1), ")"),
+            n = n()) %>% 
+  filter(complete.cases(.))
 
 outtable_total <- df %>% 
-  summarise("track" = "Total",
-            "Mean daily MVPA minutes (sd)" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
+  summarise('girl' = "Full sample",
+            'PA action planning' = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1), " (", round(sd(PA_actionplan_T1, na.rm = T), 1), ")"),
+            'PA coping planning' = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1), ' (', round(sd(PA_copingplan_T1, na.rm = T), 1), ')'),
+            'PA agreement-BCTs' = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_agrbct_T1, na.rm = T), 1), ')'),
+            'PA frequency-BCTs' = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1), ' (', round(sd(PA_frqbct_T1, na.rm = T), 1), ')'),
+            'PA amotivation' = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1), ' (', round(sd(PA_amotivation_T1, na.rm = T), 1), ')'),
+            'PA autonomous regulation' = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1), ' (', round(sd(PA_autonomous_T1, na.rm = T), 1), ')'),
+            'PA controlled regulation' = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1), ' (', round(sd(PA_controlled_T1, na.rm = T), 1), ')'),
+            'PA injunctive norm' = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_inorm_T1, na.rm = T), 1), ')'),
+            'PA descriptive norm' = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(PA_dnorm_T1, na.rm = T), 1), ')'),
+            'PA intention' = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1), ' (', round(sd(PA_intention_T1, na.rm = T), 1), ')'),
+            'PA outcome expectations' = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(PA_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'PA opportunities' = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1), ' (', round(sd(PA_opportunities_T1, na.rm = T), 1), ')'),
+            'PA perceived behavioural control' = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1), ' (', round(sd(PA_pbc_T1, na.rm = T), 1), ')'),
+            'PA self-efficacy' = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1), ' (', round(sd(PA_selfefficacy_T1, na.rm = T), 1), ')'),
+            'SB descriptive norm' = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_dnorm_T1, na.rm = T), 1), ')'),
+            'SB injunctive norm' = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1), ' (', round(sd(SB_inorm_T1, na.rm = T), 1), ')'),
+            'SB intention' = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1), ' (', round(sd(SB_intention_T1, na.rm = T), 1), ')'),
+            'SB outcome expectations' = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1), ' (', round(sd(SB_outcomeExpectations_T1, na.rm = T), 1), ')'),
+            'SB self-efficacy & perceived behavioural control' = paste0(round(mean(SB_sePbc_T1, na.rm = TRUE), 1), ' (', round(sd(SB_sePbc_T1, na.rm = T), 1), ')'),
+
+            "Mean daily MVPA minutes" = paste0(round(mean(paAccelerometer_T1, na.rm = T), 1)," (", 
                                         round(sd(paAccelerometer_T1, na.rm = T), 1), ")"),
-            "Mean daily minutes spent sitting or lying down (sd)" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
+            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = T), 1)," (", 
                                         round(sd(sitLieAccelerometer_T1, na.rm = T), 1), ")"),
-            "Mean daily breaks in sitting (sd)" = paste0(round(mean(fatpct_T1, na.rm = T), 1)," (", 
-                                        round(sd(fatpct_T1, na.rm = T), 1), ")"),
-            "Mean fat-% (sd)" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
+            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaks_T1, na.rm = T), 1)," (", 
                                         round(sd(sitBreaks_T1, na.rm = T), 1), ")"),
             n = n())
 
 
 
-outtable1 <- bind_rows(outtable, outtable_total)
-outtable1 <- outtable1 %>% gather(var, val, 2:ncol(outtable1)) %>% spread(track, val)
+# Transpose each table
+outtable_track <- outtable_track %>% gather(Variable, val, 2:ncol(.)) %>% spread(track, val)
 
-apa_table(outtable1, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
+outtable_intervention <- outtable_intervention %>% gather(Variable, val, 2:ncol(.)) %>% spread(intervention, val)
+names(outtable_intervention) <- c("Variable", "Control", "Intervention")
+
+## In the last table, have a column for total before transposing
+outtable_girl <- bind_rows(outtable_girl, outtable_total)
+outtable_girl <- outtable_girl %>% gather(Variable, val, 2:ncol(.)) %>% spread(girl, val)
+names(outtable_girl) <- c("Variable", "Boy", "Girl", "Full sample")
+
+# Are all variables the same?
+identical(outtable_track$Variable, outtable_girl$Variable)
+identical(outtable_track$Variable, outtable_intervention$Variable)
+
+# Create large table with all variables
+outtable_mega <- bind_cols(outtable_track, outtable_intervention, outtable_girl) %>% 
+  select(-Variable1, -Variable2) 
+
+# Move n to be the first row
+out1 <- outtable_mega %>% filter(Variable == "n")
+out2 <- outtable_mega %>% filter(Variable != "n")
+outtable_mega <- bind_rows(out1, out2)
+
+# Fix names: leave first blank, have the rest as they were
+names(outtable_mega) <- c("", names(outtable_mega)[2:(length(names(outtable_mega)))])
+
+apa_table(outtable_mega, caption = "Baseline demographics of educational tracks")
 
 
 ```
@@ -1230,6 +1423,29 @@ grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 ```
 
 Note: action and coping planning on a scale from 1 to 4.
+
+# Visualising random effects using full posterior (UNDER CONSTRUCTION)
+
+```{r randeff-plot, eval = FALSE}
+
+# This chunk needs packages mlmRev and rstanarm 
+# grep("PA_", names(df), value = TRUE)
+
+m_1 <- stan_glmer(paAccelerometer_T1 ~ (1 | group), data = df, chains = 2, iter = 2000) 
+pt <- ranef(m_1) 
+school_int <- data.frame(posterior_interval(m_1, prob = 0.90)) 
+school_int <- school_int[-c(1, nrow(school_int)-1, nrow(school_int)),] #remove intercept and sigma parameters, leaving only class intervals 
+groupmeans <- df %>% select(paAccelerometer_T1, group) %>% group_by(group) %>% 
+  summarise(mean = mean(paAccelerometer_T1, na.rm = T)) %>% filter(complete.cases(.))
+
+dat_plt <- data.frame(groupmeans[2], school_int) 
+colnames(dat_plt) <- c("pt", "low", "up") 
+dat_plt <- dat_plt %>% arrange(pt) 
+dat_plt$index <- 1:nrow(dat_plt) 
+dat_plt %>% ggplot(aes(x = index, y = pt)) + geom_errorbar(aes(ymin = low, ymax = up)) + geom_point(size = 4, shape = 18) + geom_point(size = 2.5, shape = 18, color = "white") + theme_bw()
+
+```
+
 
 # Ridge plots
 
@@ -1439,7 +1655,6 @@ dens <- densplot %>% select(PA_frqbct_T1, intervention) %>%
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
-
 # Make plot
 sm.PA_frqbct_T1_1 <- sm.density.compare2(as.numeric(dens$PA_frqbct_T1), as.factor(dens$intervention), xlab="", col=colfill, lty=c(1,2), bandcol='LightGray', model="equal", lwd=(c(2,2)))
 legend("topright", levels(dens$intervention), fill=c(1, 2))
@@ -1451,7 +1666,6 @@ dens <- densplot %>% select(PA_frqbct_T1, girl) %>%
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
-
 # Make plot
 sm.PA_frqbct_T1_2 <- sm.density.compare2(as.numeric(dens$PA_frqbct_T1), as.factor(dens$girl), xlab="", col=colfill, lty=c(1,2), bandcol='LightGray', model="equal", lwd=(c(2,2)))
 legend("topright", levels(dens$girl), fill=c(1, 2))
@@ -1467,6 +1681,8 @@ set.seed(10)
 # Intervention groups with solid thicker lines
 linetypes <- c(1,2,2,1,2)
 
+# Set random number generator for reproducibility of bootstrap test of equal densities
+set.seed(10)
 # Make plot
 sm.PA_frqbct_T1_3 <- sm.density.compare(as.numeric(dens$PA_frqbct_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
 legend("topright", c("Intervention school", "Control school"), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
@@ -1494,7 +1710,6 @@ dens <- densplot %>% select(PA_agrbct_T1, intervention) %>%
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
-
 # Make plot
 sm.PA_agrbct_T1_1 <- sm.density.compare2(as.numeric(dens$PA_agrbct_T1), as.factor(dens$intervention), xlab="", col=colfill, lty=c(1,2), bandcol='LightGray', model="equal", lwd=(c(2,2)))
 legend("topright", levels(dens$intervention), fill=c(1, 2))
@@ -1506,7 +1721,6 @@ dens <- densplot %>% select(PA_agrbct_T1, girl) %>%
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
-
 # Make plot
 sm.PA_agrbct_T1_2 <- sm.density.compare2(as.numeric(dens$PA_agrbct_T1), as.factor(dens$girl), xlab="", col=colfill, lty=c(1,2), bandcol='LightGray', model="equal", lwd=(c(2,2)))
 legend("topright", levels(dens$girl), fill=c(1, 2))
@@ -1516,12 +1730,11 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 dens <- densplot %>% select(PA_agrbct_T1, school) %>% 
   na.omit(.)
 
-# Set random number generator for reproducibility of bootstrap test of equal densities
-set.seed(10)
-
 # Intervention groups with solid thicker lines
 linetypes <- c(1,2,2,1,2)
 
+# Set random number generator for reproducibility of bootstrap test of equal densities
+set.seed(10)
 # Make plot
 sm.PA_agrbct_T1_3 <- sm.density.compare(as.numeric(dens$PA_agrbct_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
 legend("topright", c("Intervention school", "Control school"), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
@@ -1899,7 +2112,7 @@ plot1 <- df %>% dplyr::select(id,
   girl,
 'PA action and\ncoping planning' = PA_actCop_T1,
 'PA intention' = PA_intention_T1,
-'PA outcome\nexpectations' = PA_oexp_T1,
+'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
 'PA perceived\nbehavioural control' = PA_pbc_T1,
 'PA self efficacy' = PA_selfefficacy_T1,
 'PA perceived\nopportunities' = PA_opportunities_T1,
@@ -1928,7 +2141,7 @@ plot2 <- df %>% dplyr::select(id,
   girl,
 'PA action and\ncoping planning' = PA_actCop_T1,
 'PA intention' = PA_intention_T1,
-'PA outcome\nexpectations' = PA_oexp_T1,
+'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
 'PA perceived\nbehavioural control' = PA_pbc_T1,
 'PA self efficacy' = PA_selfefficacy_T1,
 'PA perceived\nopportunities' = PA_opportunities_T1,
@@ -1952,7 +2165,7 @@ plot2 <- df %>% dplyr::select(id,
 
 target = c("PA_actCop_T1",
 "PA_intention_T1",
-"PA_oexp_T1",
+"PA_outcomeExpectations_T1",
 "PA_pbc_T1",
 "PA_selfefficacy_T1",
 "PA_opportunities_T1",
@@ -1962,7 +2175,7 @@ target = c("PA_actCop_T1",
 PA_ci_girls <- ci_girls %>% filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_oexp_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
                                      grepl("PA_pbc_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
@@ -1974,7 +2187,7 @@ PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
 PA_ci_boys <- ci_boys %>% filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_oexp_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
                                      grepl("PA_pbc_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
@@ -1992,7 +2205,7 @@ plot1 <- plot1 +
 PA_ci_intervention <- ci_intervention %>% filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_oexp_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
                                      grepl("PA_pbc_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
@@ -2004,7 +2217,7 @@ PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamon
 PA_ci_control <- ci_control %>% filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_oexp_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
                                      grepl("PA_pbc_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
@@ -2034,7 +2247,7 @@ plot1 <- df %>% dplyr::select(id,
   school,
   girl,
 'SB intention' = SB_intention_T1,
-'SB outcome\nexpectations' = SB_oexp_T1,
+'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
 'SB self-efficacy\nand perceived\nbehavioural control' = SB_sePbc_T1,
 'SB descriptive\nnorm' = SB_dnorm_T1,
 'SB injunctive\nnorm' = SB_inorm_T1)  %>%
@@ -2060,7 +2273,7 @@ plot2 <- df %>% dplyr::select(id,
   school,
   girl,
 'SB intention' = SB_intention_T1,
-'SB outcome\nexpectations' = SB_oexp_T1,
+'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
 'SB self-efficacy\nand perceived\nbehavioural control' = SB_sePbc_T1,
 'SB descriptive\nnorm' = SB_dnorm_T1,
 'SB injunctive\nnorm' = SB_inorm_T1) %>%
@@ -2111,7 +2324,7 @@ CIBER(data = d_num,
         "goal_T1",
         "inorm_T1",
         "intention_T1",
-        "oexp_T1",
+        "outcomeExpectations_T1",
         "opportunities_T1",
         "pbc_T1",
         "selfefficacy_T1"),
@@ -2130,7 +2343,7 @@ CIBER(data = d_num,
         "controlled_T1",
         "dnorm_T1",
         "intention_T1",
-        "oexp_T1",
+        "outcomeExpectations_T1",
         "opportunities_T1",
         "sePbc_T1"),
       targets = c("paT1", "fatpct_T1"),
@@ -2192,18 +2405,18 @@ CIBER(data = d_num,
   "pbc_03_T1",
   "norm_01_T1",
   "norm_02_T1",
-  "oexp_01_T1",
-  "oexp_02_T1",
-  "oexp_03_T1",
-  "oexp_04_T1",
-  "oexp_05_T1",
-  "oexp_06_T1",
-  "oexp_07_T1",
-  "oexp_08_T1",
-  "oexp_09_T1",
-  "oexp_10_T1",
-  "oexp_11_T1",
-  "oexp_12_T1"),
+  "outcomeExpectations_01_T1",
+  "outcomeExpectations_02_T1",
+  "outcomeExpectations_03_T1",
+  "outcomeExpectations_04_T1",
+  "outcomeExpectations_05_T1",
+  "outcomeExpectations_06_T1",
+  "outcomeExpectations_07_T1",
+  "outcomeExpectations_08_T1",
+  "outcomeExpectations_09_T1",
+  "outcomeExpectations_10_T1",
+  "outcomeExpectations_11_T1",
+  "outcomeExpectations_12_T1"),
    targets = c("MVPA", "SB"),
   leftAnchors = rep("", 21),
   rightAnchors = rep("", 21))
@@ -2232,7 +2445,6 @@ dens <- densplot %>% select(paAccelerometer_T1, intervention) %>%
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
-
 # Make plot
 sm.paAccelerometer_T1_1 <- sm.density.compare2(as.numeric(dens$paAccelerometer_T1), as.factor(dens$intervention), xlab="", col=colfill, lty=c(1,2), bandcol='LightGray', model="equal", lwd=(c(2,2)))
 legend("topright", levels(dens$intervention), fill=c(1, 2))
@@ -2244,7 +2456,6 @@ dens <- densplot %>% select(paAccelerometer_T1, girl) %>%
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
-
 # Make plot
 sm.paAccelerometer_T1_2 <- sm.density.compare2(as.numeric(dens$paAccelerometer_T1), as.factor(dens$girl), xlab="", col=colfill, lty=c(1,2), bandcol='LightGray', model="equal", lwd=(c(2,2)))
 legend("topright", levels(dens$girl), fill=c(1, 2))
@@ -2655,3 +2866,4 @@ grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC), ggp
 
 ```
 
+# Networks of psychosocial variables
