@@ -1,0 +1,3 @@
+Sys.setenv("R_MAX_NUM_DLLS" = 300)
+#Sys.getenv("R_MAX_NUM_DLLS")
+Sys.setenv("BINPREF" = "C:/HYApp/Rtools3.4/mingw_$(WIN)/bin/")

@@ -1,0 +1,2 @@
+PATH="C:\Rtools\bin;${PATH}" 
+R_MAX_NUM_DLLS = 240
