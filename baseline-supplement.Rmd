@@ -1,5 +1,6 @@
 ---
 title: "Baseline analysis supplement"
+output: pdf_document
 ---
 
 Welcome to the LMI baseline supplement! This supplement will walk you through the paper and provides additional graphs.
@@ -14,28 +15,34 @@ First, we set up the basics to enable compiling the document:
 
 # If pacman-package is not installed, install it and then load it.
 if (!require(pacman)) install.packages("pacman")
-library(pacman)
+#library(pacman)
 
-# Use pacman to check and load the needed packages.
-p_load(viridis, bookdown, papaja, knitr, tidyverse, haven, lme4, userfriendlyscience, grid, sm, sjstats, gridExtra, ggridges, igraph, devtools, grid)
+CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4", "userfriendlyscience", "sm", "sjstats", "gridExtra", "ggridges", "igraph", "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm", "brms", "mlmRev")
+instpacks <- setdiff(CRANpacks,pacman::p_library())
+
+# Use pacman to install the needed packages.
+if (length(instpacks)>0) pacman::p_install(instpacks)
+
+pacman::p_install_gh("crsh/papaja")
+pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
 
 # Packages specifically for network analysis
-p_load(EstimateGroupNetwork, bootnet, qgraph)
-p_load_gh("sachaepskamp/NetworkComparisonTest")
+#pacman::p_install(c("EstimateGroupNetwork", "bootnet", "qgraph"))
+#pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
 
 # Packages for the figures which show Bayesian credible intervals of classes
-p_load(rstanarm, brms, mlmRev)
+#pacman::p_install(c("rstanarm", "brms", "mlmRev"))
 
-opts_chunk$set(echo = TRUE, 
+knitr::opts_chunk$set(echo = TRUE, 
                warning = TRUE,
                error = TRUE,
                cache = TRUE, 
                collapse = TRUE,
                eval = TRUE)
-opts_chunk$set(root.dir = ".")  # Always set project root as working directory
-opts_knit$set(root.dir = ".")  # This is needed for some versions of RStudio
+knitr::opts_chunk$set(root.dir = ".")  # Always set project root as working directory
+knitr::opts_knit$set(root.dir = ".")  # This is needed for some versions of RStudio
 
-theme_set(theme_apa())
+ggplot2::theme_set(papaja::theme_apa())
 
 ```
 
@@ -44,7 +51,7 @@ theme_set(theme_apa())
 ```{r}
 
 # Read data.
-lmi <- read_sav("data/LMI_data_korjattu_syntaksilla_nimetpoistettu.sav", user_na = FALSE)
+lmi <- haven::read_sav("data/LMI_data_korjattu_syntaksilla_nimetpoistettu.sav", user_na = FALSE)
 
 # write_csv(lmi, "Z:/Desktop/LMI DATA/LMI_data_korjattu_syntaksilla_CSV.csv")
 
@@ -74,7 +81,7 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
 {
   if (!is.vector(x)) 
     stop("sm.density.compare can handle only 1-d data")
-  opt <- sm.options(list(...))
+  opt <- sm:::sm.options(list(...))
   sm:::replace.na(opt, ngrid, 50)                 
   ## These all changed from replace.na() --> sm:::
   sm:::replace.na(opt, display, "line")
@@ -120,13 +127,13 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
   if (length(opt$col) < nlev) 
     opt$col <- 2:(nlev + 1)
   if (missing(h)) 
-    h <- h.select(x, y = NA, group = group, ...)
+    h <- sm:::h.select(x, y = NA, group = group, ...)
   opt$band <- band
   opt$test <- test
   estimate <- matrix(0, ncol = opt$ngrid, nrow = nlev)
   se <- matrix(0, ncol = opt$ngrid, nrow = nlev)
   for (i in 1:nlev) {
-    sm <- sm.density(y[fact == fact.levels[i]], h = h, display = "none", 
+    sm <- sm:::sm.density(y[fact == fact.levels[i]], h = h, display = "none", 
                      eval.points = opt$eval.points)
     estimate[i, ] <- sm$estimate
     se[i, ] <- sm$se
@@ -148,7 +155,7 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
       ts <- sum((estimate[1, ] - estimate[2, ])^2)
     }
     else {
-      sm.mean <- sm.density(y, h = h, xlim = opt$xlim, 
+      sm.mean <- sm:::sm.density(y, h = h, xlim = opt$xlim, 
                             ngrid = opt$ngrid, display = "none")$estimate
       ts <- 0
       for (i in 1:nlev) ts <- ts + ni[i] * sum((estimate[i, 
@@ -160,7 +167,7 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
       ind <- (1:length(y))
       for (i in 1:nlev) {
         indi <- sample((1:length(ind)), ni[i])
-        est.star[i, ] <- sm.density(y[ind[indi]], h = h, 
+        est.star[i, ] <- sm:::sm.density(y[ind[indi]], h = h, 
                                     ngrid = opt$ngrid, xlim = opt$xlim, display =
                                       "none")$estimate
         ind <- ind[-indi]
@@ -169,7 +176,7 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
         ts.star <- sum((est.star[1, ] - est.star[2, ])^2)
       }
       else {
-        sm.mean <- sm.density(y, h = h, xlim = opt$xlim, 
+        sm.mean <- sm:::sm.density(y, h = h, xlim = opt$xlim, 
                               ngrid = opt$ngrid, display = "none")$estimate
         ts.star <- 0
         for (i in 1:nlev) {
@@ -224,8 +231,8 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
 We do data manipulation and cleaning to come up with a dataaset with our variables of interests.
 
 ```{r}
-library(userfriendlyscience)
-
+#library(userfriendlyscience)
+library(dplyr)
 d <- lmi %>% dplyr::select(id = ID,
   intervention = ryhmä,
   group = ryhmäkoodi_korjattu,
@@ -551,7 +558,7 @@ PA_copingplan_T1 = grep('copplan', names(dT1), value = TRUE)
 )
 
 # Append the aggregate variables to the data frame
-newdf <- makeScales(dT1, scales_T1)
+newdf <- userfriendlyscience::makeScales(dT1, scales_T1)
 
 # Create T3 scales
 
@@ -585,7 +592,7 @@ PA_copingplan_T3 = grep('copplan', names(dT3), value = TRUE)
 )
 
 # Append the aggregate variables to the data frame
-newdf2 <- makeScales(dT3, scales_T3)
+newdf2 <- userfriendlyscience::makeScales(dT3, scales_T3)
 
 # Take the demographic variables from d, combine with the variables with T1 or T3 in the name. 
 df <- cbind(d[ , c("id", "intervention", "group", "school", "girl", "track")], newdf[, ], newdf2[, ])
@@ -655,8 +662,8 @@ motiscales_T3 <- list(
   PA_introjected_T3 = grep('introjected', names(regulationVariables_T3), value = TRUE),
   PA_extrinsic_T3 = grep('extrinsic', names(regulationVariables_T3), value = TRUE))
 
-motidf1 <- makeScales(regulationVariables_T1, motiscales_T1)
-motidf2 <- makeScales(regulationVariables_T3, motiscales_T3)
+motidf1 <- userfriendlyscience::makeScales(regulationVariables_T1, motiscales_T1)
+motidf2 <- userfriendlyscience::makeScales(regulationVariables_T3, motiscales_T3)
 
 df <- cbind(df, motidf1, motidf2)
 
@@ -664,7 +671,7 @@ df <- cbind(df, motidf1, motidf2)
 t1_vars <- grep("_T1", colnames(df), value = TRUE)
 t1_vars <- grep("b5|fat|paLastweek|PA_opportunitiesReverseCoded_08|sitBreaks_T1", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
 t3_vars <- grep("_T3", colnames(df), value = TRUE)
-df[, paste0(str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars]
+df[, paste0(stringr::str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars]
 
 
 ```
@@ -706,21 +713,21 @@ nonmissings <- NA
 
 # Loop over each variable name, extract statistics: 
 
-# all participants  
+# all participants
 for (i in names){
-m <- lmer(paste0(i," ~ (1|school) + (1|group)"), data=df)
-mean[i] <- fixef(m)
+m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group)"), data=df)
+mean[i] <- lme4::fixef(m)
 m_p <- profile(m, which = "beta_")
 ci_low[i] <- confint(m_p)[, 1]
 ci_high[i] <- confint(m_p)[, 2]
-ICC_group[i] <- icc(m)[1]
-ICC_School[i] <- icc(m)[2]
+ICC_group[i] <- sjstats::icc(m)[1]
+ICC_School[i] <- sjstats::icc(m)[2]
 nonmissings[i] <- length(m@resp$y)
 }
 
 
 vardatatable <- data_frame(
-  Variable = str_sub(names(mean), end = -4), #remove "_T1" from names
+  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
   Mean = round(mean, 2), 
   CI95 = paste(round(ci_low, 2), "-", round(ci_high, 2)), 
   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
@@ -739,7 +746,7 @@ options(tibble.print_max = 1000)
  
 vardatatable %>% 
   filter(Variable == "paAccelerometer" | Variable == "fatpct" | Variable == "sitLieAccelerometer" | Variable == "sitBreaks") %>% 
-    apa_table(
+    papaja::apa_table(
         caption = "All variables with their class and school ICCs",
         escape = T,
         digits = c(1, 2, 2, 3, 3, 0))
@@ -751,7 +758,7 @@ vardatatable %>%
 options(tibble.print_max = 1000)
  
 vardatatable %>%
-    apa_table(
+    papaja::apa_table(
         caption = "All variables with their class and school ICCs",
         escape = T,
         digits = c(1, 2, 2, 3, 3, 0))
@@ -761,7 +768,7 @@ vardatatable %>%
 
 ```{r icc-school-class-sortbyclass, results = 'asis'}
 
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% slice(1:20) %>% as.tbl() %>%  apa_table(caption = "Intra-class correlations sorted by classroom ICC",
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% slice(1:20) %>% as.tbl() %>%  papaja::apa_table(caption = "Intra-class correlations sorted by classroom ICC",
         digits = c(1, 3, 3, 0))
 
 ```
@@ -770,7 +777,7 @@ vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc
 
 ```{r icc-school-class-sortbyschool, results = 'asis'}
 
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% slice(1:20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC",
+vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% slice(1:20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by school ICC",
         digits = c(0, 3, 3, 0))
 
 ```
@@ -785,8 +792,8 @@ As before, we create a table with all variables, their means, CIs and ICCs.
 
 
 ```{r}
-library(sjstats)
-library(lme4)
+#library(sjstats)
+#library(lme4)
 
 names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -contains("_T3"), -contains("_diff")) %>% names(.)
 
@@ -817,19 +824,19 @@ ICC_track <- NA
 
 # all participants  
 for (i in names){
-m <- lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
-mean[i] <- fixef(m)
+m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
+mean[i] <- lme4::fixef(m)
 m_p <- profile(m, which = "beta_")
 ci_low[i] <- confint(m_p)[5]
 ci_high[i] <- confint(m_p)[10]
-ICC_group[i] <- icc(m)[1]
-ICC_School[i] <- icc(m)[3]
-ICC_track[i] <- icc(m)[2]
+ICC_group[i] <- sjstats::icc(m)[1]
+ICC_School[i] <- sjstats::icc(m)[3]
+ICC_track[i] <- sjstats::icc(m)[2]
 nonmissings[i] <- length(m@resp$y)
 }
 
 vardatatable <- data_frame(
-  Variable = str_sub(names(mean), end = -4), #remove "_T1" from names
+  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
   Mean = round(mean, 2), 
   CI95 = paste(round(ci_low, 2), "-", round(ci_high, 2)), 
   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
@@ -847,7 +854,7 @@ options(tibble.print_max = 15)
 
 ```{r icc-school-class-track-sortbyschool, results = 'asis'}
 
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by school ICC",
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC school`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by school ICC",
         digits = c(0, 3, 3, 3, 0))
 
 ```
@@ -856,7 +863,7 @@ vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC sch
 
 ```{r icc-school-class-track-sortbyclass, results = 'asis'}
 
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by classroom ICC",
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by classroom ICC",
         digits = c(0, 3, 3, 3, 0))
 
 ```
@@ -865,7 +872,7 @@ vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC sch
 
 ```{r icc-school-class-track-sortbytrack, results = 'asis'}
 
-vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% apa_table(caption = "Intra-class correlations sorted by educational track ICC",
+vardatatable %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by educational track ICC",
         digits = c(0, 3, 3, 3, 0))
 
 ```
@@ -890,17 +897,17 @@ nonmissings.boys <- NA
 df.boys <- df %>% mutate(boy = factor(ifelse(girl == 1, 0, 1), levels = c(1, 0)))
 
 for (i in names){
-m.boys <- lmer(paste0(i," ~ (1|school) + (1|group) + boy"), data=df.boys)
-mean.boys[i] <- fixef(m.boys)
+m.boys <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + boy"), data=df.boys)
+mean.boys[i] <- lme4::fixef(m.boys)
 m_p.boys <- profile(m.boys, which = "beta_")
 ci_low.boys[i] <- confint(m_p.boys)[1, 1]
 ci_high.boys[i] <- confint(m_p.boys)[1, 2]
-ICC_group.boys[i] <- icc(m.boys)[1]
-ICC_School.boys[i] <- icc(m.boys)[2]
+ICC_group.boys[i] <- sjstats::icc(m.boys)[1]
+ICC_School.boys[i] <- sjstats::icc(m.boys)[2]
 nonmissings.boys[i] <- length(m.boys@resp$y)
 }
 
-cat("The labels are arranged such that intercept is not for girls:", labels(fixef(m.boys))[2] == "boy0")
+cat("The labels are arranged such that intercept is not for girls:", labels(lme4::fixef(m.boys))[2] == "boy0")
 
 ci_boys <- data.frame(ciLo = ci_low.boys, mean = mean.boys, ciHi = ci_high.boys)
 diamondlabels <- labels(ci_boys)[[1]]
@@ -917,17 +924,17 @@ ICC_School.girls <- NA
 nonmissings.girls <- NA
 
 for (i in names){
-m.girls <- lmer(paste0(i," ~ (1|school) + (1|group) + girl"), data=df)
-mean.girls[i] <- fixef(m.girls)
+m.girls <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + girl"), data=df)
+mean.girls[i] <- lme4::fixef(m.girls)
 m_p.girls <- profile(m.girls, which = "beta_")
 ci_low.girls[i] <- confint(m_p.girls)[1, 1]
 ci_high.girls[i] <- confint(m_p.girls)[1, 2]
-ICC_group.girls[i] <- icc(m.girls)[1]
-ICC_School.girls[i] <- icc(m.girls)[2]
+ICC_group.girls[i] <- sjstats::icc(m.girls)[1]
+ICC_School.girls[i] <- sjstats::icc(m.girls)[2]
 nonmissings.girls[i] <- length(m.girls@resp$y)
 }
 
-cat("The labels are arranged such that intercept is not for boys:", labels(fixef(m.girls))[2] == "girl0")
+cat("The labels are arranged such that intercept is not for boys:", labels(lme4::fixef(m.girls))[2] == "girl0")
 
 ci_girls <- data.frame(ciLo = ci_low.girls, mean = mean.girls, ciHi = ci_high.girls)
 diamondlabels <- labels(ci_girls)[[1]]
@@ -948,17 +955,17 @@ nonmissings.intervention <- NA
 df.intervention <- df %>% mutate(intervention = factor(intervention, levels = c(1, 0)))
 
 for (i in names){
-m.intervention <- lmer(paste0(i," ~ (1|school) + (1|group) + intervention"), data=df.intervention)
-mean.intervention[i] <- fixef(m.intervention)
+m.intervention <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + intervention"), data=df.intervention)
+mean.intervention[i] <- lme4::fixef(m.intervention)
 m_p.intervention <- profile(m.intervention, which = "beta_")
 ci_low.intervention[i] <- confint(m_p.intervention)[1, 1]
 ci_high.intervention[i] <- confint(m_p.intervention)[1, 2]
-ICC_group.intervention[i] <- icc(m.intervention)[1]
-ICC_School.intervention[i] <- icc(m.intervention)[2]
+ICC_group.intervention[i] <- sjstats::icc(m.intervention)[1]
+ICC_School.intervention[i] <- sjstats::icc(m.intervention)[2]
 nonmissings.intervention[i] <- length(m.intervention@resp$y)
 }
 
-cat("The labels are arranged such that intercept is not for control:", labels(fixef(m.intervention))[2] == "intervention0")
+cat("The labels are arranged such that intercept is not for control:", labels(lme4::fixef(m.intervention))[2] == "intervention0")
 
 ci_intervention <- data.frame(ciLo = ci_low.intervention, mean = mean.intervention, ciHi = ci_high.intervention)
 diamondlabels <- labels(ci_intervention)[[1]]
@@ -978,17 +985,17 @@ nonmissings.control <- NA
 df.control <- df %>% mutate(control = factor(ifelse(intervention == 1, 0, 1), levels = c(1, 0)))
 
 for (i in names){
-m.control <- lmer(paste0(i," ~ (1|school) + (1|group) + control"), data=df.control)
-mean.control[i] <- fixef(m.control)
+m.control <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + control"), data=df.control)
+mean.control[i] <- lme4::fixef(m.control)
 m_p.control <- profile(m.control, which = "beta_")
 ci_low.control[i] <- confint(m_p.control)[1, 1]
 ci_high.control[i] <- confint(m_p.control)[1, 2]
-ICC_group.control[i] <- icc(m.control)[1]
-ICC_School.control[i] <- icc(m.control)[2]
+ICC_group.control[i] <- sjstats::icc(m.control)[1]
+ICC_School.control[i] <- sjstats::icc(m.control)[2]
 nonmissings.control[i] <- length(m.control@resp$y)
 }
 
-cat("The labels are arranged such that intercept is not for intervention:", labels(fixef(m.control))[2] == "control0")
+cat("The labels are arranged such that intercept is not for intervention:", labels(lme4::fixef(m.control))[2] == "control0")
 
 ci_control <- data.frame(ciLo = ci_low.control, mean = mean.control, ciHi = ci_high.control)
 diamondlabels <- labels(ci_control)[[1]]
@@ -1074,11 +1081,11 @@ demotable_total <- demographics %>%
 
 demotable <- bind_rows(demotable, demotable_total)
 
-demotable <- demotable %>% gather(Variable, val, 2:ncol(demotable)) %>% spread(Track, val)
+demotable <- demotable %>% tidyr::gather(Variable, val, 2:ncol(demotable)) %>% tidyr::spread(Track, val)
 
 # For some reason, sum of n's of all tracks is 1084.
 
-apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 1, 0))
+papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 1, 0))
 ```
 
 ### By gender
@@ -1112,13 +1119,13 @@ demotable_total <- demographics %>%
 
 demotable <- bind_rows(demotable, demotable_total)
 
-demotable <- demotable %>% gather(Variable, val, 2:ncol(demotable)) %>% spread(Girl, val)
+demotable <- demotable %>% tidyr::gather(Variable, val, 2:ncol(demotable)) %>% tidyr::spread(Girl, val)
 
 names(demotable) <- c("", "Boy", "Girl", "Full sample")
 
 # For some reason, sum of n's of all tracks is 1084.
 
-apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
+papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
 ```
 
 ### By intervention participation
@@ -1153,13 +1160,13 @@ demotable_total <- demographics %>%
 
 demotable <- bind_rows(demotable, demotable_total)
 
-demotable <- demotable %>% gather(Variable, val, 2:ncol(demotable)) %>% spread(intervention, val)
+demotable <- demotable %>% tidyr::gather(Variable, val, 2:ncol(demotable)) %>% tidyr::spread(intervention, val)
 
 names(demotable) <- c("", "Control", "Intervention", "Full sample")
 
 # For some reason, sum of n's of all tracks is 1084.
 
-apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
+papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
 ```
 
 ## Create outcome tables
@@ -1363,14 +1370,14 @@ outtable_total <- df %>%
 
 
 # Transpose each table
-outtable_track <- outtable_track %>% gather(Variable, val, 2:ncol(.)) %>% spread(track, val)
+outtable_track <- outtable_track %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(track, val)
 
-outtable_intervention <- outtable_intervention %>% gather(Variable, val, 2:ncol(.)) %>% spread(intervention, val)
+outtable_intervention <- outtable_intervention %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(intervention, val)
 names(outtable_intervention) <- c("Variable", "Control", "Intervention")
 
 ## In the last table, have a column for total before transposing
 outtable_girl <- bind_rows(outtable_girl, outtable_total)
-outtable_girl <- outtable_girl %>% gather(Variable, val, 2:ncol(.)) %>% spread(girl, val)
+outtable_girl <- outtable_girl %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(girl, val)
 names(outtable_girl) <- c("Variable", "Boy", "Girl", "Full sample")
 
 # Are all variables the same?
@@ -1389,7 +1396,7 @@ outtable_mega <- bind_rows(out1, out2)
 # Fix names: leave first blank, have the rest as they were
 names(outtable_mega) <- c("", names(outtable_mega)[2:(length(names(outtable_mega)))])
 
-apa_table(outtable_mega, caption = "Baseline demographics of educational tracks")
+papaja::apa_table(outtable_mega, caption = "Baseline demographics of educational tracks")
 
 
 ```
@@ -1409,16 +1416,17 @@ PA_ci_control <- ci_control %>% filter(diamondlabels %in% names(scales_T1) & gre
 
 ICClabels <- vardatatable %>% filter(Variable %in% PA_ci_control$diamondlabels)
 
-plot1 <- diamondPlot(PA_ci_girls, color = 'green', alpha=.3, yLabels = PA_ci_girls$diamondlabels, fixedSize = 0.3, xlab = NULL) +
-  diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color='blue', alpha=.3, fixedSize = 0.3) +
+library(ggplot2)
+plot1 <- userfriendlyscience::diamondPlot(PA_ci_girls, color = 'green', alpha=.3, yLabels = PA_ci_girls$diamondlabels, fixedSize = 0.3, xlab = NULL) +
+  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color='blue', alpha=.3, fixedSize = 0.3) +
   scale_x_continuous(limits = c(1, 7), breaks = 1:7)
 
-plot2 <- diamondPlot(PA_ci_intervention, color = 'red', alpha=.3, yLabels = c(rep("", length(PA_ci_girls$diamondlabels))), fixedSize = 0.3, xlab = NULL, ylab = NULL) +
-  diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color='black', alpha=.3, fixedSize = 0.3) +
+plot2 <- userfriendlyscience::diamondPlot(PA_ci_intervention, color = 'red', alpha=.3, yLabels = c(rep("", length(PA_ci_girls$diamondlabels))), fixedSize = 0.3, xlab = NULL, ylab = NULL) +
+  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color='black', alpha=.3, fixedSize = 0.3) +
   scale_x_continuous(limits = c(1, 7), breaks = 1:7)
 
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 
 # dat2 <- data.frame(ciLo = c(3, 2), mean = c(4, 2.5), ciHi = c(6, 3));
 # diamondPlot(dat1, color = 'blue', alpha=.3, yLabels = dat1$diamondlabels) +
@@ -1441,9 +1449,9 @@ Plot below shows credible intervals deviations
 # Centre the variable:
 df <- df %>% mutate(paAccelerometer_T1_centred = paAccelerometer_T1 - mean(paAccelerometer_T1, na.rm = TRUE))
 
-m_1 <- stan_glmer(paAccelerometer_T1_centred ~ (1 | group), data = df, chains = 2, iter = 2000) 
-pt <- ranef(m_1) 
-posteriors <- data.frame(posterior_interval(m_1, prob = 0.90)) 
+m_1 <- rstanarm::stan_glmer(paAccelerometer_T1_centred ~ (1 | group), data = df, chains = 2, iter = 2000) 
+pt <- rstanarm::ranef(m_1) 
+posteriors <- data.frame(rstanarm::posterior_interval(m_1, prob = 0.90)) 
 school_int <- posteriors[-c(1, nrow(posteriors)-1, nrow(posteriors)),] #remove intercept and sigma parameters, leaving only class intervals 
 
 # This not needed any more:
@@ -1466,16 +1474,15 @@ dat_plt %>% ggplot(aes(x = index, y = pt)) + geom_errorbar(aes(ymin = low, ymax 
 df <- df %>% mutate(paAccelerometer_T1_centred = paAccelerometer_T1 - mean(paAccelerometer_T1, na.rm = TRUE))
 
 m_1 <- brms::bf(paAccelerometer_T1_centred ~ (1 | group)) 
-get_prior(m_1, data = df)
+brms::get_prior(m_1, data = df)
 
 fit_1 <- brms::brm(m_1, df)
 
 summary(fit_1)
 
 ### JATKA TÄSTÄ
-ranef(m_1)
-pt <- ranef(m_1) 
-posteriors <- data.frame(posterior_interval(m_1, prob = 0.90)) 
+pt <- brms::ranef(m_1) 
+posteriors <- data.frame(brms::posterior_interval(m_1, prob = 0.90)) 
 school_int <- posteriors[-c(1, nrow(posteriors)-1, nrow(posteriors)),] #remove intercept and sigma parameters, leaving only class intervals 
 
 dat_plt <- data.frame(pt$group, school_int) 
@@ -1501,19 +1508,19 @@ plot1 <- df %>% dplyr::select(id,
 'PA controlled \nmotivation' = PA_controlled_T1,
 'PA amotivation' = PA_amotivation_T1)  %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0)) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("PA amotivation 0", "PA amotivation 1"),
+  ggridges::scale_fill_cyclical(breaks = c("PA amotivation 0", "PA amotivation 1"),
                       labels = c( 'PA amotivation 0' = "Boy", 'PA amotivation 1' = "Girl"),
                       values = c("#3bc600", "#0000ff", "#9cc68b", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
 plot2 <- df %>% dplyr::select(id,
@@ -1525,25 +1532,25 @@ plot2 <- df %>% dplyr::select(id,
 'PA controlled motivation' = PA_controlled_T1,
 'PA amotivation' = PA_amotivation_T1) %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("PA amotivation 1", "PA amotivation 0"),
+  ggridges::scale_fill_cyclical(breaks = c("PA amotivation 1", "PA amotivation 0"),
                       labels = c('PA amotivation 1' = "Intervention", 'PA amotivation 0' = "Control"),
                       values = c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
 # grid.arrange(plot1, plot2, ncol = 2)
 
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 ```
 
 ## Big 5 personality traits
@@ -1561,19 +1568,19 @@ plot1 <- df %>% dplyr::select(id,
 'Neuroticism' = b5neur_T1,
 'Openness' = b5open_T1)  %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0)) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("Agreeableness 0", "Agreeableness 1"),
+  ggridges::scale_fill_cyclical(breaks = c("Agreeableness 0", "Agreeableness 1"),
                       labels = c( 'Agreeableness 0' = "Boy", 'Agreeableness 1' = "Girl"),
                       values = c("#3bc600", "#0000ff", "#9cc68b", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
 plot2 <- df %>% dplyr::select(id,
@@ -1587,25 +1594,25 @@ plot2 <- df %>% dplyr::select(id,
 'Neuroticism' = b5neur_T1,
 'Openness' = b5open_T1) %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("Agreeableness 1", "Agreeableness 0"),
+  ggridges::scale_fill_cyclical(breaks = c("Agreeableness 1", "Agreeableness 0"),
                       labels = c('Agreeableness 1' = "Intervention", 'Agreeableness 0' = "Control"),
                       values = c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
 # grid.arrange(plot1, plot2, ncol = 2)
 
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 ```
 
 ## BCT use
@@ -1622,19 +1629,19 @@ plot1 <- df %>% dplyr::select(id,
 'Frequency-\nrelated BCTs' = PA_frqbct_T1,
 'Agreement-\nrelated BCTs' = PA_agrbct_T1)  %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0)) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("Agreement-\nrelated BCTs 0", "Agreement-\nrelated BCTs 1"),
+  ggridges::scale_fill_cyclical(breaks = c("Agreement-\nrelated BCTs 0", "Agreement-\nrelated BCTs 1"),
                       labels = c( 'Agreement-\nrelated BCTs 0' = "Boy", 'Agreement-\nrelated BCTs 1' = "Girl"),
                       values = c("#3bc600", "#0000ff", "#9cc68b", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
 plot2 <- df %>% dplyr::select(id,
@@ -1645,23 +1652,23 @@ plot2 <- df %>% dplyr::select(id,
 'Frequency-\nrelated BCTs' = PA_frqbct_T1,
 'Agreement-\nrelated BCTs' = PA_agrbct_T1) %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("Agreement-\nrelated BCTs 1", "Agreement-\nrelated BCTs 0"),
+  ggridges::scale_fill_cyclical(breaks = c("Agreement-\nrelated BCTs 1", "Agreement-\nrelated BCTs 0"),
                       labels = c('Agreement-\nrelated BCTs 1' = "Intervention", 'Agreement-\nrelated BCTs 0' = "Control"),
                       values = c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 
 
 
@@ -1723,7 +1730,7 @@ linetypes <- c(1,2,2,1,2)
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
 # Make plot
-sm.PA_frqbct_T1_3 <- sm.density.compare(as.numeric(dens$PA_frqbct_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
+sm.PA_frqbct_T1_3 <- sm::sm.density.compare(as.numeric(dens$PA_frqbct_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
 legend("topright", c("Intervention school", "Control school"), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
 
 ```
@@ -1775,7 +1782,7 @@ linetypes <- c(1,2,2,1,2)
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
 # Make plot
-sm.PA_agrbct_T1_3 <- sm.density.compare(as.numeric(dens$PA_agrbct_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
+sm.PA_agrbct_T1_3 <- sm::sm.density.compare(as.numeric(dens$PA_agrbct_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
 legend("topright", c("Intervention school", "Control school"), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
 
 ```
@@ -1823,17 +1830,17 @@ bctGirls <- df %>% dplyr::select(id,
 'Has made changes at home' = PA_frqbct_07_T1,
 'Has sought social support' = PA_frqbct_08_T1,
 'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Girls") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -1854,17 +1861,17 @@ bctBoys <- df %>% dplyr::select(id,
 'Has made changes at home' = PA_frqbct_07_T1,
 'Has sought social support' = PA_frqbct_08_T1,
 'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Boys") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -1885,17 +1892,17 @@ bctInt <- df %>% dplyr::select(id,
 'Has made changes at home' = PA_frqbct_07_T1,
 'Has sought social support' = PA_frqbct_08_T1,
 'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "") +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Intervention") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10, face="bold")) +
@@ -1915,17 +1922,17 @@ bctCont <- df %>% dplyr::select(id,
 'Has made changes at home' = PA_frqbct_07_T1,
 'Has sought social support' = PA_frqbct_08_T1,
 'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Control") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10, face="bold")) +
@@ -1936,8 +1943,8 @@ coord_cartesian(xlim = c(0.5, 6.5))
 # ("Seldom or never", "About once a month", "About once a week", "Almost daily")
 
 # This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = "last"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = "last"))
 
 # This draws 2 histograms per row:
 # grid.newpage()
@@ -1987,17 +1994,17 @@ bctGirls <- df %>% dplyr::select(id,
   'Has planned for barriers' = PA_agrbct_08_T1,
   'Has thought of PA identity' = PA_agrbct_09_T1,
   'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Girls") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -2019,17 +2026,17 @@ bctBoys <- df %>% dplyr::select(id,
   'Has planned for barriers' = PA_agrbct_08_T1,
   'Has thought of PA identity' = PA_agrbct_09_T1,
   'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
-  gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Boys") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -2051,17 +2058,17 @@ bctInt <- df %>% dplyr::select(id,
   'Has planned for barriers' = PA_agrbct_08_T1,
   'Has thought of PA identity' = PA_agrbct_09_T1,
   'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "") +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Intervention") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10, face="bold")) +
@@ -2082,17 +2089,17 @@ bctCont <- df %>% dplyr::select(id,
   'Has planned for barriers' = PA_agrbct_08_T1,
   'Has thought of PA identity' = PA_agrbct_09_T1,
   'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Control") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10, face="bold")) +
@@ -2103,8 +2110,8 @@ coord_cartesian(xlim = c(0.5, 6.5))
 # ("Seldom or never", "About once a month", "About once a week", "Almost daily")
 
 # This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = "last"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = "last"))
 
 # This draws 2 histograms per row:
 # grid.newpage()
@@ -2143,7 +2150,7 @@ grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGirls), g
 ## PA determinants
 
 ```{r}
-
+library(viridis)
 plot1 <- df %>% dplyr::select(id,
   intervention,
   group,
@@ -2158,19 +2165,19 @@ plot1 <- df %>% dplyr::select(id,
 'PA descriptive\nnorm' = PA_dnorm_T1,
 'PA injunctive\nnorm' = PA_inorm_T1)  %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
            alpha = .3, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0)) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("PA injunctive\nnorm 0", "PA injunctive\nnorm 1"),
+  ggridges::scale_fill_cyclical(breaks = c("PA injunctive\nnorm 0", "PA injunctive\nnorm 1"),
                       labels = c( 'PA injunctive\nnorm 0' = "Boy", 'PA injunctive\nnorm 1' = "Girl"),
                       values = viridis(4)[1:2], #c("#3bc600", "#0000ff", "#9cc68b", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom", axis.text=element_text(size=10))
 
 plot2 <- df %>% dplyr::select(id,
@@ -2187,19 +2194,19 @@ plot2 <- df %>% dplyr::select(id,
 'PA descriptive\nnorm' = PA_dnorm_T1,
 'PA injunctive\nnorm' = PA_inorm_T1) %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("PA injunctive\nnorm 1", "PA injunctive\nnorm 0"),
+  ggridges::scale_fill_cyclical(breaks = c("PA injunctive\nnorm 1", "PA injunctive\nnorm 0"),
                       labels = c('PA injunctive\nnorm 1' = "Intervention", 'PA injunctive\nnorm 0' = "Control"),
                       values = viridis(4)[3:4], #c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom", axis.text=element_text(size=10))
 
 target = c("PA_actCop_T1",
@@ -2236,9 +2243,9 @@ PA_ci_boys <- ci_boys %>% filter(diamondlabels %in% names(scales_T1) &
 PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
 
 plot1 <- plot1 + 
-  diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, color=viridis(4)[1],# 'blue', 
+  userfriendlyscience::diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, color=viridis(4)[1],# 'blue', 
                 alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
-  diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color=viridis(4)[2], #'green', 
+  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color=viridis(4)[2], #'green', 
                 alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
 
 PA_ci_intervention <- ci_intervention %>% filter(diamondlabels %in% names(scales_T1) & 
@@ -2266,14 +2273,14 @@ PA_ci_control <- ci_control %>% filter(diamondlabels %in% names(scales_T1) &
 PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
 
 plot2 <- plot2 + 
-  diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, color=viridis(4)[4],# 'blue',
+  userfriendlyscience::diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, color=viridis(4)[4],# 'blue',
               alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
-  diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color=viridis(4)[3], #'red', 
+  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color=viridis(4)[3], #'red', 
               alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
 
 # grid.arrange(plot1, plot2, ncol = 2)
-grid.newpage()
-grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 ```
 
 ## SB determinants
@@ -2291,19 +2298,19 @@ plot1 <- df %>% dplyr::select(id,
 'SB descriptive\nnorm' = SB_dnorm_T1,
 'SB injunctive\nnorm' = SB_inorm_T1)  %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0)) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("SB injunctive\nnorm 0", "SB injunctive\nnorm 1"),
+  ggridges::scale_fill_cyclical(breaks = c("SB injunctive\nnorm 0", "SB injunctive\nnorm 1"),
                       labels = c( 'SB injunctive\nnorm 0' = "Boy", 'SB injunctive\nnorm 1' = "Girl"),
                       values = c("#3bc600", "#0000ff", "#9cc68b", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
 plot2 <- df %>% dplyr::select(id,
@@ -2317,28 +2324,28 @@ plot2 <- df %>% dplyr::select(id,
 'SB descriptive\nnorm' = SB_dnorm_T1,
 'SB injunctive\nnorm' = SB_inorm_T1) %>%
   # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
-  geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
+  ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
            alpha = .6, color = "black", from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
   scale_x_continuous(expand = c(0.01, 0)) +
-  scale_fill_cyclical(breaks = c("SB injunctive\nnorm 1", "SB injunctive\nnorm 0"),
+  ggridges::scale_fill_cyclical(breaks = c("SB injunctive\nnorm 1", "SB injunctive\nnorm 0"),
                       labels = c('SB injunctive\nnorm 1' = "Intervention", 'SB injunctive\nnorm 0' = "Control"),
                       values = c("#ff0000", "#0000ff", "#ff8080", "#8080ff"),
                       name = "", guide = "legend") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position="bottom")
 
-grid.arrange(plot1, plot2, ncol = 2)
+gridExtra::grid.arrange(plot1, plot2, ncol = 2)
 ```
 
 # CIBER (not included for now)
 
 ```{r, eval = FALSE}
-p_load(userfriendlyscience)
+#p_install("userfriendlyscience")
 
 # cat(names(df), sep = "\",\n\"")
 
@@ -2346,33 +2353,33 @@ p_load(userfriendlyscience)
 d_num <- df %>% mutate_all(as.numeric) 
 d_num <- as.data.frame(d_num)
 
-CIBER(data = d_num,
+userfriendlyscience::CIBER(data = d_num,
       determinants = c(
-        "actCop_T1",
-        "agrbct_T1",
-        "amotivation_T1",
-        "autonomous_T1",
-        "b5agr_T1.1",
-        "b5cons_T1.1",
-        "b5ext_T1.1",
-        "b5neur_T1.1",
-        "b5open_T1.1",
-        "controlled_T1",
-        "dnorm_T1",
-        "frqbct_T1",
-        "goal_T1",
-        "inorm_T1",
-        "intention_T1",
-        "outcomeExpectations_T1",
-        "opportunities_T1",
-        "pbc_T1",
-        "selfefficacy_T1"),
+        "PA_actCop_T1",
+        "PA_agrbct_T1",
+        "PA_amotivation_T1",
+        "PA_autonomous_T1",
+        "b5agr_T1",
+        "b5cons_T1",
+        "b5ext_T1",
+        "b5neur_T1",
+        "b5open_T1",
+        "PA_controlled_T1",
+        "PA_dnorm_T1",
+        "PA_frqbct_T1",
+        "PA_goal_T1",
+        "PA_inorm_T1",
+        "PA_intention_T1",
+        "PA_outcomeExpectations_T1",
+        "PA_opportunities_T1",
+        "PA_pbc_T1",
+        "PA_selfefficacy_T1"),
       targets = c("paT1", "fatpct_T1"),
       conf.level = list(means = 0.9999,
                         associations = 0.99)
       )
 
-CIBER(data = d_num,
+userfriendlyscience::CIBER(data = d_num,
       determinants = c(
         "actCop_T1",
         "agrbct_T1",
@@ -2393,7 +2400,7 @@ CIBER(data = d_num,
 # to create variable list for CIBER:
 # cat(names(d), sep = "\",\n\"")
 
-CIBER(data = d_num,
+userfriendlyscience::CIBER(data = d_num,
   determinants = c(
   "agrbct_01_T1",
   "agrbct_02_T1",
@@ -2418,7 +2425,7 @@ CIBER(data = d_num,
   leftAnchors = rep("", 19),
   rightAnchors = rep("", 19))
 
-CIBER(data = d_num,
+userfriendlyscience::CIBER(data = d_num,
   determinants = c(
   "autonomous_01_T1",
   "autonomous_02_T1",
@@ -2433,7 +2440,7 @@ CIBER(data = d_num,
   leftAnchors = rep("", 9),
   rightAnchors = rep("", 9))
 
-CIBER(data = d_num,
+userfriendlyscience::CIBER(data = d_num,
   determinants = c(
   "intention_01_T1",
   "intention_02_T1",
@@ -2511,7 +2518,7 @@ set.seed(10)
 linetypes <- c(1,2,2,1,2)
 
 # Make plot
-sm.paAccelerometer_T1_3 <- sm.density.compare(as.numeric(dens$paAccelerometer_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
+sm.paAccelerometer_T1_3 <- sm::sm.density.compare(as.numeric(dens$paAccelerometer_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
 legend("topright", c("Intervention school", "Control school"), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
 
 ```
@@ -2566,7 +2573,7 @@ set.seed(10)
 linetypes <- c(1,2,2,1,2)
 
 # Make plot
-sm.sitLieAccelerometer_T1_3 <- sm.density.compare(as.numeric(dens$sitLieAccelerometer_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
+sm.sitLieAccelerometer_T1_3 <- sm::sm.density.compare(as.numeric(dens$sitLieAccelerometer_T1), dens$school, xlab="", col=colfill, lty=linetypes, model="none")
 legend("topright", c("Intervention school", "Control school"), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))
 
 ```
@@ -2619,7 +2626,7 @@ linetypes <- c(1,2,2,1,2)
 linewidths <- c(2,1,1,2,1)
 
 # Make plot
-sm.symptom_T1_3 <- sm.density.compare(dens$`Symptom sum score`, dens$school, xlab="", col=colfill, lty=linetypes, model="equal", lwd=linewidths)
+sm.symptom_T1_3 <- sm::sm.density.compare(dens$`Symptom sum score`, dens$school, xlab="", col=colfill, lty=linetypes, model="equal", lwd=linewidths)
 xlab = ""
 
 
@@ -2644,17 +2651,17 @@ sympGirls <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Girls") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2674,17 +2681,17 @@ sympBoys <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Boys") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2704,17 +2711,17 @@ sympInt <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "") +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Intervention") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2734,17 +2741,17 @@ sympCont <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Control") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2756,8 +2763,8 @@ coord_cartesian(xlim = c(0.5, 4.5))
 # ("Seldom or never", "About once a month", "About once a week", "Almost daily")
 
 # This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(sympInt), ggplotGrob(sympCont), ggplotGrob(sympGirls), ggplotGrob(sympBoys), size = "last"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(sympInt), ggplotGrob(sympCont), ggplotGrob(sympGirls), ggplotGrob(sympBoys), size = "last"))
 
 # This draws 2 histograms per row:
 #grid.newpage()
@@ -2783,17 +2790,17 @@ sympHRC <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(track == "HRC") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "HRC") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2813,17 +2820,17 @@ sympNursing <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(track == "Nursing") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Nursing") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2843,17 +2850,17 @@ sympIT <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(track == "Business IT") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "") +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Business IT") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2873,17 +2880,17 @@ sympBA <- df %>% dplyr::select(id,
   "Difficulty with sleep" = symptom_sleepDifficulty_T1,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(track == "Business Admin") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:4), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Business Admin") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5, size = 10),
@@ -2895,8 +2902,8 @@ coord_cartesian(xlim = c(0.5, 4.5))
 # ("Seldom or never", "About once a month", "About once a week", "Almost daily")
 
 # This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC), ggplotGrob(sympNursing), size = "last"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC), ggplotGrob(sympNursing), size = "last"))
 
 # This draws 2 histograms per row:
 #grid.newpage()
@@ -2962,8 +2969,8 @@ bctdf <- df %>% dplyr::select(id,
 
 S.boys <- bctdf %>% filter(girl == 0) %>% select(6:ncol(bctdf)) %>% na.omit(.) 
 S.girls <- bctdf %>% filter(girl == 1) %>% select(6:ncol(bctdf)) %>% na.omit(.)
-nwBoys <- estimateNetwork(S.boys, default="IsingFit")
-nwGirls <- estimateNetwork(S.girls, default="IsingFit")
+nwBoys <- bootnet::estimateNetwork(S.boys, default="IsingFit")
+nwGirls <- bootnet::estimateNetwork(S.girls, default="IsingFit")
 
 # Create means for filling nodes
 
@@ -2999,7 +3006,7 @@ plot(nwBoys, layout = Layout, label.scale = FALSE, title = "Boys", label.cex = 0
 # Network for all participants
 
 S.total <- bctdf %>% select(6:ncol(bctdf))
-nwBCT <- estimateNetwork(S.total, default="IsingFit")
+nwBCT <- bootnet::estimateNetwork(S.total, default="IsingFit")
 
 # smallworldIndex(plot(nwBCT))
 
@@ -3014,7 +3021,7 @@ plot(nwBCT, layout = "spring", label.scale = FALSE, title = "Ising fit", label.c
      pieBorder = 1)
 
 # Estimate ising network without regularisation
-nwBCT_nonreg <- estimateNetwork(S.total, default="IsingSampler")
+nwBCT_nonreg <- bootnet::estimateNetwork(S.total, default="IsingSampler")
 
 plot(nwBCT_nonreg, layout = "spring", label.scale = FALSE, title = "Non-regularised Ising model", label.cex = 0.75,
      pie = piefill, 
@@ -3109,7 +3116,7 @@ bctdf <- df %>% dplyr::select(id,
 # Network for all participants
 
 S.total <- bctdf %>% select(6:ncol(bctdf))
-nwBCT <- estimateNetwork(S.total, default="IsingFit")
+nwBCT <- bootnet::estimateNetwork(S.total, default="IsingFit")
 
 # smallworldIndex(plot(nwBCT))
 
@@ -3135,10 +3142,10 @@ plot(nwBCT, layout = "spring", label.scale = FALSE, title = "Ising fit", label.c
 #### Centrality and stability
 
 ```{r BCTstability, cache = TRUE}
-centralityPlot(nwBCT)
+qgraph::centralityPlot(nwBCT)
 
-boot2 <- bootnet(nwBCT, nBoots = 2500, type = "case", nCores = 8)
-corStability(boot2)
+boot2 <- bootnet::bootnet(nwBCT, nBoots = 2500, type = "case", nCores = 8)
+bootnet::corStability(boot2)
 
 plot(boot2)
 plot(boot2, "strength")
@@ -3152,7 +3159,7 @@ plot(boot2, "closeness")
 
 ```{r nctboysgirls, eval = FALSE, cache = TRUE}
 
-nct_results <- NCT(nwGirls, nwBoys, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
+nct_results <- NetworkComparisonTest::NCT(nwGirls, nwBoys, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
 
 nct_results$nwinv.pval  # p value of network structure diff test: 0.424
 nct_results$glstrinv.pval  # p value of global connectivity diff test: 0.071
@@ -3268,7 +3275,7 @@ sympdf <- df %>% dplyr::select(id,
 
 S.all <- sympdf %>% select(6:ncol(sympdf)) %>% na.omit(.) 
 
-nwAll <- estimateNetwork(S.all, default="mgm")
+nwAll <- bootnet::estimateNetwork(S.all, default="mgm")
 
 allmeans <- sympdf %>%  
   summarise_at(vars(6:16),
@@ -3321,8 +3328,8 @@ sympdf <- df %>% dplyr::select(id,
 
 S.boys <- sympdf %>% filter(girl == 0) %>% select(6:ncol(sympdf)) %>% na.omit(.) 
 S.girls <- sympdf %>% filter(girl == 1) %>% select(6:ncol(sympdf)) %>% na.omit(.)
-nwBoys <- estimateNetwork(S.boys, default="mgm")
-nwGirls <- estimateNetwork(S.girls, default="mgm")
+nwBoys <- bootnet::estimateNetwork(S.boys, default="mgm")
+nwGirls <- bootnet::estimateNetwork(S.girls, default="mgm")
 
 girlmeans <- sympdf %>% group_by(girl) %>% 
   summarise_at(vars(5:15),
@@ -3358,9 +3365,9 @@ plot(nwBoys, label.scale = FALSE, title = "Boys", label.cex = 0.75,
 ## symptom network: educational tracks
 
 ```{r}
-library(bootnet)
-library(qgraph)
-library(tidyverse)
+#library(bootnet)
+#library(qgraph)
+#library(tidyverse)
 
 sympdf <- df %>% dplyr::select(id,
   intervention,
@@ -3404,10 +3411,10 @@ S.hrc <- sympdf %>% filter(track == 4) %>% select(6:ncol(sympdf))
 S.nursing <- sympdf %>% filter(track == 5) %>% select(6:ncol(sympdf))
 
 # nwOther <- estimateNetwork(S.other, default="mgm")
-nwIt <- estimateNetwork(S.it, default="mgm")
-nwAdmin <- estimateNetwork(S.admin, default="mgm")
-nwHrc <- estimateNetwork(S.hrc, default="mgm")
-nwNursing <- estimateNetwork(S.nursing, default="mgm")
+nwIt <- bootnet::estimateNetwork(S.it, default="mgm")
+nwAdmin <- bootnet::estimateNetwork(S.admin, default="mgm")
+nwHrc <- bootnet::estimateNetwork(S.hrc, default="mgm")
+nwNursing <- bootnet::estimateNetwork(S.nursing, default="mgm")
 
 # othermeans <- sympdf %>% group_by(track) %>% 
 #   summarise_at(vars(5:15),
@@ -3741,7 +3748,7 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 ```{r}
 
-Network1 <- estimateNetwork(data1, default = "EBICglasso")
+Network1 <- bootnet::estimateNetwork(data1, default = "EBICglasso")
 plot(Network1, layout = "spring", labels = TRUE)
 
 centralityPlot(Network1)
@@ -3919,17 +3926,17 @@ motiGirls <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Girls") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -3959,17 +3966,17 @@ motiBoys <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Boys") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -3999,17 +4006,17 @@ motiInt <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "") +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Intervention") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
@@ -4038,17 +4045,17 @@ motiCont <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Control") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
@@ -4059,14 +4066,14 @@ coord_cartesian(xlim = c(0.5, 5.5))
 # ("Seldom or never", "About once a month", "About once a week", "Almost daily")
 
 # This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = "last"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = "last"))
 
 ```
 
 ## Motivational regulations network
 
-## TEE TÄNNE PIEFILL; tummempi sama väri tai opacity?
+## TEE T?NNE PIEFILL; tummempi sama v?ri tai opacity?
 
 ```{r}
 # Was going to do fused graphical lasso, but the items not normal...
