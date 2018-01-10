@@ -27,3 +27,12 @@ qgraph
 bookdown
 viridisLite
 viridis
+bootnet
+NetworkComparisonTest
+Rcpp
+rstanarm
+brms
+mlmRev
+corrgram
+broom
+brmstools

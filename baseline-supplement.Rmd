@@ -1458,9 +1458,11 @@ dat_plt %>% ggplot(aes(x = index, y = pt)) + geom_errorbar(aes(ymin = low, ymax 
 
 ```
 
-## Using brms
+## Using brms and diamondPlot
 
-```{r randeff-plot-brms, eval = FALSE}
+```{r randeff-plot-brms-mvpa, fig.height = 4, fig.width = 12}
+# I keep needing this:
+# Sys.setenv("BINPREF" = "C:/HYApp/Rtools3.4/mingw_$(WIN)/bin/")
 
 # Centre the variable:
 df <- df %>% mutate(paAccelerometer_T1_centred = paAccelerometer_T1 - mean(paAccelerometer_T1, na.rm = TRUE))
@@ -1470,21 +1472,60 @@ get_prior(m_1, data = df)
 
 fit_1 <- brms::brm(m_1, df)
 
-summary(fit_1)
+pt <- brms::ranef(fit_1, robust = TRUE) %>% 
+  data.frame %>% 
+  select(credintLow = group.2.5.ile.Intercept,
+         intercept = group.Estimate.Intercept, 
+         credintHigh = group.97.5.ile.Intercept) %>% 
+  arrange(intercept)
 
-### JATKA TÄSTÄ
-ranef(m_1)
-pt <- ranef(m_1) 
-posteriors <- data.frame(posterior_interval(m_1, prob = 0.90)) 
-school_int <- posteriors[-c(1, nrow(posteriors)-1, nrow(posteriors)),] #remove intercept and sigma parameters, leaving only class intervals 
 
-dat_plt <- data.frame(pt$group, school_int) 
-colnames(dat_plt) <- c("pt", "low", "up") 
-dat_plt <- dat_plt %>% arrange(pt) 
-dat_plt$index <- 1:nrow(dat_plt) 
-dat_plt %>% ggplot(aes(x = index, y = pt)) + geom_errorbar(aes(ymin = low, ymax = up)) + geom_point(size = 4, shape = 18) + geom_point(size = 2.5, shape = 18, color = "white") + theme_bw()
+plot1 <- diamondPlot(pt, color = 'green', alpha=.3, yLabels = 1:58, fixedSize = 0.3, xlab = NULL) +
+  coord_flip(expand = TRUE) +
+  labs(x = "Deviance from average MVPA", y = "Group")
+
+
+df %>% ggplot(aes(x = group, y = paAccelerometer_T1_centred)) +
+  diamondPlot(pt, color = 'green', alpha=.3, yLabels = 1:58, fixedSize = 0.3, xlab = NULL, returnLayerOnly = TRUE) +
+  coord_flip(expand = TRUE) +
+  labs(x = "Deviance from average MVPA", y = "Group")
+   
 
 ```
+
+## Random effects in autonomous motivation
+
+```{r randeff-plot-brms-autonomous, fig.height = 4, fig.width = 12}
+
+# Centre the variable:
+df <- df %>% mutate(PA_autonomous_T1_centred = PA_autonomous_T1 - mean(PA_autonomous_T1, na.rm = TRUE))
+
+m_1 <- brms::bf(PA_autonomous_T1_centred ~ (1 | group)) 
+get_prior(m_1, data = df)
+
+fit_1 <- brms::brm(m_1, df)
+
+pt <- brms::ranef(fit_1, robust = TRUE) %>% 
+  data.frame %>% 
+  select(credintLow = group.2.5.ile.Intercept,
+         intercept = group.Estimate.Intercept, 
+         credintHigh = group.97.5.ile.Intercept) %>% 
+  arrange(intercept)
+
+
+plot1 <- diamondPlot(pt, color = 'blue', alpha=.3, yLabels = 1:59, fixedSize = 0.3, xlab = NULL) +
+  coord_flip(expand = TRUE) +
+  labs(x = "Deviance from average motivation", y = "Group")
+
+
+df %>% ggplot(aes(x = group, y = PA_autonomous_T1_centred)) +
+  diamondPlot(pt, color = 'blue', alpha=.3, yLabels = 1:59, fixedSize = 0.3, xlab = NULL, returnLayerOnly = TRUE) +
+  coord_flip(expand = TRUE) +
+  labs(x = "Deviance from average motivation", y = "Group")
+   
+
+```
+
 
 # Ridge plots
 
@@ -2943,7 +2984,7 @@ bctdf <- df %>% dplyr::select(id,
   'social support' = PA_frqbct_08_T1,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
-  'goal setting' = ifelse(`goals` == 1, 0, 1),
+  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
   'plan' = ifelse(`plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
@@ -3068,7 +3109,7 @@ bctdf <- df %>% dplyr::select(id,
   'social support' = PA_frqbct_08_T1,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
-  'goals' = ifelse(`goals` == 1, 0, 1),
+  'goals' = ifelse(`goal setting` == 1, 0, 1),
   'plan' = ifelse(`plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
@@ -3155,7 +3196,7 @@ bctdf <- df %>% dplyr::select(id,
   'social support' = PA_frqbct_08_T1,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
-  'goals' = ifelse(`goals` == 1, 0, 1),
+  'goals' = ifelse(`goal setting` == 1, 0, 1),
   'plan' = ifelse(`plan` == 1 & `plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
@@ -3325,7 +3366,7 @@ corrgram(S.total,
 
 # Create means for filling nodes
 piefill <- S.total %>%
-  summarise_all(funs(mean(., na.rm = TRUE) / 6)) 
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
 
 # Plot network
 plot(nwBCT, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivation", label.cex = 0.75,
@@ -3335,8 +3376,8 @@ plot(nwBCT, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivat
 
 # Combine items further:
 bctdf2 <- bctdf %>% rowwise %>% 
-  mutate('goals & plans' = mean(c(`goal.setting`, `implementation.plan`), na.rm = TRUE)) %>% 
-  mutate('barriers identified & planned for' = mean(c(`barrier.identification`, `coping.planning`), na.rm = TRUE)) %>% 
+  mutate('goals and plans' = mean(c(`goal.setting`, `implementation.plan`), na.rm = TRUE)) %>% 
+  mutate('barriers identified\nand planned for' = mean(c(`barrier.identification`, `coping.planning`), na.rm = TRUE)) %>% 
   select(-`goal.setting`, -`implementation.plan`, -`barrier.identification`, -`coping.planning`) %>% 
   data.frame
 
@@ -3344,20 +3385,175 @@ S.total2 <- bctdf2 %>% select(`Autonomous`:ncol(bctdf2))
 nwBCT2 <- estimateNetwork(S.total2, default="EBICglasso")
 
 # Create means for filling nodes
-piefill <- S.total2 %>%
+piefill2 <- S.total2 %>%
   mutate(Autonomous = Autonomous * 6/5, # Transform these from scale 1-5 to 1-6
          Controlled = Controlled * 6/5) %>% 
-  summarise_all(funs(mean(., na.rm = TRUE) / 6)) 
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
 
 # Plot network
 plot(nwBCT2, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivation", label.cex = 0.75,
-     pie = piefill, 
+     pie = piefill2, 
      color = "skyblue",
      pieBorder = 1)
 
 
 ```
 
+#### Stability and robustness
+
+Robustness test 
+
+```{r bct-robustness}
+
+centralityPlot(nwBCT)
+centralityPlot(nwBCT2)
+
+BCTboot1 <- bootnet(nwBCT, nBoots = 2500)
+BCTboot2 <- bootnet(nwBCT2, nBoots = 2500)
+
+plot(BCTboot1, labels = TRUE, order = "sample")
+plot(BCTboot2, labels = TRUE, order = "sample")
+
+autEdges <- summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Autonomous')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  dplyr::filter(!(node2 == 'Controlled')) %>% 
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, node2)
+
+contEdges <- summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Controlled')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, node2)
+
+diamondPlot(autEdges, 
+            ciCols = c("CIlower", "mean", "CIupper"), 
+            color = viridis(2, end = 0.8)[1], 
+            alpha = 0.3, 
+            yLabels = autEdges$node2, 
+            fixedSize = 0.3, 
+            xlab = NULL) +
+  diamondPlot(contEdges, 
+              ciCols = c("CIlower", "mean", "CIupper"), 
+              color = viridis(2, end = 0.8)[2], 
+              alpha = 0.3, 
+              yLabels = autEdges$node2, 
+              fixedSize = 0.3, 
+              xlab = NULL, 
+              returnLayerOnly = TRUE) +
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Controlled"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Autonomous"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  scale_fill_manual('Connected node',
+                      values = viridis(2, end = 0.8)[1:2],  
+                      guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation")
+  
+
+summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(id, 'Controlled')) %>%
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, id) %>% 
+  diamondPlot(ciCols = c("CIlower", "mean", "CIupper"), ylabels = id)
+
+```
+
+#### BCT-SDT Regression analyses
+
+Here's the classical linear model.
+
+```{r}
+library(broom)
+
+bctdf <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  'Autonomous' = PA_autonomous_T1,
+  'Controlled' = PA_controlled_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Integrated' = PA_integrated_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1) %>%
+  rowwise() %>% 
+  mutate( 
+  #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
+  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
+  select(-`log on paper`, -`smartphone`) %>% 
+  data.frame # %>% 
+  # mutate_all(as.numeric)
+
+outcomevars <- c('Autonomous', 
+  'Controlled', 
+  'Intrinsic',
+  'Identified', 
+  'Integrated', 
+  'Introjected',
+  'Extrinsic')
+
+for (i in outcomevars) {
+m <- lm(paste0(i, " ~ 
+  goal.setting +
+  implementation.plan +
+  plan.by.other +
+  reminder.of.plan +
+  subgoals +
+  new.PA.options +
+  barrier.identification +
+  coping.planning +
+  PA.identity +
+  PA.life.values +
+  positive.consequences"), 
+  data = bctdf)
+
+cat("Estimates for", i, "regulation", sep = " ")
+summary(m) %>% broom::tidy() %>% dplyr::arrange(desc(estimate)) %>% apa_table() 
+}
+
+
+```
+
+
+## Centrality stability
+
+```{r}
+boot2 <- bootnet(Network1, nBoots = 2500, type = "case")
+corStability(boot2)
+
+plot(boot2)
+
+differenceTest(boot1, "auton", "intent",  measure = c("strength", "closeness", "betweenness"))
+
+plot(boot1, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
+
+plot(boot1, "strength")
+plot(boot1, "betweenness")
+plot(boot1, "closeness")
+```
 
 ## PA determinants: unregularised correlations visualised
 
