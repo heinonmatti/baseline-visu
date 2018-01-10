@@ -3530,7 +3530,7 @@ m <- lm(paste0(i, " ~
   positive.consequences"), 
   data = bctdf)
 
-cat("Estimates for", i, "regulation", sep = " ")
+cat("\n\nEstimates for", i, "regulation", sep = " ")
 summary(m) %>% broom::tidy() %>% dplyr::arrange(desc(estimate)) %>% apa_table() 
 }
 
