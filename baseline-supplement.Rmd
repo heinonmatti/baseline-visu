@@ -3449,15 +3449,53 @@ diamondPlot(autEdges,
   scale_fill_manual('Connected node',
                       values = viridis(2, end = 0.8)[1:2],  
                       guide = guide_legend(override.aes = list(alpha = 1))) +
-  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation")
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (all items)")
   
+# Combined items
 
-summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+autEdges <- summary(BCTboot2, statistics = "edge", rank = TRUE) %>% 
   dplyr::arrange(mean) %>% 
-  dplyr::filter(stringr::str_detect(id, 'Controlled')) %>%
+  dplyr::filter(stringr::str_detect(node1, 'Autonomous')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  dplyr::filter(!(node2 == 'Controlled')) %>% 
   data.frame() %>% 
-  select(CIlower, mean, CIupper, id) %>% 
-  diamondPlot(ciCols = c("CIlower", "mean", "CIupper"), ylabels = id)
+  select(CIlower, mean, CIupper, node2)
+
+contEdges <- summary(BCTboot2, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Controlled')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, node2)
+
+diamondPlot(autEdges, 
+            ciCols = c("CIlower", "mean", "CIupper"), 
+            color = viridis(2, end = 0.8)[1], 
+            alpha = 0.3, 
+            yLabels = autEdges$node2, 
+            fixedSize = 0.3, 
+            xlab = NULL) +
+  diamondPlot(contEdges, 
+              ciCols = c("CIlower", "mean", "CIupper"), 
+              color = viridis(2, end = 0.8)[2], 
+              alpha = 0.3, 
+              yLabels = autEdges$node2, 
+              fixedSize = 0.3, 
+              xlab = NULL, 
+              returnLayerOnly = TRUE) +
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Controlled"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Autonomous"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  scale_fill_manual('Connected node',
+                      values = viridis(2, end = 0.8)[1:2],  
+                      guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (combined items)")
+
+# summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+#   dplyr::arrange(mean) %>% 
+#   dplyr::filter(stringr::str_detect(id, 'Controlled')) %>%
+#   data.frame() %>% 
+#   select(CIlower, mean, CIupper, id) %>% 
+#   diamondPlot(ciCols = c("CIlower", "mean", "CIupper"), ylabels = id)
 
 ```
 

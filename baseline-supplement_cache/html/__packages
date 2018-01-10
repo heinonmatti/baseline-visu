@@ -1,4 +1,8 @@
 base
+pacman
+viridisLite
+viridis
+bookdown
 papaja
 knitr
 tidyverse
@@ -10,7 +14,6 @@ purrr
 dplyr
 stringr
 forcats
-pacman
 haven
 Matrix
 lme4
@@ -21,18 +24,13 @@ gridExtra
 ggridges
 igraph
 devtools
-bindrcpp
 EstimateGroupNetwork
-qgraph
-bookdown
-viridisLite
-viridis
 bootnet
+qgraph
 NetworkComparisonTest
 Rcpp
 rstanarm
 brms
 mlmRev
-corrgram
+bindrcpp
 broom
-brmstools
