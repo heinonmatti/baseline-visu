@@ -1,45 +1,22 @@
 ---
-title: "Baseline networks"
+title: "Network analyses"
 ---
 
-
-```{r setup}
-opts_chunk$set(echo = TRUE, 
-               warning = FALSE,
-               error = TRUE,
-               cache = TRUE, 
-               collapse = TRUE,
-               eval = FALSE)
-opts_chunk$set(root.dir = ".")  # Always project root as working directory
-opts_knit$set(root.dir = ".")  # This is needed for some versions of RStudio
-```
-
-```{r set-viz-theme}
-theme_set(theme_apa())
-```
-
-# Load packages and data
-
 ```{r}
-#.libPaths("C:/R/R-3.4.2/library")
-#.libPaths("C:/Users/hema/RPackages")
-#.libPaths("C:/rlibs/3.4.2")
-# 
-# if (!require(pacman)) install.packages("pacman")
-# library(pacman)
-# 
-# p_load(EstimateGroupNetwork, bootnet, qgraph)
-# 
-# if (!require(devtools)) install.packages("devtools")
-# p_load_gh("sachaepskamp/NetworkComparisonTest")
-# # p_load_gh("rmcelreath/rethinking")
-# 
-# lmi <- read_sav("data/LMI_data_korjattu_syntaksilla.sav", user_na = FALSE)
+source("setup.R")
 ```
+
+Clicking the "Code"-buttons on the right shows code for each chunk.
+
+# UNDER CONSTRUCTION: Networks of psychosocial variables 
 
 # BCTs
 
-### Graph analysis
+## Graph analysis
+
+### Ising networks
+
+Prepare and dichotomise data (lots of skew in distributions).
 
 ```{r}
 nItems <- 19
@@ -49,8 +26,8 @@ bctdf <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'goals' = PA_agrbct_01_T1,
-  'plan' = PA_agrbct_02_T1,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
   'plan by other' = PA_agrbct_03_T1,
   'reminder of plan' = PA_agrbct_04_T1,
   'subgoals' = PA_agrbct_05_T1,
@@ -69,7 +46,7 @@ bctdf <- df %>% dplyr::select(id,
   'social support' = PA_frqbct_08_T1,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
-  'goals' = ifelse(`goals` == 1, 0, 1),
+  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
   'plan' = ifelse(`plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
@@ -92,8 +69,133 @@ bctdf <- df %>% dplyr::select(id,
 
 S.boys <- bctdf %>% filter(girl == 0) %>% select(6:ncol(bctdf)) %>% na.omit(.) 
 S.girls <- bctdf %>% filter(girl == 1) %>% select(6:ncol(bctdf)) %>% na.omit(.)
-nwBoys <- estimateNetwork(S.boys, default="IsingFit")
-nwGirls <- estimateNetwork(S.girls, default="IsingFit")
+nwBoys <- bootnet::estimateNetwork(S.boys, default="IsingFit")
+nwGirls <- bootnet::estimateNetwork(S.girls, default="IsingFit")
+
+# Create means for filling nodes
+
+girlmeans <- bctdf %>% group_by(girl) %>% 
+  summarise_at(vars(5:(5+nItems-1)),
+  funs(mean(., na.rm = TRUE))) %>% 
+  filter(girl == 1) %>% 
+  select(-1)
+
+boymeans <- bctdf %>% group_by(girl) %>% 
+  summarise_at(vars(5:(5+nItems-1)),
+  funs(mean(., na.rm = TRUE))) %>% 
+  filter(girl == 0) %>% 
+  select(-1)
+
+```
+
+#### Plot BCT Ising-networks 
+
+For girls and boys.
+
+```{r}
+
+# Find average layout for comparability and plot graphs next to each other
+
+Layout <- averageLayout(nwGirls, nwBoys)
+
+layout(t(1:2))
+
+plot(nwGirls, layout = Layout, label.scale = FALSE, title = "Girls", label.cex = 0.75,
+     pie = girlmeans, 
+     color = "skyblue",
+     pieBorder = 1)
+
+plot(nwBoys, layout = Layout, label.scale = FALSE, title = "Boys", label.cex = 0.75, 
+     pie = boymeans, 
+     color = "skyblue",
+     pieBorder = 1)
+
+```
+
+For all participants.
+
+```{r}
+
+S.total <- bctdf %>% select(6:ncol(bctdf))
+nwBCT <- bootnet::estimateNetwork(S.total, default="IsingFit")
+
+# smallworldIndex(plot(nwBCT))
+
+# Create means for filling nodes
+piefill <- S.total %>%
+  summarise_all(funs(mean(., na.rm = TRUE))) 
+
+# Plot network
+plot(nwBCT, layout = "spring", label.scale = FALSE, title = "Ising fit", label.cex = 0.75,
+     pie = piefill, 
+     color = "skyblue",
+     pieBorder = 1)
+
+# Estimate ising network without regularisation
+nwBCT_nonreg <- bootnet::estimateNetwork(S.total, default="IsingSampler")
+
+plot(nwBCT_nonreg, layout = "spring", label.scale = FALSE, title = "Non-regularised Ising model", label.cex = 0.75,
+     pie = piefill, 
+     color = "skyblue",
+     pieBorder = 1)
+```
+
+
+
+```{r}
+
+nItems <- 19
+
+bctdf <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1) %>%
+ mutate(
+  'goals' = ifelse(`goal setting` == 1, 0, 1),
+  'plan' = ifelse(`plan` == 1, 0, 1),
+  'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  'log on paper' = ifelse(`log on paper` == 1, 0, 1),
+  'smartphone' = ifelse(`smartphone` == 1, 0, 1),
+  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  'social support' = ifelse(`social support` == 1, 0, 1),
+  'failure contemplated' = ifelse(`failure contemplated` == 1, 0, 1)) %>% 
+  data.frame
+
+S.boys <- bctdf %>% filter(girl == 0) %>% select(6:ncol(bctdf)) %>% na.omit(.) 
+S.girls <- bctdf %>% filter(girl == 1) %>% select(6:ncol(bctdf)) %>% na.omit(.)
+nwBoys <- bootnet::estimateNetwork(S.boys, default="IsingFit")
+nwGirls <- bootnet::estimateNetwork(S.girls, default="IsingFit")
 
 # Create means for filling nodes
 
@@ -124,32 +226,6 @@ plot(nwBoys, layout = Layout, label.scale = FALSE, title = "Boys", label.cex = 0
      color = "skyblue",
      pieBorder = 1)
 
-
-
-# Network for all participants
-
-S.total <- bctdf %>% select(6:ncol(bctdf))
-nwBCT <- estimateNetwork(S.total, default="IsingFit")
-
-# smallworldIndex(plot(nwBCT))
-
-# Create means for filling nodes
-piefill <- S.total %>%
-  summarise_all(funs(mean(., na.rm = TRUE))) 
-
-# Plot network
-plot(nwBCT, layout = "spring", label.scale = FALSE, title = "Ising fit", label.cex = 0.75,
-     pie = piefill, 
-     color = "skyblue",
-     pieBorder = 1)
-
-# Estimate ising network without regularisation
-nwBCT_nonreg <- estimateNetwork(S.total, default="IsingSampler")
-
-plot(nwBCT_nonreg, layout = "spring", label.scale = FALSE, title = "Non-regularised Ising model", label.cex = 0.75,
-     pie = piefill, 
-     color = "skyblue",
-     pieBorder = 1)
 ```
 
 #### Combine items 
@@ -162,8 +238,8 @@ bctdf <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'goals' = PA_agrbct_01_T1,
-  'plan' = PA_agrbct_02_T1,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
   'plan by other' = PA_agrbct_03_T1,
   'reminder of plan' = PA_agrbct_04_T1,
   'subgoals' = PA_agrbct_05_T1,
@@ -182,7 +258,7 @@ bctdf <- df %>% dplyr::select(id,
   'social support' = PA_frqbct_08_T1,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
-  'goals' = ifelse(`goals` == 1, 0, 1),
+  'goals' = ifelse(`goal setting` == 1, 0, 1),
   'plan' = ifelse(`plan` == 1 & `plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
@@ -204,8 +280,8 @@ bctdf <- df %>% dplyr::select(id,
 
 # S.boys <- bctdf %>% filter(girl == 0) %>% select(6:ncol(bctdf)) %>% na.omit(.) 
 # S.girls <- bctdf %>% filter(girl == 1) %>% select(6:ncol(bctdf)) %>% na.omit(.)
-# nwBoys <- estimateNetwork(S.boys, default="IsingFit")
-# nwGirls <- estimateNetwork(S.girls, default="IsingFit")
+# nwBoys <- bootnet::estimateNetwork(S.boys, default="IsingFit")
+# nwGirls <- bootnet::estimateNetwork(S.girls, default="IsingFit")
 # 
 # # Create means for filling nodes
 # 
@@ -239,7 +315,7 @@ bctdf <- df %>% dplyr::select(id,
 # Network for all participants
 
 S.total <- bctdf %>% select(6:ncol(bctdf))
-nwBCT <- estimateNetwork(S.total, default="IsingFit")
+nwBCT <- bootnet::estimateNetwork(S.total, default="IsingFit")
 
 # smallworldIndex(plot(nwBCT))
 
@@ -254,7 +330,7 @@ plot(nwBCT, layout = "spring", label.scale = FALSE, title = "Ising fit", label.c
      pieBorder = 1)
 
 # # Estimate ising network without regularisation
-# nwBCT_nonreg <- estimateNetwork(S.total, default="IsingSampler")
+# nwBCT_nonreg <- bootnet::estimateNetwork(S.total, default="IsingSampler")
 # 
 # plot(nwBCT_nonreg, layout = "spring", label.scale = FALSE, title = "Non-regularised Ising model", label.cex = 0.75,
 #      pie = piefill, 
@@ -265,10 +341,10 @@ plot(nwBCT, layout = "spring", label.scale = FALSE, title = "Ising fit", label.c
 #### Centrality and stability
 
 ```{r BCTstability, cache = TRUE}
-centralityPlot(nwBCT)
+qgraph::centralityPlot(nwBCT)
 
-boot2 <- bootnet(nwBCT, nBoots = 2500, type = "case", nCores = 8)
-corStability(boot2)
+boot2 <- bootnet::bootnet(nwBCT, nBoots = 2500, type = "case", nCores = 2)
+bootnet::corStability(boot2)
 
 plot(boot2)
 plot(boot2, "strength")
@@ -282,7 +358,7 @@ plot(boot2, "closeness")
 
 ```{r nctboysgirls, eval = FALSE, cache = TRUE}
 
-nct_results <- NCT(nwGirls, nwBoys, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
+nct_results <- NetworkComparisonTest::NCT(nwGirls, nwBoys, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
 
 nct_results$nwinv.pval  # p value of network structure diff test: 0.424
 nct_results$glstrinv.pval  # p value of global connectivity diff test: 0.071
@@ -292,6 +368,305 @@ sum(nct_results$einv.pvals$"p-value" < 0.05)  # how many edges are different0
 
 ```
 
+### GGM BCTs & motivation 
+
+```{r}
+library(corrgram)
+
+nItems <- 19
+
+bctdf <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  'Autonomous' = PA_autonomous_T1,
+  'Controlled' = PA_controlled_T1,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1) %>%
+  rowwise() %>% 
+  mutate( 
+  #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
+  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
+  select(-`log on paper`, -`smartphone`) %>% 
+  data.frame %>% 
+  mutate_all(as.numeric)
+
+# Network for all participants
+
+S.total <- bctdf %>% select(`Autonomous`:ncol(bctdf))
+nwBCT <- bootnet::estimateNetwork(S.total, default="EBICglasso")
+
+# Plot correlations (minmax crowds the diagonal as it plots the minimum and maximum values for each variable).
+labs <- colnames(S.total)
+corrgram::corrgram(S.total, 
+         cor.method = "spearman", 
+         # diag.panel=panel.minmax, 
+         # lower.panel=panel.shade, 
+         # lower.panel=panel.ellipse,
+         # lower.panel=panel.cor,
+         upper.panel=panel.conf,
+         lower.panel=panel.pie,
+         outer.labels=list(
+           bottom=list(labels=labs,cex=.75, srt=60),
+           left=list(labels=labs,cex=.75, srt=30))
+         )
+
+labs <- colnames(S.total)
+corrgram::corrgram(S.total, 
+         cor.method = "spearman",
+         upper.panel=panel.ellipse,
+         lower.panel=panel.pie,
+         outer.labels=list(
+           bottom=list(labels=labs,cex=.75, srt=60),
+           left=list(labels=labs,cex=.75, srt=30))
+         )
+
+# Create means for filling nodes
+piefill <- S.total %>%
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
+
+# Plot network
+plot(nwBCT, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivation", label.cex = 0.75,
+     pie = piefill, 
+     color = "skyblue",
+     pieBorder = 1)
+
+# Combine items further:
+bctdf2 <- bctdf %>% rowwise %>% 
+  mutate('goals and plans' = mean(c(`goal.setting`, `implementation.plan`), na.rm = TRUE)) %>% 
+  mutate('barriers identified\nand planned for' = mean(c(`barrier.identification`, `coping.planning`), na.rm = TRUE)) %>% 
+  select(-`goal.setting`, -`implementation.plan`, -`barrier.identification`, -`coping.planning`) %>% 
+  data.frame
+
+S.total2 <- bctdf2 %>% select(`Autonomous`:ncol(bctdf2))
+nwBCT2 <- bootnet::estimateNetwork(S.total2, default="EBICglasso")
+
+# Create means for filling nodes
+piefill2 <- S.total2 %>%
+  mutate(Autonomous = Autonomous * 6/5, # Transform these from scale 1-5 to 1-6
+         Controlled = Controlled * 6/5) %>% 
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
+
+# Plot network
+plot(nwBCT2, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivation", label.cex = 0.75,
+     pie = piefill2, 
+     color = "skyblue",
+     pieBorder = 1)
+
+
+```
+
+#### Stability and robustness
+
+Robustness test 
+
+```{r bct-robustness}
+
+qgraph::centralityPlot(nwBCT)
+qgraph::centralityPlot(nwBCT2)
+
+BCTboot1 <- bootnet::bootnet(nwBCT, nBoots = 2500)
+BCTboot2 <- bootnet::bootnet(nwBCT2, nBoots = 2500)
+
+plot(BCTboot1, labels = TRUE, order = "sample")
+plot(BCTboot2, labels = TRUE, order = "sample")
+
+autEdges <- summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Autonomous')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  dplyr::filter(!(node2 == 'Controlled')) %>% 
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, node2)
+
+contEdges <- summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Controlled')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, node2)
+
+diamondPlot(autEdges, 
+            ciCols = c("CIlower", "mean", "CIupper"), 
+            color = viridis(2, end = 0.8)[1], 
+            alpha = 0.3, 
+            yLabels = autEdges$node2, 
+            fixedSize = 0.3, 
+            xlab = NULL) +
+  userfriendlyscience::diamondPlot(contEdges, 
+              ciCols = c("CIlower", "mean", "CIupper"), 
+              color = viridis(2, end = 0.8)[2], 
+              alpha = 0.3, 
+              yLabels = autEdges$node2, 
+              fixedSize = 0.3, 
+              xlab = NULL, 
+              returnLayerOnly = TRUE) +
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Controlled"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Autonomous"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  scale_fill_manual('Connected node',
+                      values = viridis(2, end = 0.8)[1:2],  
+                      guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (all items)")
+  
+# Combined items
+
+autEdges <- summary(BCTboot2, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Autonomous')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  dplyr::filter(!(node2 == 'Controlled')) %>% 
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, node2)
+
+contEdges <- summary(BCTboot2, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Controlled')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  data.frame() %>% 
+  select(CIlower, mean, CIupper, node2)
+
+diamondPlot(autEdges, 
+            ciCols = c("CIlower", "mean", "CIupper"), 
+            color = viridis(2, end = 0.8)[1], 
+            alpha = 0.3, 
+            yLabels = autEdges$node2, 
+            fixedSize = 0.3, 
+            xlab = NULL) +
+  userfriendlyscience::diamondPlot(contEdges, 
+              ciCols = c("CIlower", "mean", "CIupper"), 
+              color = viridis(2, end = 0.8)[2], 
+              alpha = 0.3, 
+              yLabels = autEdges$node2, 
+              fixedSize = 0.3, 
+              xlab = NULL, 
+              returnLayerOnly = TRUE) +
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Controlled"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Autonomous"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  scale_fill_manual('Connected node',
+                      values = viridis(2, end = 0.8)[1:2],  
+                      guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (combined items)")
+
+# summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
+#   dplyr::arrange(mean) %>% 
+#   dplyr::filter(stringr::str_detect(id, 'Controlled')) %>%
+#   data.frame() %>% 
+#   select(CIlower, mean, CIupper, id) %>% 
+#   userfriendlyscience::diamondPlot(ciCols = c("CIlower", "mean", "CIupper"), ylabels = id)
+
+```
+
+#### BCT-SDT Regression analyses
+
+Here's the classical linear model.
+
+```{r}
+library(broom)
+
+bctdf <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  'Autonomous' = PA_autonomous_T1,
+  'Controlled' = PA_controlled_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Integrated' = PA_integrated_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1) %>%
+  rowwise() %>% 
+  mutate( 
+  #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
+  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
+  select(-`log on paper`, -`smartphone`) %>% 
+  data.frame # %>% 
+  # mutate_all(as.numeric)
+
+outcomevars <- c('Autonomous', 
+  'Controlled', 
+  'Intrinsic',
+  'Identified', 
+  'Integrated', 
+  'Introjected',
+  'Extrinsic')
+
+for (i in outcomevars) {
+m <- lm(paste0(i, " ~ 
+  goal.setting +
+  implementation.plan +
+  plan.by.other +
+  reminder.of.plan +
+  subgoals +
+  new.PA.options +
+  barrier.identification +
+  coping.planning +
+  PA.identity +
+  PA.life.values +
+  positive.consequences"), 
+  data = bctdf)
+
+cat("\n\nEstimates for", i, "regulation", sep = " ")
+summary(m) %>% broom::tidy() %>% dplyr::arrange(desc(estimate)) %>% apa_table() 
+}
+
+
+```
+
+
+## Centrality stability
+
+```{r}
+boot2 <- bootnet::bootnet(Network1, nBoots = 2500, type = "case")
+bootnet::corStability(boot2)
+
+plot(boot2)
+
+differenceTest(boot1, "auton", "intent",  measure = c("strength", "closeness", "betweenness"))
+
+plot(boot1, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
+
+plot(boot1, "strength")
+plot(boot1, "betweenness")
+plot(boot1, "closeness")
+```
 
 ## PA determinants: unregularised correlations visualised
 
@@ -398,7 +773,7 @@ sympdf <- df %>% dplyr::select(id,
 
 S.all <- sympdf %>% select(6:ncol(sympdf)) %>% na.omit(.) 
 
-nwAll <- estimateNetwork(S.all, default="mgm")
+nwAll <- bootnet::estimateNetwork(S.all, default="mgm")
 
 allmeans <- sympdf %>%  
   summarise_at(vars(6:16),
@@ -451,8 +826,8 @@ sympdf <- df %>% dplyr::select(id,
 
 S.boys <- sympdf %>% filter(girl == 0) %>% select(6:ncol(sympdf)) %>% na.omit(.) 
 S.girls <- sympdf %>% filter(girl == 1) %>% select(6:ncol(sympdf)) %>% na.omit(.)
-nwBoys <- estimateNetwork(S.boys, default="mgm")
-nwGirls <- estimateNetwork(S.girls, default="mgm")
+nwBoys <- bootnet::estimateNetwork(S.boys, default="mgm")
+nwGirls <- bootnet::estimateNetwork(S.girls, default="mgm")
 
 girlmeans <- sympdf %>% group_by(girl) %>% 
   summarise_at(vars(5:15),
@@ -533,11 +908,11 @@ S.admin <- sympdf %>% filter(track == 3) %>% select(6:ncol(sympdf))
 S.hrc <- sympdf %>% filter(track == 4) %>% select(6:ncol(sympdf))
 S.nursing <- sympdf %>% filter(track == 5) %>% select(6:ncol(sympdf))
 
-# nwOther <- estimateNetwork(S.other, default="mgm")
-nwIt <- estimateNetwork(S.it, default="mgm")
-nwAdmin <- estimateNetwork(S.admin, default="mgm")
-nwHrc <- estimateNetwork(S.hrc, default="mgm")
-nwNursing <- estimateNetwork(S.nursing, default="mgm")
+# nwOther <- bootnet::estimateNetwork(S.other, default="mgm")
+nwIt <- bootnet::estimateNetwork(S.it, default="mgm")
+nwAdmin <- bootnet::estimateNetwork(S.admin, default="mgm")
+nwHrc <- bootnet::estimateNetwork(S.hrc, default="mgm")
+nwNursing <- bootnet::estimateNetwork(S.nursing, default="mgm")
 
 # othermeans <- sympdf %>% group_by(track) %>% 
 #   summarise_at(vars(5:15),
@@ -714,7 +1089,7 @@ group.spinglass<- list(c(1, 2, 3, 5, 10),
 
 set.seed(2)
 
-network1 <- estimateNetwork(data1, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data1, default="EBICglasso")
 
 #bladibla <- averageLayout(network1$graph, network2$graph)
 
@@ -756,7 +1131,7 @@ group.spinglass<- list(c(1, 2, 3, 7),
 
 set.seed(2)
 
-network1 <- estimateNetwork(data, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data, default="EBICglasso")
 
 plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color=c("olivedrab2", "orange", "mediumpurple1", "lightblue"))
 
@@ -792,7 +1167,7 @@ group.spinglass<- list(c(1, 2, 6),
                        c(5),
                        c(7, 8, 9))
 
-network1 <- estimateNetwork(data, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data, default="EBICglasso")
 
 piefill <- data %>%
   summarise_all(funs(mean(., na.rm = TRUE))) %>% 
@@ -848,7 +1223,7 @@ group.spinglass<- list(c(1, 4:6),
 # Estimate and plot graph
 
 
-network1 <- estimateNetwork(data, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data, default="EBICglasso")
 
 piefill <- data %>%
   summarise_all(funs(mean(., na.rm = TRUE))) %>%
@@ -871,29 +1246,29 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 ```{r}
 
-Network1 <- estimateNetwork(data1, default = "EBICglasso")
+Network1 <- bootnet::estimateNetwork(data1, default = "EBICglasso")
 plot(Network1, layout = "spring", labels = TRUE)
 
-centralityPlot(Network1)
+qgraph::centralityPlot(Network1)
 
-boot1 <- bootnet(Network1, nBoots = 2500, nCores = 3)
+boot1 <- bootnet::bootnet(Network1, nBoots = 2500, nCores = 2)
 
 plot(boot1, labels = TRUE, order = "sample")
 
-Network2 <- estimateNetwork(data1, default = "pcor")
+Network2 <- bootnet::estimateNetwork(data1, default = "pcor")
 plot(Network2, layout = "spring", labels = TRUE)
 
-boot2 <- bootnet(Network2, nBoots = 2500, nCores = 3)
+boot2 <- bootnet::bootnet(Network2, nBoots = 2500, nCores = 2)
 
-centralityPlot(Network)
-centralityPlot(Network2)
+qgraph::centralityPlot(Network)
+qgraph::centralityPlot(Network2)
 ```
 
 ## Centrality stability
 
 ```{r}
-boot2 <- bootnet(Network1, nBoots = 2500, type = "case", nCores = 8)
-corStability(boot2)
+boot2 <- bootnet::bootnet(Network1, nBoots = 2500, type = "case", nCores = 2)
+bootnet::corStability(boot2)
 
 plot(boot2)
 
@@ -924,8 +1299,8 @@ data2 <- data %>% filter(girl == 0) %>% select(-girl) %>% as.data.frame
 
 
 ### estimate networks and compare visually; use averageLayout function, then plot via layout(t(1:2))
-network1 <- estimateNetwork(data1, default="EBICglasso")
-network2 <- estimateNetwork(data2, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data1, default="EBICglasso")
+network2 <- bootnet::estimateNetwork(data2, default="EBICglasso")
 
 bladibla <- averageLayout(network1$graph, network2$graph)
 
@@ -935,7 +1310,7 @@ graph2 <- plot(network2, layout=bladibla, cut=0)
 
 ### run NCT 
 
-nct_results <- NCT(data1, data2, it=1000, binary.data=FALSE, paired=TRUE, test.edges=TRUE, edges='all', progressbar=TRUE)
+nct_results <- NetworkComparisonTest::NCT(data1, data2, it=1000, binary.data=FALSE, paired=TRUE, test.edges=TRUE, edges='all', progressbar=TRUE)
 
 nct_results$nwinv.pval  # p value of network structure diff test
 nct_results$glstrinv.pval  # p value of global connectivity diff test
@@ -953,28 +1328,28 @@ data <- data %>% select(BCT = agrbct_T1,
     OExp = oexp_T1,
     DNorm = norm_T1)
 
-Network <- estimateNetwork(data, default = "EBICglasso")
+Network <- bootnet::estimateNetwork(data, default = "EBICglasso")
 
-boot1 <- bootnet(Network, nBoots = 2500, nCores = 3)
+boot1 <- bootnet::bootnet(Network, nBoots = 2500, nCores = 2)
 
 plot(boot1, labels = TRUE, order = "sample")
 
 plot(Network, layout = "spring", labels = TRUE)
 
-Network2 <- estimateNetwork(data, default = "pcor")
+Network2 <- bootnet::estimateNetwork(data, default = "pcor")
 plot(Network2, layout = "spring", labels = TRUE)
 
-boot1 <- bootnet(Network2, nBoots = 2500, nCores = 3)
+boot1 <- bootnet::bootnet(Network2, nBoots = 2500, nCores = 2)
 
-centralityPlot(Network)
-centralityPlot(Network2)
+qgraph::centralityPlot(Network)
+qgraph::centralityPlot(Network2)
 ```
 
 # Centrality stability
 
 ```{r}
-boot2 <- bootnet(Network, nBoots = 2500, type = "case", nCores = 8)
-corStability(boot2)
+boot2 <- bootnet::bootnet(Network, nBoots = 2500, type = "case", nCores = 2)
+bootnet::corStability(boot2)
 
 plot(boot2)
 
@@ -1049,17 +1424,17 @@ motiGirls <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Girls") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -1089,17 +1464,17 @@ motiBoys <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(girl == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
   labs(title = "Boys") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         plot.title = element_text(hjust = 0.5),
@@ -1129,17 +1504,17 @@ motiInt <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "") +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Intervention") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
@@ -1168,17 +1543,17 @@ motiCont <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_01_T1,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
- gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   filter(intervention == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
-  geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
                      name = "") +
   scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
-  scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
   labs(title = "Control") +
   guides(y = "none") +
-  theme_ridges(grid = FALSE) +
+  ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
@@ -1189,8 +1564,8 @@ coord_cartesian(xlim = c(0.5, 5.5))
 # ("Seldom or never", "About once a month", "About once a week", "Almost daily")
 
 # This draws all histograms next to each other:
-grid.newpage()
-grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = "last"))
+grid::grid.newpage()
+grid::grid.draw(cbind(ggplotGrob(motiInt), ggplotGrob(motiCont), ggplotGrob(motiGirls), ggplotGrob(motiBoys), size = "last"))
 
 ```
 
@@ -1239,8 +1614,8 @@ PA_intrinsic_03_T1 = ifelse(PA_intrinsic_03_T1 == 1, 0, 1))
 
 S.boys <- regulations.df %>% filter(girl == 0) %>% select(6:ncol(regulations.df)) # %>% na.omit(.) 
 S.girls <- regulations.df %>% filter(girl == 1) %>% select(6:ncol(regulations.df)) # %>% na.omit(.)
-nwBoys <- estimateNetwork(S.boys, default="IsingFit")
-nwGirls <- estimateNetwork(S.girls, default="IsingFit")
+nwBoys <- bootnet::estimateNetwork(S.boys, default="IsingFit")
+nwGirls <- bootnet::estimateNetwork(S.girls, default="IsingFit")
 
 data1 <- regulations.df %>% select(6:ncol(regulations.df))
 names(data1) <- c(paste0(rep("Amoti", 4), 1:4),
@@ -1249,7 +1624,7 @@ names(data1) <- c(paste0(rep("Amoti", 4), 1:4),
                 paste0(rep("Ident", 3), 1:3),
                 paste0(rep("Integ", 3), 1:3),
                 paste0(rep("Intri", 3), 1:3))
-nwAll <- estimateNetwork(data1, default="IsingFit")
+nwAll <- bootnet::estimateNetwork(data1, default="IsingFit")
 
 # Create means for filling nodes
 girlmeans <- regulations.df %>% group_by(girl) %>% 

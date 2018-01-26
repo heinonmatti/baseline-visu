@@ -18,6 +18,11 @@ navbar:
     href: index.html
   - text: Manuscript
     href: manuscript/baseline-manuscript.pdf
-  - text: Supplement
+  - text: Descriptives
     href: baseline-supplement.html
+  - text: Network analysis
+    href: baseline-networks.html
+  - text: Forest plots of posteriors
+    href: baseline-forestplots.html
+    
 

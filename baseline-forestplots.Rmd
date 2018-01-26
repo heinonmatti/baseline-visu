@@ -1,0 +1,43 @@
+---
+title: "Forest plots for posteriors"
+---
+
+```{r}
+
+source(setup.R)
+
+```
+
+
+### Regression analysis
+
+```{r}
+
+df %>% select(PA_agrbct_T1, trackSchool) %>% dplyr::group_by(trackSchool) %>% summarise(mean = mean(PA_agrbct_T1, na.rm = TRUE), n = n())
+
+# Create combination of track and school variables, show means
+df %>% dplyr::mutate(trackSchool = paste0(track, school)) %>% select(PA_agrbct_T1, track, school, trackSchool) %>% dplyr::group_by(trackSchool) %>% summarise(mean = mean(PA_agrbct_T1, na.rm = TRUE), n = n())
+
+m_lmer_agrbct <- lme4::lmer(PA_agrbct_T1 ~ (1 | trackSchool), data = df) 
+visreg(m_lmer_agrbct, "trackSchool")
+
+
+```
+
+
+### Forest plots of posteriors
+
+```{r}
+
+m_agrbct <- brms::bf(PA_agrbct_T1 ~ (1 | trackSchool)) 
+brms::get_prior(m_agrbct, data = df)
+
+fit_agrbct <- brms::brm(m_agrbct, df, control = list(adapt_delta = 0.95))
+
+forest(fit_agrbct, sort = TRUE)
+
+plot(fit_agrbct)
+pairs(fit_agrbct)
+stanplot(fit_agrbct, "b_Intercept", type = "trace")
+pp_check(fit_agrbct, nsamples = 100)
+```

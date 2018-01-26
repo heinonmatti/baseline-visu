@@ -34,3 +34,6 @@ brms
 mlmRev
 bindrcpp
 broom
+visreg
+corrgram
+brmstools
