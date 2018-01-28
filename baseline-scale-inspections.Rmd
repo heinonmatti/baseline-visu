@@ -1,9 +1,12 @@
 ---
 title: "tables"
 output: 
-  bookdown::html_document2:
-    theme: readable
 ---
+
+```{r}
+library(psych)
+
+```
 
 ```{r}
 

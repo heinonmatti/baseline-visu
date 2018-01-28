@@ -3,7 +3,7 @@ title: "Network analyses"
 ---
 
 ```{r}
-source("setup.R")
+source("baseline-datasetup.R")
 ```
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
@@ -47,7 +47,7 @@ bctdf <- df %>% dplyr::select(id,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  'plan' = ifelse(`plan` == 1, 0, 1),
+  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
@@ -172,7 +172,7 @@ bctdf <- df %>% dplyr::select(id,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
   'goals' = ifelse(`goal setting` == 1, 0, 1),
-  'plan' = ifelse(`plan` == 1, 0, 1),
+  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
@@ -259,7 +259,7 @@ bctdf <- df %>% dplyr::select(id,
   'failure contemplated' = PA_frqbct_09_T1) %>%
  mutate(
   'goals' = ifelse(`goal setting` == 1, 0, 1),
-  'plan' = ifelse(`plan` == 1 & `plan by other` == 1, 0, 1),
+  'implementation plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
   'new PA options' = ifelse(`new PA options` == 1, 0, 1),

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 66px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+
+.section h2 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h3 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h4 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h5 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+.section h6 {
+  padding-top: 71px;
+  margin-top: -71px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Visualising baseline characteristics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">About</a>
+</li>
+<li>
+  <a href="manuscript/baseline-manuscript.pdf">Manuscript</a>
+</li>
+<li>
+  <a href="baseline-supplement.html">Descriptives</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><h1 id="forest-plots-for-posteriors">forest plots for posteriors</h1></h1>
+
+</div>
+
+
+<pre class="r"><code>source(&quot;baseline-datasetup.R&quot;)
+## Skipping install of &#39;papaja&#39; from a github remote, the SHA1 (849df30a) has not changed since last install.
+##   Use `force = TRUE` to force installation
+## Warning in pacman::p_install_gh(&quot;crsh/papaja&quot;): The following may have incorrect capitalization specification:
+## 
+## papaja
+## 
+## The following packages were not able to be installed:
+## papaja
+## Skipping install of &#39;NetworkComparisonTest&#39; from a github remote, the SHA1 (178d9a14) has not changed since last install.
+##   Use `force = TRUE` to force installation
+## Warning in pacman::p_install_gh(&quot;sachaepskamp/NetworkComparisonTest&quot;): The following may have incorrect capitalization specification:
+## 
+## NetworkComparisonTest
+## 
+## The following packages were not able to be installed:
+## NetworkComparisonTest
+
+Sys.setenv(&quot;BINPREF&quot; = &quot;C:/HYApp/Rtools3.4/mingw_$(WIN)/bin/&quot;)
+
+library(brmstools)</code></pre>
+<div id="regression-analysis" class="section level3">
+<h3>Regression analysis</h3>
+<pre class="r"><code>
+df %&gt;% select(PA_agrbct_T1, trackSchool) %&gt;% dplyr::group_by(trackSchool) %&gt;% summarise(mean = mean(PA_agrbct_T1, na.rm = TRUE), n = n())
+## # A tibble: 17 x 3
+##    trackSchool       mean     n
+##    &lt;chr&gt;            &lt;dbl&gt; &lt;int&gt;
+##  1 Business Admin1   3.34   149
+##  2 Business Admin2   3.60   131
+##  3 Business Admin4   3.05     2
+##  4 Business IT1      2.49    76
+##  5 Business IT2      2.64    87
+##  6 HRC1              3.10    67
+##  7 HRC2              1.00     1
+##  8 HRC5              3.18   145
+##  9 NANA            NaN       81
+## 10 Nursing2          3.30     1
+## # ... with 7 more rows
+
+# Create combination of track and school variables, show means
+df %&gt;% dplyr::mutate(trackSchool = paste0(track, school)) %&gt;% select(PA_agrbct_T1, track, school, trackSchool) %&gt;% dplyr::group_by(trackSchool) %&gt;% summarise(mean = mean(PA_agrbct_T1, na.rm = TRUE), n = n())
+## # A tibble: 17 x 3
+##    trackSchool       mean     n
+##    &lt;chr&gt;            &lt;dbl&gt; &lt;int&gt;
+##  1 Business Admin1   3.34   149
+##  2 Business Admin2   3.60   131
+##  3 Business Admin4   3.05     2
+##  4 Business IT1      2.49    76
+##  5 Business IT2      2.64    87
+##  6 HRC1              3.10    67
+##  7 HRC2              1.00     1
+##  8 HRC5              3.18   145
+##  9 NANA            NaN       81
+## 10 Nursing2          3.30     1
+## # ... with 7 more rows
+
+m_lmer_agrbct &lt;- lme4::lmer(PA_agrbct_T1 ~ (1 | trackSchool), data = df) 
+visreg(m_lmer_agrbct, &quot;trackSchool&quot;)</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="forest-plots-of-posteriors" class="section level3">
+<h3># forest plots of posteriors</h3>
+<p>Agreement-related BCTs:</p>
+<pre class="r"><code>
+m_agrbct &lt;- brms::bf(PA_agrbct_T1 ~ (1 | trackSchool)) 
+brms::get_prior(m_agrbct, data = df)
+## Warning: Rows containing NAs were excluded from the model
+##                   prior     class      coef       group resp dpar nlpar
+## 1 student_t(3, 3.1, 10) Intercept                                      
+## 2   student_t(3, 0, 10)        sd                                      
+## 3                              sd           trackSchool                
+## 4                              sd Intercept trackSchool                
+## 5   student_t(3, 0, 10)     sigma                                      
+##   bound
+## 1      
+## 2      
+## 3      
+## 4      
+## 5
+
+fit_agrbct &lt;- brms::brm(m_agrbct, df, control = list(adapt_delta = 0.95))
+## Warning: Rows containing NAs were excluded from the model
+## Compiling the C++ model
+## Start sampling
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 1).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.754 seconds (Warm-up)
+##                1.244 seconds (Sampling)
+##                2.998 seconds (Total)
+## 
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 2).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.817 seconds (Warm-up)
+##                1.25 seconds (Sampling)
+##                3.067 seconds (Total)
+## 
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 3).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.747 seconds (Warm-up)
+##                1.077 seconds (Sampling)
+##                2.824 seconds (Total)
+## 
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 4).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.927 seconds (Warm-up)
+##                1.243 seconds (Sampling)
+##                3.17 seconds (Total)
+
+# forest(fit_agrbct, sort = TRUE)
+
+plot(fit_agrbct)</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>pairs(fit_agrbct)</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<pre class="r"><code>stanplot(fit_agrbct, &quot;b_Intercept&quot;, type = &quot;trace&quot;)
+## No divergences to plot.</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-3-3.png" width="672" /></p>
+<pre class="r"><code>pp_check(fit_agrbct, nsamples = 100)</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-3-4.png" width="672" /></p>
+<pre class="r"><code>
+m_paAccelerometer &lt;- brms::bf(paAccelerometer_T1 ~ (1 | trackSchool)) 
+brms::get_prior(m_paAccelerometer, data = df)
+## Warning: Rows containing NAs were excluded from the model
+##                      prior     class      coef       group resp dpar nlpar
+## 1 student_t(3, 180.93, 54) Intercept                                      
+## 2      student_t(3, 0, 54)        sd                                      
+## 3                                 sd           trackSchool                
+## 4                                 sd Intercept trackSchool                
+## 5      student_t(3, 0, 54)     sigma                                      
+##   bound
+## 1      
+## 2      
+## 3      
+## 4      
+## 5
+
+fit_paAccelerometer &lt;- brms::brm(m_paAccelerometer, df, control = list(adapt_delta = 0.95))
+## Warning: Rows containing NAs were excluded from the model
+## Compiling the C++ model
+## Start sampling
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 1).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.542 seconds (Warm-up)
+##                0.71 seconds (Sampling)
+##                2.252 seconds (Total)
+## 
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 2).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.523 seconds (Warm-up)
+##                0.804 seconds (Sampling)
+##                2.327 seconds (Total)
+## 
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 3).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.286 seconds (Warm-up)
+##                0.834 seconds (Sampling)
+##                2.12 seconds (Total)
+## 
+## 
+## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 4).
+## 
+## Gradient evaluation took 0 seconds
+## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Adjust your expectations accordingly!
+## 
+## 
+## Iteration:    1 / 2000 [  0%]  (Warmup)
+## Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Iteration: 2000 / 2000 [100%]  (Sampling)
+## 
+##  Elapsed Time: 1.673 seconds (Warm-up)
+##                0.792 seconds (Sampling)
+##                2.465 seconds (Total)
+
+# forest(fit_paAccelerometer, sort = TRUE)
+
+plot(fit_paAccelerometer)</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>pairs(fit_paAccelerometer)</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code>stanplot(fit_paAccelerometer, &quot;b_Intercept&quot;, type = &quot;trace&quot;)
+## No divergences to plot.</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<pre class="r"><code>pp_check(fit_paAccelerometer, nsamples = 100)</code></pre>
+<p><img src="baseline-forestplots_files/figure-html/unnamed-chunk-4-4.png" width="672" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
