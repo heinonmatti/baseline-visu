@@ -15,15 +15,11 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -103,34 +99,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 66px;
+  padding-top: 51px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 71px;
-  margin-top: -71px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 
 .section h2 {
-  padding-top: 71px;
-  margin-top: -71px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h3 {
-  padding-top: 71px;
-  margin-top: -71px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h4 {
-  padding-top: 71px;
-  margin-top: -71px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h5 {
-  padding-top: 71px;
-  margin-top: -71px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 .section h6 {
-  padding-top: 71px;
-  margin-top: -71px;
+  padding-top: 56px;
+  margin-top: -56px;
 }
 </style>
 
@@ -163,111 +159,8 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -302,14 +195,6 @@ div.tocify {
 </div><!--/.navbar -->
 
 <div class="fluid-row" id="header">
-
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
 
 
 
@@ -392,8 +277,8 @@ nonmissings[i] &lt;- length(m@resp$y)
 
 vardatatable &lt;- data_frame(
   Variable = stringr::str_sub(names(mean), end = -4), #remove &quot;_T1&quot; from names
-  Mean = round(mean, 2), 
-  CI95 = paste(round(ci_low, 2), &quot;-&quot;, round(ci_high, 2)), 
+  &quot;Mean&quot; = round(mean, 2),
+  &quot;CI95&quot; = paste(round(ci_low, 2), &quot; - &quot;, round(ci_high, 2)), 
   &quot;ICC class&quot; =ifelse(round(ICC_group, 3) == 0, &quot;&lt; 0.001&quot;, round(ICC_group, 3)), 
   &quot;ICC school&quot; = ifelse(round(ICC_School, 3) == 0, &quot;&lt; 0.001&quot;, round(ICC_School, 3)),
   n = nonmissings) %&gt;% 
@@ -407,9 +292,18 @@ vardatatable &lt;- data_frame(
 <div id="primary-outcome-variables" class="section level2">
 <h2>Primary outcome variables</h2>
 <pre class="r"><code>options(tibble.print_max = 1000)
- 
-vardatatable %&gt;% 
-  filter(Variable == &quot;paAccelerometer&quot; | Variable == &quot;fatpct&quot; | Variable == &quot;sitLieAccelerometer&quot; | Variable == &quot;sitBreaks&quot;) %&gt;% 
+
+vardatatable2 &lt;- vardatatable
+vardatatable2$Variable &lt;- gsub(&quot;paAccelerometer&quot;, &quot;PA minutes&quot;, vardatatable2$Variable)
+vardatatable2$Variable &lt;- gsub(&quot;padaysLastweek&quot;, &quot;Number of MVPA days last week (self-report)&quot;, vardatatable2$Variable)
+vardatatable2$Variable &lt;- gsub(&quot;sitLieAccelerometer&quot;, &quot;Minutes spent sitting or lying down&quot;, vardatatable2$Variable)
+vardatatable2$Variable &lt;- gsub(&quot;sitBreaks&quot;, &quot;Number of times sitting was interrupted&quot;, vardatatable2$Variable)
+
+vardatatable2 %&gt;% 
+  filter(Variable == &quot;PA minutes&quot; | 
+           Variable == &quot;Number of MVPA days last week (self-report)&quot; | 
+           Variable == &quot;Minutes spent sitting or lying down&quot; | 
+           Variable == &quot;Number of times sitting was interrupted&quot; ) %&gt;% 
     papaja::apa_table(
         caption = &quot;Primary outcome variables with their class and school ICCs&quot;,
         escape = T,
@@ -433,33 +327,33 @@ vardatatable %&gt;%
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">fatpct</td>
-<td align="left">25.52</td>
-<td align="left">22.38 - 28.67</td>
-<td align="left">0.003</td>
-<td align="left">0.123</td>
-<td align="left">942</td>
-</tr>
-<tr class="even">
-<td align="left">paAccelerometer</td>
+<td align="left">PA minutes</td>
 <td align="left">183.13</td>
-<td align="left">165.99 - 200.45</td>
+<td align="left">165.99  -  200.45</td>
 <td align="left">0.072</td>
 <td align="left">0.096</td>
 <td align="left">706</td>
 </tr>
+<tr class="even">
+<td align="left">Number of MVPA days last week (self-report)</td>
+<td align="left">2.79</td>
+<td align="left">2.63  -  2.95</td>
+<td align="left">0.047</td>
+<td align="left">&lt; 0.001</td>
+<td align="left">1,082</td>
+</tr>
 <tr class="odd">
-<td align="left">sitBreaks</td>
+<td align="left">Number of times sitting was interrupted</td>
 <td align="left">28.02</td>
-<td align="left">24.69 - 31.37</td>
+<td align="left">24.69  -  31.37</td>
 <td align="left">0.058</td>
 <td align="left">0.085</td>
 <td align="left">706</td>
 </tr>
 <tr class="even">
-<td align="left">sitLieAccelerometer</td>
+<td align="left">Minutes spent sitting or lying down</td>
 <td align="left">573.94</td>
-<td align="left">535.48 - 611.8</td>
+<td align="left">535.48  -  611.8</td>
 <td align="left">0.086</td>
 <td align="left">0.145</td>
 <td align="left">706</td>
@@ -2160,10 +2054,9 @@ vardatatable %&gt;% select(Variable, `ICC class`, `ICC school`, n) %&gt;%
 </tbody>
 </table>
 </div>
-<div id="add-educational-track" class="section level2">
-<h2>Add educational track</h2>
+<div id="model-with-educational-track" class="section level2">
+<h2>Model with educational track</h2>
 <p>The model below is the same as the one above, except it adds educational track.</p>
-<p><strong>IT MAY NOT MAKE SENSE TO HAVE BOTH TRACK AND SCHOOL HERE, AS THEY’RE ALMOST THE SAME?</strong></p>
 <p>As before, we create a table with all variables, their means, CIs and ICCs.</p>
 <pre class="r"><code>#library(sjstats)
 #library(lme4)
@@ -3693,11 +3586,198 @@ options(tibble.print_max = 15)</code></pre>
 <pre class="r"><code>
 vardatatable_containing_edutrack %&gt;% 
   select(Variable, `ICC educational track`, n) %&gt;% 
-  arrange(desc(`ICC school`)) %&gt;% 
+  arrange(desc(`ICC educational track`)) %&gt;% 
   top_n(20) %&gt;% 
   papaja::apa_table(caption = &quot;Intra-class correlations sorted by educational track ICC&quot;,
         format.args = list(digits = c(0), margin = 2))
-## Error in arrange_impl(.data, dots): Evaluation error: object &#39;ICC school&#39; not found.</code></pre>
+## Selecting by n</code></pre>
+<caption>
+(#tab:icc-edu-track-only)
+</caption>
+<caption>
+<em>Intra-class correlations sorted by educational track ICC</em>
+</caption>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">ICC educational track</th>
+<th align="left">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">PA_integrated</td>
+<td align="left">0.082</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_autonomous</td>
+<td align="left">0.073</td>
+<td align="left">1,078</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_intrinsic</td>
+<td align="left">0.071</td>
+<td align="left">1,074</td>
+</tr>
+<tr class="even">
+<td align="left">pafreqUsually</td>
+<td align="left">0.069</td>
+<td align="left">1,082</td>
+</tr>
+<tr class="odd">
+<td align="left">symptom</td>
+<td align="left">0.066</td>
+<td align="left">1,084</td>
+</tr>
+<tr class="even">
+<td align="left">PA_intention</td>
+<td align="left">0.064</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_intention_02</td>
+<td align="left">0.064</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_intention_01</td>
+<td align="left">0.061</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_dnorm_01</td>
+<td align="left">0.054</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_dnorm</td>
+<td align="left">0.052</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_controlled</td>
+<td align="left">0.051</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">pahrsUsually</td>
+<td align="left">0.051</td>
+<td align="left">1,082</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_identified</td>
+<td align="left">0.044</td>
+<td align="left">1,074</td>
+</tr>
+<tr class="even">
+<td align="left">padaysLastweek</td>
+<td align="left">0.04</td>
+<td align="left">1,082</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_actplan_04</td>
+<td align="left">0.038</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">paLastweek</td>
+<td align="left">0.037</td>
+<td align="left">1,082</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_actCop</td>
+<td align="left">0.036</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">pahrsLastweek</td>
+<td align="left">0.036</td>
+<td align="left">1,082</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_copingplan</td>
+<td align="left">0.034</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_copplan_03</td>
+<td align="left">0.034</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_actplan_01</td>
+<td align="left">0.033</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_copplan_04</td>
+<td align="left">0.033</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_actionplan</td>
+<td align="left">0.031</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_outcomeExpectations</td>
+<td align="left">0.024</td>
+<td align="left">1,078</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_dnorm_02</td>
+<td align="left">0.023</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_copplan_01</td>
+<td align="left">0.022</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_actplan_03</td>
+<td align="left">0.02</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_actplan_02</td>
+<td align="left">0.018</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_copplan_02</td>
+<td align="left">0.015</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">paminLastweek</td>
+<td align="left">0.005</td>
+<td align="left">1,082</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_introjected</td>
+<td align="left">0.001</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_inorm</td>
+<td align="left">&lt; 0.001</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="odd">
+<td align="left">PA_inorm_01</td>
+<td align="left">&lt; 0.001</td>
+<td align="left">1,073</td>
+</tr>
+<tr class="even">
+<td align="left">PA_opportunities</td>
+<td align="left">&lt; 0.001</td>
+<td align="left">1,075</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="create-confidence-bounds-for-all-items-by-gender-and-intervention-allocation" class="section level2">
@@ -5003,8 +5083,9 @@ papaja::apa_table(outtable_mega, caption = &quot;Baseline demographics of educat
 </tbody>
 </table>
 </div>
-<div id="pa-psychosocial-determinants-self-report-scales-t1" class="section level2">
-<h2>PA psychosocial determinants: self report scales T1</h2>
+</div>
+<div id="pa-psychosocial-determinants-self-report-scales-t1" class="section level1">
+<h1>PA psychosocial determinants: self report scales T1</h1>
 <pre class="r"><code>PA_ci_girls &lt;- ci_girls %&gt;% filter(diamondlabels %in% names(scales_T1) &amp; grepl(&quot;PA_&quot;, diamondlabels) &amp; !grepl(&quot;bct&quot;, diamondlabels))
 
 PA_ci_boys &lt;- ci_boys %&gt;% filter(diamondlabels %in% names(scales_T1) &amp; grepl(&quot;PA_&quot;, diamondlabels) &amp; !grepl(&quot;bct&quot;, diamondlabels))
@@ -5033,7 +5114,6 @@ grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&q
 # userfriendlyscience::diamondPlot(dat2, returnLayerOnly = TRUE, color=&#39;red&#39;, alpha=.3)
  </code></pre>
 <p>Note: action and coping planning on a scale from 1 to 4.</p>
-</div>
 </div>
 <div id="visualising-random-effects-using-full-posterior-under-construction" class="section level1">
 <h1>Visualising random effects using full posterior (UNDER CONSTRUCTION)</h1>
@@ -5269,11 +5349,11 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
   group,
   school,
   girl,
-&#39;Agreeableness&#39; = b5agr_T1,
-&#39;Conscientiousness&#39; = b5cons_T1,
-&#39;Extraversion&#39; = b5ext_T1,
-&#39;Neuroticism&#39; = b5neur_T1,
-&#39;Openness&#39; = b5open_T1)  %&gt;%
+&#39;Agreeableness&#39; = big5_agreeableness_T1,
+&#39;Conscientiousness&#39; = big5_conscientiousness_T1,
+&#39;Extraversion&#39; = big5_extraversion_T1,
+&#39;Neuroticism&#39; = big5_neuroticism_T1,
+&#39;Openness&#39; = big5_openness_T1)  %&gt;%
   # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
@@ -5289,17 +5369,18 @@ plot1 &lt;- df %&gt;% dplyr::select(id,
                       name = &quot;&quot;, guide = &quot;legend&quot;) +
   ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position=&quot;bottom&quot;)
+## Error in overscope_eval_next(overscope, expr): object &#39;big5_agreeableness_T1&#39; not found
 
 plot2 &lt;- df %&gt;% dplyr::select(id,
   intervention,
   group,
   school,
   girl,
-&#39;Agreeableness&#39; = b5agr_T1,
-&#39;Conscientiousness&#39; = b5cons_T1,
-&#39;Extraversion&#39; = b5ext_T1,
-&#39;Neuroticism&#39; = b5neur_T1,
-&#39;Openness&#39; = b5open_T1) %&gt;%
+&#39;Agreeableness&#39; = big5_agreeableness_T1,
+&#39;Conscientiousness&#39; = big5_conscientiousness_T1,
+&#39;Extraversion&#39; = big5_extraversion_T1,
+&#39;Neuroticism&#39; = big5_neuroticism_T1,
+&#39;Openness&#39; = big5_openness_T1) %&gt;%
   # select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %&gt;% 
   ggplot(aes(y = Variable)) +
@@ -5315,16 +5396,17 @@ plot2 &lt;- df %&gt;% dplyr::select(id,
                       name = &quot;&quot;, guide = &quot;legend&quot;) +
   ggridges::theme_ridges(grid = FALSE) +
   theme(legend.position=&quot;bottom&quot;)
+## Error in overscope_eval_next(overscope, expr): object &#39;big5_agreeableness_T1&#39; not found
 
 # grid.arrange(plot1, plot2, ncol = 2)
 
 grid::grid.newpage()
 grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = &quot;first&quot;))
-## Picking joint bandwidth of 0.315
-## Warning: Removed 486 rows containing non-finite values
+## Picking joint bandwidth of 0.216
+## Warning: Removed 272 rows containing non-finite values
 ## (stat_density_ridges).
-## Picking joint bandwidth of 0.305
-## Warning: Removed 486 rows containing non-finite values
+## Picking joint bandwidth of 0.216
+## Warning: Removed 272 rows containing non-finite values
 ## (stat_density_ridges).</code></pre>
 <p><img src="baseline-supplement_files/figure-html/unnamed-chunk-9-1.png" width="2100" /></p>
 </div>
@@ -6423,11 +6505,11 @@ userfriendlyscience::CIBER(data = d_num,
         &quot;agrbct_T1&quot;,
         &quot;amotivation_T1&quot;,
         &quot;autonomous_T1&quot;,
-        &quot;b5agr_T1.1&quot;,
-        &quot;b5cons_T1.1&quot;,
-        &quot;b5ext_T1.1&quot;,
-        &quot;b5neur_T1.1&quot;,
-        &quot;b5open_T1.1&quot;,
+        &quot;big5_agreeableness_T1.1&quot;,
+        &quot;big5_conscientiousness_T1.1&quot;,
+        &quot;big5_extraversion_T1.1&quot;,
+        &quot;big5_neuroticism_T1.1&quot;,
+        &quot;big5_openness_T1.1&quot;,
         &quot;controlled_T1&quot;,
         &quot;dnorm_T1&quot;,
         &quot;frqbct_T1&quot;,
@@ -6535,6 +6617,38 @@ userfriendlyscience::CIBER(data = d_num,
 <h1>Density plots</h1>
 <div id="accelerometer-measured-pa" class="section level2">
 <h2>Accelerometer-measured PA</h2>
+<p>Contrary to some other findings, in our sample girls were more active than boys.</p>
+<pre class="r"><code>
+MVPAgirl_df &lt;- df %&gt;% group_by(girl) %&gt;% select(girl, paAccelerometer_T1) %&gt;% summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE), median = median(paAccelerometer_T1, na.rm = TRUE))
+MVPAgirl_df[1, 2] - MVPAgirl_df[2, 2]
+##       mean
+## 1 16.81268
+MVPAgirl_df[1, 3] - MVPAgirl_df[2, 3]
+##     median
+## 1 24.52857
+
+userfriendlyscience::meanDiff(df$girl, df$paAccelerometer_T1)
+## Input variables:
+## 
+##   girl (grouping variable)
+##   paAccelerometer_T1 (dependent variable)
+##   Mean 1 (1) = 190.36, sd = 48.6, n = 425
+##   Mean 2 (0)= 173.55, sd = 59.39, n = 281
+## 
+## Independent samples t-test (tested for equal variances, p &lt; .001, so unequal variances)
+##   (standard deviation used of largest sample, 48.6)
+## 
+## 95% confidence intervals:
+##   Absolute mean difference: [8.45, 25.17] (Absolute mean difference: 16.81)
+##   Cohen&#39;s d for difference: [0.19, 0.5] (Cohen&#39;s d point estimate: 0.35)
+##   Hedges g for difference:  [0.19, 0.5] (Hedges g point estimate:  0.35)
+## 
+## Achieved power for d=0.35: 0.9957 (for small: 0.756; medium: 1; large: 1)
+## 
+## (secondary information (NHST): t[516] = 3.95, p &lt; .001)
+## 
+## 
+## NOTE: because the t-test is based on unequal variances, the NHST p-value may be inconsistent with the confidence interval. Although this is not a problem, if you wish to ensure consistency, you can use parameter &quot;var.equal = &#39;yes&#39;&quot; to force equal variances.</code></pre>
 <pre class="r"><code>
 colfill &lt;- c(1,2,3,4,5)
 
@@ -6586,7 +6700,7 @@ linetypes &lt;- c(1,2,2,1,2)
 # Make plot
 sm.paAccelerometer_T1_3 &lt;- sm::sm.density.compare(as.numeric(dens$paAccelerometer_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
 legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-21-1.png" width="2100" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-22-1.png" width="2100" /></p>
 </div>
 <div id="time-spent-sitting-and-lying-down" class="section level2">
 <h2>Time spent sitting and lying down</h2>
@@ -6643,7 +6757,7 @@ linetypes &lt;- c(1,2,2,1,2)
 # Make plot
 sm.sitLieAccelerometer_T1_3 &lt;- sm::sm.density.compare(as.numeric(dens$sitLieAccelerometer_T1), dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;none&quot;)
 legend(&quot;topright&quot;, c(&quot;Intervention school&quot;, &quot;Control school&quot;), col = c(4, 3), lty = c(1, 2), lwd = c(2, 2))</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-22-1.png" width="2100" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-23-1.png" width="2100" /></p>
 </div>
 </div>
 <div id="symptoms" class="section level1">
@@ -6699,7 +6813,7 @@ linewidths &lt;- c(2,1,1,2,1)
 # Make plot
 sm.symptom_T1_3 &lt;- sm::sm.density.compare(dens$`Symptom sum score`, dens$school, xlab=&quot;&quot;, col=colfill, lty=linetypes, model=&quot;equal&quot;, lwd=linewidths)
 ## Reference band available to compare two groups only.</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-23-1.png" width="2100" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-24-1.png" width="2100" /></p>
 <pre><code>## 
 ## Test of equal densities:  p-value =  0
 xlab = &quot;&quot;
@@ -6848,7 +6962,7 @@ grid::grid.draw(cbind(ggplotGrob(sympInt), ggplotGrob(sympCont), ggplotGrob(symp
 ## Warning: Removed 93 rows containing non-finite values (stat_binline).
 ## Warning: Removed 197 rows containing non-finite values (stat_binline).
 ## Warning: Removed 94 rows containing non-finite values (stat_binline).</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-24-1.png" width="2100" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-25-1.png" width="2100" /></p>
 <pre class="r"><code>
 # This draws 2 histograms per row:
 #grid.newpage()
@@ -6998,7 +7112,7 @@ grid::grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC
 
 ## Warning: Removed 49 rows containing non-finite values (stat_binline).
 ## Warning: Removed 141 rows containing non-finite values (stat_binline).</code></pre>
-<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-25-1.png" width="2100" /></p>
+<p><img src="baseline-supplement_files/figure-html/unnamed-chunk-26-1.png" width="2100" /></p>
 <pre class="r"><code>
 # This draws 2 histograms per row:
 #grid.newpage()
@@ -7010,8 +7124,6 @@ grid::grid.draw(cbind(ggplotGrob(sympIT), ggplotGrob(sympBA), ggplotGrob(sympHRC
 
 
 
-</div>
-</div>
 
 </div>
 

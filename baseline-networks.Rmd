@@ -3,7 +3,13 @@ title: "Network analyses"
 ---
 
 ```{r}
+
 source("baseline-datasetup.R")
+
+# # Packages specifically for network analysis
+pacman::p_install("EstimateGroupNetwork", "bootnet", "qgraph")
+pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
+
 ```
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
@@ -13,6 +19,317 @@ Clicking the "Code"-buttons on the right shows code for each chunk.
 # BCTs
 
 ## Graph analysis
+
+### Mixed model with binarised and continuous variables
+
+```{r}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+  intervention,
+#  group,
+#  school,
+  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1,
+  'MVPA' = paAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+#  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+#  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  'barriers identified, planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+#  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+#  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  'monitored PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+#  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  'social support' = ifelse(`social support` == 1, 0, 1),
+  'failure contemplated' = ifelse(`failure contemplated` == 1, 0, 1),
+  'autonomous' = mean(c(identified, intrinsic), na.rm = T),
+  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled' = ifelse(controlled < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
+  select(-`log on paper`, -`smartphone`, -`plan by other`, -`implementation plan`, -identified, -intrinsic,
+         -`failure contemplated`, # only concerns those who haven't reached goals
+         -`barrier identification`, -`coping planning`, # closely related
+         -`PA identity`, -`PA life values`) %>% # closely related
+#  select(-controlled) %>% # Not really gaussian at all 
+  select(MVPA, girl, intervention, everything()) %>% 
+  data.frame
+
+bctdf_mgm$autonomous[is.nan(bctdf_mgm$autonomous)] <- NA
+
+labs <- names(bctdf_mgm)
+labs
+bctdf_mgm %>% 
+  corrgram::corrgram( 
+         cor.method = "spearman", 
+         # diag.panel=panel.minmax, 
+         # lower.panel=panel.shade, 
+         # lower.panel=panel.ellipse,
+         # lower.panel=panel.cor,
+         upper.panel=panel.conf,
+         lower.panel=panel.pie,
+         outer.labels=list(
+           bottom=list(labels=labs,cex=.75, srt=60),
+           left=list(labels=labs,cex=.75, srt=30))
+         )
+
+```
+
+## mgm estimation
+
+```{r}
+# devtools::install_github("jmbh/mgm")
+# Restart R for the latest package
+# .r.restartR()
+library(mgm)
+
+# mgm wants full data, see package missForest for imputation
+bctdf_mgm <- bctdf_mgm %>% filter(complete.cases(.))
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", rep("c", 16), "g")
+mgm_variable_levels <- c("1", rep("2", 16), "1")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2:17, 4],
+                pred_obj$errors[18, 3])
+
+```
+
+## mgm plotting
+
+```{r}
+library(qgraph)
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.90, # To nudge the network from originally bad visual state
+            title = "MGM: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = "darkorchid1",
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            theme = "colorblind")
+
+```
+
+## ggm estimation
+
+```{r}
+
+bctdf_ggm <- df %>% dplyr::select(
+#  id,
+  intervention,
+#  group,
+#  school,
+  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1,
+  'MVPA' = paAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
+  'barriers identified, planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE),
+  'identity, life values' = mean(c(`PA identity` == 1, `PA life values`), na.rm = TRUE),
+  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE),
+  'autonomous' = mean(c(identified, intrinsic), na.rm = T),
+  'girl' = ifelse(girl == "girl", 1, 0),
+  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
+  select(-`log on paper`, -`smartphone`, -`plan by other`, -`implementation plan`, -identified, -intrinsic,
+         -`failure contemplated`, # only concerns those who haven't reached goals
+         -`barrier identification`, -`coping planning`, # closely related
+         -`PA identity`, -`PA life values`) %>% # closely related
+#  select(-controlled) %>% # Not really gaussian at all 
+  select(MVPA, girl, intervention, everything()) %>% 
+  data.frame
+
+bctdf_mgm$autonomous[is.nan(bctdf_mgm$autonomous)] <- NA
+
+# Network for all participants
+
+S.total_ggm <- bctdf_ggm
+nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="EBICglasso")
+
+labs_ggm <- colnames(S.total_ggm)
+
+# Create means for filling nodes
+piefill_ggm <- S.total_ggm %>% 
+  select(-contains("MVPA"), -girl, -intervention) %>%
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
+
+piefill_ggm$MVPA <- median(S.total_ggm$MVPA, na.rm = TRUE) / (60*24) 
+piefill_ggm$girl <- mean(S.total_ggm$girl, na.rm = TRUE)
+piefill_ggm$intervention <- mean(S.total_ggm$intervention, na.rm = TRUE)
+
+piefill_ggm <- piefill_ggm %>% select(MVPA, girl, intervention, everything())
+
+# Plot network
+
+BCT_ggm <- plot(nwBCT_ggm, 
+                layout = "spring", 
+                repulsion = 0.90, # To nudge the network from originally bad visual state
+                label.scale = FALSE, 
+                title = "GGM: PA, BCTs & motivation", 
+                label.cex = 0.75,
+                pie = piefill_ggm, 
+                color = "skyblue",
+                pieBorder = 1)
+
+```
+
+### Plot bivariate correlations
+
+```{r}
+corMat <- cor_auto(bctdf_ggm)
+
+qgraph(corMat, 
+       graph = "cor", 
+       label.scale = FALSE, 
+       title = "Bivariate correlations: PA, BCTs & motivation", 
+       label.cex = 0.75,
+       pie = piefill_ggm, 
+       color = "skyblue",
+       pieBorder = 1,
+       threshold = "holm",
+       sampleSize = sum(complete.cases(bctdf_ggm)),
+       minimum = 0.2,
+       layout = ,
+       details = TRUE)
+
+```
+
+### Centrality and stability check
+
+```{r}
+c1 <- qgraph::centralityPlot(BCT_ggm)
+
+centrality(nwBCT_ggm)$InDegree
+scale(centrality(nwBCT_ggm)$InDegree) # Normalised strength
+centrality(nwBCT_ggm)$Closeness
+centrality(nwBCT_ggm)$Betweenness
+
+nwcors <- data.frame(centrality(nwBCT_ggm)$InDegree,
+                     centrality(nwBCT_ggm)$Betweenness,
+                     centrality(nwBCT_ggm)$Closeness)
+
+names(nwcors) <- c("InDegree", "Betweenness", "Closeness")
+
+labs <- names(nwcors)
+corrgram::corrgram(nwcors, 
+         cor.method = "spearman", 
+         # diag.panel=panel.minmax, 
+         # lower.panel=panel.shade, 
+         # lower.panel=panel.ellipse,
+         # lower.panel=panel.cor,
+         upper.panel=panel.conf,
+         lower.panel=panel.pie
+         # outer.labels=list(
+         #   bottom=list(labels=labs,cex=.75, srt=60),
+         #   left=list(labels=labs,cex=.75, srt=30))
+          )
+
+BCT_ggm_bootnet <- bootnet::bootnet(nwBCT_ggm, boots=1000, nCores=2)
+save(BCT_ggm_bootnet, file = "BCT_ggm_bootnet.Rdata")
+
+plot(BCTboot1, "strength")
+plot(BCTboot1, "betweenness")
+plot(BCTboot1, "closeness")
+
+```
+
+
+## Visually compare ggm and mgm
+
+```{r}
+
+layout_mgm_ggm <- averageLayout(BCT_ggm, BCT_mgm)
+
+layout(t(1:2))
+
+plot(nwBCT_ggm, layout = layout_mgm_ggm, label.scale = FALSE, title = "GGM: PA, BCTs & motivation", label.cex = 0.75,
+     pie = piefill_ggm, 
+     color = "skyblue",
+     pieBorder = 1)
+
+qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = layout_mgm_ggm,
+            title = "MGM: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = "darkorchid1",
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            theme = "colorblind")
+```
+
 
 ### Ising networks
 
@@ -471,8 +788,10 @@ plot(nwBCT2, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motiva
      color = "skyblue",
      pieBorder = 1)
 
-
+bctdf %>% dplyr::select(-girl, -Autonomous, -group, -id, -school, -Controlled) %>% skim()
 ```
+
+
 
 #### Stability and robustness
 
@@ -486,7 +805,13 @@ qgraph::centralityPlot(nwBCT2)
 BCTboot1 <- bootnet::bootnet(nwBCT, nBoots = 2500)
 BCTboot2 <- bootnet::bootnet(nwBCT2, nBoots = 2500)
 
+# save(BCTboot1, file = "BCTboot1.Rdata")
+# save(BCTboot2, file = "BCTboot2.Rdata")
+
+load("BCTboot1.Rdata")
+
 plot(BCTboot1, labels = TRUE, order = "sample")
+
 plot(BCTboot2, labels = TRUE, order = "sample")
 
 autEdges <- summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
@@ -504,14 +829,14 @@ contEdges <- summary(BCTboot1, statistics = "edge", rank = TRUE) %>%
 
 diamondPlot(autEdges, 
             ciCols = c("CIlower", "mean", "CIupper"), 
-            color = viridis(2, end = 0.8)[1], 
+            color = viridis::viridis(2, end = 0.8)[1], 
             alpha = 0.3, 
             yLabels = autEdges$node2, 
             fixedSize = 0.3, 
             xlab = NULL) +
   userfriendlyscience::diamondPlot(contEdges, 
               ciCols = c("CIlower", "mean", "CIupper"), 
-              color = viridis(2, end = 0.8)[2], 
+              color = viridis::viridis(2, end = 0.8)[2], 
               alpha = 0.3, 
               yLabels = autEdges$node2, 
               fixedSize = 0.3, 
@@ -522,7 +847,7 @@ diamondPlot(autEdges,
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Autonomous"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   scale_fill_manual('Connected node',
-                      values = viridis(2, end = 0.8)[1:2],  
+                      values = viridis::viridis(2, end = 0.8)[1:2],  
                       guide = guide_legend(override.aes = list(alpha = 1))) +
   ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (all items)")
   
@@ -543,14 +868,14 @@ contEdges <- summary(BCTboot2, statistics = "edge", rank = TRUE) %>%
 
 diamondPlot(autEdges, 
             ciCols = c("CIlower", "mean", "CIupper"), 
-            color = viridis(2, end = 0.8)[1], 
+            color = viridis::viridis(2, end = 0.8)[1], 
             alpha = 0.3, 
             yLabels = autEdges$node2, 
             fixedSize = 0.3, 
             xlab = NULL) +
   userfriendlyscience::diamondPlot(contEdges, 
               ciCols = c("CIlower", "mean", "CIupper"), 
-              color = viridis(2, end = 0.8)[2], 
+              color = viridis::viridis(2, end = 0.8)[2], 
               alpha = 0.3, 
               yLabels = autEdges$node2, 
               fixedSize = 0.3, 
@@ -561,7 +886,7 @@ diamondPlot(autEdges,
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Autonomous"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   scale_fill_manual('Connected node',
-                      values = viridis(2, end = 0.8)[1:2],  
+                      values = viridis::viridis(2, end = 0.8)[1:2],  
                       guide = guide_legend(override.aes = list(alpha = 1))) +
   ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (combined items)")
 
@@ -573,6 +898,104 @@ diamondPlot(autEdges,
 #   userfriendlyscience::diamondPlot(ciCols = c("CIlower", "mean", "CIupper"), ylabels = id)
 
 ```
+
+Sacha says this makes sense, you can also do the difference test (same as the plot with black and white squares) and look at Jonas Haslbeck's node importance R^2 thing. You can also just see what happens when you include PA (common effect). 
+
+#### #### Add PA
+
+```{r}
+library(corrgram)
+
+nItems_PA <- 20
+
+bctdf_PA <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  'MVPA' = paAccelerometer_T1,
+  'Autonomous' = PA_autonomous_T1,
+  'Controlled' = PA_controlled_T1,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1) %>%
+  rowwise() %>% 
+  mutate( 
+  #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
+  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
+  select(-`log on paper`, -`smartphone`) %>% 
+  data.frame %>% 
+  mutate_all(as.numeric)
+
+# Network for all participants
+
+S.total_PA <- bctdf_PA %>% select(`MVPA`:ncol(bctdf))
+nwBCT_PA <- bootnet::estimateNetwork(S.total_PA, default="EBICglasso")
+
+labs <- colnames(S.total_PA)
+
+# Create means for filling nodes
+piefill <- S.total_PA %>% 
+  select(-contains("MVPA")) %>% 
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
+
+piefill$MVPA <- median(S.total_PA$MVPA, na.rm = TRUE) / (60*24) 
+
+piefill <- piefill %>% select(MVPA, everything())
+
+# Plot network
+plot(nwBCT_PA, layout = "spring", label.scale = FALSE, title = "GGM: PA, BCTs & motivation", label.cex = 0.75,
+     pie = piefill, 
+     color = "skyblue",
+     pieBorder = 1)
+
+# Combine items further:
+bctdf_PA2 <- bctdf_PA %>% rowwise %>% 
+  mutate('goals and plans' = mean(c(`goal.setting`, `implementation.plan`), na.rm = TRUE)) %>% 
+  mutate('barriers identified\nand planned for' = mean(c(`barrier.identification`, `coping.planning`), na.rm = TRUE)) %>% 
+  select(-`goal.setting`, -`implementation.plan`, -`barrier.identification`, -`coping.planning`) %>% 
+  data.frame
+
+S.total_PA2 <- bctdf_PA2 %>% select(MVPA:ncol(bctdf_PA2))
+nwBCT_PA2 <- bootnet::estimateNetwork(S.total_PA2, default="EBICglasso")
+
+# Create means for filling nodes
+piefill_PA2 <- S.total_PA2 %>% 
+  select(-contains("MVPA")) %>%
+  mutate(Autonomous = Autonomous * 6/5, # Transform these from scale 1-5 to 1-6
+         Controlled = Controlled * 6/5) %>% 
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
+
+piefill_PA2$MVPA <- median(S.total_PA2$MVPA, na.rm = TRUE) / (60*24) 
+
+piefill_PA2 <- piefill_PA2 %>% select(MVPA, everything())
+
+
+# Plot network
+plot(nwBCT_PA2, layout = "spring", label.scale = FALSE, title = "GGM: PA BCTs & motivation", label.cex = 0.75,
+     pie = piefill_PA2, 
+     color = "skyblue",
+     pieBorder = 1)
+
+
+```
+
 
 #### BCT-SDT Regression analyses
 
@@ -1103,6 +1526,7 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 
 ```
+
 ### PA network without SDT motivations
 
 ```{r}

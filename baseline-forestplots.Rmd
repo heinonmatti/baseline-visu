@@ -1,5 +1,5 @@
 ---
-title: "# forest plots for posteriors"
+title: '# forest plots for posteriors'
 ---
 
 ```{r}
@@ -25,6 +25,27 @@ visreg(m_lmer_agrbct, "trackSchool")
 
 
 ```
+
+```{r}
+m_PAtrackgirl_lmer <- lme4::lmer(paAccelerometer_T1 ~ (1 | track:girl), data = df)
+
+
+m_PAtrackgirl_lmer %>% ranef()
+
+m_p <- profile(m_PAtrackgirl_lmer)
+ci_low <- confint(m_p)[, 1]
+ci_high <- confint(m_p)
+
+sjPlot::sjt.lmer(m_PAtrackgirl_lmer)
+p_load(sjPlot)
+m_PAtrackgirl_lmer %>% summary()
+
+m_PAtrackgirl_lmer %>% ranef() 
+m_PAtrackgirl_lmer %>% confint(m_p)
+m_PAtrackgirl_lmer %>% confint.mer
+
+```
+
 
 ```{r}
 
@@ -68,7 +89,7 @@ PA_agrbct_lmer <- lmer(PA_agrbct_T1 ~ (1 | track:school), data = df)
 
 
 
-### # forest plots of posteriors
+### forest plots of posteriors
 
 Agreement-related BCTs:
 
@@ -90,6 +111,49 @@ pp_check(fit_agrbct, nsamples = 100)
 
 Accelerometer-measured PA:
 
+### track:school
+
+```{r}
+
+m_paAccelerometer_trackgirl <- brms::bf(paAccelerometer_T1 ~ (1 | track:girl)) %>% 
+  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+
+brms::get_prior(m_paAccelerometer_trackgirl, data = df)
+
+b_intercept <- fixef(m_paAccelerometer_trackgirl)[1]
+
+# This gives estimates only:
+PA_trackgirl_estimates <- ranef(m_paAccelerometer_trackgirl)[[1]][1:10]
+
+# The 2.5%ile:
+PA_trackgirl_CIL <- ranef(m_paAccelerometer_trackgirl)[[1]][21:30]
+
+# The 97.5%ile:
+PA_trackgirl_CIH <- ranef(m_paAccelerometer_trackgirl)[[1]][31:40]
+
+PA_trackgirl_ci <- data.frame(PA_trackgirl_CIL, PA_trackgirl_estimates, PA_trackgirl_CIH, Variable = labels(ranef(m_paAccelerometer_trackgirl))) %>% 
+  mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  mutate(PA_trackgirl_CIL = PA_trackgirl_CIL + b_intercept,
+         PA_trackgirl_estimates = PA_trackgirl_estimates + b_intercept,
+         PA_trackgirl_CIH = PA_trackgirl_CIH + b_intercept,
+         track = c('Business Admin_boy',
+                   'Business Admin_girl',
+                   'Business IT_boy',
+                   'Business IT_girl',
+                   'HRC_boy',
+                   'HRC_girl',
+                   'Nursing_boy',
+                   'Nursing_girl',
+                   'Other_boy',
+                   'Other_girl'
+))
+
+
+```
+
+
+### Track:school:intervention
+
 ```{r}
 
 df <- df %>% mutate(paAccelerometer_T1_centered = paAccelerometer_T1 - mean(paAccelerometer_T1, na.rm = TRUE))
@@ -105,6 +169,8 @@ plot(fit_paAccelerometer)
 pairs(fit_paAccelerometer)
 stanplot(fit_paAccelerometer, "b_Intercept", type = "trace")
 pp_check(fit_paAccelerometer, nsamples = 100)
+
+
 
 ```
 

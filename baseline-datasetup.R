@@ -8,18 +8,17 @@
 if (!require(pacman)) install.packages("pacman")
 #library(pacman)
 
-CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4", "userfriendlyscience", "sm", "sjstats", "gridExtra", "ggridges", "igraph", "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm", "brms", "mlmRev")
+CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4", 
+               "userfriendlyscience", "sm", "sjstats", "gridExtra", "igraph", 
+               "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm",
+               "brms", "mlmRev", "rstan")
 instpacks <- setdiff(CRANpacks,pacman::p_library())
 
 # Use pacman to install the needed packages.
 if (length(instpacks)>0) pacman::p_install(instpacks)
 
 pacman::p_install_gh("crsh/papaja")
-pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
-
-# Packages specifically for network analysis
-#pacman::p_install(c("EstimateGroupNetwork", "bootnet", "qgraph"))
-#pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
+pacman::p_install_gh("clauswilke/ggridges")
 
 # Packages for the figures which show Bayesian credible intervals of classes
 #pacman::p_install(c("rstanarm", "brms", "mlmRev"))
@@ -43,6 +42,8 @@ ggplot2::theme_set(papaja::theme_apa())
 #lmi <- haven::read_sav("data/LMI_data_korjattu_syntaksilla_nimetpoistettu.sav", user_na = FALSE)
 
 lmi <- haven::read_sav("data/LMI_data_korjattu_syntaksilla_nimetpoistettu - skandit muutettu MANUAALISESTI.sav", user_na = FALSE)
+# ses <- haven::read_sav("data/baselinedata_vainnuoret SPSS_160226_accfac fixed.sav", user_na = FALSE)
+ses <- read_csv2("data/baselinedata_vainnuoret SPSS_160226_accfac fixed.csv")
 
 
 # write_csv(lmi, "Z:/Desktop/LMI DATA/LMI_data_korjattu_syntaksilla_CSV.csv")
@@ -494,7 +495,7 @@ d <- d %>% dplyr::mutate(group = ifelse(group == "", NA, group))
 d <- d %>% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
                          intervention = factor(intervention),
                          girl = ifelse(girl == 2, 1, 0),
-                         girl = factor(girl, levels = c("1", "0")),
+                         girl = factor(girl, levels = c("1", "0"), labels = c("girl", "boy")),
                          school = factor(school, levels = c("1", "2", "3", "4", "5")))
 
 # Create the self-reported PA time variable
