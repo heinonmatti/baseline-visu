@@ -90,9 +90,21 @@ ci_total <- data_frame(
 # save(vardatatable, file = "vardatatable.Rdata")
 # save(ci_total, file = "ci_total.Rdata")
 load("vardatatable.Rdata")
+load("ci_total.Rdata")
 ```
 
 ## Primary outcome variables
+
+### Plot of self-reported and accelerometer-measured MVPA-variables
+
+# !!! Red line is for the cutoff
+
+```{r}
+lmi %>% ggplot2::ggplot(aes(x = LiikuntaT1_ka, y = Kys0045.1)) + geom_point() + geom_smooth(method = "loess") +
+  geom_vline(xintercept = 120, col = "red") +
+  labs(x = "accelerometer-measured MVPA", y = "self-reported MVPA days last week")
+```
+
 
 ```{r selected-total, results = 'asis'}
 options(tibble.print_max = 1000)
@@ -179,8 +191,8 @@ ICC_track <- NA
 
 ## To test the code with a single variable:
 # dftest <- df #%>% na.omit()
-# m <- lmer(sitLieAccelerometer_T1 ~ (1|school) + (1|group) + (1|track), data=df)
-# mean <- fixef(m)
+# m <- lme4::lmer(sitLieAccelerometer_T1 ~ (1|school) + (1|group) + (1|track), data=df)
+# mean <- lme4::fixef(m)
 # m_p <- profile(m)
 # ci_low <- confint(m_p)[5]
 # ci_high <- confint(m_p)[10]
@@ -195,8 +207,8 @@ for (i in names){
 m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
 mean[i] <- lme4::fixef(m)
 m_p <- profile(m, which = "beta_")
-ci_low[i] <- confint(m_p)[5]
-ci_high[i] <- confint(m_p)[10]
+ci_low[i] <- confint(m_p)[1]
+ci_high[i] <- confint(m_p)[2]
 ICC_group[i] <- sjstats::icc(m)[1]
 ICC_School[i] <- sjstats::icc(m)[3]
 ICC_track[i] <- sjstats::icc(m)[2]
@@ -214,7 +226,19 @@ vardatatable_containing_edutrack <- data_frame(
   dplyr::arrange(Variable) %>% 
   filter(Variable != "") #remove first row, which is empty
 
-options(tibble.print_max = 15)
+save(vardatatable_containing_edutrack, file = "vardatatable_containing_edutrack.Rdata")
+load("vardatatable_containing_edutrack.Rdata")
+
+ci_edutrack <- data_frame(
+  "ciLo" = ci_low,
+  "mean" = mean,
+  "ciHi" = ci_high,  
+  "diamondlabels" = names(mean)) %>%  
+  filter(diamondlabels != "") %>% #remove first row, which is empty
+  as.data.frame()
+
+save(ci_edutrack, file = "ci_edutrack.Rdata")
+load("ci_edutrack.Rdata")
 
 ```
 
@@ -255,7 +279,7 @@ vardatatable_containing_edutrack %>% select(Variable, `ICC educational track`, `
 #library(sjstats)
 #library(lme4)
 
-names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
+names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
 
 # Create empty soon-to-be-filled objects
 m <- NA
@@ -271,42 +295,49 @@ ICC_track <- NA
 
 ## To test the code with a single variable:
 # dftest <- df #%>% na.omit()
-# m <- lmer(sitLieAccelerometer_T1 ~ (1|school) + (1|group) + (1|track), data=df)
-# mean <- fixef(m)
+# m <- lme4::lmer(sitLieAccelerometer_T1 ~ (1|track), data=df)
+# mean <- lme4::fixef(m)
 # m_p <- profile(m)
-# ci_low <- confint(m_p)[5]
-# ci_high <- confint(m_p)[10]
-# ICC_group <- icc(m)[1]
-# ICC_School <- icc(m)[2]
+# ci_low <- confint(m_p)[3]
+# ci_high <- confint(m_p)[6]
+# ICC_group <- sjstats::icc(m)[1]
 # nonmissings <- length(m@resp$y)
 
 # Loop over each variable name, extract statistics: 
 
 # all participants  
 for (i in names){
-m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
+m <- lme4::lmer(paste0(i," ~ (1|track)"), data=df)
 mean[i] <- lme4::fixef(m)
 m_p <- profile(m, which = "beta_")
-ci_low[i] <- confint(m_p)[5]
-ci_high[i] <- confint(m_p)[10]
-ICC_group[i] <- sjstats::icc(m)[1]
-ICC_School[i] <- sjstats::icc(m)[3]
-ICC_track[i] <- sjstats::icc(m)[2]
+ci_low[i] <- confint(m_p)[1]
+ci_high[i] <- confint(m_p)[2]
+ICC_track[i] <- sjstats::icc(m)[1]
 nonmissings[i] <- length(m@resp$y)
 }
 
-vardatatable_containing_edutrack <- data_frame(
+vardatatable_edutrack_only <- data_frame(
   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
   Mean = round(mean, 1), 
   CI95 = paste(round(ci_low, 1), "-", round(ci_high, 1)), 
-  "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
-  "ICC school" = ifelse(round(ICC_School, 3) == 0, "< 0.001", round(ICC_School, 3)),
   "ICC educational track" = ifelse(round(ICC_track, 3) == 0, "< 0.001", round(ICC_track, 3)),
   n = nonmissings) %>% 
   dplyr::arrange(Variable) %>% 
   filter(Variable != "") #remove first row, which is empty
 
-options(tibble.print_max = 15)
+save(vardatatable_edutrack_only, file = "vardatatable_edutrack_only.Rdata")
+load("vardatatable_edutrack_only.Rdata")
+
+ci_edutrack_only <- data_frame(
+  "ciLo" = ci_low,
+  "mean" = mean,
+  "ciHi" = ci_high,  
+  "diamondlabels" = names(mean)) %>%  
+  filter(diamondlabels != "") %>% #remove first row, which is empty
+  as.data.frame()
+
+save(ci_edutrack_only, file = "ci_edutrack_only.Rdata")
+load("ci_edutrack_only.Rdata")
 
 ```
 
@@ -322,6 +353,261 @@ vardatatable_containing_edutrack %>%
         format.args = list(digits = c(0), margin = 2))
 
 ```
+
+## CIs using the sandwich estimator
+
+```{r}
+# Basic instructions are from https://web.archive.org/web/20180206180739/http://thestatsgeek.com/2014/02/14/the-robust-sandwich-variance-estimator-for-linear-regression-using-r/
+
+names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
+
+# Create empty soon-to-be-filled objects
+m <- NA
+sandwich_se <- NA
+mean <- NA
+ci_low <- NA
+ci_high <- NA
+nonmissings <- NA
+
+## To test the code with a single variable:
+# m <- lm(sitLieAccelerometer_T1 ~ 1, data=df)
+# sandwich_se <- diag(vcovHC(m, type = "HC"))^0.5
+# mean <- m$coefficients[[1]]
+# ci_low <- coef(m) - 1.96 * sandwich_se
+# ci_high <- coef(m) + 1.96 * sandwich_se
+# nonmissings <- nrow(m$model)
+
+
+# Loop over each variable name, extract statistics: 
+for (i in names){
+m <- lm(paste0(i," ~ 1"), data = df)
+sandwich_se <- diag(vcovHC(m, type = "HC"))^0.5
+mean[i] <- m$coefficients[[1]]
+ci_low[i] <- coef(m) - 1.96 * sandwich_se
+ci_high[i] <- coef(m) + 1.96 * sandwich_se
+nonmissings[i] <- nrow(m$model)
+}
+
+vardatatable_sandwich <- data_frame(
+  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
+  Mean = round(mean, 1), 
+  CI95 = paste(round(ci_low, 1), "-", round(ci_high, 1)), 
+  n = nonmissings) %>% 
+  dplyr::arrange(Variable) %>% 
+  filter(Variable != "") #remove first row, which is empty
+
+save(vardatatable_sandwich, file = "vardatatable_sandwich.Rdata")
+load("vardatatable_sandwich.Rdata")
+
+ci_sandwich <- data_frame(
+  "ciLo" = ci_low,
+  "mean" = mean,
+  "ciHi" = ci_high,  
+  "diamondlabels" = names(mean)) %>%  
+  filter(diamondlabels != "") %>% #remove first row, which is empty
+  as.data.frame()
+
+save(ci_sandwich, file = "ci_sandwich.Rdata")
+load("ci_sandwich.Rdata")
+```
+
+### Compare estimates visually {.tabset}
+
+#### This section contains diamond plots comparing different estimates for means and CIs.
+
+#### High-mean variables
+
+```{r}
+ci_total_big <- ci_total %>% filter(mean > 10)
+ci_edutrack_big <- ci_edutrack %>% filter(mean > 10)
+ci_edutrack_only_big <- ci_edutrack_only %>% filter(mean > 10)
+ci_sandwich_big <- ci_sandwich %>% filter(mean > 10)
+
+
+for (i in 1:4){
+plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ], 
+                                          color = viridis::viridis(4)[1], 
+                                          alpha=.15, 
+                                          yLabels = ci_total_big[i, ]$diamondlabels, 
+                                          fixedSize = 0.3, 
+                                          xlab = NULL) +
+  userfriendlyscience::diamondPlot(ci_edutrack_big[i, ], 
+                                   returnLayerOnly = TRUE,
+                                   color = viridis::viridis(4)[2], 
+                                   alpha=.15, 
+                                   yLabels = ci_edutrack_big[i, ]$diamondlabels, 
+                                   fixedSize = 0.3, 
+                                   xlab = NULL) +
+  userfriendlyscience::diamondPlot(ci_edutrack_only_big[i, ], 
+                                   returnLayerOnly = TRUE,
+                                   color = viridis::viridis(4)[3], 
+                                   alpha=.15, 
+                                   yLabels = ci_edutrack_only_big[i, ]$diamondlabels, 
+                                   fixedSize = 0.3, 
+                                   xlab = NULL) +
+  userfriendlyscience::diamondPlot(ci_sandwich_big[i, ], 
+                                   returnLayerOnly = TRUE,
+                                   color = viridis::viridis(4)[4], 
+                                   alpha=.15, 
+                                   yLabels = ci_edutrack_only_big[i, ]$diamondlabels, 
+                                   fixedSize = 0.3, 
+                                   xlab = NULL) + 
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom & school"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom, school & track"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Track only"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  scale_fill_manual('Model',
+                    values = c(viridis::viridis(4)[1], 
+                               viridis::viridis(4)[2], 
+                               viridis::viridis(4)[4], 
+                               viridis::viridis(4)[3]),
+                    guide = guide_legend(override.aes = list(alpha = 1), ncol = 2)) +
+  theme(legend.position="right") 
+  plot(plot1)
+}
+```
+
+
+#### Other variables
+
+```{r}
+ci_total_small <- ci_total %>% filter(mean <= 10)
+ci_edutrack_small <- ci_edutrack %>% filter(mean <= 10)
+ci_edutrack_only_small <- ci_edutrack_only %>% filter(mean <= 10)
+ci_sandwich_small <- ci_sandwich %>% filter(mean <= 10)
+
+
+for (i in c(seq(from = 1, to = 171, by = 8))) {
+plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 8), ], 
+                                          color = viridis::viridis(4)[1], 
+                                          alpha=.15, 
+                                          yLabels = ci_total_small[i:(i + 8), ]$diamondlabels, 
+                                          fixedSize = 0.3, 
+                                          xlab = NULL) +
+  userfriendlyscience::diamondPlot(ci_edutrack_small[i:(i + 8), ], 
+                                   returnLayerOnly = TRUE,
+                                   color = viridis::viridis(4)[2], 
+                                   alpha=.15, 
+                                   yLabels = ci_edutrack_small[i:(i + 8), ]$diamondlabels, 
+                                   fixedSize = 0.5, 
+                                   xlab = NULL) +
+  userfriendlyscience::diamondPlot(ci_edutrack_only_small[i:(i + 8), ], 
+                                   returnLayerOnly = TRUE,
+                                   color = viridis::viridis(4)[3], 
+                                   alpha=.15, 
+                                   yLabels = ci_edutrack_only_small[i:(i + 8), ]$diamondlabels, 
+                                   fixedSize = 0.3, 
+                                   xlab = NULL) +
+  userfriendlyscience::diamondPlot(ci_sandwich_small[i:(i + 8), ], 
+                                   returnLayerOnly = TRUE,
+                                   color = viridis::viridis(4)[4], 
+                                   alpha=.15, 
+                                   yLabels = ci_edutrack_only_small[i:(i + 8), ]$diamondlabels, 
+                                   fixedSize = 0.3, 
+                                   xlab = NULL) + 
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom & school"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom, school & track"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Track only"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  scale_fill_manual('Model: ',
+                    values = c(viridis::viridis(4)[1], 
+                               viridis::viridis(4)[2], 
+                               viridis::viridis(4)[4], 
+                               viridis::viridis(4)[3]),
+                    guide = guide_legend(override.aes = list(alpha = 1), ncol = 2)) +
+  theme(legend.position="bottom") 
+  plot(plot1)
+}
+
+```
+
+
+```{r}
+
+
+CI_widths <- data.frame(
+  "Label" = ci_total$diamondlabels,
+  "Classroom & school" = (ci_total$ciHi - ci_total$ciLo), 
+  "Classroom, school & track" = (ci_edutrack$ciHi - ci_edutrack$ciLo), 
+  "Only track" = (ci_edutrack_only$ciHi - ci_edutrack_only$ciLo),
+  "Sandwich" = (ci_sandwich$ciHi - ci_sandwich$ciLo)) %>% 
+  dplyr::arrange(Sandwich)
+
+CI_widths %>%
+  dplyr::mutate(Label = as.numeric(as.factor(ci_total$diamondlabels)))  %>% 
+  tidyr::gather(estimator, value, 2:Sandwich) %>% 
+  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    ggtitle("All variables")
+
+CI_widths %>%
+#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+  gather(estimator, value, 2:Sandwich) %>% 
+  ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    ggtitle("Zoom into the first bump") +
+    coord_cartesian(xlim = c(15, 17), ylim = c(0, 7)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
+
+CI_widths %>%
+#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+  gather(estimator, value, 2:Sandwich) %>% 
+  ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    ggtitle("Zoom into second bump") +
+    coord_cartesian(xlim = c(127, 130), ylim = c(0, 50)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
+
+CI_widths %>%
+#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+  gather(estimator, value, 2:Sandwich) %>% 
+  ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    ggtitle("Zoom into third bump") +
+    coord_cartesian(xlim = c(133, 135), ylim = c(0, 200)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
+
+CI_widths %>%
+#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+  gather(estimator, value, 2:Sandwich) %>% 
+  ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    ggtitle("Zoom into fourth bump") +
+    coord_cartesian(xlim = c(160, 163), ylim = c(0, 200)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
+
+CI_widths %>%
+#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+  gather(estimator, value, 2:Sandwich) %>% 
+  ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    ggtitle("Zoom into fourth bump") +
+    coord_cartesian(xlim = c(0, 10), ylim = c(0, 1.25)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
+# # test to see all labels are in the right order
+# data.frame(
+#   Label = ci_total$diamondlabels,
+#   label2 = ci_edutrack$diamondlabels,
+#   label3 = ci_edutrack_only$diamondlabels,
+#   label4 = ci_sandwich) %>% rowwise %>% 
+#   mutate(test1 = ifelse(Label == label2, "OK",
+#                         ifelse(label2 == label3, "OK", 
+#                                ifelse(label3 == label4, "OK", "DISCREPANCY"))))
+
+CI_widths %>% summarise(meanClassroom...school = mean(Classroom...school), meanClassroom..school...track = mean(Classroom..school...track, na.rm = TRUE),
+                        meanOnly.track = mean(Only.track), meanSandwich = mean(Sandwich))
+```
+
 
 ## Create confidence bounds for all items by gender and intervention allocation
 
@@ -1796,7 +2082,7 @@ grid::grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGir
 
 
 ### Plot without fill
-
+# TÄÄLLÄ LUKEE "MUUTTAAKO MITÄÄN?"
 ```{r}
 plot1 <- df %>% dplyr::select(id,
                               intervention,
@@ -1930,7 +2216,7 @@ grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 ```
 
 ### Pretty plot with fill
-
+# !!! KESKEN
 ```{r}
 
 plot1 <- df %>% dplyr::select(id,
@@ -1949,7 +2235,8 @@ plot1 <- df %>% dplyr::select(id,
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, colour = "black", 
                                     fill = paste(Variable, girl)), 
-                                    alpha = 0.6, size = 0.25, from = 1, to = 7) +
+                                    alpha = 0.6, size = 0.25, 
+                                    from = 1, to = 7) +
   labs(x = "",
        y = "") +
   scale_y_discrete(expand = c(0.01, 0)) +

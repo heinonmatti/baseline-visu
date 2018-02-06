@@ -11,7 +11,7 @@ if (!require(pacman)) install.packages("pacman")
 CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4", 
                "userfriendlyscience", "sm", "sjstats", "gridExtra", "igraph", 
                "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm",
-               "brms", "mlmRev", "rstan")
+               "brms", "mlmRev", "rstan", "sandwich")
 instpacks <- setdiff(CRANpacks,pacman::p_library())
 
 # Use pacman to install the needed packages.
