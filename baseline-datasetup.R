@@ -12,13 +12,13 @@ CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4",
                "userfriendlyscience", "sm", "sjstats", "gridExtra", "igraph", 
                "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm",
                "brms", "mlmRev", "rstan", "sandwich")
-instpacks <- setdiff(CRANpacks,pacman::p_library())
+instpacks <- setdiff(CRANpacks, pacman::p_library())
 
 # Use pacman to install the needed packages.
-if (length(instpacks)>0) pacman::p_install(instpacks)
+if (length(instpacks)>0) install.packages(instpacks)
 
-pacman::p_install_gh("crsh/papaja")
-pacman::p_install_gh("clauswilke/ggridges")
+if (!require(papaja)) pacman::p_install_gh("crsh/papaja")
+if (!require(ggridges)) pacman::p_install_gh("clauswilke/ggridges")
 
 # Packages for the figures which show Bayesian credible intervals of classes
 #pacman::p_install(c("rstanarm", "brms", "mlmRev"))
@@ -43,7 +43,7 @@ ggplot2::theme_set(papaja::theme_apa())
 
 lmi <- haven::read_sav("data/LMI_data_korjattu_syntaksilla_nimetpoistettu - skandit muutettu MANUAALISESTI.sav", user_na = FALSE)
 # ses <- haven::read_sav("data/baselinedata_vainnuoret SPSS_160226_accfac fixed.sav", user_na = FALSE)
-ses <- read_csv2("data/baselinedata_vainnuoret SPSS_160226_accfac fixed.csv")
+# ses <- read_csv2("data/baselinedata_vainnuoret SPSS_160226_accfac fixed.csv")
 
 
 # write_csv(lmi, "Z:/Desktop/LMI DATA/LMI_data_korjattu_syntaksilla_CSV.csv")

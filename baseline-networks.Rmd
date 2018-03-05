@@ -7,8 +7,8 @@ title: "Network analyses"
 source("baseline-datasetup.R")
 
 # # Packages specifically for network analysis
-pacman::p_install("EstimateGroupNetwork", "bootnet", "qgraph")
-pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
+# pacman::p_install("EstimateGroupNetwork", "bootnet", "qgraph")
+# pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
 
 ```
 
@@ -203,6 +203,7 @@ pie_errors <- c(pred_obj$errors[1, 3],
 
 ```{r}
 library(qgraph)
+library(igraph)
 
 node_colors <- c(viridis::viridis(6, end = 0.8)[1], 
                  viridis::viridis(6, end = 0.8)[2],
@@ -227,6 +228,105 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             theme = "colorblind")
 
 ```
+
+```{r}
+devtools::install_github("hfgolino/EGA")
+library(EGA)
+
+n1 <- qgraph(cor_auto(bctdf_mgm), graph="EBICglasso", sampleSize=nrow(bctdf_mgm), layout="spring")
+
+g <- as.igraph(BCT_mgm)
+
+matrix_spinglass <- matrix(NA, nrow=1,ncol=100)
+ 
+for (i in 1:100) {
+set.seed(i)
+spinglass <- spinglass.community(g)
+matrix_spinglass[1,i] <- max(spinglass$membership) 
+}
+
+matrix(spinglass$membership, 1:18)
+
+# mean(as.vector(matrix_spinglass)) #5.87
+# max(as.vector(matrix_spinglass)) #7
+# min(as.vector(matrix_spinglass)) #5
+# median(as.vector(matrix_spinglass)) #6
+
+group_spinglass <- list(c(1:3, 17), c(4, 14, 18), c(5:7, 15:16), c(8:13))
+
+spinglass_graph <- qgraph::qgraph(cor_auto(bctdf_mgm), 
+            graph="EBICglasso", 
+            sampleSize=nrow(bctdf_mgm), 
+            layout = "spring",
+            repulsion = 0.90, # To nudge the network from originally bad visual state
+            title = "PA, BCTs & motivation in Spinglass groups",
+            pie = pie_errors,
+            pieColor = viridis::viridis(6, end = 0.8)[6],
+            # color = node_colors,
+            groups = group_spinglass,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            theme = "colorblind")
+
+ega_graph <- EGA(bctdf_mgm)
+
+ega_graph
+
+group_ega <- list(c(8:13, 16:17), c(3:7, 14:15), c(1:2, 18))
+
+ega_graph <- qgraph::qgraph(cor_auto(bctdf_mgm), 
+            graph="EBICglasso", 
+            sampleSize=nrow(bctdf_mgm), 
+            layout = "spring",
+            repulsion = 0.90, # To nudge the network from originally bad visual state
+            title = "PA, BCTs & motivation in EGA groups",
+            pie = pie_errors,
+            pieColor = viridis::viridis(6, end = 0.8)[6],
+            # color = node_colors,
+            groups = group_ega,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            theme = "colorblind")
+
+avlayout <- averageLayout(ega_graph, spinglass_graph)
+
+
+par(mfrow = c(1, 2))
+
+qgraph::qgraph(cor_auto(bctdf_mgm), 
+            graph="EBICglasso", 
+            sampleSize=nrow(bctdf_mgm), 
+            layout = avlayout,
+            repulsion = 0.90, # To nudge the network from originally bad visual state
+            title = "PA, BCTs & motivation in EGA groups",
+            pie = pie_errors,
+            pieColor = viridis::viridis(6, end = 0.8)[6],
+            # color = node_colors,
+            groups = group_ega,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            theme = "colorblind")
+
+qgraph::qgraph(cor_auto(bctdf_mgm), 
+            graph="EBICglasso", 
+            sampleSize=nrow(bctdf_mgm), 
+            layout = avlayout,
+            repulsion = 0.90, # To nudge the network from originally bad visual state
+            title = "PA, BCTs & motivation in Spinglass groups",
+            pie = pie_errors,
+            pieColor = viridis::viridis(6, end = 0.8)[6],
+            # color = node_colors,
+            groups = group_spinglass,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            theme = "colorblind")
+
+```
+
 
 ### ggm estimation & plotting
 

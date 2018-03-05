@@ -11,7 +11,7 @@ Clicking the "Code"-buttons on the right shows code for each chunk.
 
 To start data analysis, we set up the basics to enable compiling the document:
 
-```{r verbose = FALSE, warning = FALSE, message = FALSE}
+```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
 ```
 
@@ -55,37 +55,37 @@ nonmissings <- NA
 # Loop over each variable name, extract statistics: 
 
 # all participants
-for (i in names){
-m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group)"), data=df)
-mean[i] <- lme4::fixef(m)
-m_p <- profile(m, which = "beta_")
-ci_low[i] <- confint(m_p)[, 1]
-ci_high[i] <- confint(m_p)[, 2]
-ICC_group[i] <- sjstats::icc(m)[1]
-ICC_School[i] <- sjstats::icc(m)[2]
-nonmissings[i] <- length(m@resp$y)
-}
-
-
-vardatatable <- data_frame(
-  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-  "Mean" = round(mean, 1),
-  "CI95" = paste(round(ci_low, 1), " - ", round(ci_high, 2)), 
-  "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
-  "ICC school" = ifelse(round(ICC_School, 3) == 0, "< 0.001", round(ICC_School, 3)),
-  n = nonmissings) %>% 
-  dplyr::arrange(Variable) %>% 
-  filter(Variable != "") %>% #remove first row, which is empty
-  mutate(`ICC class` = as.numeric(`ICC class`)) %>% 
-  as.data.frame()
-
-ci_total <- data_frame(
-  "ciLo" = ci_low,
-  "mean" = mean,
-  "ciHi" = ci_high,  
-  "diamondlabels" = names(mean)) %>%  
-  filter(diamondlabels != "") %>% #remove first row, which is empty
-  as.data.frame()
+# for (i in names){
+# m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group)"), data=df)
+# mean[i] <- lme4::fixef(m)
+# m_p <- profile(m, which = "beta_")
+# ci_low[i] <- confint(m_p)[, 1]
+# ci_high[i] <- confint(m_p)[, 2]
+# ICC_group[i] <- sjstats::icc(m)[1]
+# ICC_School[i] <- sjstats::icc(m)[2]
+# nonmissings[i] <- length(m@resp$y)
+# }
+# 
+# 
+# vardatatable <- data_frame(
+#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
+#   "Mean" = round(mean, 1),
+#   "CI95" = paste(round(ci_low, 1), " - ", round(ci_high, 2)), 
+#   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
+#   "ICC school" = ifelse(round(ICC_School, 3) == 0, "< 0.001", round(ICC_School, 3)),
+#   n = nonmissings) %>% 
+#   dplyr::arrange(Variable) %>% 
+#   filter(Variable != "") %>% #remove first row, which is empty
+#   mutate(`ICC class` = as.numeric(`ICC class`)) %>% 
+#   as.data.frame()
+# 
+# ci_total <- data_frame(
+#   "ciLo" = ci_low,
+#   "mean" = mean,
+#   "ciHi" = ci_high,  
+#   "diamondlabels" = names(mean)) %>%  
+#   filter(diamondlabels != "") %>% #remove first row, which is empty
+#   as.data.frame()
 
 # save(vardatatable, file = "vardatatable.Rdata")
 # save(ci_total, file = "ci_total.Rdata")
@@ -203,41 +203,41 @@ ICC_track <- NA
 # Loop over each variable name, extract statistics: 
 
 # all participants  
-for (i in names){
-m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
-mean[i] <- lme4::fixef(m)
-m_p <- profile(m, which = "beta_")
-ci_low[i] <- confint(m_p)[1]
-ci_high[i] <- confint(m_p)[2]
-ICC_group[i] <- sjstats::icc(m)[1]
-ICC_School[i] <- sjstats::icc(m)[3]
-ICC_track[i] <- sjstats::icc(m)[2]
-nonmissings[i] <- length(m@resp$y)
-}
-
-vardatatable_containing_edutrack <- data_frame(
-  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-  Mean = round(mean, 1), 
-  CI95 = paste(round(ci_low, 2), "-", round(ci_high, 2)), 
-  "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
-  "ICC school" = ifelse(round(ICC_School, 3) == 0, "< 0.001", round(ICC_School, 3)),
-  "ICC educational track" = ifelse(round(ICC_track, 3) == 0, "< 0.001", round(ICC_track, 3)),
-  n = nonmissings) %>% 
-  dplyr::arrange(Variable) %>% 
-  filter(Variable != "") #remove first row, which is empty
-
-save(vardatatable_containing_edutrack, file = "vardatatable_containing_edutrack.Rdata")
+# for (i in names){
+# m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
+# mean[i] <- lme4::fixef(m)
+# m_p <- profile(m, which = "beta_")
+# ci_low[i] <- confint(m_p)[1]
+# ci_high[i] <- confint(m_p)[2]
+# ICC_group[i] <- sjstats::icc(m)[1]
+# ICC_School[i] <- sjstats::icc(m)[3]
+# ICC_track[i] <- sjstats::icc(m)[2]
+# nonmissings[i] <- length(m@resp$y)
+# }
+# 
+# vardatatable_containing_edutrack <- data_frame(
+#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
+#   Mean = round(mean, 1), 
+#   CI95 = paste(round(ci_low, 2), "-", round(ci_high, 2)), 
+#   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3)), 
+#   "ICC school" = ifelse(round(ICC_School, 3) == 0, "< 0.001", round(ICC_School, 3)),
+#   "ICC educational track" = ifelse(round(ICC_track, 3) == 0, "< 0.001", round(ICC_track, 3)),
+#   n = nonmissings) %>% 
+#   dplyr::arrange(Variable) %>% 
+#   filter(Variable != "") #remove first row, which is empty
+# 
+# save(vardatatable_containing_edutrack, file = "vardatatable_containing_edutrack.Rdata")
 load("vardatatable_containing_edutrack.Rdata")
 
-ci_edutrack <- data_frame(
-  "ciLo" = ci_low,
-  "mean" = mean,
-  "ciHi" = ci_high,  
-  "diamondlabels" = names(mean)) %>%  
-  filter(diamondlabels != "") %>% #remove first row, which is empty
-  as.data.frame()
-
-save(ci_edutrack, file = "ci_edutrack.Rdata")
+# ci_edutrack <- data_frame(
+#   "ciLo" = ci_low,
+#   "mean" = mean,
+#   "ciHi" = ci_high,  
+#   "diamondlabels" = names(mean)) %>%  
+#   filter(diamondlabels != "") %>% #remove first row, which is empty
+#   as.data.frame()
+# 
+# save(ci_edutrack, file = "ci_edutrack.Rdata")
 load("ci_edutrack.Rdata")
 
 ```
@@ -306,37 +306,37 @@ ICC_track <- NA
 # Loop over each variable name, extract statistics: 
 
 # all participants  
-for (i in names){
-m <- lme4::lmer(paste0(i," ~ (1|track)"), data=df)
-mean[i] <- lme4::fixef(m)
-m_p <- profile(m, which = "beta_")
-ci_low[i] <- confint(m_p)[1]
-ci_high[i] <- confint(m_p)[2]
-ICC_track[i] <- sjstats::icc(m)[1]
-nonmissings[i] <- length(m@resp$y)
-}
-
-vardatatable_edutrack_only <- data_frame(
-  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-  Mean = round(mean, 1), 
-  CI95 = paste(round(ci_low, 1), "-", round(ci_high, 1)), 
-  "ICC educational track" = ifelse(round(ICC_track, 3) == 0, "< 0.001", round(ICC_track, 3)),
-  n = nonmissings) %>% 
-  dplyr::arrange(Variable) %>% 
-  filter(Variable != "") #remove first row, which is empty
-
-save(vardatatable_edutrack_only, file = "vardatatable_edutrack_only.Rdata")
+# for (i in names){
+# m <- lme4::lmer(paste0(i," ~ (1|track)"), data=df)
+# mean[i] <- lme4::fixef(m)
+# m_p <- profile(m, which = "beta_")
+# ci_low[i] <- confint(m_p)[1]
+# ci_high[i] <- confint(m_p)[2]
+# ICC_track[i] <- sjstats::icc(m)[1]
+# nonmissings[i] <- length(m@resp$y)
+# }
+# 
+# vardatatable_edutrack_only <- data_frame(
+#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
+#   Mean = round(mean, 1), 
+#   CI95 = paste(round(ci_low, 1), "-", round(ci_high, 1)), 
+#   "ICC educational track" = ifelse(round(ICC_track, 3) == 0, "< 0.001", round(ICC_track, 3)),
+#   n = nonmissings) %>% 
+#   dplyr::arrange(Variable) %>% 
+#   filter(Variable != "") #remove first row, which is empty
+# 
+# save(vardatatable_edutrack_only, file = "vardatatable_edutrack_only.Rdata")
 load("vardatatable_edutrack_only.Rdata")
 
-ci_edutrack_only <- data_frame(
-  "ciLo" = ci_low,
-  "mean" = mean,
-  "ciHi" = ci_high,  
-  "diamondlabels" = names(mean)) %>%  
-  filter(diamondlabels != "") %>% #remove first row, which is empty
-  as.data.frame()
-
-save(ci_edutrack_only, file = "ci_edutrack_only.Rdata")
+# ci_edutrack_only <- data_frame(
+#   "ciLo" = ci_low,
+#   "mean" = mean,
+#   "ciHi" = ci_high,  
+#   "diamondlabels" = names(mean)) %>%  
+#   filter(diamondlabels != "") %>% #remove first row, which is empty
+#   as.data.frame()
+# 
+# save(ci_edutrack_only, file = "ci_edutrack_only.Rdata")
 load("ci_edutrack_only.Rdata")
 
 ```
@@ -370,46 +370,76 @@ ci_high <- NA
 nonmissings <- NA
 
 ## To test the code with a single variable:
-# m <- lm(sitLieAccelerometer_T1 ~ 1, data=df)
-# sandwich_se <- diag(vcovHC(m, type = "HC"))^0.5
+# df_for_sandwich <- df %>% select(group, school, track, sitLieAccelerometer_T1) %>% na.omit()
+# sandwich_clusters <- df_for_sandwich %>% select(group, school, track)
+# m <- lm(sitLieAccelerometer_T1 ~ 1, data=df_for_sandwich)
+# sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
 # mean <- m$coefficients[[1]]
 # ci_low <- coef(m) - 1.96 * sandwich_se
 # ci_high <- coef(m) + 1.96 * sandwich_se
 # nonmissings <- nrow(m$model)
 
 
-# Loop over each variable name, extract statistics: 
-for (i in names){
-m <- lm(paste0(i," ~ 1"), data = df)
-sandwich_se <- diag(vcovHC(m, type = "HC"))^0.5
-mean[i] <- m$coefficients[[1]]
-ci_low[i] <- coef(m) - 1.96 * sandwich_se
-ci_high[i] <- coef(m) + 1.96 * sandwich_se
-nonmissings[i] <- nrow(m$model)
-}
-
-vardatatable_sandwich <- data_frame(
-  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-  Mean = round(mean, 1), 
-  CI95 = paste(round(ci_low, 1), "-", round(ci_high, 1)), 
-  n = nonmissings) %>% 
-  dplyr::arrange(Variable) %>% 
-  filter(Variable != "") #remove first row, which is empty
-
-save(vardatatable_sandwich, file = "vardatatable_sandwich.Rdata")
+## Loop over each variable name, extract statistics: 
+# for (i in names){
+# df_for_sandwich <- df %>% select(
+#   group, school, track, i) %>% 
+#   na.omit()
+# sandwich_clusters <- df_for_sandwich %>% select(group, school, track)
+# m <- lm(paste0(i," ~ 1"), data = df_for_sandwich)
+# sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
+# mean[i] <- m$coefficients[[1]]
+# ci_low[i] <- coef(m) - 1.96 * sandwich_se
+# ci_high[i] <- coef(m) + 1.96 * sandwich_se
+# nonmissings[i] <- nrow(m$model)
+# }
+# 
+# vardatatable_sandwich <- data_frame(
+#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
+#   Mean = round(mean, 1), 
+#   CI95 = paste(round(ci_low, 1), "-", round(ci_high, 1)), 
+#   n = nonmissings) %>% 
+#   dplyr::arrange(Variable) %>% 
+#   filter(Variable != "") #remove first row, which is empty
+# 
+# save(vardatatable_sandwich, file = "vardatatable_sandwich.Rdata")
 load("vardatatable_sandwich.Rdata")
 
-ci_sandwich <- data_frame(
-  "ciLo" = ci_low,
-  "mean" = mean,
-  "ciHi" = ci_high,  
-  "diamondlabels" = names(mean)) %>%  
-  filter(diamondlabels != "") %>% #remove first row, which is empty
-  as.data.frame()
-
-save(ci_sandwich, file = "ci_sandwich.Rdata")
+# ci_sandwich <- data_frame(
+#   "ciLo" = ci_low,
+#   "mean" = mean,
+#   "ciHi" = ci_high,  
+#   "diamondlabels" = names(mean)) %>%  
+#   filter(diamondlabels != "") %>% #remove first row, which is empty
+#   as.data.frame()
+# 
+# save(ci_sandwich, file = "ci_sandwich.Rdata")
 load("ci_sandwich.Rdata")
 ```
+
+## Observed means and CIs, without clustering
+
+```{r}
+
+df_for_uncorrected <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff"))
+
+# Create empty soon-to-be-filled objects
+mean_uncorrected <- NA
+ci_low <- NA
+ci_high <- NA
+nonmissings <- NA
+
+ci_uncorrected <- rbind(
+  df_for_uncorrected %>% dplyr::summarise_all(funs(t.test(.)$conf.int[1])),
+  df_for_uncorrected %>% dplyr::summarise_all(funs(mean(., na.rm = TRUE))),
+  df_for_uncorrected %>% dplyr::summarise_all(funs(t.test(.)$conf.int[2]))) %>% 
+  t() %>% 
+  data.frame
+
+names(ci_uncorrected) <- c("ciLo", "mean", "ciHi")
+
+```
+
 
 ### Compare estimates visually {.tabset}
 
@@ -420,7 +450,7 @@ load("ci_sandwich.Rdata")
 ```{r}
 ci_total_big <- ci_total %>% filter(mean > 10)
 ci_edutrack_big <- ci_edutrack %>% filter(mean > 10)
-ci_edutrack_only_big <- ci_edutrack_only %>% filter(mean > 10)
+ci_uncorrected_big <- ci_uncorrected %>% filter(mean > 10)
 ci_sandwich_big <- ci_sandwich %>% filter(mean > 10)
 
 
@@ -436,27 +466,27 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ],
                                    color = viridis::viridis(4)[2], 
                                    alpha=.15, 
                                    yLabels = ci_edutrack_big[i, ]$diamondlabels, 
-                                   fixedSize = 0.3, 
+                                   fixedSize = 0.5, 
                                    xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_edutrack_only_big[i, ], 
+  userfriendlyscience::diamondPlot(ci_uncorrected_big[i, ], 
                                    returnLayerOnly = TRUE,
                                    color = viridis::viridis(4)[3], 
                                    alpha=.15, 
-                                   yLabels = ci_edutrack_only_big[i, ]$diamondlabels, 
+                                   yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
                                    fixedSize = 0.3, 
                                    xlab = NULL) +
   userfriendlyscience::diamondPlot(ci_sandwich_big[i, ], 
                                    returnLayerOnly = TRUE,
                                    color = viridis::viridis(4)[4], 
                                    alpha=.15, 
-                                   yLabels = ci_edutrack_only_big[i, ]$diamondlabels, 
+                                   yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
                                    fixedSize = 0.3, 
                                    xlab = NULL) + 
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom & school"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom, school & track"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Track only"), 
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Uncorrected"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
@@ -477,7 +507,7 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ],
 ```{r}
 ci_total_small <- ci_total %>% filter(mean <= 10)
 ci_edutrack_small <- ci_edutrack %>% filter(mean <= 10)
-ci_edutrack_only_small <- ci_edutrack_only %>% filter(mean <= 10)
+ci_uncorrected_small <- ci_uncorrected %>% filter(mean <= 10)
 ci_sandwich_small <- ci_sandwich %>% filter(mean <= 10)
 
 
@@ -495,25 +525,25 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 8), ],
                                    yLabels = ci_edutrack_small[i:(i + 8), ]$diamondlabels, 
                                    fixedSize = 0.5, 
                                    xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_edutrack_only_small[i:(i + 8), ], 
+  userfriendlyscience::diamondPlot(ci_uncorrected_small[i:(i + 8), ], 
                                    returnLayerOnly = TRUE,
                                    color = viridis::viridis(4)[3], 
                                    alpha=.15, 
-                                   yLabels = ci_edutrack_only_small[i:(i + 8), ]$diamondlabels, 
+                                   yLabels = ci_uncorrected_small[i:(i + 8), ]$diamondlabels, 
                                    fixedSize = 0.3, 
                                    xlab = NULL) +
   userfriendlyscience::diamondPlot(ci_sandwich_small[i:(i + 8), ], 
                                    returnLayerOnly = TRUE,
                                    color = viridis::viridis(4)[4], 
                                    alpha=.15, 
-                                   yLabels = ci_edutrack_only_small[i:(i + 8), ]$diamondlabels, 
+                                   yLabels = ci_uncorrected_small[i:(i + 8), ]$diamondlabels, 
                                    fixedSize = 0.3, 
                                    xlab = NULL) + 
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom & school"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom, school & track"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Track only"), 
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Uncorrected"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
@@ -527,6 +557,7 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 8), ],
   plot(plot1)
 }
 
+
 ```
 
 
@@ -537,7 +568,7 @@ CI_widths <- data.frame(
   "Label" = ci_total$diamondlabels,
   "Classroom & school" = (ci_total$ciHi - ci_total$ciLo), 
   "Classroom, school & track" = (ci_edutrack$ciHi - ci_edutrack$ciLo), 
-  "Only track" = (ci_edutrack_only$ciHi - ci_edutrack_only$ciLo),
+  "Uncorrected" = (ci_uncorrected$ciHi - ci_uncorrected$ciLo),
   "Sandwich" = (ci_sandwich$ciHi - ci_sandwich$ciLo)) %>% 
   dplyr::arrange(Sandwich)
 
@@ -549,12 +580,41 @@ CI_widths %>%
     ggtitle("All variables")
 
 CI_widths %>%
+  dplyr::mutate(Label = (ci_total$diamondlabels))  %>% 
+  tidyr::gather(estimator, value, 2:Sandwich) %>% 
+  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    coord_cartesian(xlim = c(75, 100), ylim = c(0, 100)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
+    ggtitle("Zoomed into bumps")
+
+CI_widths %>%
+  dplyr::mutate(Label = (ci_total$diamondlabels))  %>% 
+  tidyr::gather(estimator, value, 2:Sandwich) %>% 
+  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    coord_cartesian(xlim = c(81, 83), ylim = c(0, 100)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
+    ggtitle("Zoomed into first bump")
+
+CI_widths %>%
+  dplyr::mutate(Label = (ci_total$diamondlabels))  %>% 
+  tidyr::gather(estimator, value, 2:Sandwich) %>% 
+  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
+    geom_line(aes(color = estimator)) +
+    coord_cartesian(xlim = c(87, 89), ylim = c(0, 100)) +
+    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
+    ggtitle("Zoomed into first bump")
+
+# DELETE THESE:
+
+CI_widths %>%
 #  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
   gather(estimator, value, 2:Sandwich) %>% 
   ggplot(aes(x = Label, y = value, group = estimator)) +
     geom_line(aes(color = estimator)) +
-    ggtitle("Zoom into the first bump") +
-    coord_cartesian(xlim = c(15, 17), ylim = c(0, 7)) +
+    ggtitle("Zoom into the bumps") +
+    coord_cartesian(xlim = c(75, 100), ylim = c(0, 7)) +
     theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
 
 CI_widths %>%
@@ -598,14 +658,14 @@ CI_widths %>%
 # data.frame(
 #   Label = ci_total$diamondlabels,
 #   label2 = ci_edutrack$diamondlabels,
-#   label3 = ci_edutrack_only$diamondlabels,
+#   label3 = ci_uncorrected$diamondlabels,
 #   label4 = ci_sandwich) %>% rowwise %>% 
 #   mutate(test1 = ifelse(Label == label2, "OK",
 #                         ifelse(label2 == label3, "OK", 
 #                                ifelse(label3 == label4, "OK", "DISCREPANCY"))))
 
 CI_widths %>% summarise(meanClassroom...school = mean(Classroom...school), meanClassroom..school...track = mean(Classroom..school...track, na.rm = TRUE),
-                        meanOnly.track = mean(Only.track), meanSandwich = mean(Sandwich))
+                        meanOnly.track = mean(Only.track), meanSandwich = mean(Sandwich, na.rm = TRUE))
 ```
 
 
@@ -2407,6 +2467,41 @@ PA_trackgirl_ci %>% filter(track == "Business IT_boy")) %>%
 
 
 ```
+
+```{r}
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              Intrinsic = PA_intrinsic_T1,
+                              Identified = PA_identified_T1,
+                              Integrated = PA_integrated_T1,
+                              Introjected = PA_introjected_T1,
+                              Extrinsic = PA_extrinsic_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  gather(Regulation, value, Intrinsic:Extrinsic) %>% 
+  data.frame %>% 
+  ggplot(aes(y = Regulation)) +
+  ggridges::geom_density_ridges2(aes(x = value, colour = "black",
+                                     fill = paste(Regulation, track)),
+                                  scale = 1,
+                                  alpha = 0.4, size = 0.25,
+                                  from = 1, to = 7) +
+  labs(x = "Mean daily MVPA minutes (accelerometer)",
+       y = "") +
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('Extrinsic Business Admin' = "Business admin", 'Extrinsic Business IT' = "Business IT", 'Extrinsic HRC' = "HRC", 'Extrinsic Nursing' = "Nursing"),
+                                values = viridis::viridis(4, end = 0.8),
+                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  papaja::theme_apa() 
+
+```
+
+
+## MVPA: Different tracks, with gender as diamond
 
 ```{r}
 
