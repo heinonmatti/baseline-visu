@@ -9,22 +9,119 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Network analysis
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+In latent variable analysis, manifest variables (e.g. questionnaire items) are thought to be the manifest constructs of a hidden cause, which is observed indirectly through those manifest variables. In the latent variable approach, the latent variable can be thought about like temperature, which is measured by the readings on the measurement instrument. For example, in the reasoned action approach, it is conventionally thought that e.g. outcome expectations (together with perceived norms and perceived behavioral control) define intention, which again causes overt behaviour. In the network conceptualisation, latent causes are not present, but all is manifest (?)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Network tools give insight to complex systems, although they are not the essence of it. The "Medical model"" not necessarily thought to be correct by medical researchers.
 
-```{r cars}
-summary(cars)
-```
+How to do network thinking:
+1. Identify a node set
+2. Come up with a construction rule
 
-## Including Plots
+Even if networks were refuted, e.t. the Ising model will stay as an exploratory tool.
 
-You can also embed plots, for example:
+Treatment can be used as a node in interventions, to see if it is connected to stuff in T1 (it shouldn't, if randomised), and if it looks different in T2. Denny says change networks are fine, too, differs on what sort of questions you're looking to answer. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+Also, if you assume a thing is not a network, you can do bivariate correlations, why not.. but if it's a network, maybe not.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Network theory
+
+When you increase stress on a highly connected network, you see jumps in activation, and it stays high once you decrease the activation! So, perturbation pushes system past a tipping point to a new, more static stable state (a deeper valley). 
+
+Treat depression symptoms as agents and simulate the network; by cosmic incidence Denny's Netlogo model had a tipping point at five symptoms.
+
+Clinicians use personalised networks (get baseline while on waiting list); they say that showing the networks can make people think differently about their problmes and thus they can be taken aboard treatment more easily. I.e. intervenetion adherence increases!
+
+You have to measure on the time scalse when the process takes place!
+
+Speed-accuracy tradeoff: Denny thinks the typing peed thing could happen, but differences between individual and group level are likely to be gradual and continuous instead of extrerme.
+
+Critical slowing down: increased autocorrelation, i.e. previous time point predicts the next one more robustly. WHAT ABOUT HEALTHY VARIABILITY?
+
+Colliders are only a problem when there's no feedback; very rare, says Denny.
+
+## Sacha and qgraph:
+
+Minimum, maximum and cut. 
+
+Maximum: the widest edges are always the largest correlations. Comparing different networks is difficult without labels! Use max to make networks comparable. 
+
+Minimum: kills small edges and starts coloring from the smallest above the minimum.
+
+Cut: use zero as default.
+
+
+
+# Causality
+
+Pearl's do-operator represents an intervention:
+
+Do(A=a)
+P(B|Do(A=a))
+
+Do(intervention)
+p(thing | intervention)
+
+Causal effect, if: P(thing | intervention) != P(thing)
+
+Edges can be thought of as *conditional independence relations*. This means we can at least rule out some causal structures. So, if we would observe that 
+
+
+# EIKO 
+
+- Central nodes != intervention targets:
+
+1. Central node can be a cause of many things
+2. E.g. suicidal ideation is important but not central
+3. Due to feedback loops, can be hard to make change stick in a system, if many things cause a thing.
+
+Note: strength is absolute value, check out "expected influence", which can account for 
+Check out predictability: in fused graphical lasso paper they had the outer rim of the nodes depicting how much of variance in a node is explained by other nodes.
+
+## What to include in a network?
+
+Scales are developed to measure latent variables, so you have similar items.
+Topological overlap (CORRELATION NETWORK) could be a thing to see which is similar and which is not. If you have 3+ items, estimate factor scores to control for measurement error. Paper on prenatal depression did this.
+
+### EIKO IS WRITING A PAPER ON SCALE CONSTRUCTION
+
+### Multicollinearity
+Ask Sacha, Eiko checks VIFs to flag weird stuff but doesn't know what to do if something is weird.
+
+### Missing data
+Ising model is based on nodewise regression; x1 on x2, x3, x4 and x2 on x1, x3, x4 etc. The ising model drops missing data automatically. The GGM relies on correlations, and missing data doesn't matter that much: You do pairwise correlations on items where you have data!
+
+## Centrality and stability practical
+
+Download the latest files for a good bootnet workflow, including how the order of nodes changes with dropping more of the data (remember the trust item).
+
+For visual comparability (thickest edge is the strongest edge in either network) is the maximum = max(network1$graph | network2$graph)
+
+## Power
+
+Check "A tutorial on regularized partial correlation networks" for a priori power analysis (but you need to assume a network structure!)
+
+# Sacha on time series
+
+Lag-1 factorization: "The future is independent of the past, given the present"
+
+## Multi-level VAR
+
+Correlation between edges indicaates network strengths, between means indicates a their connection, 
+
+When is it ok to interpret "average people"? Sacha says he interprets average networks all the time, you can plot the SD to see which effects vary a lot! 
+
+If you see something weird and thus suspect collider effects, maybe try out DAGing the data.
+
+## Cross-sectional data
+
+
+
+## Power in time series?????
+
+Marjan drucker tai joku? Mastrich multilevel school interventions
+
+# Laurens Waldorf DAGs
+
+Correlations are simple structures, tell about linear relations.

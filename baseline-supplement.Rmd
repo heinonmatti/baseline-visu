@@ -1,6 +1,8 @@
 ---
 title: "Baseline analysis supplement"
-output: word_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 Welcome to the LMI baseline supplement! This supplement will walk you through the paper and provides additional graphs.
@@ -28,7 +30,7 @@ Code chunk below shows how the values are calculated.
 
 ```{r}
 # Create a vector with all names of the variables we want. Exclude T3 variables.
-names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
+names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
 
 # Create empty soon-to-be-filled objects
 m <- NA
@@ -76,7 +78,7 @@ nonmissings <- NA
 #   n = nonmissings) %>% 
 #   dplyr::arrange(Variable) %>% 
 #   filter(Variable != "") %>% #remove first row, which is empty
-#   mutate(`ICC class` = as.numeric(`ICC class`)) %>% 
+#   dplyr::mutate(`ICC class` = as.numeric(`ICC class`)) %>% 
 #   as.data.frame()
 # 
 # ci_total <- data_frame(
@@ -93,20 +95,7 @@ load("vardatatable.Rdata")
 load("ci_total.Rdata")
 ```
 
-## Primary outcome variables
-
-### Plot of self-reported and accelerometer-measured MVPA-variables
-
-# !!! Red line is for the cutoff
-
-```{r}
-lmi %>% ggplot2::ggplot(aes(x = LiikuntaT1_ka, y = Kys0045.1)) + geom_point() + geom_smooth(method = "loess") +
-  geom_vline(xintercept = 120, col = "red") +
-  labs(x = "accelerometer-measured MVPA", y = "self-reported MVPA days last week")
-```
-
-
-```{r selected-total, results = 'asis'}
+```{r dplyr::selected-total, results = 'asis'}
 options(tibble.print_max = 1000)
 
 vardatatable2 <- vardatatable
@@ -144,7 +133,7 @@ vardatatable %>%
 ```{r icc-school-class-sortbyclass, results = 'asis'}
 
 vardatatable %>% 
-  select(Variable, `ICC class`, `ICC school`, n) %>% 
+  dplyr::select(Variable, `ICC class`, `ICC school`, n) %>% 
   arrange(desc(`ICC class`)) %>% slice(1:20) %>% 
   as.tbl() %>% 
   papaja::apa_table(caption = "Intra-class correlations sorted by classroom ICC",
@@ -156,7 +145,7 @@ vardatatable %>%
 
 ```{r icc-school-class-sortbyschool, results = 'asis'}
 
-vardatatable %>% select(Variable, `ICC class`, `ICC school`, n) %>% 
+vardatatable %>% dplyr::select(Variable, `ICC class`, `ICC school`, n) %>% 
   arrange(desc(`ICC school`)) %>% 
   slice(1:20) %>% 
   papaja::apa_table(caption = "Intra-class correlations sorted by school ICC",
@@ -175,7 +164,7 @@ As before, we create a table with all variables, their means, CIs and ICCs.
 #library(sjstats)
 #library(lme4)
 
-names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
+names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
 
 # Create empty soon-to-be-filled objects
 m <- NA
@@ -247,7 +236,7 @@ load("ci_edutrack.Rdata")
 ```{r icc-school-class-track-sortbyschool, results = 'asis'}
 
 vardatatable_containing_edutrack %>% 
-  select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% 
+  dplyr::select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% 
   arrange(desc(`ICC school`)) %>% 
   top_n(20) %>% 
   papaja::apa_table(caption = "Intra-class correlations sorted by school ICC",
@@ -259,7 +248,7 @@ vardatatable_containing_edutrack %>%
 
 ```{r icc-school-class-track-sortbyclass, results = 'asis'}
 
-vardatatable_containing_edutrack %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by classroom ICC",
+vardatatable_containing_edutrack %>% dplyr::select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by classroom ICC",
         format.args = list(digits = c(0), margin = 2))
 
 ```
@@ -268,7 +257,7 @@ vardatatable_containing_edutrack %>% select(Variable, `ICC educational track`, `
 
 ```{r icc-school-class-track-sortbytrack, results = 'asis'}
 
-vardatatable_containing_edutrack %>% select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by educational track ICC",
+vardatatable_containing_edutrack %>% dplyr::select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by educational track ICC",
         format.args = list(digits = c(0), margin = 2))
 
 ```
@@ -346,7 +335,7 @@ Top 20 items, sorted by ICC educational track
 ```{r icc-edu-track-only, results = 'asis'}
 
 vardatatable_containing_edutrack %>% 
-  select(Variable, `ICC educational track`, n) %>% 
+  dplyr::select(Variable, `ICC educational track`, n) %>% 
   arrange(desc(`ICC educational track`)) %>% 
   top_n(20) %>% 
   papaja::apa_table(caption = "Intra-class correlations sorted by educational track ICC",
@@ -370,8 +359,8 @@ ci_high <- NA
 nonmissings <- NA
 
 ## To test the code with a single variable:
-# df_for_sandwich <- df %>% select(group, school, track, sitLieAccelerometer_T1) %>% na.omit()
-# sandwich_clusters <- df_for_sandwich %>% select(group, school, track)
+# df_for_sandwich <- df %>% dplyr::select(group, school, track, sitLieAccelerometer_T1) %>% na.omit()
+# sandwich_clusters <- df_for_sandwich %>% dplyr::select(group, school, track)
 # m <- lm(sitLieAccelerometer_T1 ~ 1, data=df_for_sandwich)
 # sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
 # mean <- m$coefficients[[1]]
@@ -382,10 +371,10 @@ nonmissings <- NA
 
 ## Loop over each variable name, extract statistics: 
 # for (i in names){
-# df_for_sandwich <- df %>% select(
+# df_for_sandwich <- df %>% dplyr::select(
 #   group, school, track, i) %>% 
 #   na.omit()
-# sandwich_clusters <- df_for_sandwich %>% select(group, school, track)
+# sandwich_clusters <- df_for_sandwich %>% dplyr::select(group, school, track)
 # m <- lm(paste0(i," ~ 1"), data = df_for_sandwich)
 # sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
 # mean[i] <- m$coefficients[[1]]
@@ -443,7 +432,7 @@ names(ci_uncorrected) <- c("ciLo", "mean", "ciHi")
 
 ### Compare estimates visually {.tabset}
 
-#### This section contains diamond plots comparing different estimates for means and CIs.
+This section contains diamond plots comparing different estimates for means and CIs.
 
 #### High-mean variables
 
@@ -504,12 +493,18 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ],
 
 #### Other variables
 
-```{r}
+```{r estimates for other variables, results = "asis", fig.show = "asis"}
+# Take the high-mean variables out, because otherwise you'd have something with a mean of 200 
+# and a mean of 2 in the same plot, and scaling of the x-axis would smudge differences between the
+# diamonds, which indicate the estimates
+
 ci_total_small <- ci_total %>% filter(mean <= 10)
 ci_edutrack_small <- ci_edutrack %>% filter(mean <= 10)
 ci_uncorrected_small <- ci_uncorrected %>% filter(mean <= 10)
 ci_sandwich_small <- ci_sandwich %>% filter(mean <= 10)
 
+# Now, four data frames contain columns ciLo, mean, ciHi, and variable name, for each variable (i.e. row).
+# Make a diamondPlot layer from each of these data frames, so that i number of variables are in the same plot: 
 
 for (i in c(seq(from = 1, to = 171, by = 8))) {
 plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 8), ], 
@@ -554,10 +549,9 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 8), ],
                                viridis::viridis(4)[3]),
                     guide = guide_legend(override.aes = list(alpha = 1), ncol = 2)) +
   theme(legend.position="bottom") 
-  plot(plot1)
+#  cat('\n\n####', i, '\n\n  ') # Couldn't get tabbed plots to work properly.
+  print(plot1)
 }
-
-
 ```
 
 
@@ -609,7 +603,7 @@ CI_widths %>%
 # DELETE THESE:
 
 CI_widths %>%
-#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+#  dplyr::mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
   gather(estimator, value, 2:Sandwich) %>% 
   ggplot(aes(x = Label, y = value, group = estimator)) +
     geom_line(aes(color = estimator)) +
@@ -618,7 +612,7 @@ CI_widths %>%
     theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
 
 CI_widths %>%
-#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+#  dplyr::mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
   gather(estimator, value, 2:Sandwich) %>% 
   ggplot(aes(x = Label, y = value, group = estimator)) +
     geom_line(aes(color = estimator)) +
@@ -627,7 +621,7 @@ CI_widths %>%
     theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
 
 CI_widths %>%
-#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+#  dplyr::mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
   gather(estimator, value, 2:Sandwich) %>% 
   ggplot(aes(x = Label, y = value, group = estimator)) +
     geom_line(aes(color = estimator)) +
@@ -636,7 +630,7 @@ CI_widths %>%
     theme(axis.text.x=element_text(angle = 45, hjust = 1)) 
 
 CI_widths %>%
-#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+#  dplyr::mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
   gather(estimator, value, 2:Sandwich) %>% 
   ggplot(aes(x = Label, y = value, group = estimator)) +
     geom_line(aes(color = estimator)) +
@@ -646,7 +640,7 @@ CI_widths %>%
 
 
 CI_widths %>%
-#  mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
+#  dplyr::mutate(Label = as.numeric(as.factor(ci_total$diamondlabels))) %>% 
   gather(estimator, value, 2:Sandwich) %>% 
   ggplot(aes(x = Label, y = value, group = estimator)) +
     geom_line(aes(color = estimator)) +
@@ -660,12 +654,12 @@ CI_widths %>%
 #   label2 = ci_edutrack$diamondlabels,
 #   label3 = ci_uncorrected$diamondlabels,
 #   label4 = ci_sandwich) %>% rowwise %>% 
-#   mutate(test1 = ifelse(Label == label2, "OK",
+#   dplyr::mutate(test1 = ifelse(Label == label2, "OK",
 #                         ifelse(label2 == label3, "OK", 
 #                                ifelse(label3 == label4, "OK", "DISCREPANCY"))))
 
 CI_widths %>% summarise(meanClassroom...school = mean(Classroom...school), meanClassroom..school...track = mean(Classroom..school...track, na.rm = TRUE),
-                        meanOnly.track = mean(Only.track), meanSandwich = mean(Sandwich, na.rm = TRUE))
+                        meanOnly.track = mean(Uncorrected), meanSandwich = mean(Sandwich, na.rm = TRUE))
 ```
 
 
@@ -674,124 +668,124 @@ CI_widths %>% summarise(meanClassroom...school = mean(Classroom...school), meanC
 These numbers are visualised with diamond plots later.
 
 ```{r}
-names <- df %>% select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
-
-# Intercepts for boys; when boy is 1, girl is 0, but boy is a factor, so intercept is for boys even though boy is 1 for boys and 0 for girls.
-m.boys <- NA
-mean.boys <- NA
-m_p.boys <- NA
-ci_low.boys <- NA
-ci_high.boys <- NA
-ICC_group.boys <- NA
-ICC_School.boys <- NA
-nonmissings.boys <- NA
-
-df.boys <- df %>% mutate(boy = factor(ifelse(girl == "girl", 0, 1), levels = c(1, 0)))
-
-for (i in names){
-m.boys <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + boy"), data=df.boys)
-mean.boys[i] <- lme4::fixef(m.boys)[1]
-m_p.boys <- profile(m.boys, which = "beta_")
-ci_low.boys[i] <- confint(m_p.boys)[1, 1]
-ci_high.boys[i] <- confint(m_p.boys)[1, 2]
-ICC_group.boys[i] <- sjstats::icc(m.boys)[1]
-ICC_School.boys[i] <- sjstats::icc(m.boys)[2]
-nonmissings.boys[i] <- length(m.boys@resp$y)
-}
-
-cat("The labels are arranged such that intercept is not for girls:", labels(lme4::fixef(m.boys))[2] == "boy0")
-
-ci_boys <- data.frame(ciLo = ci_low.boys, mean = mean.boys, ciHi = ci_high.boys)
-diamondlabels <- labels(ci_boys)[[1]]
-ci_boys <- data.frame(ci_boys, diamondlabels)
-
-# Intercepts for girls; when boy is 1, girl is 0, but boy is a factor, so intercept is for girls even though girl is 1 for girls and 0 for boys.
-m.girls <- NA
-mean.girls <- NA
-m_p.girls <- NA
-ci_low.girls <- NA
-ci_high.girls <- NA
-ICC_group.girls <- NA
-ICC_School.girls <- NA
-nonmissings.girls <- NA
-
-for (i in names){
-m.girls <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + girl"), data=df)
-mean.girls[i] <- lme4::fixef(m.girls)[1]
-m_p.girls <- profile(m.girls, which = "beta_")
-ci_low.girls[i] <- confint(m_p.girls)[1, 1]
-ci_high.girls[i] <- confint(m_p.girls)[1, 2]
-ICC_group.girls[i] <- sjstats::icc(m.girls)[1]
-ICC_School.girls[i] <- sjstats::icc(m.girls)[2]
-nonmissings.girls[i] <- length(m.girls@resp$y)
-}
-
-cat("The labels are arranged such that intercept is not for boys:", labels(lme4::fixef(m.girls))[2] == "girl0")
-
-ci_girls <- data.frame(ciLo = ci_low.girls, mean = mean.girls, ciHi = ci_high.girls)
-diamondlabels <- labels(ci_girls)[[1]]
-ci_girls <- data.frame(ci_girls, diamondlabels)
-
-
-# Intercepts for intervention
-m.intervention <- NA
-mean.intervention <- NA
-m_p.intervention <- NA
-ci_low.intervention <- NA
-ci_high.intervention <- NA
-ICC_group.intervention <- NA
-ICC_School.intervention <- NA
-nonmissings.intervention <- NA
-
-## change "intervention" to be consistent regarding level order with "girl".
-df.intervention <- df %>% mutate(intervention = factor(intervention, levels = c(1, 0)))
-
-for (i in names){
-m.intervention <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + intervention"), data=df.intervention)
-mean.intervention[i] <- lme4::fixef(m.intervention)[1]
-m_p.intervention <- profile(m.intervention, which = "beta_")
-ci_low.intervention[i] <- confint(m_p.intervention)[1, 1]
-ci_high.intervention[i] <- confint(m_p.intervention)[1, 2]
-ICC_group.intervention[i] <- sjstats::icc(m.intervention)[1]
-ICC_School.intervention[i] <- sjstats::icc(m.intervention)[2]
-nonmissings.intervention[i] <- length(m.intervention@resp$y)
-}
-
-cat("The labels are arranged such that intercept is not for control:", labels(lme4::fixef(m.intervention))[2] == "intervention0")
-
-ci_intervention <- data.frame(ciLo = ci_low.intervention, mean = mean.intervention, ciHi = ci_high.intervention)
-diamondlabels <- labels(ci_intervention)[[1]]
-ci_intervention <- data.frame(ci_intervention, diamondlabels)
-
-# Intercepts for control
-
-m.control <- NA
-mean.control <- NA
-m_p.control <- NA
-ci_low.control <- NA
-ci_high.control <- NA
-ICC_group.control <- NA
-ICC_School.control <- NA
-nonmissings.control <- NA
-
-df.control <- df %>% mutate(control = factor(ifelse(intervention == 1, 0, 1), levels = c(1, 0)))
-
-for (i in names){
-m.control <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + control"), data=df.control)
-mean.control[i] <- lme4::fixef(m.control)[1]
-m_p.control <- profile(m.control, which = "beta_")
-ci_low.control[i] <- confint(m_p.control)[1, 1]
-ci_high.control[i] <- confint(m_p.control)[1, 2]
-ICC_group.control[i] <- sjstats::icc(m.control)[1]
-ICC_School.control[i] <- sjstats::icc(m.control)[2]
-nonmissings.control[i] <- length(m.control@resp$y)
-}
-
-cat("The labels are arranged such that intercept is not for intervention:", labels(lme4::fixef(m.control))[2] == "control0")
-
-ci_control <- data.frame(ciLo = ci_low.control, mean = mean.control, ciHi = ci_high.control)
-diamondlabels <- labels(ci_control)[[1]]
-ci_control <- data.frame(ci_control, diamondlabels)
+# names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
+# 
+# # Intercepts for boys; when boy is 1, girl is 0, but boy is a factor, so intercept is for boys even though boy is 1 for boys and 0 for girls.
+# m.boys <- NA
+# mean.boys <- NA
+# m_p.boys <- NA
+# ci_low.boys <- NA
+# ci_high.boys <- NA
+# ICC_group.boys <- NA
+# ICC_School.boys <- NA
+# nonmissings.boys <- NA
+# 
+# df.boys <- df %>% dplyr::mutate(boy = factor(ifelse(girl == "girl", 0, 1), levels = c(1, 0)))
+# 
+# for (i in names){
+# m.boys <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + boy"), data=df.boys)
+# mean.boys[i] <- lme4::fixef(m.boys)[1]
+# m_p.boys <- profile(m.boys, which = "beta_")
+# ci_low.boys[i] <- confint(m_p.boys)[1, 1]
+# ci_high.boys[i] <- confint(m_p.boys)[1, 2]
+# ICC_group.boys[i] <- sjstats::icc(m.boys)[1]
+# ICC_School.boys[i] <- sjstats::icc(m.boys)[2]
+# nonmissings.boys[i] <- length(m.boys@resp$y)
+# }
+# 
+# cat("The labels are arranged such that intercept is not for girls:", labels(lme4::fixef(m.boys))[2] == "boy0")
+# 
+# ci_boys <- data.frame(ciLo = ci_low.boys, mean = mean.boys, ciHi = ci_high.boys)
+# diamondlabels <- labels(ci_boys)[[1]]
+# ci_boys <- data.frame(ci_boys, diamondlabels)
+# 
+# # Intercepts for girls; when boy is 1, girl is 0, but boy is a factor, so intercept is for girls even though girl is 1 for girls and 0 for boys.
+# m.girls <- NA
+# mean.girls <- NA
+# m_p.girls <- NA
+# ci_low.girls <- NA
+# ci_high.girls <- NA
+# ICC_group.girls <- NA
+# ICC_School.girls <- NA
+# nonmissings.girls <- NA
+# 
+# for (i in names){
+# m.girls <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + girl"), data=df)
+# mean.girls[i] <- lme4::fixef(m.girls)[1]
+# m_p.girls <- profile(m.girls, which = "beta_")
+# ci_low.girls[i] <- confint(m_p.girls)[1, 1]
+# ci_high.girls[i] <- confint(m_p.girls)[1, 2]
+# ICC_group.girls[i] <- sjstats::icc(m.girls)[1]
+# ICC_School.girls[i] <- sjstats::icc(m.girls)[2]
+# nonmissings.girls[i] <- length(m.girls@resp$y)
+# }
+# 
+# cat("The labels are arranged such that intercept is not for boys:", labels(lme4::fixef(m.girls))[2] == "girl0")
+# 
+# ci_girls <- data.frame(ciLo = ci_low.girls, mean = mean.girls, ciHi = ci_high.girls)
+# diamondlabels <- labels(ci_girls)[[1]]
+# ci_girls <- data.frame(ci_girls, diamondlabels)
+# 
+# 
+# # Intercepts for intervention
+# m.intervention <- NA
+# mean.intervention <- NA
+# m_p.intervention <- NA
+# ci_low.intervention <- NA
+# ci_high.intervention <- NA
+# ICC_group.intervention <- NA
+# ICC_School.intervention <- NA
+# nonmissings.intervention <- NA
+# 
+# ## change "intervention" to be consistent regarding level order with "girl".
+# df.intervention <- df %>% dplyr::mutate(intervention = factor(intervention, levels = c(1, 0)))
+# 
+# for (i in names){
+# m.intervention <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + intervention"), data=df.intervention)
+# mean.intervention[i] <- lme4::fixef(m.intervention)[1]
+# m_p.intervention <- profile(m.intervention, which = "beta_")
+# ci_low.intervention[i] <- confint(m_p.intervention)[1, 1]
+# ci_high.intervention[i] <- confint(m_p.intervention)[1, 2]
+# ICC_group.intervention[i] <- sjstats::icc(m.intervention)[1]
+# ICC_School.intervention[i] <- sjstats::icc(m.intervention)[2]
+# nonmissings.intervention[i] <- length(m.intervention@resp$y)
+# }
+# 
+# cat("The labels are arranged such that intercept is not for control:", labels(lme4::fixef(m.intervention))[2] == "intervention0")
+# 
+# ci_intervention <- data.frame(ciLo = ci_low.intervention, mean = mean.intervention, ciHi = ci_high.intervention)
+# diamondlabels <- labels(ci_intervention)[[1]]
+# ci_intervention <- data.frame(ci_intervention, diamondlabels)
+# 
+# # Intercepts for control
+# 
+# m.control <- NA
+# mean.control <- NA
+# m_p.control <- NA
+# ci_low.control <- NA
+# ci_high.control <- NA
+# ICC_group.control <- NA
+# ICC_School.control <- NA
+# nonmissings.control <- NA
+# 
+# df.control <- df %>% dplyr::mutate(control = factor(ifelse(intervention == 1, 0, 1), levels = c(1, 0)))
+# 
+# for (i in names){
+# m.control <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + control"), data=df.control)
+# mean.control[i] <- lme4::fixef(m.control)[1]
+# m_p.control <- profile(m.control, which = "beta_")
+# ci_low.control[i] <- confint(m_p.control)[1, 1]
+# ci_high.control[i] <- confint(m_p.control)[1, 2]
+# ICC_group.control[i] <- sjstats::icc(m.control)[1]
+# ICC_School.control[i] <- sjstats::icc(m.control)[2]
+# nonmissings.control[i] <- length(m.control@resp$y)
+# }
+# 
+# cat("The labels are arranged such that intercept is not for intervention:", labels(lme4::fixef(m.control))[2] == "control0")
+# 
+# ci_control <- data.frame(ciLo = ci_low.control, mean = mean.control, ciHi = ci_high.control)
+# diamondlabels <- labels(ci_control)[[1]]
+# ci_control <- data.frame(ci_control, diamondlabels)
 
 # Same ICC results you'd get with e.g.:
 # m1 <- as.data.frame(VarCorr(m))
@@ -827,7 +821,7 @@ school = Aineisto.1,
 girl = Kys0013.1,
 ethnicity = Kys0005.1,
 studyYear = Kys0014.1) %>% 
-  mutate(age = 2016 - birthYear,
+  dplyr::mutate(age = 2016 - birthYear,
          intervention = ifelse(intervention == 1, 1, 0),
          intervention = as.numeric(intervention),
          girl = ifelse(girl == 2, 1, 0),
@@ -837,13 +831,13 @@ studyYear = Kys0014.1) %>%
          studyYear = ifelse(studyYear == 0, NA, studyYear)) # Remove "other" from study year
 
 # Insert track variable with those who answered "other" with one of the actual category labels given the appropriate category:
-Track <- lmi %>% select(Kys0016.1, Kys0017.1) %>% mutate(
+Track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
   Kys0016.1 = ifelse(Kys0017.1 == "Merkonomi" | Kys0017.1 == "merkonomi", 3,
                   ifelse(Kys0017.1 == "Datanomi" | Kys0017.1 == "datanomi", 2, Kys0016.1)),
   Track = factor(Kys0016.1, # Fix track labels first
                      levels = c(0, 1, 2, 3, 4),
                      labels = c("Other", "Business IT", "Business Admin", "HRC", "Nursing"))) %>% 
-  select(-Kys0016.1, -Kys0017.1)
+  dplyr::select(-Kys0016.1, -Kys0017.1)
 
 demographics <- bind_cols(demographics, Track)
 ```
@@ -974,7 +968,7 @@ papaja::apa_table(demotable, caption = "Baseline demographics of educational tra
 ```{r outcome-table, results = 'asis'}
 
 outtable_track <- df %>%
-  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
+  dplyr::select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -1030,7 +1024,7 @@ outtable_track <- df %>%
   filter(track != "Other")
 
 outtable_intervention <- df %>%
-  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
+  dplyr::select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -1084,7 +1078,7 @@ outtable_intervention <- df %>%
   filter(complete.cases(.))
 
 outtable_girl <- df %>%
-  select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
+  dplyr::select(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, # Main outcomes 
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -1186,7 +1180,7 @@ identical(outtable_track$Variable, outtable_intervention$Variable)
 
 # Create large table with all variables
 outtable_mega <- bind_cols(outtable_track, outtable_intervention, outtable_girl) %>% 
-  select(-Variable1, -Variable2) 
+  dplyr::select(-Variable1, -Variable2) 
 
 # Move n to be the first row
 out1 <- outtable_mega %>% filter(Variable == "n")
@@ -1209,7 +1203,7 @@ papaja::apa_table(outtable_mega, caption = "Baseline demographics of educational
 mediatortable_intervention <- ci_intervention %>%
   dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_intervention$diamondlabels)) %>% 
   filter(diamondlabels != "PA_goal_T1") %>% 
-  mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
+  dplyr::mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
          mean = round(mean, 1))
 
 mediatortable_intervention$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_intervention$diamondlabels)
@@ -1234,7 +1228,7 @@ mediatortable_intervention$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'S
 mediatortable_control <- ci_control %>%
   dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_control$diamondlabels)) %>% 
   filter(diamondlabels != "PA_goal_T1") %>% 
-  mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
+  dplyr::mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
          mean = round(mean, 1))
 
 mediatortable_control$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_control$diamondlabels)
@@ -1259,7 +1253,7 @@ mediatortable_control$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB out
 mediatortable_girls <- ci_girls %>%
   dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_girls$diamondlabels)) %>% 
   filter(diamondlabels != "PA_goal_T1") %>% 
-  mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
+  dplyr::mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
          mean = round(mean, 1))
 
 mediatortable_girls$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_girls$diamondlabels)
@@ -1284,7 +1278,7 @@ mediatortable_girls$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outco
 mediatortable_boys <- ci_boys %>%
   dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_boys$diamondlabels)) %>% 
   filter(diamondlabels != "PA_goal_T1") %>% 
-  mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
+  dplyr::mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
          mean = round(mean, 1))
 
 mediatortable_boys$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_boys$diamondlabels)
@@ -1309,7 +1303,7 @@ mediatortable_boys$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outcom
 mediatortable_total <- ci_total %>%
   dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_total$diamondlabels)) %>% 
   filter(diamondlabels != "PA_goal_T1") %>% 
-  mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
+  dplyr::mutate("CI95" = paste(round(ciLo, 1), "-", round(ciHi, 1)),
          mean = round(mean, 1))
 
 mediatortable_total$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_total$diamondlabels)
@@ -1388,7 +1382,7 @@ library(rstanarm)
 # grep("PA_", names(df), value = TRUE)
 
 # Centre the variable:
-df <- df %>% mutate(paAccelerometer_T1_centred = paAccelerometer_T1 - mean(paAccelerometer_T1, na.rm = TRUE))
+df <- df %>% dplyr::mutate(paAccelerometer_T1_centred = paAccelerometer_T1 - mean(paAccelerometer_T1, na.rm = TRUE))
 
 m_1 <- stan_glmer(paAccelerometer_T1_centred ~ (1 | group), data = df, chains = 2, iter = 2000) 
 pt <- ranef(m_1) 
@@ -1396,7 +1390,7 @@ posteriors <- data.frame(posterior_interval(m_1, prob = 0.90))
 school_int <- posteriors[-c(1, nrow(posteriors)-1, nrow(posteriors)),] #remove intercept and sigma parameters, leaving only class intervals 
 
 # This not needed any more:
-# groupmeans <- df %>% select(paAccelerometer_T1, group) %>% group_by(group) %>% 
+# groupmeans <- df %>% dplyr::select(paAccelerometer_T1, group) %>% group_by(group) %>% 
 #   summarise(mean = mean(paAccelerometer_T1, na.rm = T)) %>% filter(complete.cases(.))
 
 dat_plt <- data.frame(pt$group, school_int) 
@@ -1421,7 +1415,7 @@ Sys.setenv("BINPREF" = "C:/HYApp/Rtools3.4/mingw_$(WIN)/bin/")
 library(brms)
 
 # Centre the variable:
-df <- df %>% mutate(paAccelerometer_T1_centred = 
+df <- df %>% dplyr::mutate(paAccelerometer_T1_centred = 
                       paAccelerometer_T1 - mean(paAccelerometer_T1, na.rm = TRUE))
 
 m_1 <- brms::bf(paAccelerometer_T1_centred ~ (1 | group)) 
@@ -1431,7 +1425,7 @@ fit_1 <- brms::brm(m_1, df)
 
 pt <- brms::ranef(fit_1, robust = TRUE) %>% 
   data.frame %>% 
-  select(credintLow = group.2.5.ile.Intercept,
+  dplyr::select(credintLow = group.2.5.ile.Intercept,
          intercept = group.Estimate.Intercept, 
          credintHigh = group.97.5.ile.Intercept) %>% 
   arrange(intercept)
@@ -1455,7 +1449,7 @@ forest(fit_1)
 ```{r randeff-plot-brms-autonomous, fig.height = 4, fig.width = 12}
 
 # Centre the variable:
-df <- df %>% mutate(PA_autonomous_T1_centred = PA_autonomous_T1 - mean(PA_autonomous_T1, na.rm = TRUE))
+df <- df %>% dplyr::mutate(PA_autonomous_T1_centred = PA_autonomous_T1 - mean(PA_autonomous_T1, na.rm = TRUE))
 
 m_1 <- brms::bf(PA_autonomous_T1_centred ~ (1 | group)) 
 get_prior(m_1, data = df)
@@ -1464,7 +1458,7 @@ fit_1 <- brms::brm(m_1, df)
 
 pt <- brms::ranef(fit_1, robust = TRUE) %>% 
   data.frame %>% 
-  select(credintLow = group.2.5.ile.Intercept,
+  dplyr::select(credintLow = group.2.5.ile.Intercept,
          intercept = group.Estimate.Intercept, 
          credintHigh = group.97.5.ile.Intercept) %>% 
   arrange(intercept)
@@ -1483,6 +1477,47 @@ df %>% ggplot(aes(x = group, y = PA_autonomous_T1_centred)) +
 
 ```
 
+## Primary outcome variables
+
+### Plot of self-reported and accelerometer-measured MVPA-variables
+
+# !!! Red line is for the cutoff
+
+```{r}
+lmi %>% ggplot2::ggplot(aes(x = LiikuntaT1_ka, y = Kys0045.1)) + geom_point() + geom_smooth(method = "loess") +
+  geom_vline(xintercept = 120, col = "red") +
+  labs(x = "accelerometer-measured MVPA", y = "self-reported MVPA days last week")
+
+
+```
+
+```{r}
+ggstatsplot::ggscatterstats(
+  data = na.omit(dplyr::select(lmi, LiikuntaT1_ka, Kys0045.1)),
+  x = LiikuntaT1_ka,
+  y = Kys0045.1,
+  test = "robust",                               # type of test that needs to be run
+  results.subtitle = FALSE,
+  xlab = "Accelerometer-measured MVPA",              # label for x axis
+  ylab = "Self-reported PA (previous week)",              # label for y axis 
+  line.colour = "black",                     # changing regression line colour line
+  title = "",       # title text for the plot
+  # caption = expression(                          # caption text for the plot
+  #  paste(italic("Note"), ": this is a demo")
+  #  ),
+  marginal.type = "histogram",                     # type of marginal distribution to be displayed
+  xfill = "blue",                                # colour fill for x-axis marginal distribution 
+  yfill = "red",                                 # colour fill for y-axis marginal distribution
+  intercept = "median",                          # which type of intercept line is to be displayed  
+  width.jitter = 0,                            # amount of horizontal jitter for data points
+  height.jitter = 0                            # amount of vertical jitter for data points
+) 
+
+ggstatsplot::ggscatterstats(data = na.omit(dplyr::select(lmi, LiikuntaT1_ka, Kys0045.1)), 
+                            x = LiikuntaT1_ka, 
+                            y = Kys0045.1)
+```
+
 
 # Ridge plots
 
@@ -1498,7 +1533,7 @@ plot1 <- df %>% dplyr::select(id,
   'PA autonomous \nmotivation' = PA_autonomous_T1,
 'PA controlled \nmotivation' = PA_controlled_T1,
 'PA amotivation' = PA_amotivation_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
@@ -1522,7 +1557,7 @@ plot2 <- df %>% dplyr::select(id,
   'PA autonomous \nmotivation' = PA_autonomous_T1,
 'PA controlled \nmotivation' = PA_controlled_T1,
 'PA amotivation' = PA_amotivation_T1) %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
@@ -1558,7 +1593,7 @@ plot1 <- df %>% dplyr::select(id,
 'Extraversion' = big5_extraversion_T1,
 'Neuroticism' = big5_neuroticism_T1,
 'Openness' = big5_openness_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
@@ -1584,7 +1619,7 @@ plot2 <- df %>% dplyr::select(id,
 'Extraversion' = big5_extraversion_T1,
 'Neuroticism' = big5_neuroticism_T1,
 'Openness' = big5_openness_T1) %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
@@ -1619,7 +1654,7 @@ plot1 <- df %>% dplyr::select(id,
   girl,
 'Frequency-\nrelated BCTs' = PA_frqbct_T1,
 'Agreement-\nrelated BCTs' = PA_agrbct_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
@@ -1642,7 +1677,7 @@ plot2 <- df %>% dplyr::select(id,
   girl,
 'Frequency-\nrelated BCTs' = PA_frqbct_T1,
 'Agreement-\nrelated BCTs' = PA_agrbct_T1) %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
@@ -1687,7 +1722,7 @@ levels(densplot$girl) <- list("Girl" = "1", "Boy" = "0")
 
 ## Intervention vs. control
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(PA_frqbct_T1, intervention) %>% 
+dens <- densplot %>% dplyr::select(PA_frqbct_T1, intervention) %>% 
   na.omit(.)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -1698,7 +1733,7 @@ legend("topright", levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(PA_frqbct_T1, girl) %>% 
+dens <- densplot %>% dplyr::select(PA_frqbct_T1, girl) %>% 
   na.omit(.)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -1709,7 +1744,7 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(PA_frqbct_T1, school) %>% 
+dens <- densplot %>% dplyr::select(PA_frqbct_T1, school) %>% 
   na.omit(.)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -1742,7 +1777,7 @@ levels(densplot$girl) <- list("Girl" = "1", "Boy" = "0")
 
 ## Intervention vs. control
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(PA_agrbct_T1, intervention) %>% 
+dens <- densplot %>% dplyr::select(PA_agrbct_T1, intervention) %>% 
   na.omit(.)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -1753,7 +1788,7 @@ legend("topright", levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(PA_agrbct_T1, girl) %>% 
+dens <- densplot %>% dplyr::select(PA_agrbct_T1, girl) %>% 
   na.omit(.)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -1764,7 +1799,7 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(PA_agrbct_T1, school) %>% 
+dens <- densplot %>% dplyr::select(PA_agrbct_T1, school) %>% 
   na.omit(.)
 
 # Intervention groups with solid thicker lines
@@ -1942,6 +1977,58 @@ grid::grid.draw(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), ggplotGrob(bctGir
 # grid.draw(rbind(cbind(ggplotGrob(bctInt), ggplotGrob(bctCont), size = "last"), cbind(ggplotGrob(bctGirls), ggplotGrob(bctBoys), size = "last")))
 
 ```
+
+**Correlations**
+
+```{r BCT-correlations, eval = FALSE}
+frqbct_df <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  track,
+'Reminded self of positive consequences' = PA_frqbct_01_T1,
+'Has logged PA on paper' = PA_frqbct_02_T1,
+'Has monitored PA on smartphone' = PA_frqbct_03_T1,
+'Uses mnemonic cues' = PA_frqbct_04_T1,
+'Has compared actual with goal' = PA_frqbct_05_T1,
+'Has thought of relevance of PA' = PA_frqbct_06_T1,
+'Has made changes at home' = PA_frqbct_07_T1,
+'Has sought social support' = PA_frqbct_08_T1,
+'Has evaluated why goal not reached' = PA_frqbct_09_T1)
+
+plots <- plyr::dlply(
+  .data = frqbct_df,
+  .variables = .(track),  # creates the ggcorrmat for each level of track factor
+  .fun = function(frqbct_df)
+    ggstatsplot::ggcorrmat(
+      data = data,
+      cor.vars = c(`Reminded self of positive consequences`, `Has logged PA on paper`),
+      cor.vars.names = c("Sepal Length", "Sepal Width", "Petal Length", "Petal Width"),
+      title = glue::glue("Species: {data$Species}")
+    )
+)
+
+# combining the individual correlalograms into a single plot
+ ggstatsplot::combine_plots(
+    plotlist = plots,
+    nrow = 3,
+    ncol = 1,
+    labels = c("(a)", "(b)", "(c)", "(d)"),
+    title.text = "Correlalogram for length measures for all Iris species",
+    title.colour = "blue",
+    caption.text = expression(
+        paste(
+          italic("Note"),
+          ": X denotes correlation non-significant at ",
+          italic("p "),
+          "< 0.05; unadjusted"
+        )
+      )
+  )  
+```
+
+
 
 
 #### Agreement-measured BCTs
@@ -2156,7 +2243,7 @@ plot1 <- df %>% dplyr::select(id,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
                               'PA descriptive\nnorm' = PA_dnorm_T1,
                               'PA injunctive\nnorm' = PA_inorm_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, colour = paste(Variable, girl), 
@@ -2223,7 +2310,7 @@ plot2 <- df %>% dplyr::select(id,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
                               'PA descriptive\nnorm' = PA_dnorm_T1,
                               'PA injunctive\nnorm' = PA_inorm_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, colour = paste(Variable, intervention), 
@@ -2290,7 +2377,7 @@ plot1 <- df %>% dplyr::select(id,
                               'PA self efficacy' = PA_selfefficacy_T1,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
                               'PA descriptive\nnorm' = PA_dnorm_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, colour = "black", 
@@ -2353,7 +2440,7 @@ plot2 <- df %>% dplyr::select(id,
                               'PA self efficacy' = PA_selfefficacy_T1,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
                               'PA descriptive\nnorm' = PA_dnorm_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, colour = "black", 
@@ -2403,10 +2490,10 @@ grid::grid.draw(cbind(ggplotGrob(plot1), ggplotGrob(plot2), size = "first"))
 plot1
 plot2
 # Test that the legend is right; descriptive norms are smaller for girls
-df %>% group_by(girl) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% filter(girl == "1") %>% select(mean) < df %>% group_by(girl) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% filter(girl == "0") %>% select(mean)
+df %>% group_by(girl) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% filter(girl == "1") %>% dplyr::select(mean) < df %>% group_by(girl) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% filter(girl == "0") %>% dplyr::select(mean)
 
 # KESKEN: iv/ctrl-legend
-df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = TRUE)) %>% filter(intervention == "1") %>% select(mean) < df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% filter(intervention == "0") %>% select(mean)
+df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = TRUE)) %>% filter(intervention == "1") %>% dplyr::select(mean) < df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% filter(intervention == "0") %>% dplyr::select(mean)
 ```
 
 ### MVPA, girls and boys in different educational tracks
@@ -2434,8 +2521,8 @@ PA_trackgirl_CIL <- brms::ranef(m_paAccelerometer_trackgirl)[[1]][21:30]
 PA_trackgirl_CIH <- brms::ranef(m_paAccelerometer_trackgirl)[[1]][31:40]
 
 PA_trackgirl_ci <- data.frame(PA_trackgirl_CIL, PA_trackgirl_estimates, PA_trackgirl_CIH, Variable = labels(brms::ranef(m_paAccelerometer_trackgirl))) %>% 
-  mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  mutate(PA_trackgirl_CIL = PA_trackgirl_CIL + b_intercept,
+  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  dplyr::mutate(PA_trackgirl_CIL = PA_trackgirl_CIL + b_intercept,
          PA_trackgirl_estimates = PA_trackgirl_estimates + b_intercept,
          PA_trackgirl_CIH = PA_trackgirl_CIH + b_intercept,
          track = c('Business Admin_boy',
@@ -2530,7 +2617,7 @@ plot1 <- df %>% dplyr::select(id,
   ggridges::theme_ridges(grid = FALSE) +
   papaja::theme_apa() 
 
-df %>% select(paAccelerometer_T1, girl, track) %>% 
+df %>% dplyr::select(paAccelerometer_T1, girl, track) %>% 
   group_by(girl, track) %>% 
   summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
             median = median(paAccelerometer_T1, na.rm = TRUE),
@@ -2539,7 +2626,7 @@ df %>% select(paAccelerometer_T1, girl, track) %>%
             sd = sd(paAccelerometer_T1, na.rm = TRUE),
             n = n())
 
-df %>% select(paAccelerometer_T1, girl, track) %>% 
+df %>% dplyr::select(paAccelerometer_T1, girl, track) %>% 
   group_by(girl) %>% 
   summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
             median = median(paAccelerometer_T1, na.rm = TRUE),
@@ -2620,7 +2707,7 @@ plot1 <- df %>% dplyr::select(id,
   theme(legend.position="bottom", axis.text=element_text(size=10))
 plot1
 
-df %>% select(paAccelerometer_T1, girl, trackSchool) %>% 
+df %>% dplyr::select(paAccelerometer_T1, girl, trackSchool) %>% 
   group_by(girl, trackSchool) %>% 
   summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
             median = median(paAccelerometer_T1, na.rm = TRUE),
@@ -2629,7 +2716,7 @@ df %>% select(paAccelerometer_T1, girl, trackSchool) %>%
             sd = sd(paAccelerometer_T1, na.rm = TRUE),
             n = n())
 
-df %>% select(paAccelerometer_T1, girl, trackSchool) %>% 
+df %>% dplyr::select(paAccelerometer_T1, girl, trackSchool) %>% 
   group_by(girl) %>% 
   summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
             median = median(paAccelerometer_T1, na.rm = TRUE),
@@ -2657,7 +2744,7 @@ plot1 <- df %>% dplyr::select(id,
 'PA perceived\nopportunities' = PA_opportunities_T1,
 'PA descriptive\nnorm' = PA_dnorm_T1,
 'PA injunctive\nnorm' = PA_inorm_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
@@ -2686,7 +2773,7 @@ plot2 <- df %>% dplyr::select(id,
 'PA perceived\nopportunities' = PA_opportunities_T1,
 'PA descriptive\nnorm' = PA_dnorm_T1,
 'PA injunctive\nnorm' = PA_inorm_T1) %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
@@ -2804,7 +2891,7 @@ plot1 <- df %>% dplyr::select(id,
 'SB self-efficacy\nand perceived\nbehavioural control' = SB_sePbc_T1,
 'SB descriptive\nnorm' = SB_dnorm_T1,
 'SB injunctive\nnorm' = SB_inorm_T1)  %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, girl)), 
@@ -2830,7 +2917,7 @@ plot2 <- df %>% dplyr::select(id,
 'SB self-efficacy\nand perceived\nbehavioural control' = SB_sePbc_T1,
 'SB descriptive\nnorm' = SB_dnorm_T1,
 'SB injunctive\nnorm' = SB_inorm_T1) %>%
-  # select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot(aes(y = Variable)) +
   ggridges::geom_density_ridges(aes(x = Value, fill = paste(Variable, intervention)), 
@@ -2857,7 +2944,7 @@ gridExtra::grid.arrange(plot1, plot2, ncol = 2)
 # cat(names(df), sep = "\",\n\"")
 
 # Make variables numeric, and d as data frame
-d_num <- df %>% mutate_all(as.numeric) 
+d_num <- df %>% dplyr::mutate_all(as.numeric) 
 d_num <- as.data.frame(d_num)
 
 userfriendlyscience::CIBER(data = d_num,
@@ -2983,7 +3070,7 @@ Contrary to some other findings, in our sample girls were more active than boys.
 
 ```{r}
 
-MVPAgirl_df <- df %>% group_by(girl) %>% select(girl, paAccelerometer_T1) %>% summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE), median = median(paAccelerometer_T1, na.rm = TRUE))
+MVPAgirl_df <- df %>% group_by(girl) %>% dplyr::select(girl, paAccelerometer_T1) %>% summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE), median = median(paAccelerometer_T1, na.rm = TRUE))
 MVPAgirl_df[1, 2] - MVPAgirl_df[2, 2]
 MVPAgirl_df[1, 3] - MVPAgirl_df[2, 3]
 
@@ -3005,7 +3092,7 @@ levels(densplot$girl) <- list("Girl" = "1", "Boy" = "0")
 
 ## Intervention vs. control
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(paAccelerometer_T1, intervention) %>% 
+dens <- densplot %>% dplyr::select(paAccelerometer_T1, intervention) %>% 
   filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -3016,7 +3103,7 @@ legend("topright", levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(paAccelerometer_T1, girl) %>% 
+dens <- densplot %>% dplyr::select(paAccelerometer_T1, girl) %>% 
   filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -3027,7 +3114,7 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(paAccelerometer_T1, school) %>% 
+dens <- densplot %>% dplyr::select(paAccelerometer_T1, school) %>% 
   filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -3058,7 +3145,7 @@ levels(densplot$girl) <- list("Girl" = "1", "Boy" = "0")
 
 ## Intervention vs. control
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(sitLieAccelerometer_T1, intervention) %>% 
+dens <- densplot %>% dplyr::select(sitLieAccelerometer_T1, intervention) %>% 
   filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -3070,7 +3157,7 @@ legend("topright", levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(sitLieAccelerometer_T1, girl) %>% 
+dens <- densplot %>% dplyr::select(sitLieAccelerometer_T1, girl) %>% 
   filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -3082,7 +3169,7 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(sitLieAccelerometer_T1, school) %>% 
+dens <- densplot %>% dplyr::select(sitLieAccelerometer_T1, school) %>% 
   filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
@@ -3113,7 +3200,7 @@ levels(densplot$girl) <- list("Girl" = "1", "Boy" = "0")
 
 ## Intervention vs. control
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(symptom_T1, intervention) %>% na.omit(densplot)
+dens <- densplot %>% dplyr::select(symptom_T1, intervention) %>% na.omit(densplot)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
@@ -3124,7 +3211,7 @@ legend("topright", levels(dens$intervention), fill=c(1, 2))
 
 ## Girls vs. boys
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select(symptom_T1, girl)  %>% na.omit(densplot)
+dens <- densplot %>% dplyr::select(symptom_T1, girl)  %>% na.omit(densplot)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
@@ -3135,7 +3222,7 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 
 ## Differences in schools
 # Choose only the variables needed and drop NA
-dens <- densplot %>% select("Symptom sum score" = symptom_T1, school) %>% na.omit(densplot)
+dens <- densplot %>% dplyr::select("Symptom sum score" = symptom_T1, school) %>% na.omit(densplot)
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)

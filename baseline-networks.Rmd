@@ -6,10 +6,6 @@ title: "Network analyses"
 
 source("baseline-datasetup.R")
 
-# # Packages specifically for network analysis
-# pacman::p_install("EstimateGroupNetwork", "bootnet", "qgraph")
-# pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
-
 ```
 
 Clicking the "Code"-buttons on the right shows code for each chunk.

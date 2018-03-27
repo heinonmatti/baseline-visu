@@ -11,7 +11,10 @@ if (!require(pacman)) install.packages("pacman")
 CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4", 
                "userfriendlyscience", "sm", "sjstats", "gridExtra", "igraph", 
                "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm",
-               "brms", "mlmRev", "rstan", "sandwich")
+               "brms", "mlmRev", "rstan", "sandwich", "visreg", "broom", 
+               "EstimateGroupNetwork", "bootnet", "qgraph", # for networks
+               "corrgram", "sjPlot") 
+
 instpacks <- setdiff(CRANpacks, pacman::p_library())
 
 # Use pacman to install the needed packages.
@@ -19,11 +22,17 @@ if (length(instpacks)>0) install.packages(instpacks)
 
 if (!require(papaja)) pacman::p_install_gh("crsh/papaja")
 if (!require(ggridges)) pacman::p_install_gh("clauswilke/ggridges")
+if (!require(brmstools)) pacman::p_install_gh("mvuorre/brmstools")
+if (!require(NetworkComparisonTest)) pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
+if (!require(ggstatsplot)) pacman::p_install_gh("IndrajeetPatil/ggstatsplot")
+
+# This is needed for the raincloud plots:
+source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
 
 # Packages for the figures which show Bayesian credible intervals of classes
 #pacman::p_install(c("rstanarm", "brms", "mlmRev"))
 
-pacman::p_load(knitr, tidyverse)
+# pacman::p_load(knitr, tidyverse)
 
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = TRUE,
@@ -482,7 +491,7 @@ d <- lmi %>% dplyr::select(id = ID,
 d <- d %>% mutate_at(dplyr::vars(contains("ReverseCoded_")), funs(8 - .))
 
 # To check:
-# d %>% select(contains("ReverseCoded_")), contains("Rev")) %>% View
+# d %>% dplyr::select(contains("ReverseCoded_")), contains("Rev")) %>% View
 identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$b5extReverseCoded_02_T1))
 identical(as.numeric(8 - lmi$Kys0100.1), as.numeric(d$PA_opportunitiesReverseCoded_03_T1))
 
@@ -502,19 +511,21 @@ d <- d %>% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
 d <- d %>% dplyr::mutate(paLastweek_T1 = (pahrsLastweek_T1 * 60) + ifelse(paminLastweek_T1 == 2, 30, 0))
 
 # Insert track variable with those who answered "other" with one of the actual category labels given the appropriate category:
-track <- lmi %>% select(Kys0016.1, Kys0017.1) %>% mutate(
+track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
+  Kys0016.1 = as.character(Kys0016.1), # Because I had an Evaluation error: `x` and `labels` must be same type.
+  Kys0017.1 = as.character(Kys0017.1),
   Kys0016.1 = ifelse(Kys0017.1 == "Merkonomi" | Kys0017.1 == "merkonomi", 3,
                      ifelse(Kys0017.1 == "Datanomi" | Kys0017.1 == "datanomi", 2, Kys0016.1)),
   track = factor(Kys0016.1, # Fix track labels first
                  levels = c(0, 1, 2, 3, 4),
                  labels = c("Other", "Business IT", "Business Admin", "HRC", "Nursing"))) %>% 
-  select(-Kys0016.1, -Kys0017.1)
+  dplyr::select(-Kys0016.1, -Kys0017.1)
 
 d <- bind_cols(d, track)
 
 # Separate variables for scale-creation purposes
-dT1 <- d %>% select(contains("T1"))
-dT3 <- d %>% select(contains("T3"))
+dT1 <- d %>% dplyr::select(contains("T1"))
+dT3 <- d %>% dplyr::select(contains("T3"))
 
 # Create T1 scales
 
@@ -605,7 +616,7 @@ df$PA_actCop_T3[is.nan(df$PA_actCop_T3)] <- NA
 
 # Create variables for motivational regulations
 
-regulationVariables_T1 <- lmi %>% select(
+regulationVariables_T1 <- lmi %>% dplyr::select(
   PA_extrinsic_01_T1 = Kys0080.1,
   PA_extrinsic_02_T1 = Kys0081.1,
   PA_extrinsic_03_T1 = Kys0083.1,
@@ -621,7 +632,7 @@ regulationVariables_T1 <- lmi %>% select(
   PA_intrinsic_02_T1 = Kys0093.1,
   PA_intrinsic_03_T1 = Kys0095.1)
 
-regulationVariables_T3 <- lmi %>% select(
+regulationVariables_T3 <- lmi %>% dplyr::select(
   PA_extrinsic_01_T3 = Kys0080.3,
   PA_extrinsic_02_T3 = Kys0081.3,
   PA_extrinsic_03_T3 = Kys0083.3,
@@ -665,4 +676,5 @@ df[, paste0(stringr::str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df
 
 # Create a combination of track and school variables
 df <- df %>% dplyr::mutate(trackSchool = paste0(track, school)) 
+
 
