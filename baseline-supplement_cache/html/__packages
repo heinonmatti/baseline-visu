@@ -7,6 +7,8 @@ Rcpp
 brms
 brmstools
 NetworkComparisonTest
+ggstatsplot
+patchwork
 knitr
 tidyverse
 tibble
@@ -17,6 +19,3 @@ dplyr
 stringr
 forcats
 bindrcpp
-rstanarm
-visreg
-broom

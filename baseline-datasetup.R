@@ -25,30 +25,31 @@ if (!require(ggridges)) pacman::p_install_gh("clauswilke/ggridges")
 if (!require(brmstools)) pacman::p_install_gh("mvuorre/brmstools")
 if (!require(NetworkComparisonTest)) pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
 if (!require(ggstatsplot)) pacman::p_install_gh("IndrajeetPatil/ggstatsplot")
-  
-# These are needed for the raincloud plots:
-source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
+if (!require(patchwork)) pacman::p_install_gh("thomasp85/patchwork")
 
-raincloud_theme = theme(
-  text = element_text(size = 10),
-  axis.title.x = element_text(size = 16),
-  axis.title.y = element_text(size = 16),
-  axis.text = element_text(size = 14),
-  axis.text.x = element_text(angle = 45, vjust = 0.5),
-  legend.title=element_text(size=16),
-  legend.text=element_text(size=16),
-  legend.position = "right",
-  plot.title = element_text(lineheight=.8, face="bold", size = 16),
-  panel.border = element_blank(),
-  panel.grid.minor = element_blank(),
-  panel.grid.major = element_blank(),
-  axis.line.x = element_line(colour = 'black', size=0.5, linetype='solid'),
-  axis.line.y = element_line(colour = 'black', size=0.5, linetype='solid'))
+# These are needed for the raincloud plots:
+# source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
+# 
+# raincloud_theme = theme(
+#   text = element_text(size = 10),
+#   axis.title.x = element_text(size = 16),
+#   axis.title.y = element_text(size = 16),
+#   axis.text = element_text(size = 14),
+#   axis.text.x = element_text(angle = 45, vjust = 0.5),
+#   legend.title=element_text(size=16),
+#   legend.text=element_text(size=16),
+#   legend.position = "right",
+#   plot.title = element_text(lineheight=.8, face="bold", size = 16),
+#   panel.border = element_blank(),
+#   panel.grid.minor = element_blank(),
+#   panel.grid.major = element_blank(),
+#   axis.line.x = element_line(colour = 'black', size=0.5, linetype='solid'),
+#   axis.line.y = element_line(colour = 'black', size=0.5, linetype='solid'))
 
 # Packages for the figures which show Bayesian credible intervals of classes
 #pacman::p_install(c("rstanarm", "brms", "mlmRev"))
 
-# pacman::p_load(knitr, tidyverse)
+pacman::p_load(knitr, tidyverse)
 
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = TRUE,
@@ -504,7 +505,7 @@ d <- lmi %>% dplyr::select(id = ID,
 
 # Reverse coded items to normal: 
 # Take vars that contain "ReverseCoded_", substract them from 8 (each scale is 1-7)
-d <- d %>% mutate_at(dplyr::vars(contains("ReverseCoded_")), funs(8 - .))
+d <- d %>% dplyr::mutate_at(dplyr::vars(contains("ReverseCoded_")), funs(8 - .))
 
 # To check:
 # d %>% dplyr::select(contains("ReverseCoded_")), contains("Rev")) %>% View

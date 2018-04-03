@@ -549,7 +549,7 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 8), ],
                                viridis::viridis(4)[3]),
                     guide = guide_legend(override.aes = list(alpha = 1), ncol = 2)) +
   theme(legend.position="bottom") 
-#  cat('\n\n####', i, '\n\n  ') # Couldn't get tabbed plots to work properly.
+  cat('\n\n####', i, '\n\n  ') 
   print(plot1)
 }
 ```
@@ -2407,8 +2407,8 @@ grid::grid.newpage()
 grid::grid.draw(cbind(ggplot2::ggplotGrob(plot1), ggplot2::ggplotGrob(plot2), size = "first"))
 ```
 
-### Pretty plot with fill
-# !!! KESKEN
+
+
 ```{r}
 
 plot1 <- df %>% dplyr::select(id,
@@ -2541,14 +2541,34 @@ df %>% group_by(girl) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% fil
 df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = TRUE)) %>% filter(intervention == "1") %>% dplyr::select(mean) < df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = T)) %>% filter(intervention == "0") %>% dplyr::select(mean)
 ```
 
-### MVPA, girls and boys in different educational tracks
-Accelerometer-measured PA:
+## Accelerometer-measured MVPA
 
 Get credibility intervals track:school
 
-#KESKEN!!!!! Timantit plottiin
+# KESKEN. Miten ja kannattaako koitaa tehdä lmer:llä kaikki CI:t vertailun vuoksi?
+
+Try out if we can estimate the intercepts by gender and educational tracks:
 
 ```{r}
+testdf <- data.frame(PA = df$paAccelerometer_T1, track = df$track, intervention = df$intervention)
+
+testdf <- testdf %>% dplyr::mutate(trackintervention = paste(track, intervention),
+                                   trackintervention = ifelse(grepl("NA", trackintervention), NA, trackintervention))
+
+
+m_test <- lme4::lmer(PA ~ (1 | trackintervention), data = testdf)
+
+confint(m_test)
+m_p <- profile(m_test, which = "beta_")
+ci_low <- confint(m_p)[, 1]
+ci_high <- confint(m_p)[, 2]
+
+data.frame(ranef = ranef(m_test)) %>% dplyr::mutate(estimate = ranef.condval + fixef(m_test))
+```
+
+### Prepare data
+
+```{r MVPA-accelerometer-data}
 m_paAccelerometer_trackgirl <- brms::bf(paAccelerometer_T1 ~ (1 | track:girl)) %>% 
   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
 
@@ -2655,86 +2675,63 @@ PA_trackintervention_diamonds_intervention
 PA_trackintervention_diamonds_control
 ```
 
-## MVPA: Different tracks, with gender as diamond
+### Accelerometer-measured MVPA density plot: 
 
-```{r}
+```{r MVPA-accelerometer-plot}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
                               girl,
                               PA = paAccelerometer_T1)  %>%
   filter(!is.na(track), track != "Other") %>% # Drop category "Other"
-  dplyr::mutate(track = forcats::fct_reorder(.f = track, .x = PA, .fun = median, na.rm = TRUE, desc = FALSE)) %>% 
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
   ggplot2::ggplot(aes(y = track)) +
   ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
-                                    fill = paste(track, girl)),
-                                  scale = .8,
-                                  alpha = 0.6, size = 0.25,
-                                  from = 0, to = 450,
-                                  jittered_points=TRUE, 
-                                  point_shape=21,
-                                  point_size = 0.85,
-                                  point_fill="black") +
-  labs(x = "Mean daily MVPA minutes (accelerometer)",
-       y = "") +
-  scale_y_discrete(expand = c(0.01, 0)) +
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
   scale_x_continuous(expand = c(0.01, 0)) +
   ggridges::scale_fill_cyclical(
-                                labels = c('business administration boy' = "Boy", 'business administration girl' = "Girl"),
+                                labels = c('admin boy' = "Boy", 'admin girl' = "Girl"),
                                 values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(24, 22),
+                                                                         point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
-  papaja::theme_apa() 
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(22, 24),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
 
-
-df %>% dplyr::select(paAccelerometer_T1, girl, track) %>% 
-  group_by(girl, track) %>% 
-  summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
-            median = median(paAccelerometer_T1, na.rm = TRUE),
-            max = max(paAccelerometer_T1, na.rm = TRUE),
-            min = min(paAccelerometer_T1, na.rm = TRUE),
-            sd = sd(paAccelerometer_T1, na.rm = TRUE),
-            n = n())
-
-df %>% dplyr::select(paAccelerometer_T1, girl, track) %>% 
-  group_by(girl) %>% 
-  summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
-            median = median(paAccelerometer_T1, na.rm = TRUE),
-            max = max(paAccelerometer_T1, na.rm = TRUE),
-            min = min(paAccelerometer_T1, na.rm = TRUE),
-            sd = sd(paAccelerometer_T1, na.rm = TRUE),
-            n = n())
-
-# target = c(
-# "PA_intention_T1",
-# "PA_outcomeExpectations_T1",
-# "PA_pbc_T1",
-# "PA_selfefficacy_T1",
-# "PA_opportunities_T1",
-# "PA_dnorm_T1")
-# 
-# PA_ci_girls <- ci_girls %>% filter(paAccelerometer)
-# 
-# PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
-# 
-# PA_ci_boys <- ci_boys %>% filter(diamondlabels %in% names(scales_T1) & 
-#                                      grepl("PA_intention_T1", diamondlabels) | 
-#                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-#                                      grepl("PA_pbc_T1", diamondlabels) | 
-#                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
-#                                      grepl("PA_opportunities_T1", diamondlabels) | 
-#                                      grepl("PA_dnorm_T1", diamondlabels))
-# 
-# PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
-# 
-plot1 <- plot1 + userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_girl, 
-                                                  returnLayerOnly = TRUE, 
-                                                  lineColor = "black", 
-                                                  color=viridis::viridis(4, end = 0.8)[3],
-                                                  alpha=.6, 
-                                                  fixedSize = 0.1, 
-                                                  otherAxisCol = (1:4 + .0)) + # specify y-position and lift the diamonds up 0.2
+plot1 <- plot1 + 
+  userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_girl, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   color=viridis::viridis(4, end = 0.8)[3],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
   userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_boy, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
@@ -2742,53 +2739,1115 @@ plot1 <- plot1 + userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_girl,
                                    color=viridis::viridis(4, end = 0.8)[1],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
-                                   otherAxisCol = (1:4 + .0)) +
+                                   otherAxisCol = (1:4 + .15))
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              PA = paAccelerometer_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('admin 0' = "Control", 'admin 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(21, 23),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(21, 23),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot2 <- plot2 + 
   userfriendlyscience::diamondPlot(PA_trackintervention_diamonds_intervention, 
-                                                  returnLayerOnly = TRUE, 
-                                                  lineColor = "black", 
-                                                  color="white",
-                                                  alpha=.6, 
-                                                  fixedSize = 0.08, 
-                                                  otherAxisCol = (1:4 + -.18)) +
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[4],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) +
   userfriendlyscience::diamondPlot(PA_trackintervention_diamonds_control, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[2],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+plot1 + plot2
+
+
+```
+
+## Self-reported MVPA days, previous week {.tabset}
+
+### Description
+
+This section reports the question on how many days the participants did MVPA during the previous week.
+
+### Prepare data
+
+```{r padaysLastweek-data}
+m_padaysLastweek_trackgirl <- brms::bf(padaysLastweek_T1 ~ (1 | track:girl)) %>% 
+  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+
+brms::prior_summary(m_padaysLastweek_trackgirl, data = df)
+
+m_padaysLastweek_trackgirl
+
+b_intercept <- brms::fixef(m_padaysLastweek_trackgirl)[1]
+
+# This gives estimates only:
+padaysLastweek_trackgirl_estimates <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][1:10]
+
+# The 2.5%ile:
+padaysLastweek_trackgirl_CIL <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][21:30]
+
+# The 97.5%ile:
+padaysLastweek_trackgirl_CIH <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][31:40]
+
+padaysLastweek_trackgirl_ci <- data.frame(padaysLastweek_trackgirl_CIL, padaysLastweek_trackgirl_estimates, padaysLastweek_trackgirl_CIH, Variable = labels(brms::ranef(m_padaysLastweek_trackgirl))) %>% 
+  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  dplyr::mutate(padaysLastweek_trackgirl_CIL = padaysLastweek_trackgirl_CIL + b_intercept,
+         padaysLastweek_trackgirl_estimates = padaysLastweek_trackgirl_estimates + b_intercept,
+         padaysLastweek_trackgirl_CIH = padaysLastweek_trackgirl_CIH + b_intercept,
+         track = c('business administration_boy',
+                   'business administration_girl',
+                   'hospitality_boy',
+                   'hospitality_girl',
+                   'information technology_boy',
+                   'information technology_girl',
+                   'nursing_boy',
+                   'nursing_girl',
+                   'Other_boy',
+                   'Other_girl'
+))
+
+padaysLastweek_trackgirl_diamonds_girl <- rbind(
+padaysLastweek_trackgirl_ci %>% filter(track == "nursing_girl"),
+padaysLastweek_trackgirl_ci %>% filter(track == "hospitality_girl"),
+padaysLastweek_trackgirl_ci %>% filter(track == "business administration_girl"),
+padaysLastweek_trackgirl_ci %>% filter(track == "information technology_girl")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+padaysLastweek_trackgirl_diamonds_boy <- rbind(
+padaysLastweek_trackgirl_ci %>% filter(track == "nursing_boy"),
+padaysLastweek_trackgirl_ci %>% filter(track == "hospitality_boy"),
+padaysLastweek_trackgirl_ci %>% filter(track == "business administration_boy"),
+padaysLastweek_trackgirl_ci %>% filter(track == "information technology_boy")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+
+m_padaysLastweek_trackintervention <- brms::bf(padaysLastweek_T1 ~ (1 | track:intervention)) %>% 
+  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+
+brms::prior_summary(m_padaysLastweek_trackintervention, data = df)
+
+m_padaysLastweek_trackintervention
+
+b_intercept <- brms::fixef(m_padaysLastweek_trackintervention)[1]
+
+# This gives estimates only:
+padaysLastweek_trackintervention_estimates <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][1:10]
+
+# The 2.5%ile:
+padaysLastweek_trackintervention_CIL <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][21:30]
+
+# The 97.5%ile:
+padaysLastweek_trackintervention_CIH <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][31:40]
+
+padaysLastweek_trackintervention_ci <- data.frame(padaysLastweek_trackintervention_CIL, padaysLastweek_trackintervention_estimates, padaysLastweek_trackintervention_CIH, Variable = labels(brms::ranef(m_padaysLastweek_trackintervention))) %>% 
+  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  dplyr::mutate(padaysLastweek_trackintervention_CIL = padaysLastweek_trackintervention_CIL + b_intercept,
+         padaysLastweek_trackintervention_estimates = padaysLastweek_trackintervention_estimates + b_intercept,
+         padaysLastweek_trackintervention_CIH = padaysLastweek_trackintervention_CIH + b_intercept,
+         track = c('business administration_control',
+                   'business administration_intervention',
+                   'hospitality_control',
+                   'hospitality_intervention',
+                   'information technology_control',
+                   'information technology_intervention',
+                   'nursing_control',
+                   'nursing_intervention',
+                   'Other_control',
+                   'Other_intervention'
+))
+
+padaysLastweek_trackintervention_diamonds_intervention <- rbind(
+padaysLastweek_trackintervention_ci %>% filter(track == "nursing_intervention"),
+padaysLastweek_trackintervention_ci %>% filter(track == "hospitality_intervention"),
+padaysLastweek_trackintervention_ci %>% filter(track == "business administration_intervention"),
+padaysLastweek_trackintervention_ci %>% filter(track == "information technology_intervention")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+padaysLastweek_trackintervention_diamonds_control <- rbind(
+padaysLastweek_trackintervention_ci %>% filter(track == "nursing_control"),
+padaysLastweek_trackintervention_ci %>% filter(track == "hospitality_control"),
+padaysLastweek_trackintervention_ci %>% filter(track == "business administration_control"),
+padaysLastweek_trackintervention_ci %>% filter(track == "information technology_control")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+padaysLastweek_trackgirl_diamonds_girl
+padaysLastweek_trackgirl_diamonds_boy
+padaysLastweek_trackintervention_diamonds_intervention
+padaysLastweek_trackintervention_diamonds_control
+```
+
+### Density plot
+
+```{r padaysLastweek-densityplot}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              PA = padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .6, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.2, height = 0.4),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('admin boy' = "Boy", 'admin girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(24, 22),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(22, 24),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 <- plot1 + 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackgirl_diamonds_girl, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   color=viridis::viridis(4, end = 0.8)[3],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackgirl_diamonds_boy, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    linetype = "solid", 
-                                   color="black",
+                                   color=viridis::viridis(4, end = 0.8)[1],
                                    alpha=.6, 
-                                   fixedSize = 0.08, 
-                                   otherAxisCol = (1:4 + -.18))
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
 
-plot1 
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              PA = padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .6, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.2, height = 0.4),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('admin 0' = "Control", 'admin 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(21, 23),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(21, 23),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot2 <- plot2 + 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackintervention_diamonds_intervention, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[4],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) +
+  userfriendlyscience::diamondPlot(padaysLastweek_trackintervention_diamonds_control, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[2],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+plot1 + plot2
 
 ```
 
-### Raincloud plot of MVPA
+### Histogram 1
+
+```{r padaysLastweek-histogram1}
+plotboys <- df %>% dplyr::select(id,
+                                 track = track,
+                                 girl,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other", girl == "boy") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = padaysLastweek_T1, fill = girl), stat = "binline", binwidth = 1, scale = 0.95, alpha = 0.6) +
+  scale_x_continuous(breaks = c(0:7), expand = c(0, 0), name = NULL) +
+  scale_y_discrete(expand = c(0.01, 0), name = "") +
+  ggridges::scale_fill_cyclical(values = viridis::viridis(4, end = 0.8)[1]) +
+  labs(title = "Boys") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.text=element_text(size=10)) +
+  coord_cartesian(xlim = c(-0.5, 7.5))
+
+plotboys <- plotboys + 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackgirl_diamonds_girl, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   color=viridis::viridis(4, end = 0.8)[3],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackgirl_diamonds_boy, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   linetype = "solid", 
+                                   color=viridis::viridis(4, end = 0.8)[1],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+plotgirls <- df %>% dplyr::select(id,
+                                 track = track,
+                                 girl,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other", girl == "girl") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = padaysLastweek_T1, fill = girl), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(0:7), expand = c(0, 0), name = NULL) +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = viridis::viridis(4, end = 0.8)[3]) +
+  labs(title = "Girls") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.text=element_text(size=10)) +
+  coord_cartesian(xlim = c(-0.5, 7.5))
+
+plotgirls <- plotgirls + 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackgirl_diamonds_girl, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   color=viridis::viridis(4, end = 0.8)[3],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackgirl_diamonds_boy, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   linetype = "solid", 
+                                   color=viridis::viridis(4, end = 0.8)[1],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+
+plotcontrol <- df %>% dplyr::select(id,
+                                 track = track,
+                                 intervention,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other", intervention == "0") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = padaysLastweek_T1, fill = intervention), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(0:7), expand = c(0, 0), name = NULL) +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = viridis::viridis(4, end = 0.8)[2]) +
+  labs(title = "Control") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.text=element_text(size=10)) +
+  coord_cartesian(xlim = c(-0.5, 7.5))
+
+plotcontrol <- plotcontrol + 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackintervention_diamonds_intervention, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[4],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) +
+  userfriendlyscience::diamondPlot(padaysLastweek_trackintervention_diamonds_control, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[2],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+plotintervention <- df %>% dplyr::select(id,
+                                 track = track,
+                                 intervention,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other", intervention == "1") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = padaysLastweek_T1, fill = intervention), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(0:7), expand = c(0, 0), name = NULL) +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = viridis::viridis(4, end = 0.8)[4]) +
+  labs(title = "Intervention") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.text=element_text(size=10)) +
+  coord_cartesian(xlim = c(-0.5, 7.5))
+
+plotintervention <- plotintervention + 
+  userfriendlyscience::diamondPlot(padaysLastweek_trackintervention_diamonds_intervention, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[4],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) +
+  userfriendlyscience::diamondPlot(padaysLastweek_trackintervention_diamonds_control, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[2],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+plotboys + plotgirls + plotcontrol + plotintervention + plot_layout(ncol = 4)
+
+```
+
+### Histogram 2
+
+```{r padaysLastweek-histogram2}
+hist_padaysLastweek_girl_count <- df %>% dplyr::select(id,
+                                 track = track,
+                                 girl,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing"),
+                padaysLastweek_T1 = as.integer(padaysLastweek_T1)) %>% 
+  ggplot(aes(x=padaysLastweek_T1, fill=girl)) +
+  geom_histogram(binwidth=1, position="dodge", color = "black") +
+  scale_x_continuous(breaks = 0:7) +
+  labs(x = NULL) +   
+  scale_fill_manual(values = viridis::viridis(4, end = 0.8)[c(3, 1)], 
+                    name = NULL) +
+  facet_wrap("track") + 
+  theme(legend.position = "bottom")
+
+hist_padaysLastweek_girl_density <- df %>% dplyr::select(id,
+                                 track = track,
+                                 girl,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing"),
+                padaysLastweek_T1 = as.integer(padaysLastweek_T1)) %>% 
+  ggplot(aes(x=padaysLastweek_T1, y = ..density.., fill=girl)) +
+  geom_histogram(binwidth=1, position="dodge", color = "black") +
+  scale_x_continuous(breaks = 0:7) +
+  labs(x = NULL) + 
+  scale_fill_manual(values = viridis::viridis(4, end = 0.8)[c(3, 1)], name = NULL,
+                    guide = FALSE) +
+  facet_wrap("track")
+
+hist_padaysLastweek_girl_count + hist_padaysLastweek_girl_density
+
+hist_padaysLastweek_intervention_count <- df %>% dplyr::select(id,
+                                 track = track,
+                                 intervention,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing"),
+                padaysLastweek_T1 = as.integer(padaysLastweek_T1)) %>% 
+  ggplot(aes(x=padaysLastweek_T1, fill=intervention)) +
+  geom_histogram(binwidth = 1, position = "dodge", color = "black") +
+  scale_x_continuous(breaks = 0:7) +
+  labs(x = NULL) + 
+  scale_fill_manual(values = viridis::viridis(4, end = 0.8)[c(2, 4)], 
+                    name = NULL, 
+                    labels = c("0" = "control", "1" = "intervention")) +
+  facet_wrap("track") + 
+  theme(legend.position = "bottom")
+
+hist_padaysLastweek_intervention_density <- df %>% dplyr::select(id,
+                                 track = track,
+                                 intervention,
+                                 padaysLastweek_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing"),
+                padaysLastweek_T1 = as.integer(padaysLastweek_T1)) %>% 
+  ggplot(aes(x=padaysLastweek_T1, y = ..density.., fill=intervention)) +
+  geom_histogram(binwidth = 1, position = "dodge", color = "black") +
+  scale_x_continuous(breaks = 0:7) +
+  labs(x = NULL) + 
+  scale_fill_manual(values = viridis::viridis(4, end = 0.8)[c(2, 4)], 
+                    guide = FALSE) +
+  facet_wrap("track")
+
+hist_padaysLastweek_intervention_count + hist_padaysLastweek_intervention_density
+```
+
+## Number of average interruptions to sitting {.tabset}
+
+### Description
+
+This section reports the accelerometer-measured number of breaks to sitting time.
+
+### Prepare data
+
+```{r sitBreaks-data}
+m_sitBreaks_trackgirl <- brms::bf(sitBreaks_T1 ~ (1 | track:girl)) %>% 
+  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+
+brms::prior_summary(m_sitBreaks_trackgirl, data = df)
+
+m_sitBreaks_trackgirl
+
+b_intercept <- brms::fixef(m_sitBreaks_trackgirl)[1]
+
+# This gives estimates only:
+sitBreaks_trackgirl_estimates <- brms::ranef(m_sitBreaks_trackgirl)[[1]][1:10]
+
+# The 2.5%ile:
+sitBreaks_trackgirl_CIL <- brms::ranef(m_sitBreaks_trackgirl)[[1]][21:30]
+
+# The 97.5%ile:
+sitBreaks_trackgirl_CIH <- brms::ranef(m_sitBreaks_trackgirl)[[1]][31:40]
+
+sitBreaks_trackgirl_ci <- data.frame(sitBreaks_trackgirl_CIL, sitBreaks_trackgirl_estimates, sitBreaks_trackgirl_CIH, Variable = labels(brms::ranef(m_sitBreaks_trackgirl))) %>% 
+  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  dplyr::mutate(sitBreaks_trackgirl_CIL = sitBreaks_trackgirl_CIL + b_intercept,
+         sitBreaks_trackgirl_estimates = sitBreaks_trackgirl_estimates + b_intercept,
+         sitBreaks_trackgirl_CIH = sitBreaks_trackgirl_CIH + b_intercept,
+         track = c('business administration_boy',
+                   'business administration_girl',
+                   'hospitality_boy',
+                   'hospitality_girl',
+                   'information technology_boy',
+                   'information technology_girl',
+                   'nursing_boy',
+                   'nursing_girl',
+                   'Other_boy',
+                   'Other_girl'
+))
+
+sitBreaks_trackgirl_diamonds_girl <- rbind(
+sitBreaks_trackgirl_ci %>% filter(track == "nursing_girl"),
+sitBreaks_trackgirl_ci %>% filter(track == "hospitality_girl"),
+sitBreaks_trackgirl_ci %>% filter(track == "business administration_girl"),
+sitBreaks_trackgirl_ci %>% filter(track == "information technology_girl")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+sitBreaks_trackgirl_diamonds_boy <- rbind(
+sitBreaks_trackgirl_ci %>% filter(track == "nursing_boy"),
+sitBreaks_trackgirl_ci %>% filter(track == "hospitality_boy"),
+sitBreaks_trackgirl_ci %>% filter(track == "business administration_boy"),
+sitBreaks_trackgirl_ci %>% filter(track == "information technology_boy")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+
+m_sitBreaks_trackintervention <- brms::bf(sitBreaks_T1 ~ (1 | track:intervention)) %>% 
+  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+
+brms::prior_summary(m_sitBreaks_trackintervention, data = df)
+
+m_sitBreaks_trackintervention
+
+b_intercept <- brms::fixef(m_sitBreaks_trackintervention)[1]
+
+# This gives estimates only:
+sitBreaks_trackintervention_estimates <- brms::ranef(m_sitBreaks_trackintervention)[[1]][1:10]
+
+# The 2.5%ile:
+sitBreaks_trackintervention_CIL <- brms::ranef(m_sitBreaks_trackintervention)[[1]][21:30]
+
+# The 97.5%ile:
+sitBreaks_trackintervention_CIH <- brms::ranef(m_sitBreaks_trackintervention)[[1]][31:40]
+
+sitBreaks_trackintervention_ci <- data.frame(sitBreaks_trackintervention_CIL, sitBreaks_trackintervention_estimates, sitBreaks_trackintervention_CIH, Variable = labels(brms::ranef(m_sitBreaks_trackintervention))) %>% 
+  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  dplyr::mutate(sitBreaks_trackintervention_CIL = sitBreaks_trackintervention_CIL + b_intercept,
+         sitBreaks_trackintervention_estimates = sitBreaks_trackintervention_estimates + b_intercept,
+         sitBreaks_trackintervention_CIH = sitBreaks_trackintervention_CIH + b_intercept,
+         track = c('business administration_control',
+                   'business administration_intervention',
+                   'hospitality_control',
+                   'hospitality_intervention',
+                   'information technology_control',
+                   'information technology_intervention',
+                   'nursing_control',
+                   'nursing_intervention',
+                   'Other_control',
+                   'Other_intervention'
+))
+
+sitBreaks_trackintervention_diamonds_intervention <- rbind(
+sitBreaks_trackintervention_ci %>% filter(track == "nursing_intervention"),
+sitBreaks_trackintervention_ci %>% filter(track == "hospitality_intervention"),
+sitBreaks_trackintervention_ci %>% filter(track == "business administration_intervention"),
+sitBreaks_trackintervention_ci %>% filter(track == "information technology_intervention")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+sitBreaks_trackintervention_diamonds_control <- rbind(
+sitBreaks_trackintervention_ci %>% filter(track == "nursing_control"),
+sitBreaks_trackintervention_ci %>% filter(track == "hospitality_control"),
+sitBreaks_trackintervention_ci %>% filter(track == "business administration_control"),
+sitBreaks_trackintervention_ci %>% filter(track == "information technology_control")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+sitBreaks_trackgirl_diamonds_girl
+sitBreaks_trackgirl_diamonds_boy
+sitBreaks_trackintervention_diamonds_intervention
+sitBreaks_trackintervention_diamonds_control
+```
+
+### Density plot
+
+```{r sitBreaks-densityplot}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              PA = sitBreaks_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .6, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.2, height = 0.4),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('admin boy' = "Boy", 'admin girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(24, 22),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(22, 24),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 <- plot1 + 
+  userfriendlyscience::diamondPlot(sitBreaks_trackgirl_diamonds_girl, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   color=viridis::viridis(4, end = 0.8)[3],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
+  userfriendlyscience::diamondPlot(sitBreaks_trackgirl_diamonds_boy, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   linetype = "solid", 
+                                   color=viridis::viridis(4, end = 0.8)[1],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              PA = sitBreaks_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .6, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.2, height = 0.4),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('admin 0' = "Control", 'admin 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(21, 23),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(21, 23),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot2 <- plot2 + 
+  userfriendlyscience::diamondPlot(sitBreaks_trackintervention_diamonds_intervention, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[4],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) +
+  userfriendlyscience::diamondPlot(sitBreaks_trackintervention_diamonds_control, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[2],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+plot1 + plot2
+
+```
+
+## SB, Accelerometer-measured
+
+Get credibility intervals track:school
+
+### Prepare data: sitting & lying down
+
+```{r SB-accelerometer-data}
+m_sitLieAccelerometer_trackgirl <- brms::bf(sitLieAccelerometer_T1 ~ (1 | track:girl)) %>% 
+  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+
+brms::prior_summary(m_sitLieAccelerometer_trackgirl, data = df)
+
+m_sitLieAccelerometer_trackgirl
+
+b_intercept <- brms::fixef(m_sitLieAccelerometer_trackgirl)[1]
+
+# This gives estimates only:
+sitLie_trackgirl_estimates <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][1:10]
+
+# The 2.5%ile:
+sitLie_trackgirl_CIL <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][21:30]
+
+# The 97.5%ile:
+sitLie_trackgirl_CIH <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][31:40]
+
+sitLie_trackgirl_ci <- data.frame(sitLie_trackgirl_CIL, sitLie_trackgirl_estimates, sitLie_trackgirl_CIH, Variable = labels(brms::ranef(m_sitLieAccelerometer_trackgirl))) %>% 
+  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  dplyr::mutate(sitLie_trackgirl_CIL = sitLie_trackgirl_CIL + b_intercept,
+         sitLie_trackgirl_estimates = sitLie_trackgirl_estimates + b_intercept,
+         sitLie_trackgirl_CIH = sitLie_trackgirl_CIH + b_intercept,
+         track = c('business administration_boy',
+                   'business administration_girl',
+                   'hospitality_boy',
+                   'hospitality_girl',
+                   'information technology_boy',
+                   'information technology_girl',
+                   'nursing_boy',
+                   'nursing_girl',
+                   'Other_boy',
+                   'Other_girl'
+))
+
+sitLie_trackgirl_diamonds_girl <- rbind(
+sitLie_trackgirl_ci %>% filter(track == "nursing_girl"),
+sitLie_trackgirl_ci %>% filter(track == "hospitality_girl"),
+sitLie_trackgirl_ci %>% filter(track == "business administration_girl"),
+sitLie_trackgirl_ci %>% filter(track == "information technology_girl")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+sitLie_trackgirl_diamonds_boy <- rbind(
+sitLie_trackgirl_ci %>% filter(track == "nursing_boy"),
+sitLie_trackgirl_ci %>% filter(track == "hospitality_boy"),
+sitLie_trackgirl_ci %>% filter(track == "business administration_boy"),
+sitLie_trackgirl_ci %>% filter(track == "information technology_boy")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+
+m_sitLieAccelerometer_trackintervention <- brms::bf(sitLieAccelerometer_T1 ~ (1 | track:intervention)) %>% 
+  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+
+brms::prior_summary(m_sitLieAccelerometer_trackintervention, data = df)
+
+m_sitLieAccelerometer_trackintervention
+
+b_intercept <- brms::fixef(m_sitLieAccelerometer_trackintervention)[1]
+
+# This gives estimates only:
+sitLie_trackintervention_estimates <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][1:10]
+
+
+# The 2.5%ile:
+sitLie_trackintervention_CIL <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][21:30]
+
+# The 97.5%ile:
+sitLie_trackintervention_CIH <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][31:40]
+
+sitLie_trackintervention_ci <- data.frame(sitLie_trackintervention_CIL, sitLie_trackintervention_estimates, sitLie_trackintervention_CIH, Variable = labels(brms::ranef(m_sitLieAccelerometer_trackintervention))) %>% 
+  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+  dplyr::mutate(sitLie_trackintervention_CIL = sitLie_trackintervention_CIL + b_intercept,
+         sitLie_trackintervention_estimates = sitLie_trackintervention_estimates + b_intercept,
+         sitLie_trackintervention_CIH = sitLie_trackintervention_CIH + b_intercept,
+         track = c('business administration_control',
+                   'business administration_intervention',
+                   'hospitality_control',
+                   'hospitality_intervention',
+                   'information technology_control',
+                   'information technology_intervention',
+                   'nursing_control',
+                   'nursing_intervention',
+                   'Other_control',
+                   'Other_intervention'
+))
+
+sitLie_trackintervention_diamonds_intervention <- rbind(
+sitLie_trackintervention_ci %>% filter(track == "nursing_intervention"),
+sitLie_trackintervention_ci %>% filter(track == "hospitality_intervention"),
+sitLie_trackintervention_ci %>% filter(track == "business administration_intervention"),
+sitLie_trackintervention_ci %>% filter(track == "information technology_intervention")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+sitLie_trackintervention_diamonds_control <- rbind(
+sitLie_trackintervention_ci %>% filter(track == "nursing_control"),
+sitLie_trackintervention_ci %>% filter(track == "hospitality_control"),
+sitLie_trackintervention_ci %>% filter(track == "business administration_control"),
+sitLie_trackintervention_ci %>% filter(track == "information technology_control")) %>% 
+  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+
+sitLie_trackgirl_diamonds_girl
+sitLie_trackgirl_diamonds_boy
+sitLie_trackintervention_diamonds_intervention
+sitLie_trackintervention_diamonds_control
+
+```
+
+#### Basic observed characteristics
+
+NOTE: These values do not account for clustering.
 
 ```{r}
 
-plot1 <- df %>% dplyr::select(id,
-                      track = track,
-                      girl,
-                      PA = paAccelerometer_T1)  %>%
-  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
-  ggplot2::ggplot(aes(y = PA, x = track, fill = track)) +
-    geom_flat_violin(position = position_nudge(x = .2, y = 0), alpha = .8) +
-    geom_point(aes(y = PA, color = track), position = position_jitter(width = .15), size = .5, alpha = 0.8) +
-    geom_boxplot(width = .1, guides = FALSE, outlier.shape = NA, alpha = 0.5) +
-    expand_limits(x = 5.25) +
-    guides(fill = FALSE) +
-    guides(color = FALSE) +
-    scale_color_viridis(palette = "Spectral") +
-    scale_fill_viridis(palette = "Spectral") +
-    coord_flip() +
-    theme_bw() +
-    raincloud_theme +
-    labs(y = "Mean daily MVPA minutes (accelerometer)",
-       x = "")
+df %>% dplyr::select(sitLieAccelerometer_T1, girl, track) %>% 
+  group_by(girl, track) %>% 
+  summarise(mean = mean(sitLieAccelerometer_T1, na.rm = TRUE),
+            median = median(sitLieAccelerometer_T1, na.rm = TRUE),
+            max = max(sitLieAccelerometer_T1, na.rm = TRUE),
+            min = min(sitLieAccelerometer_T1, na.rm = TRUE),
+            sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
+            n = n())
 
-plot1  
+df %>% dplyr::select(sitLieAccelerometer_T1, girl, track) %>% 
+  group_by(girl) %>% 
+  summarise(mean = mean(sitLieAccelerometer_T1, na.rm = TRUE),
+            median = median(sitLieAccelerometer_T1, na.rm = TRUE),
+            max = max(sitLieAccelerometer_T1, na.rm = TRUE),
+            min = min(sitLieAccelerometer_T1, na.rm = TRUE),
+            sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
+            n = n())
+
+df %>% dplyr::select(sitLieAccelerometer_T1, intervention, track) %>% 
+  group_by(intervention, track) %>% 
+  summarise(mean = mean(sitLieAccelerometer_T1, na.rm = TRUE),
+            median = median(sitLieAccelerometer_T1, na.rm = TRUE),
+            max = max(sitLieAccelerometer_T1, na.rm = TRUE),
+            min = min(sitLieAccelerometer_T1, na.rm = TRUE),
+            sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
+            n = n())
+
+df %>% dplyr::select(sitLieAccelerometer_T1, intervention, track) %>% 
+  group_by(intervention) %>% 
+  summarise(mean = mean(sitLieAccelerometer_T1, na.rm = TRUE),
+            median = median(sitLieAccelerometer_T1, na.rm = TRUE),
+            max = max(sitLieAccelerometer_T1, na.rm = TRUE),
+            min = min(sitLieAccelerometer_T1, na.rm = TRUE),
+            sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
+            n = n())
 ```
+
+
+### Draw plot: time spent sitting or lying down
+
+```{r sitLie-accelerometer-plot}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              PA = sitLieAccelerometer_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('admin boy' = "Boy", 'admin girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(24, 22),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(22, 24),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 <- plot1 + 
+  userfriendlyscience::diamondPlot(sitLie_trackgirl_diamonds_girl, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   color=viridis::viridis(4, end = 0.8)[3],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
+  userfriendlyscience::diamondPlot(sitLie_trackgirl_diamonds_boy, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black", 
+                                   linetype = "solid", 
+                                   color=viridis::viridis(4, end = 0.8)[1],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              PA = sitLieAccelerometer_T1)  %>%
+  filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("information technology", "business administration", "hospitality", "nursing")),
+                track = recode_factor(track, "information technology" = "IT", "business administration" = "admin", 
+                                      "hospitality" = "hospitality", "nursing" = "nursing")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  # from = 0, to = 450,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('admin 0' = "Control", 'admin 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(21, 23),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(21, 23),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot2 <- plot2 + 
+  userfriendlyscience::diamondPlot(sitLie_trackintervention_diamonds_intervention, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[4],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15)) +
+  userfriendlyscience::diamondPlot(sitLie_trackintervention_diamonds_control, 
+                                   returnLayerOnly = TRUE, 
+                                   lineColor = "black",  
+                                   color=viridis::viridis(4, end = 0.8)[2],
+                                   alpha=.6, 
+                                   fixedSize = 0.1, 
+                                   otherAxisCol = (1:4 + .15))
+
+plot1 + plot2
+
+```
+
+#### Check for plot correctness
+
+Show gender and group allocation of maximum and minimum values for each track.
+
+```{r sitLie-accelerometer-check}
+df %>% dplyr::select(sitLieAccelerometer_T1, girl, intervention, track) %>% 
+  dplyr::group_by(track) %>% 
+  dplyr::arrange((sitLieAccelerometer_T1), .by_group = TRUE) %>% 
+  na.omit() %>% 
+  dplyr::filter(track != "Other") %>% 
+  dplyr::filter(sitLieAccelerometer_T1 == max(sitLieAccelerometer_T1) | sitLieAccelerometer_T1 == min(sitLieAccelerometer_T1))
+```
+
 
 
 ### MVPA, girls and boys in different educational tracks and schools
