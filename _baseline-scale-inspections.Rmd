@@ -1,0 +1,125 @@
+---
+title: "tables"
+---
+
+```{r}
+library(psych)
+library(lavaan)
+source("baseline-datasetup.R")
+```
+
+```{r}
+
+motifactor_df <- df %>% dplyr::select(matches("T1")) %>%
+  select(matches("_0")) %>% 
+  select(matches("intrinsic|identified|integrated|introjected|extrinsic|amotivation"))
+
+# factorLoadingDiamondCIplot(motifactor_fa)
+
+# motifactor_df %>% psych::principal(nfactors = 6)
+
+psych::vss(motifactor_df)
+
+motifactor_df %>% psych::fa.parallel(error.bars = TRUE)
+
+motifactor_lavaanmodel_3factors <- '
+  autonomous =~ PA_identified_01_T1 + PA_identified_02_T1 + PA_identified_03_T1 + 
+                PA_integrated_01_T1 + PA_integrated_02_T1 + PA_integrated_03_T1 + 
+                PA_intrinsic_01_T1 + PA_intrinsic_02_T1 + PA_intrinsic_03_T1
+  controlled =~ PA_extrinsic_01_T1 + PA_extrinsic_02_T1 + PA_extrinsic_03_T1 + 
+                PA_introjected_01_T1 + PA_introjected_02_T1
+  amotivation =~ PA_amotivation_01_T1 + PA_amotivation_02_T1 + PA_amotivation_03_T1 + PA_amotivation_04_T1
+'
+
+motifactors_3 <- lavaan::cfa(motifactor_lavaanmodel_3factors, motifactor_df)
+
+motifactor_lavaanmodel_4factors <- '
+  autonomous =~ PA_identified_01_T1 + PA_identified_02_T1 + PA_identified_03_T1 + 
+                PA_integrated_01_T1 + PA_integrated_02_T1 + PA_integrated_03_T1 + 
+                PA_intrinsic_01_T1 + PA_intrinsic_02_T1 + PA_intrinsic_03_T1
+  introjected =~ PA_introjected_01_T1 + PA_introjected_02_T1
+  extrinsic =~ PA_extrinsic_01_T1 + PA_extrinsic_02_T1 + PA_extrinsic_03_T1 
+  amotivation =~ PA_amotivation_01_T1 + PA_amotivation_02_T1 + PA_amotivation_03_T1 + PA_amotivation_04_T1
+'
+
+motifactors_4 <- lavaan::cfa(motifactor_lavaanmodel_4factors, motifactor_df)
+
+motifactor_lavaanmodel_6factors <- '
+  identified =~ PA_identified_01_T1 + PA_identified_02_T1 + PA_identified_03_T1
+  integrated =~ PA_integrated_01_T1 + PA_integrated_02_T1 + PA_integrated_03_T1
+  intrinsic =~ PA_intrinsic_01_T1 + PA_intrinsic_02_T1 + PA_intrinsic_03_T1
+  introjected =~ PA_introjected_01_T1 + PA_introjected_02_T1
+  extrinsic =~ PA_extrinsic_01_T1 + PA_extrinsic_02_T1 + PA_extrinsic_03_T1 
+  amotivation =~ PA_amotivation_01_T1 + PA_amotivation_02_T1 + PA_amotivation_03_T1 + PA_amotivation_04_T1
+'
+
+motifactors_6 <- lavaan::cfa(motifactor_lavaanmodel_6factors, motifactor_df)
+
+motifactor_lavaanmodel_5factors <- '
+  identified =~ PA_identified_01_T1 + PA_identified_02_T1 + PA_identified_03_T1
+  intrinsic =~ PA_intrinsic_01_T1 + PA_intrinsic_02_T1 + PA_intrinsic_03_T1
+  introjected =~ PA_introjected_01_T1 + PA_introjected_02_T1
+  extrinsic =~ PA_extrinsic_01_T1 + PA_extrinsic_02_T1 + PA_extrinsic_03_T1 
+  amotivation =~ PA_amotivation_01_T1 + PA_amotivation_02_T1 + PA_amotivation_03_T1 + PA_amotivation_04_T1
+'
+
+motifactors_5 <- lavaan::cfa(motifactor_lavaanmodel_5factors, motifactor_df)
+
+lavaan::fitmeasures(motifactors_3, c("rmsea","cfi","tli","rni","rfi","ifi","srmr","gfi"))
+lavaan::fitmeasures(motifactors_4, c("rmsea","cfi","tli","rni","rfi","ifi","srmr","gfi"))
+lavaan::fitmeasures(motifactors_6, c("rmsea","cfi","tli","rni","rfi","ifi","srmr","gfi"))
+lavaan::fitmeasures(motifactors_5, c("rmsea","cfi","tli","rni","rfi","ifi","srmr","gfi"))
+
+anova(motifactors_3, motifactors_4, motifactors_6, motifactors_5)
+
+modindices(motifactors_6) %>% arrange(-mi)
+
+```
+
+Use factor analysis to extract 3-6 factors from the motivational variables.
+
+```{r}
+
+motifactor_fa6 <- motifactor_df %>% psych::fa(nfactors = 6)
+motifactor_fa5 <- motifactor_df %>% psych::fa(nfactors = 5)
+motifactor_fa4 <- motifactor_df %>% psych::fa(nfactors = 4)
+motifactor_fa3 <- motifactor_df %>% psych::fa(nfactors = 3)
+
+```
+
+Six factors were the second best fit, but integrated seems problematic: 
+
+```{r}
+motifactor_fa6
+```
+
+When we throw integrated down the tube, one item from identified is still loading strangely.
+
+```{r}
+
+motifactor_df2 <- df %>% dplyr::select(matches("T1")) %>%
+  select(matches("_0")) %>% 
+  select(matches("intrinsic|identified|introjected|extrinsic|amotivation"))
+
+motifactor_fa_nointegrated <- motifactor_df2 %>% psych::fa(nfactors = 5)
+
+motifactor_fa_nointegrated
+
+```
+
+This item is "... because it is important for me to be active regularly".
+
+```{r}
+normfactor_df <- df %>% dplyr::select(matches("T1")) %>%
+  select(matches("_0|_1")) %>% 
+    select(matches("PA")) %>% 
+  dplyr::select(matches("outcome"))
+  
+normfactor_df %>% psych::principal(nfactors = 2)
+
+normfactor_df %>% psych::vss()
+
+normfactor_df %>% psych::fa.parallel(error.bars = TRUE)
+
+```
+

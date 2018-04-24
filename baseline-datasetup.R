@@ -25,26 +25,7 @@ if (!require(ggridges)) pacman::p_install_gh("clauswilke/ggridges")
 if (!require(brmstools)) pacman::p_install_gh("mvuorre/brmstools")
 if (!require(NetworkComparisonTest)) pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
 if (!require(ggstatsplot)) pacman::p_install_gh("IndrajeetPatil/ggstatsplot")
-if (!require(patchwork)) pacman::p_install_gh("thomasp85/patchwork")
-
-# These are needed for the raincloud plots:
-# source("https://gist.githubusercontent.com/benmarwick/2a1bb0133ff568cbe28d/raw/fb53bd97121f7f9ce947837ef1a4c65a73bffb3f/geom_flat_violin.R")
-# 
-# raincloud_theme = theme(
-#   text = element_text(size = 10),
-#   axis.title.x = element_text(size = 16),
-#   axis.title.y = element_text(size = 16),
-#   axis.text = element_text(size = 14),
-#   axis.text.x = element_text(angle = 45, vjust = 0.5),
-#   legend.title=element_text(size=16),
-#   legend.text=element_text(size=16),
-#   legend.position = "right",
-#   plot.title = element_text(lineheight=.8, face="bold", size = 16),
-#   panel.border = element_blank(),
-#   panel.grid.minor = element_blank(),
-#   panel.grid.major = element_blank(),
-#   axis.line.x = element_line(colour = 'black', size=0.5, linetype='solid'),
-#   axis.line.y = element_line(colour = 'black', size=0.5, linetype='solid'))
+if (!require(patchwork)) pacman::p_install_gh("thomasp85/patchwork") # so that plot1 + plot2 creates a single side-by-side plot
 
 # Packages for the figures which show Bayesian credible intervals of classes
 #pacman::p_install(c("rstanarm", "brms", "mlmRev"))
@@ -251,16 +232,16 @@ d <- lmi %>% dplyr::select(id = ID,
                            group = ryhmakoodi_korjattu,
                            school = Aineisto.1,
                            girl = Kys0013.1,
-                           b5agr_01_T1 = Kys0155.1,
-                           b5agrReverseCoded_02_T1 = Kys0150.1,
-                           b5cons_01_T1 = Kys0151.1,
-                           b5consReverseCoded_02_T1 = Kys0156.1,
-                           b5ext_01_T1 = Kys0149.1,
-                           b5extReverseCoded_02_T1 = Kys0154.1,
-                           b5neur_01_T1 = Kys0152.1,
-                           b5neurReverseCoded_02_T1 = Kys0157.1,
-                           b5open_01_T1 = Kys0153.1,
-                           b5openReverseCoded_02_T1 = Kys0158.1,
+                           big5agreeableness_01_T1 = Kys0155.1,
+                           big5agrReverseCoded_02_T1 = Kys0150.1,
+                           big5conscientiousness_01_T1 = Kys0151.1,
+                           big5consReverseCoded_02_T1 = Kys0156.1,
+                           big5extraversion_01_T1 = Kys0149.1,
+                           big5extReverseCoded_02_T1 = Kys0154.1,
+                           big5neuroticism_01_T1 = Kys0152.1,
+                           big5neurReverseCoded_02_T1 = Kys0157.1,
+                           big5openness_01_T1 = Kys0153.1,
+                           big5openReverseCoded_02_T1 = Kys0158.1,
                            fatpct_T1 = Rasva,
                            PA_actCop_01_T1 = Kys0115.1,
                            PA_actCop_01_T3 = Kys0115.3,
@@ -509,7 +490,7 @@ d <- d %>% dplyr::mutate_at(dplyr::vars(contains("ReverseCoded_")), funs(8 - .))
 
 # To check:
 # d %>% dplyr::select(contains("ReverseCoded_")), contains("Rev")) %>% View
-identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$b5extReverseCoded_02_T1))
+identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$big5extReverseCoded_02_T1))
 identical(as.numeric(8 - lmi$Kys0100.1), as.numeric(d$PA_opportunitiesReverseCoded_03_T1))
 
 # Group variable has empty missings
@@ -535,7 +516,7 @@ track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
                      ifelse(Kys0017.1 == "Datanomi" | Kys0017.1 == "datanomi", 2, Kys0016.1)),
   track = factor(Kys0016.1, # Fix track labels first
                  levels = c(0, 1, 2, 3, 4),
-                 labels = c("Other", "information technology", "business administration", "hospitality", "nursing"))) %>% 
+                 labels = c("Other", "IT", "BA", "HRC", "Nur"))) %>% 
   dplyr::select(-Kys0016.1, -Kys0017.1)
 
 d <- bind_cols(d, track)
@@ -546,11 +527,11 @@ dT3 <- d %>% dplyr::select(contains("T3"))
 
 # Create T1 scales
 
-scales_T1 <- list(b5agr_T1 = grep('b5agr', names(dT1), value = TRUE),
-                  b5cons_T1 = grep('b5cons', names(dT1), value = TRUE),
-                  b5ext_T1 = grep('b5ext', names(dT1), value = TRUE),
-                  b5neur_T1 = grep('b5neur', names(dT1), value = TRUE),
-                  b5open_T1 = grep('b5open', names(dT1), value = TRUE),
+scales_T1 <- list(big5agreeableness_T1 = grep('big5agr', names(dT1), value = TRUE),
+                  big5conscientiousness_T1 = grep('big5cons', names(dT1), value = TRUE),
+                  big5extraversion_T1 = grep('big5ext', names(dT1), value = TRUE),
+                  big5neuroticism_T1 = grep('big5neur', names(dT1), value = TRUE),
+                  big5openness_T1 = grep('big5open', names(dT1), value = TRUE),
                   PA_actCop_T1 = grep('PA_actCop', names(dT1), value = TRUE),
                   PA_agrbct_T1 = grep('PA_agrbct', names(dT1), value = TRUE),
                   PA_amotivation_T1 = grep('PA_amotivation', names(dT1), value = TRUE),
@@ -580,11 +561,11 @@ newdf <- userfriendlyscience::makeScales(dT1, scales_T1)
 
 # Create T3 scales
 
-scales_T3 <- list(b5agr_T3 = grep('b5agr', names(dT3), value = TRUE),
-                  b5cons_T3 = grep('b5cons', names(dT3), value = TRUE),
-                  b5ext_T3 = grep('b5ext', names(dT3), value = TRUE),
-                  b5neur_T3 = grep('b5neur', names(dT3), value = TRUE),
-                  b5open_T3 = grep('b5open', names(dT3), value = TRUE),
+scales_T3 <- list(big5agreeableness_T3 = grep('big5agr', names(dT3), value = TRUE),
+                  big5conscientiousness_T3 = grep('big5cons', names(dT3), value = TRUE),
+                  big5extraversion_T3 = grep('big5ext', names(dT3), value = TRUE),
+                  big5neuroticism_T3 = grep('big5neur', names(dT3), value = TRUE),
+                  big5openness_T3 = grep('big5open', names(dT3), value = TRUE),
                   PA_actCop_T3 = grep('PA_actCop', names(dT3), value = TRUE),
                   PA_agrbct_T3 = grep('PA_agrbct', names(dT3), value = TRUE),
                   PA_amotivation_T3 = grep('PA_amotivation', names(dT3), value = TRUE),
@@ -687,7 +668,7 @@ df <- cbind(df, motidf1, motidf2)
 
 # Create change scores
 t1_vars <- grep("_T1", colnames(df), value = TRUE)
-t1_vars <- grep("b5|fat|paLastweek|PA_opportunitiesReverseCoded_08|sitBreaks_T1", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
+t1_vars <- grep("big5|fat|paLastweek|PA_opportunitiesReverseCoded_08|sitBreaks_T1", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
 t3_vars <- grep("_T3", colnames(df), value = TRUE)
 df[, paste0(stringr::str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars]
 

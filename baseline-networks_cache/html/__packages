@@ -37,3 +37,8 @@ corrgram
 broom
 brmstools
 visreg
+ggstatsplot
+patchwork
+sjPlot
+psych
+lavaan

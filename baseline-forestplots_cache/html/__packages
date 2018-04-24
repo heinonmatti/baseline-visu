@@ -37,3 +37,8 @@ bootnet
 NetworkComparisonTest
 mlmRev
 corrgram
+ggstatsplot
+patchwork
+sjPlot
+psych
+lavaan
