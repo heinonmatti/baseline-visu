@@ -12,8 +12,6 @@ Clicking the "Code"-buttons on the right shows code for each chunk.
 
 # Chunked BCTs, PA, motivation 
 
-## Description
-
 This section shows the correlations structure between BCTs (lumped into chunks based on whether they relate to frequency or agreement), motivational regulations and PA (self-reported PA the previous week and accelerometer-measured PA the following week).
 
 Note: This is only to demonstrate data exploration, as many assumptions (such as multivariate normality, homogeneity, multilevel structure) are not accounted for.   

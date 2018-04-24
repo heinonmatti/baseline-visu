@@ -13,7 +13,7 @@ CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4",
                "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm",
                "brms", "mlmRev", "rstan", "sandwich", "visreg", "broom", 
                "EstimateGroupNetwork", "bootnet", "qgraph", # for networks
-               "corrgram", "sjPlot") 
+               "corrgram", "sjPlot", "DT") 
 
 instpacks <- setdiff(CRANpacks, pacman::p_library())
 
@@ -41,8 +41,11 @@ knitr::opts_chunk$set(echo = TRUE,
                       dpi = 300)
 knitr::opts_chunk$set(root.dir = ".")  # Always set project root as working directory
 knitr::opts_knit$set(root.dir = ".")  # This is needed for some versions of RStudio
+knitr::opts_chunk$set(echo = TRUE, rows.print=15)
 
 ggplot2::theme_set(papaja::theme_apa())
+
+options(DT.options = list(columnDefs = list(list(className = 'dt-center', targets = "_all"))))
 
 # Read data.
 

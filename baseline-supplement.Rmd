@@ -8,7 +8,7 @@ Measures used in the study
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
 
-To start data analysis, we set up the basics to enable compiling the document:
+To start data analysis, we set up the basics to enable compiling the document.
 
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
@@ -19,9 +19,7 @@ source("baseline-datasetup.R")
 
 The code chunks create linear models for all variables. The results are used to estimate confidence intervals and intra-class correlations (ICC).
 
-Browse throught the tabs above to see different information.
-
-Code chunk below shows how the values are calculated.
+The CIs are calculated with a multilevel model, accounting for school and classroom membership.
 
 ```{r multilevel-clusters}
 # Create a vector with all names of the variables we want. Exclude T3 variables.
@@ -91,7 +89,6 @@ load("ci_total.Rdata")
 ```
 
 ```{r primary-outcome-vars-table-total, results = 'asis'}
-options(tibble.print_max = 1000)
 
 vardatatable2 <- vardatatable
 vardatatable2$Variable <- gsub("paAccelerometer", "MVPA minutes (accelerometer)", vardatatable2$Variable)
@@ -104,26 +101,33 @@ vardatatable2 %>%
            Variable == "Number of MVPA days last week (self-report)" | 
            Variable == "Minutes spent sitting or lying down (accelerometer)" | 
            Variable == "Number of times sitting was interrupted (accelerometer)" ) %>% 
-    papaja::apa_table(
+    DT::datatable( #papaja::apa_table()
         caption = "Primary outcome variables with their class and school ICCs",
-        escape = T,
-        format.args = list(digits = c(1, 3, 0), margin = 2))
+        escape = TRUE #, format.args = list(digits = c(1, 3, 0), margin = 2)
+        )
 ```
 
 ## All main variables, their means, CIs and ICCs.
 
+Values calculated with a multilevel model accounting for school and classroom.
 
 ```{r allvars-total, results = 'asis'}
-options(tibble.print_max = 1000)
- 
+
 vardatatable %>%
-    papaja::apa_table(
-        caption = "All variables with their class and school ICCs",
-        escape = T,
-        format.args = list(digits = c(1, 3, 0), margin = 2))
+   DT::datatable( #papaja::apa_table(
+        caption = "All variables with their class and school ICCs (values calculated with a multilevel model accounting for school and classroom)",
+        escape = TRUE #, format.args = list(digits = c(1, 3, 0), margin = 2)
+   )
+
 ```
 
-### ICC top 20 items, sorted by classroom ICC
+## Assorted tables with ICCs {.tabset}
+
+### Description
+
+**See tabs above for differently sorted tables** 
+
+### Model with school and class: ICC top 20 items, sorted by classroom ICC
 
 ```{r icc-school-class-sortbyclass, results = 'asis'}
 
@@ -136,7 +140,7 @@ vardatatable %>%
 
 ```
 
-### ICC top 20 items, sorted by school ICC
+### Model with school and class: ICC top 20 items, sorted by school ICC
 
 ```{r icc-school-class-sortbyschool, results = 'asis'}
 
@@ -148,12 +152,11 @@ vardatatable %>% dplyr::select(Variable, `ICC class`, `ICC school`, n) %>%
 
 ```
 
-Model with educational track
+## Model with school, class and educational track {.tabset}
 
 The model below is the same as the one above, except it adds educational track. 
 
 As before, we create a table with all variables, their means, CIs and ICCs.
-
 
 ```{r multilevel-edutrack-school-group}
 #library(sjstats)
@@ -226,7 +229,16 @@ load("ci_edutrack.Rdata")
 
 ```
 
-### Top 20 items, sorted by school
+### Main table
+
+```{r}
+
+vardatatable_containing_edutrack %>% 
+  DT::datatable(caption = "Values calculated with a multilevel model accounting for school, classroom and educational track")
+
+```
+
+### Model with school, class and track: Top 20 items, sorted by school
 
 ```{r icc-school-class-track-sortbyschool, results = 'asis'}
 
@@ -239,7 +251,7 @@ vardatatable_containing_edutrack %>%
 
 ```
 
-### Top 20 items, sorted by classroom
+### Model with school, class and track: Top 20 items, sorted by classroom
 
 ```{r icc-school-class-track-sortbyclass, results = 'asis'}
 
@@ -248,7 +260,7 @@ vardatatable_containing_edutrack %>% dplyr::select(Variable, `ICC educational tr
 
 ```
 
-### Top 20 items, sorted by educational track
+### Model with school, class and track: Top 20 items, sorted by educational track
 
 ```{r icc-school-class-track-sortbytrack, results = 'asis'}
 
@@ -257,7 +269,7 @@ vardatatable_containing_edutrack %>% dplyr::select(Variable, `ICC educational tr
 
 ```
 
-Model with educational track only
+## Model with educational track only {.tabset}
 
 ```{r parameters-multilevel-edutrack-only}
 #library(sjstats)
@@ -325,11 +337,20 @@ load("ci_edutrack_only.Rdata")
 
 ```
 
-### Top 20 items, sorted by ICC educational track
+### Main table 
+
+```{r datatable-edutrack-only}
+
+vardatatable_edutrack_only %>% 
+  DT::datatable(caption = "Values calculated with a multilevel model accounting for educational track only")
+
+```
+
+### Model with educational track only: Top 20 items, sorted by ICC educational track
 
 ```{r icc-edu-track-only, results = 'asis'}
 
-vardatatable_containing_edutrack %>% 
+vardatatable_edutrack_only %>% 
   dplyr::select(Variable, `ICC educational track`, n) %>% 
   arrange(desc(`ICC educational track`)) %>% 
   top_n(20) %>% 
@@ -338,7 +359,7 @@ vardatatable_containing_edutrack %>%
 
 ```
 
-CIs using the sandwich estimator
+## Calculating CIs using the sandwich estimator
 
 ```{r table-parameters-sandwich}
 # Basic instructions are from https://web.archive.org/web/20180206180739/http://thestatsgeek.com/2014/02/14/the-robust-sandwich-variance-estimator-for-linear-regression-using-r/
@@ -401,7 +422,14 @@ load("vardatatable_sandwich.Rdata")
 load("ci_sandwich.Rdata")
 ```
 
-Observed means and CIs, without clustering
+```{r datatable-sandwich}
+
+vardatatable_sandwich %>% 
+  DT::datatable(caption = "Values calculated with a sandwich estimator accounting for school, class and educational track")
+
+```
+
+## Calculating observed means and CIs, without clustering
 
 ```{r table-parameters-observed}
 
@@ -424,6 +452,15 @@ names(ci_uncorrected) <- c("ciLo", "mean", "ciHi")
 
 ```
 
+```{r datatable-observed}
+
+ci_uncorrected %>% 
+  dplyr::mutate(Variable = labels(ci_uncorrected)[[1]]) %>% 
+  dplyr::mutate_at(vars(-Variable), funs(round(., digits = 3))) %>% 
+  dplyr::select(Variable, everything()) %>% 
+  DT::datatable(caption = "Values calculated without accounting for clustering")
+
+```
 
 # Compare mean- and CI-estimates visually 
 
@@ -1497,7 +1534,7 @@ df_randeff_plot_brms_autonomous %>% ggplot2::ggplot(aes(x = group, y = PA_autono
 
 # Primary outcome variables
 
-## Plot of self-reported and accelerometer-measured MVPA-variables
+## Self-reported vs. accelerometer-measured MVPA
 
 <!-- TODO: Change Red line for the decided cutoff -->
 
@@ -1513,8 +1550,6 @@ lmi %>% ggplot2::ggplot(aes(x = LiikuntaT1_ka, y = Kys0045.1)) + geom_point() + 
 This section reports the primary outcome variables.  
 
 ## Accelerometer-measured MVPA 
-
-Get credibility intervals track:school
 
 ```{r lmer-numbers, eval = FALSE, include = FALSE}
 # TODO: Try out if we can estimate the intercepts by gender and educational tracks:
@@ -1539,15 +1574,13 @@ Contrary to some other findings, in our sample girls were more active than boys.
 
 ```{r mvpa-difference-boygirl-numbers}
 
-MVPAgirl_df <- df %>% group_by(girl) %>% dplyr::select(girl, paAccelerometer_T1) %>% summarise(`mean accelerometer-measured MVPA difference between girls and boys` = mean(paAccelerometer_T1, na.rm = TRUE), median = median(paAccelerometer_T1, na.rm = TRUE))
-MVPAgirl_df[1, 2] - MVPAgirl_df[2, 2]
-MVPAgirl_df[1, 3] - MVPAgirl_df[2, 3]
+MVPAgirl_df <- df %>% group_by(girl) %>% dplyr::select(girl, paAccelerometer_T1) %>% summarise(`mean accelerometer-measured MVPA difference between girls and boys` = mean(paAccelerometer_T1, na.rm = TRUE), `median accelerometer-measured MVPA difference between girls and boys` = median(paAccelerometer_T1, na.rm = TRUE)) 
 
 userfriendlyscience::meanDiff(df$girl, df$paAccelerometer_T1)
 
 ```
 
-### Density plot intervention / gender
+### Density plot by intervention and gender
 
 ```{r MVPA-accelerometer-sm}
 
@@ -1607,6 +1640,13 @@ plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
 text(x = 1.02, y = 1.3, labels = "MVPA minutes", pos = 1)
 ```
 
+### Data preparation {.tabset}
+
+#### Description
+
+The tab "Information on data preparation" of this section present information on data preparation for the plot
+
+#### Information on data preparation
 
 Prepare data
 
@@ -1717,7 +1757,64 @@ PA_trackintervention_diamonds_intervention
 PA_trackintervention_diamonds_control
 ```
 
-### Accelerometer-measured MVPA density plot: 
+#### Density plot of girls and boys in different educational tracks and schools
+
+```{r mvpa-trackschool-tables}
+
+df %>% dplyr::select(paAccelerometer_T1, girl, trackSchool) %>% 
+  group_by(girl, trackSchool) %>% 
+  summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
+            median = median(paAccelerometer_T1, na.rm = TRUE),
+            max = max(paAccelerometer_T1, na.rm = TRUE),
+            min = min(paAccelerometer_T1, na.rm = TRUE),
+            sd = sd(paAccelerometer_T1, na.rm = TRUE),
+            n = n()) %>% 
+  DT::datatable() #papaja::apa_table()
+
+df %>% dplyr::select(paAccelerometer_T1, girl, trackSchool) %>% 
+  group_by(girl) %>% 
+  summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
+            median = median(paAccelerometer_T1, na.rm = TRUE),
+            max = max(paAccelerometer_T1, na.rm = TRUE),
+            min = min(paAccelerometer_T1, na.rm = TRUE),
+            sd = sd(paAccelerometer_T1, na.rm = TRUE),
+            n = n()) %>% 
+  DT::datatable() #papaja::apa_table()
+
+```
+
+```{r mvpa-trackshool-density}
+
+plot1 <- df %>% dplyr::select(id,
+                              trackSchool = trackSchool,
+                              girl,
+                              PA = paAccelerometer_T1)  %>%
+  dplyr::filter(!is.na(trackSchool), !grepl('Other|NANA|BA4|HRC2|Nur2', trackSchool)) %>% # Drop categories with just few participants
+  ggplot2::ggplot(aes(y = trackSchool)) +
+  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
+                                    fill = paste(trackSchool, girl)),
+                                  scale = 1,
+                                  alpha = 0.6, size = 0.25,
+                                  from = 0, to = 450,
+                                  jittered_points=TRUE, point_shape=21,
+                                  point_fill="black") +
+  labs(x = "",
+       y = "") +
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA1 boy' = "Boy", 'BA1 girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(legend.position="bottom", axis.text=element_text(size=10))
+
+plot1
+
+```
+
+### Density plot by track
 
 ```{r MVPA-accelerometer-plot}
 
@@ -1857,6 +1954,14 @@ Description
 
 This section reports the question on how many days the participants did MVPA during the previous week.
 
+### Data preparation {.tabset}
+
+#### Description
+
+The tab "Information on data preparation" of this section present information on data preparation for the plot
+
+#### Information on data preparation
+
 Code chunk below prepares data.
 
 ```{r padaysLastweek-data}
@@ -1963,10 +2068,10 @@ padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>
 
 ```{r padaysLastweek-tables, results = "asis"}
 
-padaysLastweek_trackgirl_diamonds_girl %>% papaja::apa_table()
-padaysLastweek_trackgirl_diamonds_boy %>% papaja::apa_table()
-padaysLastweek_trackintervention_diamonds_intervention %>% papaja::apa_table()
-padaysLastweek_trackintervention_diamonds_control %>% papaja::apa_table()
+padaysLastweek_trackgirl_diamonds_girl %>% DT::datatable() #papaja::apa_table()
+padaysLastweek_trackgirl_diamonds_boy %>% DT::datatable() #papaja::apa_table()
+padaysLastweek_trackintervention_diamonds_intervention %>% DT::datatable() #papaja::apa_table()
+padaysLastweek_trackintervention_diamonds_control %>% DT::datatable() #papaja::apa_table()
 
 ```
 
@@ -2406,9 +2511,17 @@ hist_padaysLastweek_intervention_density <- df %>% dplyr::select(id,
 hist_padaysLastweek_intervention_count + hist_padaysLastweek_intervention_density
 ```
 
-## Number of average interruptions to sitting 
+## Breaks in sedentary time
 
 This section reports the accelerometer-measured number of breaks to sitting time.
+
+### Data preparation {.tabset}
+
+#### Description
+
+The tab "Information on data preparation" of this section present information on data preparation for the plot
+
+#### Information on data preparation
 
 Code chunk below prepares data.
 
@@ -2516,13 +2629,14 @@ sitBreaks_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>%
 
 ```{r sitBreaks-tables, results = "asis"}
 
-sitBreaks_trackgirl_diamonds_girl %>% papaja::apa_table()
-sitBreaks_trackgirl_diamonds_boy %>% papaja::apa_table()
-sitBreaks_trackintervention_diamonds_intervention %>% papaja::apa_table()
-sitBreaks_trackintervention_diamonds_control %>% papaja::apa_table()
+sitBreaks_trackgirl_diamonds_girl %>% DT::datatable() #papaja::apa_table()
+sitBreaks_trackgirl_diamonds_boy %>% DT::datatable() #papaja::apa_table()
+sitBreaks_trackintervention_diamonds_intervention %>% DT::datatable() #papaja::apa_table()
+sitBreaks_trackintervention_diamonds_control %>% DT::datatable() #papaja::apa_table()
 
 ```
 
+### Density plot by intervention and gender
 
 ```{r sitBreaks-sm}
 
@@ -2582,7 +2696,7 @@ plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
 text(x = 1.02, y = 1.3, labels = "Average number of breaks in daily sitting", pos = 1)
 ```
 
-### Density plot
+### Density plot by track
 
 ```{r sitBreaks-densityplot}
 
@@ -2777,6 +2891,14 @@ plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
 text(x = 1.02, y = 1.3, labels = "Average daily minutes spent sitting or lying down", pos = 1)
 ```
 
+### Data preparation {.tabset}
+
+#### Description
+
+The tab "Information on data preparation" of this section present information on data preparation for the plot
+
+#### Information on data preparation
+
 Prepare data: time spent sitting & lying down
 
 Get credibility intervals track:school
@@ -2886,10 +3008,10 @@ sitLie_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>%
 
 ```{r sitLie-tables, results = "asis"}
 
-sitLie_trackgirl_diamonds_girl %>% papaja::apa_table()
-sitLie_trackgirl_diamonds_boy %>% papaja::apa_table()
-sitLie_trackintervention_diamonds_intervention %>% papaja::apa_table()
-sitLie_trackintervention_diamonds_control %>% papaja::apa_table()
+sitLie_trackgirl_diamonds_girl %>% DT::datatable() #papaja::apa_table()
+sitLie_trackgirl_diamonds_boy %>% DT::datatable() #papaja::apa_table()
+sitLie_trackintervention_diamonds_intervention %>% DT::datatable() #papaja::apa_table()
+sitLie_trackintervention_diamonds_control %>% DT::datatable() #papaja::apa_table()
 
 ```
 
@@ -2907,7 +3029,7 @@ df %>% dplyr::select(sitLieAccelerometer_T1, girl, track) %>%
             min = min(sitLieAccelerometer_T1, na.rm = TRUE),
             sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
             n = n()) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
   
 
 df %>% dplyr::select(sitLieAccelerometer_T1, girl, track) %>% 
@@ -2918,7 +3040,7 @@ df %>% dplyr::select(sitLieAccelerometer_T1, girl, track) %>%
             min = min(sitLieAccelerometer_T1, na.rm = TRUE),
             sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
             n = n()) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 df %>% dplyr::select(sitLieAccelerometer_T1, intervention, track) %>% 
   group_by(intervention, track) %>% 
@@ -2928,7 +3050,7 @@ df %>% dplyr::select(sitLieAccelerometer_T1, intervention, track) %>%
             min = min(sitLieAccelerometer_T1, na.rm = TRUE),
             sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
             n = n()) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 df %>% dplyr::select(sitLieAccelerometer_T1, intervention, track) %>% 
   group_by(intervention) %>% 
@@ -2938,11 +3060,13 @@ df %>% dplyr::select(sitLieAccelerometer_T1, intervention, track) %>%
             min = min(sitLieAccelerometer_T1, na.rm = TRUE),
             sd = sd(sitLieAccelerometer_T1, na.rm = TRUE),
             n = n()) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 ```
 
 
-### Draw plot: time spent sitting or lying down
+### Density plot by track 
+
+Time spent sitting or lying down
 
 ```{r sitLie-accelerometer-plot}
 
@@ -3075,11 +3199,11 @@ plot1 + plot2
 
 ```
 
-#### Check for plot correctness
+<!-- Check for plot correctness -->
 
-Show gender and group allocation of maximum and minimum values for each track.
+<!-- Show gender and group allocation of maximum and minimum values for each track. -->
 
-```{r sitLie-accelerometer-check, results = "asis"}
+```{r sitLie-accelerometer-check, results = "asis", eval = FALSE, include = FALSE}
 
 df %>% dplyr::select(sitLieAccelerometer_T1, girl, intervention, track) %>% 
   dplyr::group_by(track) %>% 
@@ -3087,72 +3211,17 @@ df %>% dplyr::select(sitLieAccelerometer_T1, girl, intervention, track) %>%
   na.omit() %>% 
   dplyr::filter(track != "Other") %>% 
   dplyr::filter(sitLieAccelerometer_T1 == max(sitLieAccelerometer_T1) | sitLieAccelerometer_T1 == min(sitLieAccelerometer_T1)) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 ```
 
-### MVPA, girls and boys in different educational tracks and schools
 
-```{r mvpa-trackschool-tables}
-
-df %>% dplyr::select(paAccelerometer_T1, girl, trackSchool) %>% 
-  group_by(girl, trackSchool) %>% 
-  summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
-            median = median(paAccelerometer_T1, na.rm = TRUE),
-            max = max(paAccelerometer_T1, na.rm = TRUE),
-            min = min(paAccelerometer_T1, na.rm = TRUE),
-            sd = sd(paAccelerometer_T1, na.rm = TRUE),
-            n = n()) %>% 
-  papaja::apa_table()
-
-df %>% dplyr::select(paAccelerometer_T1, girl, trackSchool) %>% 
-  group_by(girl) %>% 
-  summarise(mean = mean(paAccelerometer_T1, na.rm = TRUE),
-            median = median(paAccelerometer_T1, na.rm = TRUE),
-            max = max(paAccelerometer_T1, na.rm = TRUE),
-            min = min(paAccelerometer_T1, na.rm = TRUE),
-            sd = sd(paAccelerometer_T1, na.rm = TRUE),
-            n = n()) %>% 
-  papaja::apa_table()
-
-```
-
-```{r mvpa-trackshool-density}
-
-plot1 <- df %>% dplyr::select(id,
-                              trackSchool = trackSchool,
-                              girl,
-                              PA = paAccelerometer_T1)  %>%
-  dplyr::filter(!is.na(trackSchool), !grepl('Other|NANA|BA4|HRC2|Nur2', trackSchool)) %>% # Drop categories with just few participants
-  ggplot2::ggplot(aes(y = trackSchool)) +
-  ggridges::geom_density_ridges2(aes(x = PA, colour = "black", 
-                                    fill = paste(trackSchool, girl)),
-                                  scale = 1,
-                                  alpha = 0.6, size = 0.25,
-                                  from = 0, to = 450,
-                                  jittered_points=TRUE, point_shape=21,
-                                  point_fill="black") +
-  labs(x = "",
-       y = "") +
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  ggridges::scale_fill_cyclical(
-                                labels = c('BA1 boy' = "Boy", 'BA1 girl' = "Girl"),
-                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
-  ggridges::scale_colour_cyclical(values = "black") +
-  ggridges::theme_ridges(grid = FALSE) +
-  theme(legend.position="bottom", axis.text=element_text(size=10))
-
-plot1
-
-```
 
 # PA Determinants
 
 This section reports various hypothesised determinants of physical activity.
 
-## Simple diamond plots
+## Simple diamond plot
 
 ```{r selfrep-determinants-simple-diamondplot}
 PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & grepl("PA_", diamondlabels) & !grepl("bct", diamondlabels))
@@ -3385,7 +3454,7 @@ df %>% dplyr::select(
 'PA amotivation' = PA_amotivation_T1) %>% 
   group_by(girl) %>% 
   summarise_at(vars(contains("PA")), funs(mean(., na.rm = TRUE))) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 df %>% dplyr::select(
   intervention,
@@ -3395,7 +3464,7 @@ df %>% dplyr::select(
 'PA amotivation' = PA_amotivation_T1) %>% 
   group_by(intervention) %>%
   summarise_at(vars(contains("PA")), funs(mean(., na.rm = TRUE))) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 ```
 
@@ -4736,10 +4805,10 @@ exerciseTypes_pvals[i-1] <- prop.test(exerciseTypes_test[, 1], exerciseTypes_tes
 }
 
 data.frame("Exercise type" = names(exerciseTypes_df)[1:14], "p-values: educational tracks" = exerciseTypes_pvals) %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 exerciseTypes_proportions %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 # For girls and boys
 
@@ -4769,10 +4838,10 @@ exerciseTypes_girlboy_pvals[i-1] <- prop.test(exerciseTypes_girlboy_test[, 1], e
 }
 
 data.frame("Exercise type" = names(exerciseTypes_girlboy_cases)[2:15], "p-values: boys vs. girls" = exerciseTypes_girlboy_pvals)  %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 exerciseTypes_girlboy_proportions %>% 
-  papaja::apa_table()
+  DT::datatable() #papaja::apa_table()
 
 ```
 

@@ -10,6 +10,7 @@ output:
     theme: readable
     highlight: tango
     df_print: paged
+    paged_print: true
     code_folding: hide
     lib_dir: site_libs
     self_contained: no
@@ -19,9 +20,10 @@ navbar:
   - text: About
     href: index.html
   - text: Manuscript
-    href: manuscript/baseline-manuscript.pdf
+    href: baseline-manuscript.html
   - text: Descriptives
     href: baseline-supplement.html
   - text: Networks
     href: baseline-networks.html
-
+  - text: Data setup code
+    href: baseline-datasetup.R
