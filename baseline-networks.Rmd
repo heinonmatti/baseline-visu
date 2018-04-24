@@ -74,7 +74,7 @@ as.data.frame(as.table(corMatrix_BCTs)) %>%
   dplyr::select(-Freq) %>% 
   dplyr::filter(`Spearman correlation` != 1) %>% 
   dplyr::arrange(desc(`Spearman correlation`)) %>% 
-  papaja::apa_table(caption = "Bivariate correlations between BCTs, motivation and PA. Sorted by strength.")
+  DT::datatable(caption = "Bivariate correlations between BCTs, motivation and PA. Sorted by strength.")
 
 ```
 
@@ -343,15 +343,18 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 individualAgreementBCTs <- bootnet::estimateNetwork(bctdf_pa_mgm, default="EBICglasso")
 
-bootnetgraph <- plot(individualAgreementBCTs, edge.labels = TRUE)
+bootnetgraph <- plot(individualAgreementBCTs, edge.labels = TRUE, 
+       title = "partial correlation network, with LASSO regularisation and EBIC model selection")
 
 corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_pa_mgm), graph = "cor",
        labels = names(bctdf_pa_mgm),
-       edge.labels = TRUE)
+       edge.labels = TRUE, 
+       title = "bivariate correlation network")
 
 pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_pa_mgm), graph = "pcor",
        labels = names(bctdf_pa_mgm),
-       edge.labels = TRUE)
+       edge.labels = TRUE, 
+       title = "partial correlation network")
 
 # Average the layout and plot all according to that
 avlayout <- qgraph::averageLayout(bootnetgraph, corgraph, pcorgraph)
@@ -562,15 +565,18 @@ combinedAgreementBcts_ggm_df <- df %>% dplyr::select(
 
 combinedAgreementBcts_network <- bootnet::estimateNetwork(combinedAgreementBcts_ggm_df, default="EBICglasso")
 
-bootnetgraph <- plot(combinedAgreementBcts_network, edge.labels = TRUE)
+bootnetgraph <- plot(combinedAgreementBcts_network, edge.labels = TRUE,
+                     title = "partial correlation network, with LASSO regularisation and EBIC model selection")
 
 corgraph <- qgraph::qgraph(qgraph::cor_auto(combinedAgreementBcts_ggm_df), graph = "cor",
        labels = names(combinedAgreementBcts_ggm_df),
-       edge.labels = TRUE)
+       edge.labels = TRUE, 
+       title = "bivariate correlation network")
 
 pcorgraph <- qgraph::qgraph(qgraph::cor_auto(combinedAgreementBcts_ggm_df), graph = "pcor",
        labels = names(combinedAgreementBcts_ggm_df),
-       edge.labels = TRUE)
+       edge.labels = TRUE,
+       title = "partial correlation network")
 
 # Average the layout and plot all according to that
 avlayout <- qgraph::averageLayout(bootnetgraph, corgraph, pcorgraph)
@@ -698,10 +704,10 @@ network_HRC <- bootnet::estimateNetwork(heterogeneity_HRC, default="EBICglasso")
 network_BA <- bootnet::estimateNetwork(heterogeneity_BA, default="EBICglasso")
 network_IT <- bootnet::estimateNetwork(heterogeneity_IT, default="EBICglasso")
 
-graph_Nur <- plot(network_Nur, layout="spring", cut=0, label.scale = FALSE)
-graph_HRC <- plot(network_HRC, layout="spring", cut=0, label.scale = FALSE)
-graph_BA <- plot(network_BA, layout="spring", cut=0, label.scale = FALSE)
-graph_IT <- plot(network_IT, layout="spring", cut=0, label.scale = FALSE)
+graph_Nur <- plot(network_Nur, layout="spring", cut=0, label.scale = FALSE, title = "Practical nurse")
+graph_HRC <- plot(network_HRC, layout="spring", cut=0, label.scale = FALSE, title = "HRC")
+graph_BA <- plot(network_BA, layout="spring", cut=0, label.scale = FALSE, title = "BA")
+graph_IT <- plot(network_IT, layout="spring", cut=0, label.scale = FALSE, title = "IT")
 
 maxedge <- max(c(graph_Nur$graphAttributes$Graph$maximum, 
                  graph_HRC$graphAttributes$Graph$maximum, 
@@ -720,22 +726,29 @@ graph_BA <- plot(network_BA, layout=L, cut=0, label.scale = FALSE, title = "BA",
 graph_IT <- plot(network_IT, layout=L, cut=0, label.scale = FALSE, title = "IT",
                  maximum = maxedge)
 
-### similarity: statistical
-cor(qgraph::centrality(network_Nur)$InDegree, qgraph::centrality(network_IT)$InDegree)
-
-cor(network_Nur$graph[lower.tri(network_Nur$graph)], network_IT$graph[lower.tri(network_Nur$graph)], method="spearman")
-
-### difference: statistical
 nct_results <- NetworkComparisonTest::NCT(heterogeneity_Nur, heterogeneity_IT, it=1000, binary.data=FALSE, paired=FALSE, test.edges=TRUE,
 edges='all', progressbar=TRUE)
-# alternatively, load 
-save(nct_results, file="NCT.Rdata")
-# load("NCT.Rdata")
 
-nct_results$nwinv.pval
-nct_results$glstrinv.pval
-nct_results$einv.pvals
-sum(nct_results$einv.pvals$"p-value" < 0.05)
+```
+
+```{r combinedAgreementBcts-heterogeneity-nct}
+print("These are the sizes of educational tracks:")
+top5Bcts_tracks_df %>% dplyr::group_by(track) %>% summarise(n = n()) %>% 
+  papaja::apa_table()
+
+print("Similarity")
+cat("Correlation between Nur and IT edge strengths:", cor(qgraph::centrality(network_Nur)$InDegree, qgraph::centrality(network_IT)$InDegree))
+
+cat("Correlation between Nur and IT networks:", cor(network_Nur$graph[lower.tri(network_Nur$graph)], network_IT$graph[lower.tri(network_Nur$graph)], method="spearman"))
+
+print("Difference")
+cat("P-value for the test of identical network structure:", nct_results_top5Bcts$nwinv.pval)
+cat("P-value for the test of identical connectivity in networks:", nct_results_top5Bcts$glstrinv.pval)
+nct_results_top5Bcts$einv.pvals %>% 
+  papaja::apa_table(caption = "p-values on difference test in edges between Nur and IT")
+
+cat("Number of edges, which appear different (p<0.05):", sum(nct_results$einv.pvals$"p-value" < 0.05))
+
 ```
 
 
@@ -968,15 +981,25 @@ BCT_ggm <- plot(nwBCT_ggm,
 
 ### Centrality and stability
 
-```{r allBctsMotiSurveyPA-ggm-stability, results = "asis"}
+```{r allBctsMotiSurveyPA-ggm-stability}
+
 allBctsMotiSurveyPA <- nwBCT_ggm
 
 allBctsMotiSurveyPA_centralityPlot <- qgraph::centralityPlot(allBctsMotiSurveyPA)
 
-qgraph::centrality(allBctsMotiSurveyPA)$InDegree
-scale(qgraph::centrality(allBctsMotiSurveyPA)$InDegree)
-qgraph::centrality(allBctsMotiSurveyPA)$Closeness
-qgraph::centrality(allBctsMotiSurveyPA)$Betweenness
+qgraph::centrality(allBctsMotiSurveyPA)$InDegree %>% 
+  data.frame("Node" = names(.), "Strength" = .) %>%
+  dplyr::arrange(desc(Strength)) %>% 
+  papaja::apa_table()
+
+scale(qgraph::centrality(allBctsMotiSurveyPA)$InDegree) %>% 
+  data.frame(Node = labels(.), `Standardised strength` = .) %>%
+  plyr::arrange(desc(`Standardised.strength`)) %>% 
+  papaja::apa_table()
+  
+qgraph::centrality(allBctsMotiSurveyPA)$Closeness %>% data.frame(Closeness = .) %>% papaja::apa_table()
+
+qgraph::centrality(allBctsMotiSurveyPA)$Betweenness %>% data.frame(names(.), .) %>% papaja::apa_table()
 
 cor(qgraph::centrality(allBctsMotiSurveyPA)$InDegree, qgraph::centrality(allBctsMotiSurveyPA)$Betweenness, 
     method = "spearman") 
@@ -1356,7 +1379,9 @@ sum(nct_results$einv.pvals$"p-value" < 0.05)  # how many edges are different0
 
 ### GGM BCTs & motivation 
 
-```{r bct-moti-ggm}
+The pie on nodes represents the median, as proportion of the theoretical maximum value (i.e. highest value on the questionnaire scale).
+
+```{r bct-moti-ggm-noncombined}
 library(corrgram)
 
 nItems <- 19
@@ -1426,17 +1451,23 @@ piefill$Controlled <- median(S.total$Controlled, na.rm = TRUE) / 5
 piefill <- piefill %>% select(Autonomous, Controlled, everything())
 
 # Plot network
-plot(nwBCT, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivation", label.cex = 0.75,
+plot(nwBCT, layout = "spring", label.scale = FALSE, title = "GGM: BCTs & motivation", label.cex = 0.75,
      pie = piefill, 
      color = "skyblue",
      pieBorder = 1)
 
+
+
+```
+
+Network after combining goal setting and implementation planning, as well as barrier identification and coping planning:
+
+```{r bct-moti-ggm-combined}
 # Combine items further:
 bctdf2 <- bctdf %>% rowwise %>% 
   dplyr::mutate('goals and plans' = mean(c(`goal setting`, `implementation plan`), na.rm = TRUE)) %>% 
   dplyr::mutate('barriers identified\nand planned for' = mean(c(`barrier identification`, `coping planning`), na.rm = TRUE)) %>% 
-  dplyr::select(-`goal setting`, -`implementation plan`, -`barrier identification`, -`coping planning`) %>% 
-  data.frame
+  dplyr::select(-`goal setting`, -`implementation plan`, -`barrier identification`, -`coping planning`)
 
 S.total2 <- bctdf2 %>% dplyr::select(`Autonomous`:ncol(bctdf2))
 nwBCT2 <- bootnet::estimateNetwork(S.total2, default="EBICglasso")
@@ -1445,7 +1476,7 @@ nwBCT2 <- bootnet::estimateNetwork(S.total2, default="EBICglasso")
 piefill2 <- S.total2 %>%
   dplyr::select(-Autonomous, -Controlled) %>%
   data.frame() %>% 
-  summarise_all(funs(mean(., na.rm = TRUE) / 6)) 
+  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
 
 piefill2$Autonomous <- median(S.total$Autonomous, na.rm = TRUE) / 5
 piefill2$Controlled <- median(S.total$Controlled, na.rm = TRUE) / 5
@@ -1453,7 +1484,7 @@ piefill2$Controlled <- median(S.total$Controlled, na.rm = TRUE) / 5
 piefill2 <- piefill2 %>% select(Autonomous, Controlled, everything())
 
 # Plot network
-plot(nwBCT2, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivation", label.cex = 0.75,
+plot(nwBCT2, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motivation, items combined", label.cex = 0.75,
      pie = piefill2, 
      color = "skyblue",
      pieBorder = 1)
@@ -1467,8 +1498,10 @@ plot(nwBCT2, layout = "spring", label.scale = FALSE, title = "GGM, BCTs & motiva
 Robustness test 
 
 ```{r bct-robustness}
-
+print("Original items:")
 qgraph::centralityPlot(nwBCT)
+
+print("Combined items:")
 qgraph::centralityPlot(nwBCT2)
 
 # BCTboot1 <- bootnet::bootnet(nwBCT, nBoots = 2500)
@@ -1479,9 +1512,11 @@ qgraph::centralityPlot(nwBCT2)
 load("BCTboot1.Rdata")
 load("BCTboot2.Rdata")
 
-plot(BCTboot1, labels = TRUE, order = "sample")
+print("Original items:")
+plot(BCTboot1, labels = FALSE, order = "sample")
 
-plot(BCTboot2, labels = TRUE, order = "sample")
+print("Combined items:")
+plot(BCTboot2, labels = FALSE, order = "sample")
 
 autEdges <- summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
   dplyr::arrange(mean) %>% 
@@ -1518,7 +1553,7 @@ userfriendlyscience::diamondPlot(autEdges,
   scale_fill_manual('Connected node',
                       values = viridis::viridis(2, end = 0.8)[1:2],  
                       guide = guide_legend(override.aes = list(alpha = 1))) +
-  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (all items)")
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (model with all items)")
   
 # Combined items
 
@@ -1557,7 +1592,7 @@ userfriendlyscience::diamondPlot(autEdges,
   scale_fill_manual('Connected node',
                       values = viridis::viridis(2, end = 0.8)[1:2],  
                       guide = guide_legend(override.aes = list(alpha = 1))) +
-  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (combined items)")
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (model with combined items)")
 
 # summary(BCTboot1, statistics = "edge", rank = TRUE) %>% 
 #   dplyr::arrange(mean) %>% 
@@ -1568,7 +1603,7 @@ userfriendlyscience::diamondPlot(autEdges,
 
 ```
 
-#### Add PA
+#### Add accelerometer-measured MVPA
 
 ```{r bct-pa-motivation-ggm}
 
@@ -1606,7 +1641,6 @@ bctdf_PA <- df %>% dplyr::select(id,
   #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
   'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
   dplyr::select(-`log on paper`, -`smartphone`) %>% 
-  data.frame %>% 
   mutate_all(as.numeric)
 
 # Network for all participants
@@ -1618,26 +1652,27 @@ labs <- colnames(S.total_PA)
 
 # Create means for filling nodes
 piefill <- S.total_PA %>% 
-    mutate(Autonomous = Autonomous * 6/5, # Transform these from scale 1-5 to 1-6
-         Controlled = Controlled * 6/5) %>% 
-  dplyr::select(-contains("MVPA")) %>% 
-  summarise_all(funs(median(., na.rm = TRUE) / 6)) 
+  dplyr::select(-MVPA, -Autonomous, -Controlled) %>% 
+  data.frame() %>% 
+  summarise_all(funs(median(., na.rm = TRUE) / 6))   
 
 piefill$MVPA <- median(S.total_PA$MVPA, na.rm = TRUE) / (60*24) 
+piefill$Autonomous <- median(S.total_PA$Autonomous, na.rm = TRUE) / 5
+piefill$Controlled <- median(S.total_PA$Controlled, na.rm = TRUE) / 5
 
-piefill <- piefill %>% dplyr::select(MVPA, everything())
+piefill <- piefill %>% dplyr::select(MVPA, Autonomous, Controlled, everything())
 
 # Plot network
-plot(nwBCT_PA, layout = "spring", label.scale = FALSE, title = "GGM: PA, BCTs & motivation", label.cex = 0.75,
+plot(nwBCT_PA, layout = "spring", label.scale = FALSE, title = "GGM: Accelerometer-MVPA, BCTs & motivation (all items)", label.cex = 0.75,
      pie = piefill, 
      color = "skyblue",
      pieBorder = 1)
 
 # Combine items further:
 bctdf_PA2 <- bctdf_PA %>% rowwise %>% 
-  mutate('goals and plans' = mean(c(`goal.setting`, `implementation.plan`), na.rm = TRUE)) %>% 
-  mutate('barriers identified\nand planned for' = mean(c(`barrier.identification`, `coping.planning`), na.rm = TRUE)) %>% 
-  dplyr::select(-`goal.setting`, -`implementation.plan`, -`barrier.identification`, -`coping.planning`) %>% 
+  mutate('goals and plans' = mean(c(`goal setting`, `implementation plan`), na.rm = TRUE)) %>% 
+  mutate('barriers identified\nand planned for' = mean(c(`barrier identification`, `coping planning`), na.rm = TRUE)) %>% 
+  dplyr::select(-`goal setting`, -`implementation plan`, -`barrier identification`, -`coping planning`) %>% 
   data.frame
 
 S.total_PA2 <- bctdf_PA2 %>% dplyr::select(MVPA:ncol(bctdf_PA2))
@@ -1645,18 +1680,19 @@ nwBCT_PA2 <- bootnet::estimateNetwork(S.total_PA2, default="EBICglasso")
 
 # Create means for filling nodes
 piefill_PA2 <- S.total_PA2 %>% 
-  dplyr::select(-contains("MVPA")) %>%
-  mutate(Autonomous = Autonomous * 6/5, # Transform these from scale 1-5 to 1-6
-         Controlled = Controlled * 6/5) %>% 
+  dplyr::select(-MVPA, -Autonomous, -Controlled) %>%
+  data.frame() %>% 
   summarise_all(funs(median(., na.rm = TRUE) / 6)) 
 
 piefill_PA2$MVPA <- median(S.total_PA2$MVPA, na.rm = TRUE) / (60*24) 
+piefill_PA2$Autonomous <- median(S.total_PA2$Autonomous, na.rm = TRUE) / 5
+piefill_PA2$Controlled <- median(S.total_PA2$Controlled, na.rm = TRUE) / 5
 
 piefill_PA2 <- piefill_PA2 %>% dplyr::select(MVPA, everything())
 
 
 # Plot network
-plot(nwBCT_PA2, layout = "spring", label.scale = FALSE, title = "GGM: PA BCTs & motivation", label.cex = 0.75,
+plot(nwBCT_PA2, layout = "spring", label.scale = FALSE, title = "GGM: Accelerometer-MVPA, BCTs & motivation (combined items)", label.cex = 0.75,
      pie = piefill_PA2, 
      color = "skyblue",
      pieBorder = 1)
@@ -1664,6 +1700,65 @@ plot(nwBCT_PA2, layout = "spring", label.scale = FALSE, title = "GGM: PA BCTs & 
 
 ```
 
+#### Centrality and stability
+
+```{r}
+# BCTbootPA <- bootnet::bootnet(nwBCT_PA2, nBoots = 2500)
+# save(BCTbootPA, file = "BCTbootPA.Rdata")
+
+load("BCTbootPA.Rdata")
+
+qgraph::centralityPlot(nwBCT_PA2)
+
+plot(BCTbootPA, labels = FALSE, order = "sample")
+
+
+```
+
+```{r diamondEdges-PAmodel, eval = FALSE, include = FALSE}
+# TODO? The edge order doesn't match and plot is hence wrong
+
+autEdges <- summary(BCTbootPA, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Autonomous') | stringr::str_detect(node2, 'Autonomous')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  dplyr::filter(!(node2 == 'Controlled') & !(node1 == 'Controlled')) %>% 
+  data.frame() %>% 
+  dplyr::select(CIlower, mean, CIupper, node2, node1) %>% 
+  dplyr::mutate(node2 = ifelse(node2 == "Autonomous", "MVPA", node2))
+
+contEdges <- summary(BCTbootPA, statistics = "edge", rank = TRUE) %>% 
+  dplyr::arrange(mean) %>% 
+  dplyr::filter(stringr::str_detect(node1, 'Controlled') | stringr::str_detect(node2, 'Controlled')) %>% # str_detect(id, 'Autonomous|Controlled') for both
+  dplyr::filter(!(node2 == 'Autonomous') & !(node1 == 'Autonomous')) %>% 
+  data.frame() %>% 
+  dplyr::select(CIlower, mean, CIupper, node2, node1) %>% 
+  dplyr::mutate(node2 = ifelse(node2 == "Controlled", "MVPA", node2))
+
+userfriendlyscience::diamondPlot(autEdges, 
+            ciCols = c("CIlower", "mean", "CIupper"), 
+            color = viridis::viridis(2, end = 0.8)[1], 
+            alpha = 0.3, 
+            yLabels = autEdges$node2, 
+            fixedSize = 0.3, 
+            xlab = NULL) +
+  userfriendlyscience::diamondPlot(contEdges, 
+              ciCols = c("CIlower", "mean", "CIupper"), 
+              color = viridis::viridis(2, end = 0.8)[2], 
+              alpha = 0.3, 
+              yLabels = autEdges$node2, 
+              fixedSize = 0.3, 
+              xlab = NULL, 
+              returnLayerOnly = TRUE) +
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Controlled"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Autonomous"), 
+            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  scale_fill_manual('Connected node',
+                      values = viridis::viridis(2, end = 0.8)[1:2],  
+                      guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggtitle("Relative strengths of edges containing autonomous \nor controlled motivation (model with MVPA & combined items)")
+
+```
 
 
 ## Demonstrating the Ising network
@@ -1815,13 +1910,13 @@ network_BA <- bootnet::estimateNetwork(heterogeneity_BA, default="IsingFit")
 network_IT <- bootnet::estimateNetwork(heterogeneity_IT, default="IsingFit")
 
 graph_Nur <- plot(network_Nur, layout="spring", cut=0, label.scale = FALSE,
-                  pie = NurMeans, pieBorder = 1)
+                  pie = NurMeans, pieBorder = 1, title = "Practical nurse")
 graph_HRC <- plot(network_HRC, layout="spring", cut=0, label.scale = FALSE,
-                  pie = HRCMeans, pieBorder = 1)
+                  pie = HRCMeans, pieBorder = 1, title = "HRC")
 graph_BA <- plot(network_BA, layout="spring", cut=0, label.scale = FALSE,
-                  pie = BAMeans, pieBorder = 1)
+                  pie = BAMeans, pieBorder = 1, title = "BA")
 graph_IT <- plot(network_IT, layout="spring", cut=0, label.scale = FALSE,
-                  pie = ITMeans, pieBorder = 1)
+                  pie = ITMeans, pieBorder = 1, title = "IT")
 
 maxedge <- max(c(graph_Nur$graphAttributes$Graph$maximum, 
                  graph_HRC$graphAttributes$Graph$maximum, 
@@ -1840,12 +1935,7 @@ graph_BA <- plot(network_BA, layout=L, cut=0, label.scale = FALSE, title = "BA",
 graph_IT <- plot(network_IT, layout=L, cut=0, label.scale = FALSE, title = "IT",
                  maximum = maxedge, pie = ITMeans, pieBorder = 1)
 
-### similarity: statistical
-cor(qgraph::centrality(network_Nur)$InDegree, qgraph::centrality(network_IT)$InDegree)
 
-cor(network_Nur$graph[lower.tri(network_Nur$graph)], network_IT$graph[lower.tri(network_Nur$graph)], method="spearman")
-
-### difference: statistical
 # nct_results_top5Bcts <- NetworkComparisonTest::NCT(heterogeneity_Nur, heterogeneity_IT, it=1000, binary.data=FALSE, paired=FALSE, test.edges=TRUE,
 # edges='all', progressbar=TRUE)
 
@@ -1855,16 +1945,22 @@ load("nct_results_top5Bcts.Rdata")
 
 ```
 
+Results from the network comparison test between Nur and IT on "top-5" BCTs:
+
 ```{r top5bcts-nct-results, results = "asis"}
 
-top5Bcts_tracks_df %>% dplyr::group_by(track) %>% summarise(n = n()) %>% 
-  papaja::apa_table()
+print("Similarity")
+cat("Correlation between Nur and IT edge strengths:", cor(qgraph::centrality(network_Nur)$InDegree, qgraph::centrality(network_IT)$InDegree))
 
-nct_results_top5Bcts$nwinv.pval
-nct_results_top5Bcts$glstrinv.pval
-nct_results_top5Bcts$einv.pvals
-sum(nct_results_top5Bcts$einv.pvals$"p-value" < 0.05)
+cat("Correlation between Nur and IT networks:", cor(network_Nur$graph[lower.tri(network_Nur$graph)], network_IT$graph[lower.tri(network_Nur$graph)], method="spearman"))
 
+print("Difference")
+cat("P-value for the test of identical network structure:", nct_results_top5Bcts$nwinv.pval)
+cat("P-value for the test of identical connectivity in networks:", nct_results_top5Bcts$glstrinv.pval)
+nct_results_top5Bcts$einv.pvals %>% 
+  papaja::apa_table(caption = "p-values on difference test in edges between Nur and IT")
+
+cat("Number of edges, which appear different (p<0.05):", sum(nct_results$einv.pvals$"p-value" < 0.05))
 
 ```
 

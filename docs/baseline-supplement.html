@@ -336,7 +336,7 @@ div.tocify {
   <a href="baseline-networks.html">Networks</a>
 </li>
 <li>
-  <a href="baseline-datasetup.R">Data setup code</a>
+  <a href="../baseline-datasetup.R">Data setup code</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -448,12 +448,62 @@ vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Number of MVPA days last week (self-report)&quot;</span> <span class="op">|</span><span class="st"> </span>
 <span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Minutes spent sitting or lying down (accelerometer)&quot;</span> <span class="op">|</span><span class="st"> </span>
 <span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Number of times sitting was interrupted (accelerometer)&quot;</span> ) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span>DT<span class="op">::</span><span class="kw">datatable</span>( <span class="co">#papaja::apa_table()</span>
+<span class="st">    </span>papaja<span class="op">::</span><span class="kw">apa_table</span>(
         <span class="dt">caption =</span> <span class="st">&quot;Primary outcome variables with their class and school ICCs&quot;</span>,
-        <span class="dt">escape =</span> <span class="ot">TRUE</span> <span class="co">#, format.args = list(digits = c(1, 3, 0), margin = 2)</span>
+        <span class="dt">escape =</span> <span class="ot">TRUE</span>, <span class="dt">format.args =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">0</span>), <span class="dt">margin =</span> <span class="dv">2</span>)
         )</code></pre></div>
-<div id="htmlwidget-78395d97e49451a4a9fe" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-78395d97e49451a4a9fe">{"x":{"filter":"none","caption":"<caption>Primary outcome variables with their class and school ICCs<\/caption>","data":[["1","2","3","4"],["MVPA minutes (accelerometer)","Number of MVPA days last week (self-report)","Number of times sitting was interrupted (accelerometer)","Minutes spent sitting or lying down (accelerometer)"],[183.1,2.8,28,573.9],["166  -  200.45","2.6  -  2.95","24.7  -  31.37","535.5  -  611.8"],[0.072,0.047,0.058,0.086],["0.096","&lt; 0.001","0.085","0.145"],[706,1082,706,706]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>Mean<\/th>\n      <th>CI95<\/th>\n      <th>ICC class<\/th>\n      <th>ICC school<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<caption>
+(#tab:primary-outcome-vars-table-total)
+</caption>
+<caption>
+<em>Primary outcome variables with their class and school ICCs</em>
+</caption>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">Mean</th>
+<th align="left">CI95</th>
+<th align="left">ICC class</th>
+<th align="left">ICC school</th>
+<th align="left">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">MVPA minutes (accelerometer)</td>
+<td align="left">183.1</td>
+<td align="left">166  -  200.45</td>
+<td align="left">0.072</td>
+<td align="left">0.096</td>
+<td align="left">706</td>
+</tr>
+<tr class="even">
+<td align="left">Number of MVPA days last week (self-report)</td>
+<td align="left">2.8</td>
+<td align="left">2.6  -  2.95</td>
+<td align="left">0.047</td>
+<td align="left">&lt; 0.001</td>
+<td align="left">1,082</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of times sitting was interrupted (accelerometer)</td>
+<td align="left">28.0</td>
+<td align="left">24.7  -  31.37</td>
+<td align="left">0.058</td>
+<td align="left">0.085</td>
+<td align="left">706</td>
+</tr>
+<tr class="even">
+<td align="left">Minutes spent sitting or lying down (accelerometer)</td>
+<td align="left">573.9</td>
+<td align="left">535.5  -  611.8</td>
+<td align="left">0.086</td>
+<td align="left">0.145</td>
+<td align="left">706</td>
+</tr>
+</tbody>
+</table>
 <div id="all-main-variables-their-means-cis-and-iccs." class="section level2">
 <h2>All main variables, their means, CIs and ICCs.</h2>
 <p>Values calculated with a multilevel model accounting for school and classroom.</p>
@@ -4965,11 +5015,12 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">position =</span> <span class="kw">position_raincloud</span>(<span class="dt">width =</span> <span class="fl">0.2</span>, <span class="dt">height =</span> <span class="fl">0.4</span>),
                                   <span class="co"># from = 0, to = 450,</span>
                                   <span class="dt">jittered_points =</span> <span class="ot">TRUE</span>,
-                                  <span class="dt">point_size =</span> <span class="dv">1</span>) <span class="op">+</span>
+                                  <span class="dt">point_size =</span> <span class="dv">1</span>,
+                                  <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>,
        <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">0</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">breaks =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>)) <span class="op">+</span>
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(
                                 <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;BA boy&#39;</span> =<span class="st"> &quot;Boy&quot;</span>, <span class="st">&#39;BA girl&#39;</span> =<span class="st"> &quot;Girl&quot;</span>),
                                 <span class="dt">values =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)],
@@ -4991,6 +5042,7 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">theme_apa</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
+## Warning: Ignoring unknown parameters: limits
 
 plot1 &lt;-<span class="st"> </span>plot1 <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(padaysLastweek_trackgirl_diamonds_girl, 
@@ -5029,11 +5081,12 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">position =</span> <span class="kw">position_raincloud</span>(<span class="dt">width =</span> <span class="fl">0.2</span>, <span class="dt">height =</span> <span class="fl">0.4</span>),
                                   <span class="co"># from = 0, to = 450,</span>
                                   <span class="dt">jittered_points =</span> <span class="ot">TRUE</span>,
-                                  <span class="dt">point_size =</span> <span class="dv">1</span>) <span class="op">+</span>
+                                  <span class="dt">point_size =</span> <span class="dv">1</span>,
+                                  <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>,
        <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">0</span>), <span class="dt">labels =</span> <span class="ot">NULL</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">breaks =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">7</span>)) <span class="op">+</span>
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(
                                 <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;BA 0&#39;</span> =<span class="st"> &quot;Control&quot;</span>, <span class="st">&#39;BA 1&#39;</span> =<span class="st"> &quot;Intervention&quot;</span>),
                                 <span class="dt">values =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)],
@@ -5055,6 +5108,7 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">theme_apa</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
+## Warning: Ignoring unknown parameters: limits
 
 plot2 &lt;-<span class="st"> </span>plot2 <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(padaysLastweek_trackintervention_diamonds_intervention, 
