@@ -26,4 +26,4 @@ navbar:
   - text: Networks
     href: baseline-networks.html
   - text: Data setup code
-    href: ../baseline-datasetup.R
+    href: https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R

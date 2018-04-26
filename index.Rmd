@@ -2,8 +2,10 @@
 title: "Baseline index"
 ---
 
-# Welcome!
+**Welcome!**
 
 This site is a companion web page to the description of baseline characteristics of the Let's Move It intervention participants, which will be submitted in 2018.
 
-See [mattiheino.com](www.mattiheino.com) for my primary blog.
+GitHub repository for the files can be found [here](https://github.com/heinonmatti/baseline-visu).
+
+For issues, please contact matti.tj.heino@gmail.com. 
