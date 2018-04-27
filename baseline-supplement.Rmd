@@ -35,22 +35,21 @@ ICC_group <- NA
 ICC_School <- NA
 nonmissings <- NA
 
-## Use this to test a single variable:
-# dftest <- df #%>% na.omit()
-# m <- lme4::lmer(sitLieAccelerometer_diff ~ (1|school) + (1|group), data=dftest)
-# mean <- lme4::fixef(m)
-# m_p <- profile(m, which = "beta_")
-# ci_low <- confint(m_p)[, 1]
-# ci_high <- confint(m_p)[, 2]
-# ICC_group <- icc(m)[1]
-# ICC_School <- icc(m)[2]
-# nonmissings <- length(m@resp$y)
+## # Use this to test a single variable:
+## dftest <- df #%>% na.omit()
+## m <- lme4::lmer(sitLieAccelerometer_diff ~ (1|school) + (1|group), data=dftest)
+## mean <- lme4::fixef(m)
+## m_p <- profile(m, which = "beta_")
+## ci_low <- confint(m_p)[, 1]
+## ci_high <- confint(m_p)[, 2]
+## ICC_group <- icc(m)[1]
+## ICC_School <- icc(m)[2]
+## nonmissings <- length(m@resp$y)
 
 
-# Loop over each variable name, extract statistics: 
+# # UNCOMMENT below and run code
 
-# all participants
-# for (i in names){
+# for (i in names){ # Loop over each variable name for all participants, extract statistics
 # m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group)"), data=df)
 # mean[i] <- lme4::fixef(m)
 # m_p <- profile(m, which = "beta_")
@@ -60,8 +59,8 @@ nonmissings <- NA
 # ICC_School[i] <- sjstats::icc(m)[2]
 # nonmissings[i] <- length(m@resp$y)
 # }
-#
-#
+# 
+# 
 # vardatatable <- data_frame(
 #   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
 #   "Mean" = round(mean, 1),
@@ -73,7 +72,7 @@ nonmissings <- NA
 #   dplyr::filter(Variable != "") %>% #remove first row, which is empty
 #   dplyr::mutate(`ICC class` = as.numeric(`ICC class`)) %>%
 #   as.data.frame()
-#
+# 
 # ci_total <- data_frame(
 #   "ciLo" = ci_low,
 #   "mean" = mean,
@@ -81,7 +80,7 @@ nonmissings <- NA
 #   "diamondlabels" = names(mean)) %>%
 #   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
 #   as.data.frame()
-
+# 
 # save(vardatatable, file = "vardatatable.Rdata")
 # save(ci_total, file = "ci_total.Rdata")
 load("vardatatable.Rdata")
@@ -187,10 +186,9 @@ ICC_track <- NA
 # ICC_School <- icc(m)[2]
 # nonmissings <- length(m@resp$y)
 
-# Loop over each variable name, extract statistics: 
+# # UNCOMMENT below and run code
 
-# all participants  
-# for (i in names){
+# for (i in names){ # Loop over each variable name for all participants, extract statistics
 # m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
 # mean[i] <- lme4::fixef(m)
 # m_p <- profile(m, which = "beta_")
@@ -213,9 +211,7 @@ ICC_track <- NA
 #   dplyr::arrange(Variable) %>% 
 #   dplyr::filter(Variable != "") #remove first row, which is empty
 # 
-# save(vardatatable_containing_edutrack, file = "vardatatable_containing_edutrack.Rdata")
-load("vardatatable_containing_edutrack.Rdata")
-
+#
 # ci_edutrack <- data_frame(
 #   "ciLo" = ci_low,
 #   "mean" = mean,
@@ -224,7 +220,9 @@ load("vardatatable_containing_edutrack.Rdata")
 #   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
 #   as.data.frame()
 # 
+# save(vardatatable_containing_edutrack, file = "vardatatable_containing_edutrack.Rdata")
 # save(ci_edutrack, file = "ci_edutrack.Rdata")
+load("vardatatable_containing_edutrack.Rdata")
 load("ci_edutrack.Rdata")
 
 ```
@@ -299,10 +297,9 @@ ICC_track <- NA
 # ICC_group <- sjstats::icc(m)[1]
 # nonmissings <- length(m@resp$y)
 
-# Loop over each variable name, extract statistics: 
+# # UNCOMMENT below and run code
 
-# all participants  
-# for (i in names){
+# for (i in names){ # Loop over each variable name for all participants, extract statistics
 # m <- lme4::lmer(paste0(i," ~ (1|track)"), data=df)
 # mean[i] <- lme4::fixef(m)
 # m_p <- profile(m, which = "beta_")
@@ -321,9 +318,6 @@ ICC_track <- NA
 #   dplyr::arrange(Variable) %>%
 #   dplyr::filter(Variable != "") #remove first row, which is empty
 # 
-# save(vardatatable_edutrack_only, file = "vardatatable_edutrack_only.Rdata")
-load("vardatatable_edutrack_only.Rdata")
-
 # ci_edutrack_only <- data_frame(
 #   "ciLo" = ci_low,
 #   "mean" = mean,
@@ -332,7 +326,9 @@ load("vardatatable_edutrack_only.Rdata")
 #   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
 #   as.data.frame()
 # 
+# save(vardatatable_edutrack_only, file = "vardatatable_edutrack_only.Rdata")
 # save(ci_edutrack_only, file = "ci_edutrack_only.Rdata")
+load("vardatatable_edutrack_only.Rdata")
 load("ci_edutrack_only.Rdata")
 
 ```
@@ -385,8 +381,9 @@ nonmissings <- NA
 # nonmissings <- nrow(m$model)
 
 
-# # Loop over each variable name, extract statistics:
-# for (i in names){
+# # UNCOMMENT below and run code
+
+# for (i in names){ # Loop over each variable name for all participants, extract statistics
 # df_for_sandwich <- df %>% dplyr::select(
 #   group, school, track, i) %>%
 #   na.omit()
@@ -398,7 +395,7 @@ nonmissings <- NA
 # ci_high[i] <- coef(m) + 1.96 * sandwich_se
 # nonmissings[i] <- nrow(m$model)
 # }
-# 
+#
 # vardatatable_sandwich <- data_frame(
 #   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
 #   Mean = round(mean, 1),
@@ -406,10 +403,7 @@ nonmissings <- NA
 #   n = nonmissings) %>%
 #   dplyr::arrange(Variable) %>%
 #   dplyr::filter(Variable != "") #remove first row, which is empty
-# 
-# save(vardatatable_sandwich, file = "vardatatable_sandwich.Rdata")
-load("vardatatable_sandwich.Rdata")
-
+#
 # ci_sandwich <- data_frame(
 #   "ciLo" = ci_low,
 #   "mean" = mean,
@@ -417,8 +411,11 @@ load("vardatatable_sandwich.Rdata")
 #   "diamondlabels" = names(mean)) %>%
 #   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
 #   as.data.frame()
-# 
+#
+# save(vardatatable_sandwich, file = "vardatatable_sandwich.Rdata")
 # save(ci_sandwich, file = "ci_sandwich.Rdata")
+
+load("vardatatable_sandwich.Rdata")
 load("ci_sandwich.Rdata")
 ```
 
@@ -787,7 +784,7 @@ These numbers are visualised with diamond plots later.
 # ci_control <- data.frame(ciLo = ci_low.control, mean = mean.control, ciHi = ci_high.control)
 # diamondlabels <- labels(ci_control)[[1]]
 # ci_control <- data.frame(ci_control, diamondlabels)
-
+# 
 # # # Same ICC results you'd get with e.g.:
 # # m1 <- as.data.frame(VarCorr(m))
 # # m1$vcov[1] / (m1$vcov[1] + m1$vcov[3])
@@ -798,10 +795,10 @@ These numbers are visualised with diamond plots later.
 # # Or from sjstats:
 # # sum(get_re_var(m)) / (sum(get_re_var(m)) + get_re_var(m, "sigma_2"))
 # 
-# # save(ci_control, file = "ci_control.Rdata")
-# # save(ci_intervention, file = "ci_intervention.Rdata")
-# # save(ci_girls, file = "ci_girls.Rdata")
-# # save(ci_boys, file = "ci_boys.Rdata")
+# save(ci_control, file = "ci_control.Rdata")
+# save(ci_intervention, file = "ci_intervention.Rdata")
+# save(ci_girls, file = "ci_girls.Rdata")
+# save(ci_boys, file = "ci_boys.Rdata")
 
 load("ci_control.Rdata")
 load("ci_intervention.Rdata")
@@ -1426,15 +1423,15 @@ papaja::apa_table(mega_mediatortable, caption = "Main mediating variables of PA 
 ```
 
 
-# Visualising random effects using full posterior
+<!-- # Visualising random effects using full posterior -->
 
-<!-- TODO: Delete this section? -->
+<!-- <!-- TODO: Delete this section? --> -->
 
-## Using rstanarm
+<!-- ## Using rstanarm -->
 
-Plot below shows credible intervals deviations  
+<!-- Plot below shows credible intervals deviations   -->
 
-```{r randeff-plot-rstanarm}
+```{r randeff-plot-rstanarm, include = FALSE, eval = FALSE}
 
 # grep("PA_", names(df), value = TRUE)
 

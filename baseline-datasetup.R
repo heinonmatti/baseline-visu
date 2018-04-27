@@ -530,11 +530,11 @@ dT3 <- d %>% dplyr::select(contains("T3"))
 
 # Create T1 scales
 
-scales_T1 <- list(big5agreeableness_T1 = grep('big5agr', names(dT1), value = TRUE),
-                  big5conscientiousness_T1 = grep('big5cons', names(dT1), value = TRUE),
-                  big5extraversion_T1 = grep('big5ext', names(dT1), value = TRUE),
-                  big5neuroticism_T1 = grep('big5neur', names(dT1), value = TRUE),
-                  big5openness_T1 = grep('big5open', names(dT1), value = TRUE),
+scales_T1 <- list(big5agreeableness_T1 = grep('big5agreeableness', names(dT1), value = TRUE),
+                  big5conscientiousness_T1 = grep('big5conscientiousness', names(dT1), value = TRUE),
+                  big5extraversion_T1 = grep('big5extraversion', names(dT1), value = TRUE),
+                  big5neuroticism_T1 = grep('big5neuroticism', names(dT1), value = TRUE),
+                  big5openness_T1 = grep('big5openness', names(dT1), value = TRUE),
                   PA_actCop_T1 = grep('PA_actCop', names(dT1), value = TRUE),
                   PA_agrbct_T1 = grep('PA_agrbct', names(dT1), value = TRUE),
                   PA_amotivation_T1 = grep('PA_amotivation', names(dT1), value = TRUE),

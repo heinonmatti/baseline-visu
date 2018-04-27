@@ -19,11 +19,6 @@ dplyr
 stringr
 forcats
 bindrcpp
-rstanarm
-viridisLite
-viridis
-visreg
-broom
 haven
 Matrix
 lme4
@@ -36,9 +31,14 @@ devtools
 EstimateGroupNetwork
 qgraph
 bookdown
+viridisLite
+viridis
 bootnet
+rstanarm
 mlmRev
 corrgram
+broom
+visreg
 sjPlot
 psych
 lavaan
