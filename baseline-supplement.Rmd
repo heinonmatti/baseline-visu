@@ -2,9 +2,7 @@
 title: "Baseline analysis supplement"
 ---
 
-Welcome to the LMI baseline supplement! This supplement will walk you through the paper and provides additional graphs.
-
-Measures used in the study
+Welcome to the LMI baseline supplement! This supplement will walk you through the analyses and provides additional graphs.
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
 

@@ -258,7 +258,7 @@ bctdf_pa_mgm <- df %>% dplyr::select(
   #        -`barrier identification`, -`coping planning`, # closely related
   #        -`PA identity`, -`PA life values`) %>% # closely related
 #  dplyr::select(-controlled) %>% # Not really gaussian at all 
-  data.frame %>% 
+  # data.frame %>% 
   mutate_all(as.numeric)
 
 # bctdf_mgm$autonomous[is.nan(bctdf_mgm$autonomous)] <- NA
@@ -333,6 +333,9 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.scale = FALSE,
             label.color = c(rep("black", 12)),
             theme = "colorblind")
+
+qgraph::flow(BCT_mgm, "PA accelerometer", theme = "colorblind", vsize = 8)
+qgraph::flow(BCT_mgm, "PA selfrep", theme = "colorblind", vsize = 8)
 ```
 
 ## ggm estimation
@@ -400,6 +403,10 @@ bootnetgraph <- plot(individualAgreementBCTs,
 
 combinedAgreementBcts_centralityPlot <- qgraph::centralityPlot(bootnetgraph)
 
+qgraph::centralityPlot(bootnetgraph, 
+               include = c("Strength", "ExpectedInfluence"),
+               orderBy = "ExpectedInfluence")
+
 qgraph::centrality(bootnetgraph)$InDegree
 scale(qgraph::centrality(bootnetgraph)$InDegree)
 qgraph::centrality(bootnetgraph)$Closeness
@@ -460,7 +467,7 @@ bctdf_pa_combinedAgreementBcts <- df %>% dplyr::select(
   dplyr::select(-`plan by other`, -`implementation plan`,
          -`barrier identification`, -`coping planning`, # closely related
          -`PA identity`, -`PA life values`) %>% # closely related
-  data.frame
+  mutate_all(as.numeric)
 
 
 ```
@@ -516,6 +523,10 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.scale = FALSE,
             label.color = c(rep("black", 9)),
             theme = "colorblind")
+
+
+# qgraph::flow(BCT_mgm, "PA accelerometer", theme = "colorblind", vsize = 8)
+# qgraph::flow(BCT_mgm, "PA selfrep", theme = "colorblind", vsize = 8)
 ```
 
 ## GGM plot
@@ -543,8 +554,7 @@ combinedAgreementBcts_ggm_df <- df %>% dplyr::select(
   dplyr::select(-`plan by other`, -`implementation plan`, 
          -`barrier identification`, -`coping planning`, # closely related
          -`PA identity`, -`PA life values`) %>% # closely related
-  mutate_all(as.numeric) %>% 
-  data.frame
+  mutate_all(as.numeric)
 
 # Create means for filling nodes
 # piefill_ggm <- S.total_ggm %>% 
@@ -614,12 +624,20 @@ bootnetgraph <- plot(combinedAgreementBcts_network,
                      pcorgraph$graph$Graph$maximum, 
                      corgraph$graph$Graph$maximum)),
        label.scale = FALSE)
+
+qgraph::flow(bootnetgraph, "PA selfrep", theme = "colorblind", vsize = 8)
+qgraph::flow(bootnetgraph, "PA accelerometer", theme = "colorblind", vsize = 8)
+
 ```
 
 ### Centrality and stability
 
 ```{r combinedAgreementBcts-stability}
 combinedAgreementBcts_centralityPlot <- qgraph::centralityPlot(bootnetgraph)
+
+qgraph::centralityPlot(bootnetgraph, 
+               include = c("Strength", "ExpectedInfluence"),
+               orderBy = "ExpectedInfluence")
 
 qgraph::centrality(bootnetgraph)$InDegree
 scale(qgraph::centrality(bootnetgraph)$InDegree)
@@ -870,9 +888,6 @@ pie_errors <- c(pred_obj$errors[1, 3],
 This plot is presented in the manuscript.
 
 ```{r allBctsMotiSurveyPA-mgm-plot}
-library(qgraph)
-library(igraph)
-
 node_colors <- c(viridis::viridis(5, begin = 0.3, end = 0.8)[1],
                  rep(viridis::viridis(5, begin = 0.3, end = 0.8)[2], 11),
                  rep(viridis::viridis(5, begin = 0.3, end = 0.8)[3], 1),   
@@ -893,6 +908,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.color = c(rep("white", 1), rep("black", 16)),
             theme = "colorblind")
 
+qgraph::flow(BCT_mgm, "MVPA", theme = "colorblind", vsize = 8)
 ```
 
 ### ggm estimation & plotting
@@ -977,6 +993,8 @@ BCT_ggm <- plot(nwBCT_ggm,
                 color = "skyblue",
                 pieBorder = 1)
 
+
+qgraph::flow(BCT_ggm, "MVPA", theme = "colorblind", vsize = 8)
 ```
 
 ### Centrality and stability
@@ -1825,6 +1843,19 @@ graph_cor <- qgraph::qgraph(qgraph::cor_auto(top5Bcts_df), graph = "cor", layout
 graph_Ising <- plot(network_all, layout=L, cut=0, label.scale = FALSE,
                   pie = allMeans, pieBorder = 1, title = "Ising model", label.cex = 0.8)
 
+qgraph::flow(graph_Ising, 
+             "MVPA", 
+             groups = c("A", "B", rep("C", 5)),
+             legend = FALSE,
+             title = "",
+             vsize = 15,
+             label.cex = 1.5,
+             colors = viridis::viridis(3),
+             label.color = c("white", rep("black", 6)))
+
+```
+```{r}
+top5Bcts_df %>% names()
 ```
 
 Centrality and stability:
@@ -1960,7 +1991,7 @@ cat("P-value for the test of identical connectivity in networks:", nct_results_t
 nct_results_top5Bcts$einv.pvals %>% 
   papaja::apa_table(caption = "p-values on difference test in edges between Nur and IT")
 
-cat("Number of edges, which appear different (p<0.05):", sum(nct_results$einv.pvals$"p-value" < 0.05))
+cat("Number of edges, which appear different (p<0.05):", sum(nct_results_top5Bcts$einv.pvals$"p-value" < 0.05))
 
 ```
 
@@ -2419,47 +2450,188 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 
 
 
-# Physical activity network
+# PA determinant network
 
-```{r, include = FALSE, eval = FALSE}
+```{r determinants, include = FALSE, eval = FALSE}
 
-data <- df %>% dplyr::select(PA = paAccelerometer_T1, actCop = actcop_T1, BCT = frqbct_T1, amot = amotivation_T1, auton = autonomous_T1, cont = controlled_T1, dnorm = dnorm_T1, fatpct = fatpct_T1, inorm = inorm_T1, intent = intention_T1, outcomeExpectations = outcomeExpectations_T1, opp = opportunities_T1, sePbc = sePbc_T1) %>% data.frame() 
+data <- df %>% 
+  dplyr::select(
+    "PA" = paAccelerometer_T1, 
+    "planning" = PA_actCop_T1, 
+    "BCT" = PA_frqbct_T1, 
+    "amotivation" = PA_amotivation_T1, 
+    "autonomous" = PA_autonomous_T1, 
+    "controlled" = PA_controlled_T1, 
+    "descriptive norm" = PA_dnorm_T1, 
+    "fat pct" = fatpct_T1, 
+    "injunctive norm" = PA_inorm_T1, 
+    "intention" = PA_intention_T1, 
+    "outcome expectations" = PA_outcomeExpectations_T1, 
+    "opportunities" = PA_opportunities_T1, 
+    "self-efficacy PBC" = PA_sePbc_T1) %>% 
+  mutate_all(funs(as.numeric(.))) 
 
-# Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
+covMatrix <- data %>% cov(use = "pairwise.complete.obs")
 
-qgraph(cor_auto(data), layout="spring")
+# Transform the matrix so, that lower diagonal of the matrix shows partial correlations,
+# while the upper one shows bivariate correlations.
+matrix_corLower_parcorUpper <- covMatrix %>% ggm::correlations()
 
-cormatrix <- cor_auto(data1)
+# Show the matrix
+matrix_corLower_parcorUpper %>% papaja::apa_table(caption = "Correlation matrix of hypothesised determinants. Upper diagonal shows bivariate correlations, lower diagonal shows partial correlations")
 
-graph1 <- qgraph(cormatrix, graph="glasso", layout="spring", sampleSize = nrow(data),
-              vsize=7, cut=0, maximum=.45, border.width=1.5)
+# Plot the matrix as a correlogram
+matrix_corLower_parcorUpper %>% corrgram::corrgram(
+  type = "cor",
+  lower.panel = corrgram::panel.pie,
+  upper.panel = corrgram::panel.pie,
+  main = "Bivariate (upper diagonal) and partial (lower diagonal)\ncorrelations of agreement-BCTs and PA")
 
-g = as.igraph(graph1, attributes=TRUE)
+```
 
-sgc <- spinglass.community(g)
+## ggm estimation
 
-sgc$membership
+```{r determinants-ggm}
 
-group.spinglass<- list(c(1, 2, 3, 5, 10), 
-                       c(4, 6, 8), 
-                       c(7, 9), 
-                       c(11, 12, 13))
+# Estimate a network
 
-set.seed(2)
+determinants_bootnet <- bootnet::estimateNetwork(data, default="EBICglasso")
 
-network1 <- bootnet::estimateNetwork(data1, default="EBICglasso")
+bootnetgraph <- plot(determinants_bootnet, edge.labels = TRUE, labels = names(data), label.scale = FALSE,
+       title = "partial correlation network, with LASSO regularisation and EBIC model selection")
 
-#bladibla <- qgraph::averageLayout(network1$graph, network2$graph)
+corgraph <- qgraph::qgraph(qgraph::cor_auto(data), graph = "cor",
+       labels = names(data),
+       label.scale = FALSE,
+       edge.labels = TRUE, 
+       title = "bivariate correlation network")
 
-# layout(t(1:2))
-# graph1 <- plot(network1, layout=bladibla, cut=0)
-# graph2 <- plot(network2, layout=bladibla, cut=0)
-# graph1 <- plot(network1, cut=0)
-# graph2 <- plot(network2, cut=0)
+pcorgraph <- qgraph::qgraph(qgraph::cor_auto(data), graph = "pcor",
+       labels = names(data),
+       label.scale = FALSE,
+       edge.labels = TRUE, 
+       title = "partial correlation network")
 
-plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color=c("olivedrab2", "orange", "mediumpurple1", "lightblue"))
+# Average the layout and plot all according to that
+avlayout <- qgraph::averageLayout(bootnetgraph, corgraph, pcorgraph)
+
+corgraph <- qgraph::qgraph(qgraph::cor_auto(data), graph = "cor",
+       labels = names(data),
+       edge.labels = TRUE, 
+       layout = avlayout, 
+       title = "bivariate correlation network",
+       theme = "colorblind",
+       maximum = max(c(bootnetgraph$graph$Graph$maximum,
+                     pcorgraph$graph$Graph$maximum, 
+                     corgraph$graph$Graph$maximum)),
+       label.scale = FALSE)
+
+# To help with visual comparison, that last argument takes the maximum edge of the three 
+# graphs and places that as the benchmark for the thickest line in all plots.
+
+pcorgraph <- qgraph::qgraph(qgraph::cor_auto(data), graph = "pcor",
+       labels = names(data),
+       edge.labels = TRUE, 
+       layout = avlayout,
+       title = "partial correlation network",
+       theme = "colorblind",
+       maximum = max(c(bootnetgraph$graph$Graph$maximum,
+                     pcorgraph$graph$Graph$maximum, 
+                     corgraph$graph$Graph$maximum)),
+       label.scale = FALSE)
 
 
+
+bootnetgraph <- plot(determinants_bootnet, 
+                     edge.labels = TRUE, 
+                     layout = avlayout, 
+                     title = "partial correlation network, with LASSO regularisation and EBIC model selection",
+       maximum = max(c(bootnetgraph$graph$Graph$maximum,
+                     pcorgraph$graph$Graph$maximum, 
+                     corgraph$graph$Graph$maximum)),
+       label.scale = FALSE)
+```
+
+A dressed-up version of the last graph. Pies indicate mean as a proportion of the maximum value in tha variable in question. 
+
+```{r}
+names(data)
+
+data <- df %>% 
+  dplyr::select(
+    "PA" = paAccelerometer_T1, 
+    "planning" = PA_actCop_T1, 
+    "BCT" = PA_frqbct_T1, 
+    "amotivation" = PA_amotivation_T1, 
+    "autonomous" = PA_autonomous_T1, 
+    "controlled" = PA_controlled_T1, 
+    "descriptive norm" = PA_dnorm_T1, 
+    "fat pct" = fatpct_T1, 
+    "injunctive norm" = PA_inorm_T1, 
+    "intention" = PA_intention_T1, 
+    "outcome expectations" = PA_outcomeExpectations_T1, 
+    "opportunities" = PA_opportunities_T1, 
+    "self-efficacy PBC" = PA_sePbc_T1) 
+
+piefill <- data %>% mutate_all(funs(mean(., na.rm = TRUE) / max(., na.rm = TRUE)))
+piefill <- piefill[1, ]
+
+itemGroups <- c(
+                rep("Objective", 3),
+                rep("Determinants", 2),
+                rep("BCTs", 2),
+                rep("Motivation", 3),
+                rep("Determinants", 6))
+
+determinantgraph <- plot(
+  determinants_bootnet, 
+  edge.labels = FALSE, 
+  layout = "spring",
+  label.scale = FALSE,
+  groups = itemGroups,
+  pie = piefill,
+  cut = 0.1,
+  pieBorder = 1,
+  legend = FALSE,
+  color = viridis::viridis(5, begin = 0.5, option = "D"))
+
+
+
+```
+
+### Centrality and stability
+
+```{r determinants-stability}
+
+determinants_centralityPlot <- qgraph::centralityPlot(bootnetgraph)
+
+qgraph::centralityPlot(bootnetgraph, 
+               include = c("Strength", "ExpectedInfluence"),
+               orderBy = "ExpectedInfluence")
+
+qgraph::centrality(bootnetgraph)$InDegree
+scale(qgraph::centrality(bootnetgraph)$InDegree)
+qgraph::centrality(bootnetgraph)$Closeness
+qgraph::centrality(bootnetgraph)$Betweenness
+
+cor(qgraph::centrality(bootnetgraph)$InDegree, qgraph::centrality(bootnetgraph)$Betweenness, 
+    method = "spearman") 
+
+# bootnet_stability_determinants <- bootnet::bootnet(determinants_bootnet, nBoots=1000)
+# save(bootnet_stability_determinants, file = "bootnet_stability_determinants.Rdata")
+load("bootnet_stability_determinants.Rdata")
+
+plot(bootnet_stability_determinants, labels = TRUE, order = "sample") 
+plot(bootnet_stability_determinants, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
+
+# bootnet_centrality_stability_determinants <- bootnet::bootnet(determinants_bootnet, nBoots=1000,nCores=8, type="case")
+# save(bootnet_centrality_stability_determinants, file = "bootnet_centrality_stability_determinants.Rdata")
+load("bootnet_centrality_stability_determinants.Rdata")
+
+plot(bootnet_centrality_stability_determinants)
+plot(bootnet_centrality_stability_determinants, perNode=T, "strength")
+
+bootnet::corStability(bootnet_centrality_stability_determinants)
 ```
 
 ### PA network without SDT motivations
@@ -2725,39 +2897,30 @@ plot(boot1, "closeness")
 
 ```{r, include = FALSE, eval = FALSE}
 nItems <- 18
-regulations.df <- lmi %>% dplyr::select(id = ID,
-  intervention = ryhmä,
-  group = ryhmäkoodi_korjattu,
-  school = Aineisto.1,
-  girl = Kys0013.1,
-  PA_amotivation_02_T1 = Kys0086.1,
-  PA_amotivation_01_T1 = Kys0082.1,
-  PA_amotivation_03_T1 = Kys0096.1,
-  PA_amotivation_04_T1 = Kys0097.1,
-  PA_extrinsic_01_T1 = Kys0080.1,
-  PA_extrinsic_02_T1 = Kys0081.1,
-  PA_extrinsic_03_T1 = Kys0083.1,
-  PA_introjected_01_T1 = Kys0084.1,
-  PA_introjected_02_T1 = Kys0085.1,
-  PA_identified_01_T1 = Kys0087.1,
-  PA_identified_02_T1 = Kys0088.1,
-  PA_identified_03_T1 = Kys0090.1,
-  PA_integrated_01_T1 = Kys0089.1,
-  PA_integrated_02_T1 = Kys0092.1,
-  PA_integrated_03_T1 = Kys0094.1,
-  PA_intrinsic_01_T1 = Kys0091.1,
-  PA_intrinsic_02_T1 = Kys0093.1,
-  PA_intrinsic_03_T1 = Kys0095.1
-)
-
-regulations.df <- regulations.df %>% dplyr::mutate(group = ifelse(group == "", NA, group))
-
-# Fix intervention and gender variables
-regulations.df <- regulations.df %>% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
-                         intervention = factor(intervention),
-            girl = ifelse(girl == 2, 1, 0),
-            girl = factor(girl, levels = c("1", "0")),
-            school = factor(school, levels = c("1", "2", "3", "4", "5")))
+regulations.df <- df %>% dplyr::select(
+  id,
+  intervention,
+  group,
+  school,
+  girl,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1, 
+  PA_integrated_02_T1,
+  PA_integrated_03_T1, 
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1)
 
 
 motiGirls <- regulations.df %>% dplyr::select(id,
@@ -2784,7 +2947,7 @@ motiGirls <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
-  filter(girl == "1") %>% 
+  filter(girl == "girl") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
@@ -2824,7 +2987,7 @@ motiBoys <- regulations.df %>% dplyr::select(id,
   PA_intrinsic_02_T1,
   PA_intrinsic_03_T1) %>%
  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
-  filter(girl == "0") %>% 
+  filter(girl == "boy") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
   scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
@@ -3042,7 +3205,6 @@ itemGroups <- c(rep("Amotivation", 4),
 
 
 plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
-
 
 ```
 

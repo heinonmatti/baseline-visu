@@ -45,6 +45,7 @@ knitr::opts_chunk$set(echo = TRUE, rows.print=15)
 
 ggplot2::theme_set(papaja::theme_apa())
 
+# This is supposed to center all data table cells...
 options(DT.options = list(columnDefs = list(list(className = 'dt-center', targets = "_all"))))
 
 # Read data.
