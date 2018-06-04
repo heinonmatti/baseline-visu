@@ -2485,7 +2485,7 @@ matrix_corLower_parcorUpper %>% corrgram::corrgram(
   type = "cor",
   lower.panel = corrgram::panel.pie,
   upper.panel = corrgram::panel.pie,
-  main = "Bivariate (upper diagonal) and partial (lower diagonal)\ncorrelations of agreement-BCTs and PA")
+  main = "Bivariate (upper diagonal) and partial (lower diagonal)\ncorrelations of PA determinants")
 
 ```
 
