@@ -478,16 +478,16 @@ nonmissings &lt;-<span class="st"> </span><span class="ot">NA</span>
 <span class="co">#   dplyr::filter(diamondlabels != &quot;&quot;) %&gt;% #remove first row, which is empty</span>
 <span class="co">#   as.data.frame()</span>
 <span class="co"># </span>
-<span class="co"># save(vardatatable, file = &quot;vardatatable.Rdata&quot;)</span>
-<span class="co"># save(ci_total, file = &quot;ci_total.Rdata&quot;)</span>
-<span class="kw">load</span>(<span class="st">&quot;vardatatable.Rdata&quot;</span>)
-<span class="kw">load</span>(<span class="st">&quot;ci_total.Rdata&quot;</span>)</code></pre></div>
+<span class="co"># save(vardatatable, file = &quot;./Rdata_files/vardatatable.Rdata&quot;)</span>
+<span class="co"># save(ci_total, file = &quot;./Rdata_files/ci_total.Rdata&quot;)</span>
+<span class="kw">load</span>(<span class="st">&quot;./Rdata_files/vardatatable.Rdata&quot;</span>)
+<span class="kw">load</span>(<span class="st">&quot;./Rdata_files/ci_total.Rdata&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 vardatatable2 &lt;-<span class="st"> </span>vardatatable
-vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;paAccelerometer&quot;</span>, <span class="st">&quot;MVPA minutes (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;mvpaAccelerometer&quot;</span>, <span class="st">&quot;MVPA minutes (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
 vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;padaysLastweek&quot;</span>, <span class="st">&quot;Number of MVPA days last week (self-report)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
 vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;sitLieAccelerometer&quot;</span>, <span class="st">&quot;Minutes spent sitting or lying down (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
-vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;sitBreaks&quot;</span>, <span class="st">&quot;Number of times sitting was interrupted (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;sitBreaksAccelerometer&quot;</span>, <span class="st">&quot;Number of times sitting was interrupted (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
 
 vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(Variable <span class="op">==</span><span class="st"> &quot;MVPA minutes (accelerometer)&quot;</span> <span class="op">|</span><span class="st"> </span>
@@ -2786,7 +2786,7 @@ papaja<span class="op">::</span><span class="kw">apa_table</span>(demotable, <sp
 <h2>Create outcome tables</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 outtable_track &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, <span class="co"># Main outcomes </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, <span class="co"># Main outcomes </span>
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -2830,19 +2830,20 @@ outtable_track &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span>
             <span class="st">&#39;SB outcome expectations&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
             <span class="st">&#39;SB self-efficacy &amp; perceived behavioural control&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
 
-            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="st">&quot;Mean daily minutes spent sitting or lying down&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
                                         <span class="kw">round</span>(<span class="kw">sd</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(track)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">!=</span><span class="st"> &quot;Other&quot;</span>)
+## Error in FUN(X[[i]], ...): object &#39;SB_sePbc_T1&#39; not found
 
 outtable_intervention &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, <span class="co"># Main outcomes </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, <span class="co"># Main outcomes </span>
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -2886,17 +2887,18 @@ outtable_intervention &lt;-<span class="st"> </span>df <span class="op">%&gt;%</
             <span class="st">&#39;SB outcome expectations&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
             <span class="st">&#39;SB self-efficacy &amp; perceived behavioural control&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
 
-            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="st">&quot;Mean daily minutes spent sitting or lying down&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
                                         <span class="kw">round</span>(<span class="kw">sd</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
+## Error in FUN(X[[i]], ...): object &#39;SB_sePbc_T1&#39; not found
 
 outtable_girl &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, sitLieAccelerometer_T1, sitBreaks_T1, <span class="co"># Main outcomes </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, <span class="co"># Main outcomes </span>
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -2940,14 +2942,15 @@ outtable_girl &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span>
             <span class="st">&#39;SB outcome expectations&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
             <span class="st">&#39;SB self-efficacy &amp; perceived behavioural control&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
 
-            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="st">&quot;Mean daily minutes spent sitting or lying down&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
                                         <span class="kw">round</span>(<span class="kw">sd</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
+## Error in FUN(X[[i]], ...): object &#39;SB_sePbc_T1&#39; not found
 
 outtable_total &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="st">&#39;girl&#39;</span> =<span class="st"> &quot;Full sample&quot;</span>,
@@ -2971,350 +2974,59 @@ outtable_total &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><s
             <span class="st">&#39;SB outcome expectations&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_outcomeExpectations_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
             <span class="st">&#39;SB self-efficacy &amp; perceived behavioural control&#39;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>), <span class="st">&#39; (&#39;</span>, <span class="kw">round</span>(<span class="kw">sd</span>(SB_sePbc_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&#39;)&#39;</span>),
 
-            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily MVPA minutes&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="st">&quot;Mean daily minutes spent sitting or lying down&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
                                         <span class="kw">round</span>(<span class="kw">sd</span>(sitLieAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaks_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+            <span class="st">&quot;Mean daily breaks in sitting&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                        <span class="kw">round</span>(<span class="kw">sd</span>(sitBreaksAccelerometer_T1, <span class="dt">na.rm =</span> T), <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
             <span class="dt">n =</span> <span class="kw">n</span>())
+## Error in summarise_impl(.data, dots): Evaluation error: object &#39;SB_sePbc_T1&#39; not found.
 
 
 
 <span class="co"># Transpose each table</span>
 outtable_track &lt;-<span class="st"> </span>outtable_track <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(Variable, val, <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw">spread</span>(track, val)
+## Error in eval(lhs, parent, parent): object &#39;outtable_track&#39; not found
 
 outtable_intervention &lt;-<span class="st"> </span>outtable_intervention <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(Variable, val, <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw">spread</span>(intervention, val)
+## Error in eval(lhs, parent, parent): object &#39;outtable_intervention&#39; not found
 <span class="kw">names</span>(outtable_intervention) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Control&quot;</span>, <span class="st">&quot;Intervention&quot;</span>)
+## Error in names(outtable_intervention) &lt;- c(&quot;Variable&quot;, &quot;Control&quot;, &quot;Intervention&quot;): object &#39;outtable_intervention&#39; not found
 
 ## In the last table, have a column for total before transposing
 outtable_girl &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(outtable_girl, outtable_total)
-## Warning in bind_rows_(x, .id): binding factor and character vector,
-## coercing into character vector
-## Warning in bind_rows_(x, .id): binding character and factor vector,
-## coercing into character vector
+## Error in dots_values(...): object &#39;outtable_girl&#39; not found
 outtable_girl &lt;-<span class="st"> </span>outtable_girl <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(Variable, val, <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw">spread</span>(girl, val)
+## Error in eval(lhs, parent, parent): object &#39;outtable_girl&#39; not found
 <span class="kw">names</span>(outtable_girl) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Variable&quot;</span>, <span class="st">&quot;Boy&quot;</span>, <span class="st">&quot;Girl&quot;</span>, <span class="st">&quot;Full sample&quot;</span>)
+## Error in names(outtable_girl) &lt;- c(&quot;Variable&quot;, &quot;Boy&quot;, &quot;Girl&quot;, &quot;Full sample&quot;): object &#39;outtable_girl&#39; not found
 
 <span class="co"># Are all variables the same?</span>
-<span class="kw">identical</span>(outtable_track<span class="op">$</span>Variable, outtable_girl<span class="op">$</span>Variable)</code></pre></div>
-<p>[1] TRUE</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">identical</span>(outtable_track<span class="op">$</span>Variable, outtable_intervention<span class="op">$</span>Variable)</code></pre></div>
-<p>[1] TRUE</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">identical</span>(outtable_track<span class="op">$</span>Variable, outtable_girl<span class="op">$</span>Variable)
+## Error in identical(outtable_track$Variable, outtable_girl$Variable): object &#39;outtable_track&#39; not found
+<span class="kw">identical</span>(outtable_track<span class="op">$</span>Variable, outtable_intervention<span class="op">$</span>Variable)
+## Error in identical(outtable_track$Variable, outtable_intervention$Variable): object &#39;outtable_track&#39; not found
+
 <span class="co"># Create large table with all variables</span>
 outtable_mega &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(outtable_track, outtable_intervention, outtable_girl) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Variable1, <span class="op">-</span>Variable2) 
+## Error in dots_values(...): object &#39;outtable_track&#39; not found
 
 <span class="co"># Move n to be the first row</span>
 out1 &lt;-<span class="st"> </span>outtable_mega <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(Variable <span class="op">==</span><span class="st"> &quot;n&quot;</span>)
+## Error in eval(lhs, parent, parent): object &#39;outtable_mega&#39; not found
 out2 &lt;-<span class="st"> </span>outtable_mega <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(Variable <span class="op">!=</span><span class="st"> &quot;n&quot;</span>)
+## Error in eval(lhs, parent, parent): object &#39;outtable_mega&#39; not found
 outtable_mega &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(out1, out2)
+## Error in dots_values(...): object &#39;out1&#39; not found
 
 <span class="co"># Fix names: leave first blank, have the rest as they were</span>
 <span class="kw">names</span>(outtable_mega) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="kw">names</span>(outtable_mega)[<span class="dv">2</span><span class="op">:</span>(<span class="kw">length</span>(<span class="kw">names</span>(outtable_mega)))])
+## Error in eval(expr, envir, enclos): object &#39;outtable_mega&#39; not found
 
-papaja<span class="op">::</span><span class="kw">apa_table</span>(outtable_mega, <span class="dt">caption =</span> <span class="st">&quot;Baseline demographics of educational tracks&quot;</span>)</code></pre></div>
-<caption>
-(#tab:outcome-table)
-</caption>
-<caption>
-<em>Baseline demographics of educational tracks</em>
-</caption>
-<table>
-<thead>
-<tr class="header">
-<th></th>
-<th align="left">IT</th>
-<th align="left">BA</th>
-<th align="left">HRC</th>
-<th align="left">Nur</th>
-<th align="left">Control</th>
-<th align="left">Intervention</th>
-<th align="left">Boy</th>
-<th align="left">Girl</th>
-<th align="left">Full sample</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>n</td>
-<td align="left">163</td>
-<td align="left">282</td>
-<td align="left">213</td>
-<td align="left">402</td>
-<td align="left">503</td>
-<td align="left">581</td>
-<td align="left">471</td>
-<td align="left">1165</td>
-<td align="left">613</td>
-</tr>
-<tr class="even">
-<td>Mean daily breaks in sitting</td>
-<td align="left">20 (9)</td>
-<td align="left">27.5 (10)</td>
-<td align="left">27.5 (9.6)</td>
-<td align="left">31.7 (11.3)</td>
-<td align="left">27.2 (10.4)</td>
-<td align="left">29 (11.6)</td>
-<td align="left">23.4 (9.5)</td>
-<td align="left">28.2 (11.1)</td>
-<td align="left">31.3 (11)</td>
-</tr>
-<tr class="odd">
-<td>Mean daily minutes spent sitting or lying down</td>
-<td align="left">652.8 (86.3)</td>
-<td align="left">586.8 (93)</td>
-<td align="left">557.8 (101.2)</td>
-<td align="left">554.4 (82.1)</td>
-<td align="left">568.5 (100.9)</td>
-<td align="left">585.9 (92.7)</td>
-<td align="left">612.5 (95.6)</td>
-<td align="left">578.2 (97.2)</td>
-<td align="left">554.9 (90.9)</td>
-</tr>
-<tr class="even">
-<td>Mean daily MVPA minutes</td>
-<td align="left">141.3 (51.6)</td>
-<td align="left">179.6 (48.4)</td>
-<td align="left">183.1 (52.2)</td>
-<td align="left">201.2 (49.2)</td>
-<td align="left">179.5 (52)</td>
-<td align="left">187.3 (55.1)</td>
-<td align="left">173.5 (59.4)</td>
-<td align="left">183.8 (53.8)</td>
-<td align="left">190.4 (48.6)</td>
-</tr>
-<tr class="odd">
-<td>PA action planning</td>
-<td align="left">2.4 (1.1)</td>
-<td align="left">2.9 (0.9)</td>
-<td align="left">2.8 (0.9)</td>
-<td align="left">2.8 (0.9)</td>
-<td align="left">2.8 (1)</td>
-<td align="left">2.7 (0.9)</td>
-<td align="left">2.8 (1)</td>
-<td align="left">2.8 (0.9)</td>
-<td align="left">2.7 (0.9)</td>
-</tr>
-<tr class="even">
-<td>PA agreement-BCTs</td>
-<td align="left">2.6 (1.3)</td>
-<td align="left">3.5 (1.2)</td>
-<td align="left">3.1 (1.3)</td>
-<td align="left">3 (1.3)</td>
-<td align="left">3.2 (1.3)</td>
-<td align="left">3 (1.3)</td>
-<td align="left">3.1 (1.4)</td>
-<td align="left">3.1 (1.3)</td>
-<td align="left">3.1 (1.3)</td>
-</tr>
-<tr class="odd">
-<td>PA amotivation</td>
-<td align="left">1.8 (1)</td>
-<td align="left">1.5 (0.8)</td>
-<td align="left">1.5 (0.8)</td>
-<td align="left">1.4 (0.7)</td>
-<td align="left">1.6 (0.8)</td>
-<td align="left">1.5 (0.8)</td>
-<td align="left">1.6 (0.9)</td>
-<td align="left">1.5 (0.8)</td>
-<td align="left">1.5 (0.7)</td>
-</tr>
-<tr class="even">
-<td>PA autonomous regulation</td>
-<td align="left">2.9 (1.1)</td>
-<td align="left">3.6 (1)</td>
-<td align="left">3.4 (1.1)</td>
-<td align="left">3.5 (1)</td>
-<td align="left">3.5 (1)</td>
-<td align="left">3.4 (1.1)</td>
-<td align="left">3.5 (1.1)</td>
-<td align="left">3.4 (1.1)</td>
-<td align="left">3.4 (1)</td>
-</tr>
-<tr class="odd">
-<td>PA controlled regulation</td>
-<td align="left">1.9 (0.8)</td>
-<td align="left">1.8 (0.8)</td>
-<td align="left">1.8 (0.9)</td>
-<td align="left">1.8 (0.8)</td>
-<td align="left">1.9 (0.9)</td>
-<td align="left">1.8 (0.8)</td>
-<td align="left">1.8 (0.8)</td>
-<td align="left">1.8 (0.8)</td>
-<td align="left">1.9 (0.8)</td>
-</tr>
-<tr class="even">
-<td>PA coping planning</td>
-<td align="left">2.2 (0.9)</td>
-<td align="left">2.7 (0.8)</td>
-<td align="left">2.5 (0.9)</td>
-<td align="left">2.5 (0.9)</td>
-<td align="left">2.5 (0.9)</td>
-<td align="left">2.5 (0.9)</td>
-<td align="left">2.6 (0.9)</td>
-<td align="left">2.5 (0.9)</td>
-<td align="left">2.5 (0.8)</td>
-</tr>
-<tr class="odd">
-<td>PA descriptive norm</td>
-<td align="left">3.8 (1.6)</td>
-<td align="left">4.8 (1.5)</td>
-<td align="left">4.5 (1.5)</td>
-<td align="left">4.2 (1.6)</td>
-<td align="left">4.5 (1.6)</td>
-<td align="left">4.3 (1.6)</td>
-<td align="left">4.5 (1.6)</td>
-<td align="left">4.4 (1.6)</td>
-<td align="left">4.3 (1.6)</td>
-</tr>
-<tr class="even">
-<td>PA frequency-BCTs</td>
-<td align="left">2.2 (1.1)</td>
-<td align="left">2.8 (1.2)</td>
-<td align="left">2.5 (1.1)</td>
-<td align="left">2.5 (1.1)</td>
-<td align="left">2.6 (1.1)</td>
-<td align="left">2.5 (1.1)</td>
-<td align="left">2.6 (1.2)</td>
-<td align="left">2.5 (1.1)</td>
-<td align="left">2.5 (1.1)</td>
-</tr>
-<tr class="odd">
-<td>PA injunctive norm</td>
-<td align="left">4.7 (2)</td>
-<td align="left">4.8 (2)</td>
-<td align="left">4.7 (2)</td>
-<td align="left">4.5 (2)</td>
-<td align="left">4.8 (2)</td>
-<td align="left">4.5 (2)</td>
-<td align="left">4.8 (2)</td>
-<td align="left">4.6 (2)</td>
-<td align="left">4.6 (2)</td>
-</tr>
-<tr class="even">
-<td>PA intention</td>
-<td align="left">4.3 (2.1)</td>
-<td align="left">5.7 (1.7)</td>
-<td align="left">5.5 (1.8)</td>
-<td align="left">5.5 (1.7)</td>
-<td align="left">5.4 (1.9)</td>
-<td align="left">5.4 (1.8)</td>
-<td align="left">5.3 (1.9)</td>
-<td align="left">5.4 (1.8)</td>
-<td align="left">5.4 (1.8)</td>
-</tr>
-<tr class="odd">
-<td>PA opportunities</td>
-<td align="left">5.1 (0.9)</td>
-<td align="left">5.2 (1)</td>
-<td align="left">5.1 (0.9)</td>
-<td align="left">5.1 (1)</td>
-<td align="left">5.2 (0.9)</td>
-<td align="left">5.1 (1)</td>
-<td align="left">5.2 (0.9)</td>
-<td align="left">5.1 (0.9)</td>
-<td align="left">5.1 (1)</td>
-</tr>
-<tr class="even">
-<td>PA outcome expectations</td>
-<td align="left">4.3 (0.9)</td>
-<td align="left">4.6 (0.9)</td>
-<td align="left">4.6 (0.9)</td>
-<td align="left">4.7 (0.9)</td>
-<td align="left">4.6 (0.9)</td>
-<td align="left">4.6 (0.9)</td>
-<td align="left">4.5 (0.9)</td>
-<td align="left">4.6 (0.9)</td>
-<td align="left">4.7 (0.9)</td>
-</tr>
-<tr class="odd">
-<td>PA perceived behavioural control</td>
-<td align="left">5.3 (1.3)</td>
-<td align="left">5.5 (1.2)</td>
-<td align="left">5.2 (1.3)</td>
-<td align="left">5.3 (1.3)</td>
-<td align="left">5.3 (1.3)</td>
-<td align="left">5.3 (1.3)</td>
-<td align="left">5.5 (1.2)</td>
-<td align="left">5.3 (1.3)</td>
-<td align="left">5.2 (1.3)</td>
-</tr>
-<tr class="even">
-<td>PA self-efficacy</td>
-<td align="left">5.2 (1.3)</td>
-<td align="left">5.4 (1.4)</td>
-<td align="left">5.1 (1.2)</td>
-<td align="left">5.2 (1.3)</td>
-<td align="left">5.3 (1.3)</td>
-<td align="left">5.2 (1.3)</td>
-<td align="left">5.3 (1.3)</td>
-<td align="left">5.2 (1.3)</td>
-<td align="left">5.1 (1.3)</td>
-</tr>
-<tr class="odd">
-<td>SB descriptive norm</td>
-<td align="left">2.8 (1.5)</td>
-<td align="left">3.2 (1.4)</td>
-<td align="left">3.4 (1.4)</td>
-<td align="left">3.4 (1.5)</td>
-<td align="left">3.3 (1.4)</td>
-<td align="left">3.2 (1.5)</td>
-<td align="left">3.3 (1.5)</td>
-<td align="left">3.2 (1.5)</td>
-<td align="left">3.2 (1.4)</td>
-</tr>
-<tr class="even">
-<td>SB injunctive norm</td>
-<td align="left">4 (1.1)</td>
-<td align="left">3.8 (1.3)</td>
-<td align="left">4 (1.2)</td>
-<td align="left">4.1 (1.3)</td>
-<td align="left">4.1 (1.2)</td>
-<td align="left">3.9 (1.3)</td>
-<td align="left">4 (1.2)</td>
-<td align="left">4 (1.3)</td>
-<td align="left">4 (1.3)</td>
-</tr>
-<tr class="odd">
-<td>SB intention</td>
-<td align="left">3 (1.6)</td>
-<td align="left">3.6 (1.5)</td>
-<td align="left">3.7 (1.6)</td>
-<td align="left">4 (1.6)</td>
-<td align="left">3.7 (1.6)</td>
-<td align="left">3.7 (1.6)</td>
-<td align="left">3.5 (1.7)</td>
-<td align="left">3.7 (1.6)</td>
-<td align="left">3.9 (1.6)</td>
-</tr>
-<tr class="even">
-<td>SB outcome expectations</td>
-<td align="left">4.1 (1.1)</td>
-<td align="left">4.4 (1)</td>
-<td align="left">4.4 (1)</td>
-<td align="left">4.5 (1)</td>
-<td align="left">4.4 (1)</td>
-<td align="left">4.4 (1.1)</td>
-<td align="left">4.3 (1.1)</td>
-<td align="left">4.4 (1)</td>
-<td align="left">4.5 (1)</td>
-</tr>
-<tr class="odd">
-<td>SB self-efficacy &amp; perceived behavioural control</td>
-<td align="left">5 (1.3)</td>
-<td align="left">4.9 (1.2)</td>
-<td align="left">5.1 (1.2)</td>
-<td align="left">4.9 (1.3)</td>
-<td align="left">5.1 (1.2)</td>
-<td align="left">4.9 (1.3)</td>
-<td align="left">5 (1.3)</td>
-<td align="left">4.9 (1.3)</td>
-<td align="left">4.9 (1.2)</td>
-</tr>
-</tbody>
-</table>
+papaja<span class="op">::</span><span class="kw">apa_table</span>(outtable_mega, <span class="dt">caption =</span> <span class="st">&quot;Baseline demographics of educational tracks&quot;</span>)
+## Error in papaja::apa_table(outtable_mega, caption = &quot;Baseline demographics of educational tracks&quot;): object &#39;outtable_mega&#39; not found</code></pre></div>
 </div>
 <div id="mediator-table-with-cis" class="section level2">
 <h2>Mediator table with CIs</h2>
@@ -3630,10 +3342,10 @@ papaja<span class="op">::</span><span class="kw">apa_table</span>(mega_mediatort
 <span class="kw">Sys.setenv</span>(<span class="st">&quot;BINPREF&quot;</span> =<span class="st"> &quot;C:/HYApp/Rtools3.4/mingw_$(WIN)/bin/&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Centre the variable:</span>
-df_randeff_plot_brms &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">paAccelerometer_T1_centred =</span> 
-                      paAccelerometer_T1 <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+df_randeff_plot_brms &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">mvpaAccelerometer_T1_centred =</span> 
+                      mvpaAccelerometer_T1 <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
 
-m_<span class="dv">1</span> &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(paAccelerometer_T1_centred <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>group)) 
+m_<span class="dv">1</span> &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(mvpaAccelerometer_T1_centred <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>group)) 
 <span class="kw">get_prior</span>(m_<span class="dv">1</span>, <span class="dt">data =</span> df_randeff_plot_brms)
 
 fit_<span class="dv">1</span> &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">brm</span>(m_<span class="dv">1</span>, df_randeff_plot_brms)
@@ -3651,7 +3363,7 @@ plot1 &lt;-<span class="st"> </span>userfriendlyscience<span class="op">::</span
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Deviance from average MVPA&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Group&quot;</span>)
 
 
-df <span class="op">%&gt;%</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> paAccelerometer_T1_centred)) <span class="op">+</span>
+df <span class="op">%&gt;%</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> group, <span class="dt">y =</span> mvpaAccelerometer_T1_centred)) <span class="op">+</span>
 <span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(pt, <span class="dt">color =</span> <span class="st">&#39;green&#39;</span>, <span class="dt">alpha=</span>.<span class="dv">3</span>, <span class="dt">yLabels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">58</span>, <span class="dt">fixedSize =</span> <span class="fl">0.3</span>, <span class="dt">xlab =</span> <span class="ot">NULL</span>, <span class="dt">returnLayerOnly =</span> <span class="ot">TRUE</span>) <span class="op">+</span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">coord_flip</span>(<span class="dt">expand =</span> <span class="ot">TRUE</span>) <span class="op">+</span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Deviance from average MVPA&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Group&quot;</span>)
@@ -3816,9 +3528,9 @@ lmi <span class="op">%&gt;%</span><span class="st"> </span>ggplot2<span class="o
 <p><img src="baseline-supplement_files/figure-html/mvpa-accelerometer-selfreport-scatterplot-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corrgram<span class="op">::</span><span class="kw">corrgram</span>(<span class="kw">data.frame</span>(<span class="st">&quot;Self-rep PA&quot;</span> =<span class="st"> </span>df<span class="op">$</span>padaysLastweek_T1, 
-                              <span class="st">&quot;Accelerometer PA&quot;</span> =<span class="st"> </span>df<span class="op">$</span>paAccelerometer_T1, 
+                              <span class="st">&quot;Accelerometer PA&quot;</span> =<span class="st"> </span>df<span class="op">$</span>mvpaAccelerometer_T1, 
                               <span class="st">&quot;Sedentary time&quot;</span> =<span class="st"> </span>df<span class="op">$</span>sitLieAccelerometer_T1, 
-                              <span class="st">&quot;Interrupted sitting&quot;</span> =<span class="st"> </span>df<span class="op">$</span>sitBreaks_T1), 
+                              <span class="st">&quot;Interrupted sitting&quot;</span> =<span class="st"> </span>df<span class="op">$</span>sitBreaksAccelerometer_T1), 
                    <span class="dt">lower.panel =</span> corrgram<span class="op">::</span>panel.pie, <span class="dt">upper.panel =</span> corrgram<span class="op">::</span>panel.conf)</code></pre></div>
 <p><img src="baseline-supplement_files/figure-html/mvpa-accelerometer-selfreport-scatterplot-2.png" width="2100" /></p>
 <p>This section reports the primary outcome variables.</p>
@@ -3827,13 +3539,13 @@ corrgram<span class="op">::</span><span class="kw">corrgram</span>(<span class="
 <h2>Accelerometer-measured MVPA</h2>
 <p>Contrary to some other findings, in our sample girls were more active than boys.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-MVPAgirl_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(girl, paAccelerometer_T1) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">mean accelerometer-measured MVPA difference between girls and boys</span><span class="st">`</span> =<span class="st"> </span><span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="st">`</span><span class="dt">median accelerometer-measured MVPA difference between girls and boys</span><span class="st">`</span> =<span class="st"> </span><span class="kw">median</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) 
+MVPAgirl_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(girl, mvpaAccelerometer_T1) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="st">`</span><span class="dt">mean accelerometer-measured MVPA difference between girls and boys</span><span class="st">`</span> =<span class="st"> </span><span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="st">`</span><span class="dt">median accelerometer-measured MVPA difference between girls and boys</span><span class="st">`</span> =<span class="st"> </span><span class="kw">median</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) 
 
-userfriendlyscience<span class="op">::</span><span class="kw">meanDiff</span>(df<span class="op">$</span>girl, df<span class="op">$</span>paAccelerometer_T1)
+userfriendlyscience<span class="op">::</span><span class="kw">meanDiff</span>(df<span class="op">$</span>girl, df<span class="op">$</span>mvpaAccelerometer_T1)
 ## Input variables:
 ## 
 ##   girl (grouping variable)
-##   paAccelerometer_T1 (dependent variable)
+##   mvpaAccelerometer_T1 (dependent variable)
 ##   Mean 1 (girl) = 190.36, sd = 48.6, n = 425
 ##   Mean 2 (boy)= 173.55, sd = 59.39, n = 281
 ## 
@@ -3868,14 +3580,14 @@ densplot &lt;-<span class="st"> </span>d
 
 ## Girls vs. boys
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 
 <span class="co"># Make plot</span>
-sm.paAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>paAccelerometer_T1), 
+sm.mvpaAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>mvpaAccelerometer_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>girl), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>,
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -3890,13 +3602,13 @@ sm.paAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><s
 
 ## Intervention vs. control
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 <span class="co"># Make plot</span>
-sm.paAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>paAccelerometer_T1), 
+sm.mvpaAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>mvpaAccelerometer_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>intervention), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>, 
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -3923,158 +3635,47 @@ sm.paAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><s
 <div id="information-on-data-preparation" class="section level4">
 <h4>Information on data preparation</h4>
 <p>Prepare data</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_paAccelerometer_trackgirl &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(paAccelerometer_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>girl)) <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_mvpaAccelerometer_trackgirl &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(mvpaAccelerometer_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>girl)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>brms<span class="op">::</span><span class="kw">brm</span>(., <span class="dt">data =</span> df, <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">iter =</span> <span class="dv">4000</span>, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">adapt_delta =</span> <span class="fl">0.95</span>))
 ## Found more than one class &quot;family&quot; in cache; using the first, from namespace &#39;lme4&#39;
 ## Also defined by &#39;MatrixModels&#39;
 ## Warning: Rows containing NAs were excluded from the model
 ## Compiling the C++ model
-## Start sampling
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 1).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.329 seconds (Warm-up)
-##                2.054 seconds (Sampling)
-##                4.383 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 2).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.432 seconds (Warm-up)
-##                1.677 seconds (Sampling)
-##                4.109 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 3).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.355 seconds (Warm-up)
-##                2.173 seconds (Sampling)
-##                4.528 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 4).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.469 seconds (Warm-up)
-##                1.58 seconds (Sampling)
-##                4.049 seconds (Total)
+## Warning: running command &#39;C:/PROGRA~1/R/R-34~1.3/bin/x64/R CMD SHLIB
+## file5d858966d48.cpp 2&gt; file5d858966d48.cpp.err.txt&#39; had status 1
+## Error in compileCode(f, code, language = language, verbose = verbose): Compilation ERROR, function(s)/method(s) not created!       0 [main] sh (15296) C:\HYAPP\Rtools3.4\bin\sh.exe: *** fatal error - cygheap base mismatch detected - 0xC77408/0xD27408.
+## This problem is probably due to using incompatible versions of the cygwin DLL.
+## Search for cygwin1.dll using the Windows Start-&gt;Find/Search facility
+## and delete all but the most recent version.  The most recent version *should*
+## reside in x:\cygwin\bin, where &#39;x&#39; is the drive on which you have
+## installed the cygwin distribution.  Rebooting is also suggested if you
+## are unable to find another cygwin DLL.
+## make: *** [file5d858966d48.o] Error 127
+## Warning message:
+## running command &#39;make -f &quot;C:/PROGRA~1/R/R-34~1.3/etc/x64/Makeconf&quot; -f &quot;C:/PROGRA~1/R/R-34~1.3/share/make/winshlib.mk&quot; -f &quot;//ATKK/home/h/hema/Documents/.R/Makevars&quot; SHLIB_LDFLAGS=&#39;$(SHLIB_CXXLDFLAGS)&#39; SHLIB_LD=&#39;$(SHLIB_CXXLD)&#39; SHLIB=&quot;file5d858966d48.dll&quot; WIN=64 TCLBIN=64 OBJECTS=&quot;file5d858966d48.o&quot;&#39; had status 2
 
-brms<span class="op">::</span><span class="kw">prior_summary</span>(m_paAccelerometer_trackgirl, <span class="dt">data =</span> df)</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["prior"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]},{"label":["coef"],"name":[3],"type":["chr"],"align":["left"]},{"label":["group"],"name":[4],"type":["chr"],"align":["left"]},{"label":["resp"],"name":[5],"type":["chr"],"align":["left"]},{"label":["dpar"],"name":[6],"type":["chr"],"align":["left"]},{"label":["nlpar"],"name":[7],"type":["chr"],"align":["left"]},{"label":["bound"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"student_t(3, 181, 54)","2":"Intercept","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 54)","2":"sd","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"","4":"track:girl","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"Intercept","4":"track:girl","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 54)","2":"sigma","3":"","4":"","5":"","6":"","7":"","8":""}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-m_paAccelerometer_trackgirl
-##  Family: gaussian 
-##   Links: mu = identity; sigma = identity 
-## Formula: paAccelerometer_T1 ~ (1 | track:girl) 
-##    Data: df (Number of observations: 706) 
-## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1; 
-##          total post-warmup samples = 8000
-##     ICs: LOO = NA; WAIC = NA; R2 = NA
-##  
-## Group-Level Effects: 
-## ~track:girl (Number of levels: 10) 
-##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sd(Intercept)    25.94      8.25    14.71    46.12       1535 1.00
-## 
-## Population-Level Effects: 
-##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept   176.79      8.65   159.52   193.31       1617 1.00
-## 
-## Family Specific Parameters: 
-##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma    50.26      1.35    47.73    53.04       6165 1.00
-## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
-## scale reduction factor on split chains (at convergence, Rhat = 1).
+brms<span class="op">::</span><span class="kw">prior_summary</span>(m_mvpaAccelerometer_trackgirl, <span class="dt">data =</span> df)
+## Error in brms::prior_summary(m_mvpaAccelerometer_trackgirl, data = df): object &#39;m_mvpaAccelerometer_trackgirl&#39; not found
 
-b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_paAccelerometer_trackgirl)[<span class="dv">1</span>]
+m_mvpaAccelerometer_trackgirl
+## Error in eval(expr, envir, enclos): object &#39;m_mvpaAccelerometer_trackgirl&#39; not found
+
+b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_mvpaAccelerometer_trackgirl)[<span class="dv">1</span>]
+## Error in brms::fixef(m_mvpaAccelerometer_trackgirl): object &#39;m_mvpaAccelerometer_trackgirl&#39; not found
 
 <span class="co"># This gives estimates only:</span>
-PA_trackgirl_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+PA_trackgirl_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+## Error in brms::ranef(m_mvpaAccelerometer_trackgirl): object &#39;m_mvpaAccelerometer_trackgirl&#39; not found
 
 <span class="co"># The 2.5%ile:</span>
-PA_trackgirl_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+PA_trackgirl_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+## Error in brms::ranef(m_mvpaAccelerometer_trackgirl): object &#39;m_mvpaAccelerometer_trackgirl&#39; not found
 
 <span class="co"># The 97.5%ile:</span>
-PA_trackgirl_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+PA_trackgirl_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+## Error in brms::ranef(m_mvpaAccelerometer_trackgirl): object &#39;m_mvpaAccelerometer_trackgirl&#39; not found
 
-PA_trackgirl_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(PA_trackgirl_CIL, PA_trackgirl_estimates, PA_trackgirl_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackgirl))) <span class="op">%&gt;%</span><span class="st"> </span>
+PA_trackgirl_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(PA_trackgirl_CIL, PA_trackgirl_estimates, PA_trackgirl_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackgirl))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">b_intercept =</span> <span class="kw">rep</span>(b_intercept, <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">PA_trackgirl_CIL =</span> PA_trackgirl_CIL <span class="op">+</span><span class="st"> </span>b_intercept,
          <span class="dt">PA_trackgirl_estimates =</span> PA_trackgirl_estimates <span class="op">+</span><span class="st"> </span>b_intercept,
@@ -4090,6 +3691,7 @@ PA_trackgirl_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>
                    <span class="st">&#39;Other_boy&#39;</span>,
                    <span class="st">&#39;Other_girl&#39;</span>
 ))
+## Error in data.frame(PA_trackgirl_CIL, PA_trackgirl_estimates, PA_trackgirl_CIH, : object &#39;PA_trackgirl_CIL&#39; not found
 
 PA_trackgirl_diamonds_girl &lt;-<span class="st"> </span><span class="kw">rbind</span>(
 PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_girl&quot;</span>),
@@ -4097,6 +3699,7 @@ PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<spa
 PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_girl&quot;</span>),
 PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_girl&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;PA_trackgirl_ci&#39; not found
 
 PA_trackgirl_diamonds_boy &lt;-<span class="st"> </span><span class="kw">rbind</span>(
 PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_boy&quot;</span>),
@@ -4104,161 +3707,52 @@ PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<spa
 PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_boy&quot;</span>),
 PA_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_boy&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;PA_trackgirl_ci&#39; not found
 
 
-m_paAccelerometer_trackintervention &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(paAccelerometer_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>intervention)) <span class="op">%&gt;%</span><span class="st"> </span>
+m_mvpaAccelerometer_trackintervention &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(mvpaAccelerometer_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>intervention)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>brms<span class="op">::</span><span class="kw">brm</span>(., <span class="dt">data =</span> df, <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">iter =</span> <span class="dv">4000</span>, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">adapt_delta =</span> <span class="fl">0.95</span>))
 ## Found more than one class &quot;family&quot; in cache; using the first, from namespace &#39;lme4&#39;
 ## Also defined by &#39;MatrixModels&#39;
 ## Warning: Rows containing NAs were excluded from the model
 ## Compiling the C++ model
-## Start sampling
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 1).
-## 
-## Gradient evaluation took 0.001 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.416 seconds (Warm-up)
-##                1.516 seconds (Sampling)
-##                3.932 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 2).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.392 seconds (Warm-up)
-##                1.827 seconds (Sampling)
-##                4.219 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 3).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.475 seconds (Warm-up)
-##                1.732 seconds (Sampling)
-##                4.207 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 4).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.053 seconds (Warm-up)
-##                2.004 seconds (Sampling)
-##                4.057 seconds (Total)
+## Warning: running command &#39;C:/PROGRA~1/R/R-34~1.3/bin/x64/R CMD SHLIB
+## file5d8760f7191.cpp 2&gt; file5d8760f7191.cpp.err.txt&#39; had status 1
+## Error in compileCode(f, code, language = language, verbose = verbose): Compilation ERROR, function(s)/method(s) not created!       0 [main] make (1288) c:\HYAPP\Rtools3.4\bin\make.exe: *** fatal error - cygheap base mismatch detected - 0xF47408/0xD97408.
+## This problem is probably due to using incompatible versions of the cygwin DLL.
+## Search for cygwin1.dll using the Windows Start-&gt;Find/Search facility
+## and delete all but the most recent version.  The most recent version *should*
+## reside in x:\cygwin\bin, where &#39;x&#39; is the drive on which you have
+## installed the cygwin distribution.  Rebooting is also suggested if you
+## are unable to find another cygwin DLL.
+##       1 [main] make 12556 fork: child -1 - forked process 1288 died unexpectedly, retry 0, exit code 0xC0000142, errno 11
+## make: vfork: Resource temporarily unavailable
+## Warning message:
+## running command &#39;make -f &quot;C:/PROGRA~1/R/R-34~1.3/etc/x64/Makeconf&quot; -f &quot;C:/PROGRA~1/R/R-34~1.3/share/make/winshlib.mk&quot; -f &quot;//ATKK/home/h/hema/Documents/.R/Makevars&quot; SHLIB_LDFLAGS=&#39;$(SHLIB_CXXLDFLAGS)&#39; SHLIB_LD=&#39;$(SHLIB_CXXLD)&#39; SHLIB=&quot;file5d8760f7191.dll&quot; WIN=64 TCLBIN=64 OBJECTS=&quot;file5d8760f7191.o&quot;&#39; had status 2
 
-brms<span class="op">::</span><span class="kw">prior_summary</span>(m_paAccelerometer_trackintervention, <span class="dt">data =</span> df)</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["prior"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]},{"label":["coef"],"name":[3],"type":["chr"],"align":["left"]},{"label":["group"],"name":[4],"type":["chr"],"align":["left"]},{"label":["resp"],"name":[5],"type":["chr"],"align":["left"]},{"label":["dpar"],"name":[6],"type":["chr"],"align":["left"]},{"label":["nlpar"],"name":[7],"type":["chr"],"align":["left"]},{"label":["bound"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"student_t(3, 181, 54)","2":"Intercept","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 54)","2":"sd","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"","4":"track:intervention","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"Intercept","4":"track:intervention","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 54)","2":"sigma","3":"","4":"","5":"","6":"","7":"","8":""}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-m_paAccelerometer_trackintervention
-##  Family: gaussian 
-##   Links: mu = identity; sigma = identity 
-## Formula: paAccelerometer_T1 ~ (1 | track:intervention) 
-##    Data: df (Number of observations: 706) 
-## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1; 
-##          total post-warmup samples = 8000
-##     ICs: LOO = NA; WAIC = NA; R2 = NA
-##  
-## Group-Level Effects: 
-## ~track:intervention (Number of levels: 10) 
-##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sd(Intercept)    23.33      7.01    13.49    40.93       1881 1.00
-## 
-## Population-Level Effects: 
-##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept   177.54      8.10   161.48   194.09       1741 1.00
-## 
-## Family Specific Parameters: 
-##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma    50.29      1.32    47.83    53.01       6980 1.00
-## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
-## scale reduction factor on split chains (at convergence, Rhat = 1).
+brms<span class="op">::</span><span class="kw">prior_summary</span>(m_mvpaAccelerometer_trackintervention, <span class="dt">data =</span> df)
+## Error in brms::prior_summary(m_mvpaAccelerometer_trackintervention, data = df): object &#39;m_mvpaAccelerometer_trackintervention&#39; not found
 
-b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_paAccelerometer_trackintervention)[<span class="dv">1</span>]
+m_mvpaAccelerometer_trackintervention
+## Error in eval(expr, envir, enclos): object &#39;m_mvpaAccelerometer_trackintervention&#39; not found
+
+b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_mvpaAccelerometer_trackintervention)[<span class="dv">1</span>]
+## Error in brms::fixef(m_mvpaAccelerometer_trackintervention): object &#39;m_mvpaAccelerometer_trackintervention&#39; not found
 
 <span class="co"># This gives estimates only:</span>
-PA_trackintervention_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+PA_trackintervention_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+## Error in brms::ranef(m_mvpaAccelerometer_trackintervention): object &#39;m_mvpaAccelerometer_trackintervention&#39; not found
 
 
 <span class="co"># The 2.5%ile:</span>
-PA_trackintervention_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+PA_trackintervention_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+## Error in brms::ranef(m_mvpaAccelerometer_trackintervention): object &#39;m_mvpaAccelerometer_trackintervention&#39; not found
 
 <span class="co"># The 97.5%ile:</span>
-PA_trackintervention_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+PA_trackintervention_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+## Error in brms::ranef(m_mvpaAccelerometer_trackintervention): object &#39;m_mvpaAccelerometer_trackintervention&#39; not found
 
-PA_trackintervention_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(PA_trackintervention_CIL, PA_trackintervention_estimates, PA_trackintervention_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_paAccelerometer_trackintervention))) <span class="op">%&gt;%</span><span class="st"> </span>
+PA_trackintervention_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(PA_trackintervention_CIL, PA_trackintervention_estimates, PA_trackintervention_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_mvpaAccelerometer_trackintervention))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">b_intercept =</span> <span class="kw">rep</span>(b_intercept, <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">PA_trackintervention_CIL =</span> PA_trackintervention_CIL <span class="op">+</span><span class="st"> </span>b_intercept,
          <span class="dt">PA_trackintervention_estimates =</span> PA_trackintervention_estimates <span class="op">+</span><span class="st"> </span>b_intercept,
@@ -4274,6 +3768,7 @@ PA_trackintervention_ci &lt;-<span class="st"> </span><span class="kw">data.fram
                    <span class="st">&#39;Other_control&#39;</span>,
                    <span class="st">&#39;Other_intervention&#39;</span>
 ))
+## Error in data.frame(PA_trackintervention_CIL, PA_trackintervention_estimates, : object &#39;PA_trackintervention_CIL&#39; not found
 
 PA_trackintervention_diamonds_intervention &lt;-<span class="st"> </span><span class="kw">rbind</span>(
 PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_intervention&quot;</span>),
@@ -4281,6 +3776,7 @@ PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>d
 PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_intervention&quot;</span>),
 PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_intervention&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;PA_trackintervention_ci&#39; not found
 
 PA_trackintervention_diamonds_control &lt;-<span class="st"> </span><span class="kw">rbind</span>(
 PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_control&quot;</span>),
@@ -4288,63 +3784,48 @@ PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>d
 PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_control&quot;</span>),
 PA_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_control&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;PA_trackintervention_ci&#39; not found
 
-PA_trackgirl_diamonds_girl</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["PA_trackgirl_CIL"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["PA_trackgirl_estimates"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["PA_trackgirl_CIH"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Variable"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["b_intercept"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["track"],"name":[6],"type":["chr"],"align":["left"]}],"data":[{"1":"105.5471","2":"132.8555","3":"157.9176","4":"track:girl","5":"176.7904","6":"IT_girl"},{"1":"159.2175","2":"178.9665","3":"198.7743","4":"track:girl","5":"176.7904","6":"BA_girl"},{"1":"166.1264","2":"184.8487","3":"204.7322","4":"track:girl","5":"176.7904","6":"HRC_girl"},{"1":"183.3733","2":"200.8111","3":"219.2797","4":"track:girl","5":"176.7904","6":"Nur_girl"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">PA_trackgirl_diamonds_boy</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["PA_trackgirl_CIL"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["PA_trackgirl_estimates"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["PA_trackgirl_CIH"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Variable"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["b_intercept"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["track"],"name":[6],"type":["chr"],"align":["left"]}],"data":[{"1":"127.6467","2":"147.3353","3":"166.5418","4":"track:girl","5":"176.7904","6":"IT_boy"},{"1":"160.9974","2":"179.9456","3":"199.8028","4":"track:girl","5":"176.7904","6":"BA_boy"},{"1":"158.8907","2":"179.2224","3":"200.0122","4":"track:girl","5":"176.7904","6":"HRC_boy"},{"1":"179.0103","2":"198.8156","3":"220.7299","4":"track:girl","5":"176.7904","6":"Nur_boy"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">PA_trackintervention_diamonds_intervention</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["PA_trackintervention_CIL"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["PA_trackintervention_estimates"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["PA_trackintervention_CIH"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Variable"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["b_intercept"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["track"],"name":[6],"type":["chr"],"align":["left"]}],"data":[{"1":"126.7626","2":"147.3696","3":"167.3386","4":"track:intervention","5":"177.5356","6":"IT_intervention"},{"1":"161.4760","2":"180.3106","3":"198.8826","4":"track:intervention","5":"177.5356","6":"BA_intervention"},{"1":"156.0911","2":"176.8814","3":"197.1322","4":"track:intervention","5":"177.5356","6":"HRC_intervention"},{"1":"185.7530","2":"202.8198","3":"220.0423","4":"track:intervention","5":"177.5356","6":"Nur_intervention"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">PA_trackintervention_diamonds_control</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["PA_trackintervention_CIL"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["PA_trackintervention_estimates"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["PA_trackintervention_CIH"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Variable"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["b_intercept"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["track"],"name":[6],"type":["chr"],"align":["left"]}],"data":[{"1":"121.9087","2":"142.5302","3":"161.4225","4":"track:intervention","5":"177.5356","6":"IT_control"},{"1":"160.0507","2":"178.6380","3":"196.6874","4":"track:intervention","5":"177.5356","6":"BA_control"},{"1":"166.9929","2":"185.2400","3":"202.8831","4":"track:intervention","5":"177.5356","6":"HRC_control"},{"1":"176.2124","2":"194.7435","3":"213.3496","4":"track:intervention","5":"177.5356","6":"Nur_control"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
+PA_trackgirl_diamonds_girl
+## Error in eval(expr, envir, enclos): object &#39;PA_trackgirl_diamonds_girl&#39; not found
+PA_trackgirl_diamonds_boy
+## Error in eval(expr, envir, enclos): object &#39;PA_trackgirl_diamonds_boy&#39; not found
+PA_trackintervention_diamonds_intervention
+## Error in eval(expr, envir, enclos): object &#39;PA_trackintervention_diamonds_intervention&#39; not found
+PA_trackintervention_diamonds_control
+## Error in eval(expr, envir, enclos): object &#39;PA_trackintervention_diamonds_control&#39; not found</code></pre></div>
 </div>
 <div id="density-plot-of-girls-and-boys-in-different-educational-tracks-and-schools" class="section level4">
 <h4>Density plot of girls and boys in different educational tracks and schools</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, girl, trackSchool) <span class="op">%&gt;%</span><span class="st"> </span>
+df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, girl, trackSchool) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(girl, trackSchool) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">median =</span> <span class="kw">median</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">max =</span> <span class="kw">max</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">min =</span> <span class="kw">min</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">sd =</span> <span class="kw">sd</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">median =</span> <span class="kw">median</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">max =</span> <span class="kw">max</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">min =</span> <span class="kw">min</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">sd =</span> <span class="kw">sd</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
             <span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-8ceaf3cb1351e7045d3f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8ceaf3cb1351e7045d3f">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29"],["girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy",null],["BA1","BA2","BA4","HRC1","HRC5","IT1","IT2","Nur3","Nur4","Other1","Other3","Other4","Other5","BA1","BA2","BA4","HRC1","HRC2","HRC5","IT1","IT2","Nur2","Nur3","Nur4","Other2","Other3","Other4","Other5","NANA"],[179.114693877551,179.109285714286,null,169.163942857143,191.107219887955,134.111904761905,113.802251082251,198.281650579151,202.734261904762,141.585714285714,193.622142857143,189.892619047619,197.85,181.617916666667,178.393814935065,null,187.730634920635,null,175.26378968254,145.830216450216,145.481544566545,210.414285714286,180.954871794872,207.458268983269,104.478571428571,262.071428571429,219.714285714286,217.428571428571,193.574591836735],[171.716666666667,185.75,null,176.08,182.471428571429,135.477380952381,113.785714285714,203.179761904762,200.882142857143,141.585714285714,186.851428571429,201.166666666667,197.85,193.6625,169.063095238095,null,184.91,null,174.414285714286,136.501785714286,139.871428571429,210.414285714286,169.942857142857,205.775,104.478571428571,262.071428571429,219.714285714286,217.428571428571,161.65],[284.483333333333,288.42,null,290.185714285714,367.214285714286,197.4,178.383333333333,307.55,338.75,141.585714285714,243.785714285714,264.471428571429,197.85,284.185714285714,273.183333333333,null,320.24,null,297.56,366.98,284.1,210.414285714286,263.483333333333,342.357142857143,135.571428571429,262.071428571429,219.714285714286,217.428571428571,291.34],[99.14,71.2,null,76.0428571428571,106.15,76.15,75.6666666666667,92.1333333333333,103.65,141.585714285714,157,101.65,197.85,83.22,91.7,null,109.125,null,66.4857142857143,69.8428571428571,67.5714285714286,210.414285714286,85.775,61.525,73.3857142857143,262.071428571429,219.714285714286,217.428571428571,137.6],[42.6877334575207,44.9505369225851,null,52.5520436559175,47.831277852254,48.3783795147208,27.0470458558404,48.3507710567373,43.3270912454487,null,39.2725578229784,64.3310939390299,null,53.561715220555,51.2932382864237,null,65.8368234788884,null,51.4453944469,57.5575642106559,49.3043653636569,null,51.4977379558124,70.345806474678,43.9719402643577,null,null,null,65.9107825429033],[56,53,1,39,90,12,14,104,227,1,7,7,2,93,78,1,28,1,55,64,73,1,20,50,3,1,2,1,81]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>girl<\/th>\n      <th>trackSchool<\/th>\n      <th>mean<\/th>\n      <th>median<\/th>\n      <th>max<\/th>\n      <th>min<\/th>\n      <th>sd<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[3,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-3189eb5c9b06c86eb0e0" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3189eb5c9b06c86eb0e0">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29"],["girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","girl","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy","boy",null],["BA1","BA2","BA4","HRC1","HRC5","IT1","IT2","Nur3","Nur4","Other1","Other3","Other4","Other5","BA1","BA2","BA4","HRC1","HRC2","HRC5","IT1","IT2","Nur2","Nur3","Nur4","Other2","Other3","Other4","Other5","NANA"],[179.114693877551,179.109285714286,null,169.163942857143,191.107219887955,134.111904761905,113.802251082251,198.281650579151,202.734261904762,141.585714285714,193.622142857143,189.892619047619,197.85,181.617916666667,178.393814935065,null,187.730634920635,null,175.26378968254,145.830216450216,145.481544566545,210.414285714286,180.954871794872,207.458268983269,104.478571428571,262.071428571429,219.714285714286,217.428571428571,193.574591836735],[171.716666666667,185.75,null,176.08,182.471428571429,135.477380952381,113.785714285714,203.179761904762,200.882142857143,141.585714285714,186.851428571429,201.166666666667,197.85,193.6625,169.063095238095,null,184.91,null,174.414285714286,136.501785714286,139.871428571429,210.414285714286,169.942857142857,205.775,104.478571428571,262.071428571429,219.714285714286,217.428571428571,161.65],[284.483333333333,288.42,null,290.185714285714,367.214285714286,197.4,178.383333333333,307.55,338.75,141.585714285714,243.785714285714,264.471428571429,197.85,284.185714285714,273.183333333333,null,320.24,null,297.56,366.98,284.1,210.414285714286,263.483333333333,342.357142857143,135.571428571429,262.071428571429,219.714285714286,217.428571428571,291.34],[99.14,71.2,null,76.0428571428571,106.15,76.15,75.6666666666667,92.1333333333333,103.65,141.585714285714,157,101.65,197.85,83.22,91.7,null,109.125,null,66.4857142857143,69.8428571428571,67.5714285714286,210.414285714286,85.775,61.525,73.3857142857143,262.071428571429,219.714285714286,217.428571428571,137.6],[42.6877334575207,44.9505369225851,null,52.5520436559175,47.831277852254,48.3783795147208,27.0470458558404,48.3507710567373,43.3270912454487,null,39.2725578229784,64.3310939390299,null,53.561715220555,51.2932382864237,null,65.8368234788884,null,51.4453944469,57.5575642106559,49.3043653636569,null,51.4977379558124,70.345806474678,43.9719402643577,null,null,null,65.9107825429033],[56,53,1,39,90,12,14,104,227,1,7,7,2,93,78,1,28,1,55,64,73,1,20,50,3,1,2,1,81]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>girl<\/th>\n      <th>trackSchool<\/th>\n      <th>mean<\/th>\n      <th>median<\/th>\n      <th>max<\/th>\n      <th>min<\/th>\n      <th>sd<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[3,4,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, girl, trackSchool) <span class="op">%&gt;%</span><span class="st"> </span>
+df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, girl, trackSchool) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">median =</span> <span class="kw">median</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">max =</span> <span class="kw">max</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">min =</span> <span class="kw">min</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-            <span class="dt">sd =</span> <span class="kw">sd</span>(paAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">median =</span> <span class="kw">median</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">max =</span> <span class="kw">max</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">min =</span> <span class="kw">min</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
+            <span class="dt">sd =</span> <span class="kw">sd</span>(mvpaAccelerometer_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
             <span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-3a80cddba690e0dd719b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3a80cddba690e0dd719b">{"x":{"filter":"none","data":[["1","2","3"],["girl","boy",null],[190.35868627451,173.546009998305,193.574591836735],[189.185714285714,164.657142857143,161.65],[367.214285714286,366.98,291.34],[71.2,61.525,137.6],[48.600141404636,59.3942453285483,65.9107825429033],[613,471,81]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>girl<\/th>\n      <th>mean<\/th>\n      <th>median<\/th>\n      <th>max<\/th>\n      <th>min<\/th>\n      <th>sd<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-6c5b06b50212cbf5124f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c5b06b50212cbf5124f">{"x":{"filter":"none","data":[["1","2","3"],["girl","boy",null],[190.35868627451,173.546009998305,193.574591836735],[189.185714285714,164.657142857143,161.65],[367.214285714286,366.98,291.34],[71.2,61.525,137.6],[48.600141404636,59.3942453285483,65.9107825429033],[613,471,81]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>girl<\/th>\n      <th>mean<\/th>\n      <th>median<\/th>\n      <th>max<\/th>\n      <th>min<\/th>\n      <th>sd<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
                               <span class="dt">trackSchool =</span> trackSchool,
                               girl,
-                              <span class="dt">PA =</span> paAccelerometer_T1)  <span class="op">%&gt;%</span>
+                              <span class="dt">PA =</span> mvpaAccelerometer_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(trackSchool), <span class="op">!</span><span class="kw">grepl</span>(<span class="st">&#39;Other|NANA|BA4|HRC2|Nur2&#39;</span>, trackSchool)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop categories with just few participants</span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> trackSchool)) <span class="op">+</span>
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">x =</span> PA, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, 
@@ -4379,7 +3860,7 @@ plot1
 plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
                               <span class="dt">track =</span> track,
                               girl,
-                              <span class="dt">PA =</span> paAccelerometer_T1)  <span class="op">%&gt;%</span>
+                              <span class="dt">PA =</span> mvpaAccelerometer_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(track), track <span class="op">!=</span><span class="st"> &quot;Other&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop category &quot;Other&quot;</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">track =</span> <span class="kw">factor</span>(track, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span>, <span class="st">&quot;HRC&quot;</span>, <span class="st">&quot;Nur&quot;</span>)),
                 <span class="dt">track =</span> <span class="kw">recode_factor</span>(track, <span class="st">&quot;IT&quot;</span> =<span class="st"> &quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span> =<span class="st"> &quot;BA&quot;</span>, 
@@ -4437,13 +3918,14 @@ plot1 &lt;-<span class="st"> </span>plot1 <span class="op">+</span><span class="
                                    <span class="dt">alpha=</span>.<span class="dv">6</span>, 
                                    <span class="dt">fixedSize =</span> <span class="fl">0.1</span>, 
                                    <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">15</span>))
+## Error in nrow(data): object &#39;PA_trackgirl_diamonds_girl&#39; not found
 
 <span class="co"># Draw plot with intervention and control densities</span>
 
 plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
                               <span class="dt">track =</span> track,
                               intervention,
-                              <span class="dt">PA =</span> paAccelerometer_T1)  <span class="op">%&gt;%</span>
+                              <span class="dt">PA =</span> mvpaAccelerometer_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(track), track <span class="op">!=</span><span class="st"> &quot;Other&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop category &quot;Other&quot;</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">track =</span> <span class="kw">factor</span>(track, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span>, <span class="st">&quot;HRC&quot;</span>, <span class="st">&quot;Nur&quot;</span>)),
                 <span class="dt">track =</span> <span class="kw">recode_factor</span>(track, <span class="st">&quot;IT&quot;</span> =<span class="st"> &quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span> =<span class="st"> &quot;BA&quot;</span>, 
@@ -4500,6 +3982,7 @@ plot2 &lt;-<span class="st"> </span>plot2 <span class="op">+</span><span class="
                                    <span class="dt">alpha=</span>.<span class="dv">6</span>, 
                                    <span class="dt">fixedSize =</span> <span class="fl">0.1</span>, 
                                    <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">15</span>))
+## Error in nrow(data): object &#39;PA_trackintervention_diamonds_intervention&#39; not found
 
 plot1 <span class="op">+</span><span class="st"> </span>plot2
 ## Picking joint bandwidth of 18.1
@@ -5377,162 +4860,52 @@ hist_padaysLastweek_intervention_count <span class="op">+</span><span class="st"
 <div id="information-on-data-preparation-2" class="section level4">
 <h4>Information on data preparation</h4>
 <p>Code chunk below prepares data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_sitBreaks_trackgirl &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(sitBreaks_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>girl)) <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_sitBreaksAccelerometer_trackgirl &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(sitBreaksAccelerometer_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>girl)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>brms<span class="op">::</span><span class="kw">brm</span>(., <span class="dt">data =</span> df, <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">iter =</span> <span class="dv">4000</span>, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">adapt_delta =</span> <span class="fl">0.95</span>))
 ## Found more than one class &quot;family&quot; in cache; using the first, from namespace &#39;lme4&#39;
 ## Also defined by &#39;MatrixModels&#39;
 ## Warning: Rows containing NAs were excluded from the model
 ## Compiling the C++ model
-## Start sampling
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 1).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 1.897 seconds (Warm-up)
-##                1.911 seconds (Sampling)
-##                3.808 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 2).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 1.982 seconds (Warm-up)
-##                1.509 seconds (Sampling)
-##                3.491 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 3).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 2.008 seconds (Warm-up)
-##                1.911 seconds (Sampling)
-##                3.919 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 4).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 1.824 seconds (Warm-up)
-##                1.82 seconds (Sampling)
-##                3.644 seconds (Total)
+## Warning: running command &#39;C:/PROGRA~1/R/R-34~1.3/bin/x64/R CMD SHLIB
+## file5d8493f616e.cpp 2&gt; file5d8493f616e.cpp.err.txt&#39; had status 1
+## Error in compileCode(f, code, language = language, verbose = verbose): Compilation ERROR, function(s)/method(s) not created!       1 [main] make (4576) c:\HYAPP\Rtools3.4\bin\make.exe: *** fatal error - cygheap base mismatch detected - 0xF77408/0xE97408.
+## This problem is probably due to using incompatible versions of the cygwin DLL.
+## Search for cygwin1.dll using the Windows Start-&gt;Find/Search facility
+## and delete all but the most recent version.  The most recent version *should*
+## reside in x:\cygwin\bin, where &#39;x&#39; is the drive on which you have
+## installed the cygwin distribution.  Rebooting is also suggested if you
+## are unable to find another cygwin DLL.
+##       1 [main] make 4076 fork: child -1 - forked process 4576 died unexpectedly, retry 0, exit code 0xC0000142, errno 11
+## make: vfork: Resource temporarily unavailable
+## Warning message:
+## running command &#39;make -f &quot;C:/PROGRA~1/R/R-34~1.3/etc/x64/Makeconf&quot; -f &quot;C:/PROGRA~1/R/R-34~1.3/share/make/winshlib.mk&quot; -f &quot;//ATKK/home/h/hema/Documents/.R/Makevars&quot; SHLIB_LDFLAGS=&#39;$(SHLIB_CXXLDFLAGS)&#39; SHLIB_LD=&#39;$(SHLIB_CXXLD)&#39; SHLIB=&quot;file5d8493f616e.dll&quot; WIN=64 TCLBIN=64 OBJECTS=&quot;file5d8493f616e.o&quot;&#39; had status 2
 
-brms<span class="op">::</span><span class="kw">prior_summary</span>(m_sitBreaks_trackgirl, <span class="dt">data =</span> df)</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["prior"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]},{"label":["coef"],"name":[3],"type":["chr"],"align":["left"]},{"label":["group"],"name":[4],"type":["chr"],"align":["left"]},{"label":["resp"],"name":[5],"type":["chr"],"align":["left"]},{"label":["dpar"],"name":[6],"type":["chr"],"align":["left"]},{"label":["nlpar"],"name":[7],"type":["chr"],"align":["left"]},{"label":["bound"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"student_t(3, 27, 11)","2":"Intercept","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 11)","2":"sd","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"","4":"track:girl","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"Intercept","4":"track:girl","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 11)","2":"sigma","3":"","4":"","5":"","6":"","7":"","8":""}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-m_sitBreaks_trackgirl
-##  Family: gaussian 
-##   Links: mu = identity; sigma = identity 
-## Formula: sitBreaks_T1 ~ (1 | track:girl) 
-##    Data: df (Number of observations: 706) 
-## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1; 
-##          total post-warmup samples = 8000
-##     ICs: LOO = NA; WAIC = NA; R2 = NA
-##  
-## Group-Level Effects: 
-## ~track:girl (Number of levels: 10) 
-##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sd(Intercept)     4.80      1.44     2.78     8.41       1885 1.00
-## 
-## Population-Level Effects: 
-##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept    26.58      1.73    23.07    29.90       1285 1.00
-## 
-## Family Specific Parameters: 
-##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma    10.15      0.27     9.63    10.70       7163 1.00
-## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
-## scale reduction factor on split chains (at convergence, Rhat = 1).
+brms<span class="op">::</span><span class="kw">prior_summary</span>(m_sitBreaksAccelerometer_trackgirl, <span class="dt">data =</span> df)
+## Error in brms::prior_summary(m_sitBreaksAccelerometer_trackgirl, data = df): object &#39;m_sitBreaksAccelerometer_trackgirl&#39; not found
 
-b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_sitBreaks_trackgirl)[<span class="dv">1</span>]
+m_sitBreaksAccelerometer_trackgirl
+## Error in eval(expr, envir, enclos): object &#39;m_sitBreaksAccelerometer_trackgirl&#39; not found
+
+b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_sitBreaksAccelerometer_trackgirl)[<span class="dv">1</span>]
+## Error in brms::fixef(m_sitBreaksAccelerometer_trackgirl): object &#39;m_sitBreaksAccelerometer_trackgirl&#39; not found
 
 <span class="co"># This gives estimates only:</span>
-sitBreaks_trackgirl_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackgirl)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+sitBreaksAccelerometer_trackgirl_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+## Error in brms::ranef(m_sitBreaksAccelerometer_trackgirl): object &#39;m_sitBreaksAccelerometer_trackgirl&#39; not found
 
 <span class="co"># The 2.5%ile:</span>
-sitBreaks_trackgirl_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackgirl)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+sitBreaksAccelerometer_trackgirl_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+## Error in brms::ranef(m_sitBreaksAccelerometer_trackgirl): object &#39;m_sitBreaksAccelerometer_trackgirl&#39; not found
 
 <span class="co"># The 97.5%ile:</span>
-sitBreaks_trackgirl_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackgirl)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+sitBreaksAccelerometer_trackgirl_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackgirl)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+## Error in brms::ranef(m_sitBreaksAccelerometer_trackgirl): object &#39;m_sitBreaksAccelerometer_trackgirl&#39; not found
 
-sitBreaks_trackgirl_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(sitBreaks_trackgirl_CIL, sitBreaks_trackgirl_estimates, sitBreaks_trackgirl_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackgirl))) <span class="op">%&gt;%</span><span class="st"> </span>
+sitBreaksAccelerometer_trackgirl_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(sitBreaksAccelerometer_trackgirl_CIL, sitBreaksAccelerometer_trackgirl_estimates, sitBreaksAccelerometer_trackgirl_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackgirl))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">b_intercept =</span> <span class="kw">rep</span>(b_intercept, <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">sitBreaks_trackgirl_CIL =</span> sitBreaks_trackgirl_CIL <span class="op">+</span><span class="st"> </span>b_intercept,
-         <span class="dt">sitBreaks_trackgirl_estimates =</span> sitBreaks_trackgirl_estimates <span class="op">+</span><span class="st"> </span>b_intercept,
-         <span class="dt">sitBreaks_trackgirl_CIH =</span> sitBreaks_trackgirl_CIH <span class="op">+</span><span class="st"> </span>b_intercept,
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">sitBreaksAccelerometer_trackgirl_CIL =</span> sitBreaksAccelerometer_trackgirl_CIL <span class="op">+</span><span class="st"> </span>b_intercept,
+         <span class="dt">sitBreaksAccelerometer_trackgirl_estimates =</span> sitBreaksAccelerometer_trackgirl_estimates <span class="op">+</span><span class="st"> </span>b_intercept,
+         <span class="dt">sitBreaksAccelerometer_trackgirl_CIH =</span> sitBreaksAccelerometer_trackgirl_CIH <span class="op">+</span><span class="st"> </span>b_intercept,
          <span class="dt">track =</span> <span class="kw">c</span>(<span class="st">&#39;BA_boy&#39;</span>,
                    <span class="st">&#39;BA_girl&#39;</span>,
                    <span class="st">&#39;HRC_boy&#39;</span>,
@@ -5544,178 +4917,71 @@ sitBreaks_trackgirl_ci &lt;-<span class="st"> </span><span class="kw">data.frame
                    <span class="st">&#39;Other_boy&#39;</span>,
                    <span class="st">&#39;Other_girl&#39;</span>
 ))
+## Error in data.frame(sitBreaksAccelerometer_trackgirl_CIL, sitBreaksAccelerometer_trackgirl_estimates, : object &#39;sitBreaksAccelerometer_trackgirl_CIL&#39; not found
 
-sitBreaks_trackgirl_diamonds_girl &lt;-<span class="st"> </span><span class="kw">rbind</span>(
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_girl&quot;</span>),
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_girl&quot;</span>),
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_girl&quot;</span>),
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_girl&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+sitBreaksAccelerometer_trackgirl_diamonds_girl &lt;-<span class="st"> </span><span class="kw">rbind</span>(
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_girl&quot;</span>),
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_girl&quot;</span>),
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_girl&quot;</span>),
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_girl&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackgirl_ci&#39; not found
 
-sitBreaks_trackgirl_diamonds_boy &lt;-<span class="st"> </span><span class="kw">rbind</span>(
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_boy&quot;</span>),
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_boy&quot;</span>),
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_boy&quot;</span>),
-sitBreaks_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_boy&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+sitBreaksAccelerometer_trackgirl_diamonds_boy &lt;-<span class="st"> </span><span class="kw">rbind</span>(
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_boy&quot;</span>),
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_boy&quot;</span>),
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_boy&quot;</span>),
+sitBreaksAccelerometer_trackgirl_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_boy&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackgirl_ci&#39; not found
 
 
-m_sitBreaks_trackintervention &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(sitBreaks_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>intervention)) <span class="op">%&gt;%</span><span class="st"> </span>
+m_sitBreaksAccelerometer_trackintervention &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">bf</span>(sitBreaksAccelerometer_T1 <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>track<span class="op">:</span>intervention)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>brms<span class="op">::</span><span class="kw">brm</span>(., <span class="dt">data =</span> df, <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">iter =</span> <span class="dv">4000</span>, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">adapt_delta =</span> <span class="fl">0.95</span>))
 ## Found more than one class &quot;family&quot; in cache; using the first, from namespace &#39;lme4&#39;
 ## Also defined by &#39;MatrixModels&#39;
 ## Warning: Rows containing NAs were excluded from the model
 ## Compiling the C++ model
-## Start sampling
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 1).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 1.743 seconds (Warm-up)
-##                1.574 seconds (Sampling)
-##                3.317 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 2).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 1.845 seconds (Warm-up)
-##                1.386 seconds (Sampling)
-##                3.231 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 3).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 1.706 seconds (Warm-up)
-##                1.292 seconds (Sampling)
-##                2.998 seconds (Total)
-## 
-## 
-## SAMPLING FOR MODEL &#39;gaussian brms-model&#39; NOW (CHAIN 4).
-## 
-## Gradient evaluation took 0 seconds
-## 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
-## Adjust your expectations accordingly!
-## 
-## 
-## Iteration:    1 / 4000 [  0%]  (Warmup)
-## Iteration:  400 / 4000 [ 10%]  (Warmup)
-## Iteration:  800 / 4000 [ 20%]  (Warmup)
-## Iteration: 1200 / 4000 [ 30%]  (Warmup)
-## Iteration: 1600 / 4000 [ 40%]  (Warmup)
-## Iteration: 2000 / 4000 [ 50%]  (Warmup)
-## Iteration: 2001 / 4000 [ 50%]  (Sampling)
-## Iteration: 2400 / 4000 [ 60%]  (Sampling)
-## Iteration: 2800 / 4000 [ 70%]  (Sampling)
-## Iteration: 3200 / 4000 [ 80%]  (Sampling)
-## Iteration: 3600 / 4000 [ 90%]  (Sampling)
-## Iteration: 4000 / 4000 [100%]  (Sampling)
-## 
-##  Elapsed Time: 1.607 seconds (Warm-up)
-##                1.441 seconds (Sampling)
-##                3.048 seconds (Total)
+## Warning: running command &#39;C:/PROGRA~1/R/R-34~1.3/bin/x64/R CMD SHLIB
+## file5d8725e6b4d.cpp 2&gt; file5d8725e6b4d.cpp.err.txt&#39; had status 1
+## Error in compileCode(f, code, language = language, verbose = verbose): Compilation ERROR, function(s)/method(s) not created!       0 [main] make (16636) c:\HYAPP\Rtools3.4\bin\make.exe: *** fatal error - cygheap base mismatch detected - 0xD57408/0xDD7408.
+## This problem is probably due to using incompatible versions of the cygwin DLL.
+## Search for cygwin1.dll using the Windows Start-&gt;Find/Search facility
+## and delete all but the most recent version.  The most recent version *should*
+## reside in x:\cygwin\bin, where &#39;x&#39; is the drive on which you have
+## installed the cygwin distribution.  Rebooting is also suggested if you
+## are unable to find another cygwin DLL.
+##       0 [main] make 13600 fork: child -1 - forked process 16636 died unexpectedly, retry 0, exit code 0xC0000142, errno 11
+## make: vfork: Resource temporarily unavailable
+## Warning message:
+## running command &#39;make -f &quot;C:/PROGRA~1/R/R-34~1.3/etc/x64/Makeconf&quot; -f &quot;C:/PROGRA~1/R/R-34~1.3/share/make/winshlib.mk&quot; -f &quot;//ATKK/home/h/hema/Documents/.R/Makevars&quot; SHLIB_LDFLAGS=&#39;$(SHLIB_CXXLDFLAGS)&#39; SHLIB_LD=&#39;$(SHLIB_CXXLD)&#39; SHLIB=&quot;file5d8725e6b4d.dll&quot; WIN=64 TCLBIN=64 OBJECTS=&quot;file5d8725e6b4d.o&quot;&#39; had status 2
 
-brms<span class="op">::</span><span class="kw">prior_summary</span>(m_sitBreaks_trackintervention, <span class="dt">data =</span> df)</code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["prior"],"name":[1],"type":["chr"],"align":["left"]},{"label":["class"],"name":[2],"type":["chr"],"align":["left"]},{"label":["coef"],"name":[3],"type":["chr"],"align":["left"]},{"label":["group"],"name":[4],"type":["chr"],"align":["left"]},{"label":["resp"],"name":[5],"type":["chr"],"align":["left"]},{"label":["dpar"],"name":[6],"type":["chr"],"align":["left"]},{"label":["nlpar"],"name":[7],"type":["chr"],"align":["left"]},{"label":["bound"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"student_t(3, 27, 11)","2":"Intercept","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 11)","2":"sd","3":"","4":"","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"","4":"track:intervention","5":"","6":"","7":"","8":""},{"1":"","2":"sd","3":"Intercept","4":"track:intervention","5":"","6":"","7":"","8":""},{"1":"student_t(3, 0, 11)","2":"sigma","3":"","4":"","5":"","6":"","7":"","8":""}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
-  </script>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-m_sitBreaks_trackintervention
-##  Family: gaussian 
-##   Links: mu = identity; sigma = identity 
-## Formula: sitBreaks_T1 ~ (1 | track:intervention) 
-##    Data: df (Number of observations: 706) 
-## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1; 
-##          total post-warmup samples = 8000
-##     ICs: LOO = NA; WAIC = NA; R2 = NA
-##  
-## Group-Level Effects: 
-## ~track:intervention (Number of levels: 10) 
-##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sd(Intercept)     4.57      1.39     2.62     7.97       2112 1.00
-## 
-## Population-Level Effects: 
-##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## Intercept    26.95      1.53    23.86    29.93       1766 1.00
-## 
-## Family Specific Parameters: 
-##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-## sigma    10.46      0.28     9.92    11.03       5522 1.00
-## 
-## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
-## is a crude measure of effective sample size, and Rhat is the potential 
-## scale reduction factor on split chains (at convergence, Rhat = 1).
+brms<span class="op">::</span><span class="kw">prior_summary</span>(m_sitBreaksAccelerometer_trackintervention, <span class="dt">data =</span> df)
+## Error in brms::prior_summary(m_sitBreaksAccelerometer_trackintervention, : object &#39;m_sitBreaksAccelerometer_trackintervention&#39; not found
 
-b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_sitBreaks_trackintervention)[<span class="dv">1</span>]
+m_sitBreaksAccelerometer_trackintervention
+## Error in eval(expr, envir, enclos): object &#39;m_sitBreaksAccelerometer_trackintervention&#39; not found
+
+b_intercept &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">fixef</span>(m_sitBreaksAccelerometer_trackintervention)[<span class="dv">1</span>]
+## Error in brms::fixef(m_sitBreaksAccelerometer_trackintervention): object &#39;m_sitBreaksAccelerometer_trackintervention&#39; not found
 
 <span class="co"># This gives estimates only:</span>
-sitBreaks_trackintervention_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackintervention)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+sitBreaksAccelerometer_trackintervention_estimates &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]
+## Error in brms::ranef(m_sitBreaksAccelerometer_trackintervention): object &#39;m_sitBreaksAccelerometer_trackintervention&#39; not found
 
 <span class="co"># The 2.5%ile:</span>
-sitBreaks_trackintervention_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackintervention)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+sitBreaksAccelerometer_trackintervention_CIL &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">21</span><span class="op">:</span><span class="dv">30</span>]
+## Error in brms::ranef(m_sitBreaksAccelerometer_trackintervention): object &#39;m_sitBreaksAccelerometer_trackintervention&#39; not found
 
 <span class="co"># The 97.5%ile:</span>
-sitBreaks_trackintervention_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackintervention)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+sitBreaksAccelerometer_trackintervention_CIH &lt;-<span class="st"> </span>brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackintervention)[[<span class="dv">1</span>]][<span class="dv">31</span><span class="op">:</span><span class="dv">40</span>]
+## Error in brms::ranef(m_sitBreaksAccelerometer_trackintervention): object &#39;m_sitBreaksAccelerometer_trackintervention&#39; not found
 
-sitBreaks_trackintervention_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(sitBreaks_trackintervention_CIL, sitBreaks_trackintervention_estimates, sitBreaks_trackintervention_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaks_trackintervention))) <span class="op">%&gt;%</span><span class="st"> </span>
+sitBreaksAccelerometer_trackintervention_ci &lt;-<span class="st"> </span><span class="kw">data.frame</span>(sitBreaksAccelerometer_trackintervention_CIL, sitBreaksAccelerometer_trackintervention_estimates, sitBreaksAccelerometer_trackintervention_CIH, <span class="dt">Variable =</span> <span class="kw">labels</span>(brms<span class="op">::</span><span class="kw">ranef</span>(m_sitBreaksAccelerometer_trackintervention))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">b_intercept =</span> <span class="kw">rep</span>(b_intercept, <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">sitBreaks_trackintervention_CIL =</span> sitBreaks_trackintervention_CIL <span class="op">+</span><span class="st"> </span>b_intercept,
-         <span class="dt">sitBreaks_trackintervention_estimates =</span> sitBreaks_trackintervention_estimates <span class="op">+</span><span class="st"> </span>b_intercept,
-         <span class="dt">sitBreaks_trackintervention_CIH =</span> sitBreaks_trackintervention_CIH <span class="op">+</span><span class="st"> </span>b_intercept,
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">sitBreaksAccelerometer_trackintervention_CIL =</span> sitBreaksAccelerometer_trackintervention_CIL <span class="op">+</span><span class="st"> </span>b_intercept,
+         <span class="dt">sitBreaksAccelerometer_trackintervention_estimates =</span> sitBreaksAccelerometer_trackintervention_estimates <span class="op">+</span><span class="st"> </span>b_intercept,
+         <span class="dt">sitBreaksAccelerometer_trackintervention_CIH =</span> sitBreaksAccelerometer_trackintervention_CIH <span class="op">+</span><span class="st"> </span>b_intercept,
          <span class="dt">track =</span> <span class="kw">c</span>(<span class="st">&#39;BA_control&#39;</span>,
                    <span class="st">&#39;BA_intervention&#39;</span>,
                    <span class="st">&#39;HRC_control&#39;</span>,
@@ -5727,33 +4993,32 @@ sitBreaks_trackintervention_ci &lt;-<span class="st"> </span><span class="kw">da
                    <span class="st">&#39;Other_control&#39;</span>,
                    <span class="st">&#39;Other_intervention&#39;</span>
 ))
+## Error in data.frame(sitBreaksAccelerometer_trackintervention_CIL, sitBreaksAccelerometer_trackintervention_estimates, : object &#39;sitBreaksAccelerometer_trackintervention_CIL&#39; not found
 
-sitBreaks_trackintervention_diamonds_intervention &lt;-<span class="st"> </span><span class="kw">rbind</span>(
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_intervention&quot;</span>),
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_intervention&quot;</span>),
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_intervention&quot;</span>),
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_intervention&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+sitBreaksAccelerometer_trackintervention_diamonds_intervention &lt;-<span class="st"> </span><span class="kw">rbind</span>(
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_intervention&quot;</span>),
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_intervention&quot;</span>),
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_intervention&quot;</span>),
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_intervention&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackintervention_ci&#39; not found
 
-sitBreaks_trackintervention_diamonds_control &lt;-<span class="st"> </span><span class="kw">rbind</span>(
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_control&quot;</span>),
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_control&quot;</span>),
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_control&quot;</span>),
-sitBreaks_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_control&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span></code></pre></div>
+sitBreaksAccelerometer_trackintervention_diamonds_control &lt;-<span class="st"> </span><span class="kw">rbind</span>(
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur_control&quot;</span>),
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC_control&quot;</span>),
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA_control&quot;</span>),
+sitBreaksAccelerometer_trackintervention_ci <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT_control&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>()) <span class="co"># reverse order of rows to make them right for the plot to come</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackintervention_ci&#39; not found</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-sitBreaks_trackgirl_diamonds_girl <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-2342ddb430e875969d75" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2342ddb430e875969d75">{"x":{"filter":"none","data":[["1","2","3","4"],[18.0288786359591,26.6796367220833,25.4628826753358,29.4483971579713],[23.2163040621766,30.5973462129417,29.2123324560742,32.8918645415588],[28.2055275507597,34.7682397755262,33.1189715627738,36.5608233205633],["track:girl","track:girl","track:girl","track:girl"],[26.5813088562452,26.5813088562452,26.5813088562452,26.5813088562452],["IT_girl","BA_girl","HRC_girl","Nur_girl"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>sitBreaks_trackgirl_CIL<\/th>\n      <th>sitBreaks_trackgirl_estimates<\/th>\n      <th>sitBreaks_trackgirl_CIH<\/th>\n      <th>Variable<\/th>\n      <th>b_intercept<\/th>\n      <th>track<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[1,2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sitBreaks_trackgirl_diamonds_boy <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-443a8d901d78d7f6c6b9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-443a8d901d78d7f6c6b9">{"x":{"filter":"none","data":[["1","2","3","4"],[15.9842010860581,21.218293374672,20.578129994873,21.718618986747],[19.976156188847,25.0110042386153,24.6232002496553,25.7308880270438],[23.7943339432317,28.917799331967,28.7209793637441,29.9589174450734],["track:girl","track:girl","track:girl","track:girl"],[26.5813088562452,26.5813088562452,26.5813088562452,26.5813088562452],["IT_boy","BA_boy","HRC_boy","Nur_boy"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>sitBreaks_trackgirl_CIL<\/th>\n      <th>sitBreaks_trackgirl_estimates<\/th>\n      <th>sitBreaks_trackgirl_CIH<\/th>\n      <th>Variable<\/th>\n      <th>b_intercept<\/th>\n      <th>track<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[1,2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sitBreaks_trackintervention_diamonds_intervention <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-eed989cebb3b058785be" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-eed989cebb3b058785be">{"x":{"filter":"none","data":[["1","2","3","4"],[17.9439422782162,23.9630163633957,22.653449355583,28.7291898924227],[21.9644287558745,27.5358522700638,26.6776382320567,31.9352294825686],[25.7657748362901,31.1499354142604,30.5547829570299,35.2672957498557],["track:intervention","track:intervention","track:intervention","track:intervention"],[26.9468736599924,26.9468736599924,26.9468736599924,26.9468736599924],["IT_intervention","BA_intervention","HRC_intervention","Nur_intervention"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>sitBreaks_trackintervention_CIL<\/th>\n      <th>sitBreaks_trackintervention_estimates<\/th>\n      <th>sitBreaks_trackintervention_CIH<\/th>\n      <th>Variable<\/th>\n      <th>b_intercept<\/th>\n      <th>track<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[1,2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sitBreaks_trackintervention_diamonds_control <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-9b928f1a15781381a204" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9b928f1a15781381a204">{"x":{"filter":"none","data":[["1","2","3","4"],[15.612028294728,23.8058646176297,24.3729782834309,27.0460907987431],[19.6023487617885,27.4291191662579,27.8570675912938,30.5718352864605],[23.3950924777933,31.0241342330087,31.2895909555272,34.223197801201],["track:intervention","track:intervention","track:intervention","track:intervention"],[26.9468736599924,26.9468736599924,26.9468736599924,26.9468736599924],["IT_control","BA_control","HRC_control","Nur_control"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>sitBreaks_trackintervention_CIL<\/th>\n      <th>sitBreaks_trackintervention_estimates<\/th>\n      <th>sitBreaks_trackintervention_CIH<\/th>\n      <th>Variable<\/th>\n      <th>b_intercept<\/th>\n      <th>track<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[1,2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+sitBreaksAccelerometer_trackgirl_diamonds_girl <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackgirl_diamonds_girl&#39; not found
+sitBreaksAccelerometer_trackgirl_diamonds_boy <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackgirl_diamonds_boy&#39; not found
+sitBreaksAccelerometer_trackintervention_diamonds_intervention <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackintervention_diamonds_intervention&#39; not found
+sitBreaksAccelerometer_trackintervention_diamonds_control <span class="op">%&gt;%</span><span class="st"> </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span>
+## Error in eval(lhs, parent, parent): object &#39;sitBreaksAccelerometer_trackintervention_diamonds_control&#39; not found</code></pre></div>
 </div>
 </div>
 <div id="density-plot-by-intervention-and-gender-2" class="section level3">
@@ -5773,14 +5038,14 @@ densplot &lt;-<span class="st"> </span>d
 
 ## Girls vs. boys
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(sitBreaks_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(sitBreaksAccelerometer_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 
 <span class="co"># Make plot</span>
-sm.sitBreaks_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>sitBreaks_T1), 
+sm.sitBreaksAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>sitBreaksAccelerometer_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>girl), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>,
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -5795,13 +5060,13 @@ sm.sitBreaks_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span cl
 
 ## Intervention vs. control
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(sitBreaks_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(sitBreaksAccelerometer_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 <span class="co"># Make plot</span>
-sm.sitBreaks_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>sitBreaks_T1), 
+sm.sitBreaksAccelerometer_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>sitBreaksAccelerometer_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>intervention), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>, 
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -5817,7 +5082,7 @@ sm.sitBreaks_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span cl
 <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)) 
 <span class="kw">plot</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>,<span class="dt">axes =</span> <span class="ot">FALSE</span>) <span class="co"># Fake plot</span>
 <span class="kw">text</span>(<span class="dt">x =</span> <span class="fl">1.02</span>, <span class="dt">y =</span> <span class="fl">1.3</span>, <span class="dt">labels =</span> <span class="st">&quot;Average number of breaks in daily sitting&quot;</span>, <span class="dt">pos =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-supplement_files/figure-html/sitBreaks-sm-1.png" width="2100" /></p>
+<p><img src="baseline-supplement_files/figure-html/sitBreaksAccelerometer-sm-1.png" width="2100" /></p>
 </div>
 <div id="density-plot-by-track-2" class="section level3">
 <h3>Density plot by track</h3>
@@ -5825,7 +5090,7 @@ sm.sitBreaks_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span cl
 plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
                               <span class="dt">track =</span> track,
                               girl,
-                              <span class="dt">PA =</span> sitBreaks_T1)  <span class="op">%&gt;%</span>
+                              <span class="dt">PA =</span> sitBreaksAccelerometer_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(track), track <span class="op">!=</span><span class="st"> &quot;Other&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop category &quot;Other&quot;</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">track =</span> <span class="kw">factor</span>(track, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span>, <span class="st">&quot;HRC&quot;</span>, <span class="st">&quot;Nur&quot;</span>)),
                 <span class="dt">track =</span> <span class="kw">recode_factor</span>(track, <span class="st">&quot;IT&quot;</span> =<span class="st"> &quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span> =<span class="st"> &quot;BA&quot;</span>, 
@@ -5868,14 +5133,14 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
 
 plot1 &lt;-<span class="st"> </span>plot1 <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaks_trackgirl_diamonds_girl, 
+<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaksAccelerometer_trackgirl_diamonds_girl, 
                                    <span class="dt">returnLayerOnly =</span> <span class="ot">TRUE</span>, 
                                    <span class="dt">lineColor =</span> <span class="st">&quot;black&quot;</span>, 
                                    <span class="dt">color=</span>viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="dv">3</span>],
                                    <span class="dt">alpha=</span>.<span class="dv">6</span>, 
                                    <span class="dt">fixedSize =</span> <span class="fl">0.1</span>, 
                                    <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">15</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># specify y-position; option to move the diamond </span>
-<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaks_trackgirl_diamonds_boy, 
+<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaksAccelerometer_trackgirl_diamonds_boy, 
                                    <span class="dt">returnLayerOnly =</span> <span class="ot">TRUE</span>, 
                                    <span class="dt">lineColor =</span> <span class="st">&quot;black&quot;</span>, 
                                    <span class="dt">linetype =</span> <span class="st">&quot;solid&quot;</span>, 
@@ -5883,13 +5148,14 @@ plot1 &lt;-<span class="st"> </span>plot1 <span class="op">+</span><span class="
                                    <span class="dt">alpha=</span>.<span class="dv">6</span>, 
                                    <span class="dt">fixedSize =</span> <span class="fl">0.1</span>, 
                                    <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">15</span>))
+## Error in nrow(data): object &#39;sitBreaksAccelerometer_trackgirl_diamonds_girl&#39; not found
 
 <span class="co"># Draw plot with intervention and control densities</span>
 
 plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
                               <span class="dt">track =</span> track,
                               intervention,
-                              <span class="dt">PA =</span> sitBreaks_T1)  <span class="op">%&gt;%</span>
+                              <span class="dt">PA =</span> sitBreaksAccelerometer_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(track), track <span class="op">!=</span><span class="st"> &quot;Other&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop category &quot;Other&quot;</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">track =</span> <span class="kw">factor</span>(track, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span>, <span class="st">&quot;HRC&quot;</span>, <span class="st">&quot;Nur&quot;</span>)),
                 <span class="dt">track =</span> <span class="kw">recode_factor</span>(track, <span class="st">&quot;IT&quot;</span> =<span class="st"> &quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span> =<span class="st"> &quot;BA&quot;</span>, 
@@ -5932,20 +5198,21 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
 
 plot2 &lt;-<span class="st"> </span>plot2 <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaks_trackintervention_diamonds_intervention, 
+<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaksAccelerometer_trackintervention_diamonds_intervention, 
                                    <span class="dt">returnLayerOnly =</span> <span class="ot">TRUE</span>, 
                                    <span class="dt">lineColor =</span> <span class="st">&quot;black&quot;</span>,  
                                    <span class="dt">color=</span>viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="dv">4</span>],
                                    <span class="dt">alpha=</span>.<span class="dv">6</span>, 
                                    <span class="dt">fixedSize =</span> <span class="fl">0.1</span>, 
                                    <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">15</span>)) <span class="op">+</span>
-<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaks_trackintervention_diamonds_control, 
+<span class="st">  </span>userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>(sitBreaksAccelerometer_trackintervention_diamonds_control, 
                                    <span class="dt">returnLayerOnly =</span> <span class="ot">TRUE</span>, 
                                    <span class="dt">lineColor =</span> <span class="st">&quot;black&quot;</span>,  
                                    <span class="dt">color=</span>viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="dv">2</span>],
                                    <span class="dt">alpha=</span>.<span class="dv">6</span>, 
                                    <span class="dt">fixedSize =</span> <span class="fl">0.1</span>, 
                                    <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>.<span class="dv">15</span>))
+## Error in nrow(data): object &#39;sitBreaksAccelerometer_trackintervention_diamonds_intervention&#39; not found
 
 plot1 <span class="op">+</span><span class="st"> </span>plot2
 ## Picking joint bandwidth of 3.67
@@ -5954,7 +5221,7 @@ plot1 <span class="op">+</span><span class="st"> </span>plot2
 ## Picking joint bandwidth of 3.51
 ## Warning: Removed 370 rows containing non-finite values
 ## (stat_density_ridges).</code></pre></div>
-<p><img src="baseline-supplement_files/figure-html/sitBreaks-densityplot-1.png" width="2100" /></p>
+<p><img src="baseline-supplement_files/figure-html/sitBreaksAccelerometer-densityplot-1.png" width="2100" /></p>
 </div>
 </div>
 <div id="sb-accelerometer-measured" class="section level2">
@@ -8045,32 +7312,32 @@ plot1 <span class="op">+</span><span class="st"> </span>plot2
 <div id="informativeness-of-averages" class="section level1">
 <h1>Informativeness of averages</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-<span class="co"># total_n &lt;- df %&gt;% select(paAccelerometer_T1, sitLieAccelerometer_T1, padaysLastweek_T1, sitBreaks_T1) %&gt;% </span>
+<span class="co"># total_n &lt;- df %&gt;% select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, padaysLastweek_T1, sitBreaksAccelerometer_T1) %&gt;% </span>
 <span class="co">#   na.omit(.) %&gt;% </span>
 <span class="co">#   summarise(n = n())</span>
                      
 middle_x_percentile &lt;-<span class="st"> </span><span class="cf">function</span>(middle_percentile) {
   df <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>((df<span class="op">$</span>paAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>paAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
-<span class="st">                  </span>(df<span class="op">$</span>paAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>paAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>((df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
+<span class="st">                  </span>(df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span>
 <span class="st">                </span>(df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
 <span class="st">                 </span>(df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                </span>(df<span class="op">$</span>padaysLastweek_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
 <span class="st">                  </span>(df<span class="op">$</span>padaysLastweek_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span>
-<span class="st">                </span>(df<span class="op">$</span>sitBreaks_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaks_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
-<span class="st">                  </span>(df<span class="op">$</span>sitBreaks_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaks_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]])) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                </span>(df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
+<span class="st">                  </span>(df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]])) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">nrow</span>(.)
 }
   
 
 getmiddle &lt;-<span class="st"> </span><span class="cf">function</span>(middlePerc) {                                       
-df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(paAccelerometer_T1, padaysLastweek_T1, sitLieAccelerometer_T1, sitBreaks_T1) <span class="op">%&gt;%</span><span class="st"> </span>
+df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, padaysLastweek_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">na.omit</span>(.) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>(), 
-                   <span class="dt">middle =</span> <span class="kw">sum</span>((paAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(paAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
-<span class="st">                                      </span>(paAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(paAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
+                   <span class="dt">middle =</span> <span class="kw">sum</span>((mvpaAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
+<span class="st">                                       </span>(<span class="kw">quantile</span>(mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                                      </span>(mvpaAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
+<span class="st">                                       </span>(<span class="kw">quantile</span>(mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
 <span class="st">                                      </span>(padaysLastweek_T1 <span class="op">&gt;</span><span class="st"> </span>
 <span class="st">                                       </span>(<span class="kw">quantile</span>(padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                      </span>(padaysLastweek_T1 <span class="op">&lt;</span><span class="st"> </span>
@@ -8079,24 +7346,24 @@ df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">
 <span class="st">                                       </span>(<span class="kw">quantile</span>(sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                      </span>(sitLieAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
 <span class="st">                                       </span>(<span class="kw">quantile</span>(sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
-<span class="st">                                      </span>(sitBreaks_T1 <span class="op">&gt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(sitBreaks_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
-<span class="st">                                      </span>(sitBreaks_T1 <span class="op">&lt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(sitBreaks_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]]))
+<span class="st">                                      </span>(sitBreaksAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
+<span class="st">                                       </span>(<span class="kw">quantile</span>(sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                                      </span>(sitBreaksAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
+<span class="st">                                       </span>(<span class="kw">quantile</span>(sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]]))
                                      )) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">mutate</span>(<span class="dt">perc =</span> middle<span class="op">/</span>n)
 }
 
 
 middleprobs &lt;-<span class="st"> </span><span class="cf">function</span>(prob1, prob2) {
-<span class="kw">sum</span>(df<span class="op">$</span>paAccelerometer_T1 <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>paAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]] <span class="op">&amp;</span>
-<span class="st">      </span>df<span class="op">$</span>paAccelerometer_T1 <span class="op">&lt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>paAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]] <span class="op">&amp;</span>
+<span class="kw">sum</span>(df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]] <span class="op">&amp;</span>
+<span class="st">      </span>df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&lt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]] <span class="op">&amp;</span>
 <span class="st">    </span>df<span class="op">$</span>padaysLastweek_T1 <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]] <span class="op">&amp;</span>
 <span class="st">      </span>df<span class="op">$</span>padaysLastweek_T1 <span class="op">&lt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]] <span class="op">&amp;</span>
 <span class="st">    </span>df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]] <span class="op">&amp;</span>
 <span class="st">      </span>df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&lt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]] <span class="op">&amp;</span>
-<span class="st">    </span>df<span class="op">$</span>sitBreaks_T1 <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaks_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]] <span class="op">&amp;</span>
-<span class="st">      </span>df<span class="op">$</span>sitBreaks_T1 <span class="op">&lt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaks_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]],
+<span class="st">    </span>df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&gt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]] <span class="op">&amp;</span>
+<span class="st">      </span>df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&lt;=</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(prob1, prob2), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]],
     <span class="dt">na.rm=</span> <span class="ot">TRUE</span>) 
 }    
 
@@ -8109,26 +7376,26 @@ middleprobs &lt;-<span class="st"> </span><span class="cf">function</span>(prob1
 
 <span class="co"># # middle_x_percentile(1) gives a number != total, because it&#39;s exclusive of the ends. See difference between</span>
 
-<span class="co"># sum(df$paAccelerometer_T1 &gt;= min(df$paAccelerometer_T1, na.rm = TRUE) &amp;</span>
-<span class="co">#       df$paAccelerometer_T1 &lt;= max(df$paAccelerometer_T1, na.rm = TRUE) &amp;</span>
+<span class="co"># sum(df$mvpaAccelerometer_T1 &gt;= min(df$mvpaAccelerometer_T1, na.rm = TRUE) &amp;</span>
+<span class="co">#       df$mvpaAccelerometer_T1 &lt;= max(df$mvpaAccelerometer_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#     df$padaysLastweek_T1 &gt;= min(df$padaysLastweek_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#       df$padaysLastweek_T1 &lt;= max(df$padaysLastweek_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#     df$sitLieAccelerometer_T1 &gt;= min(df$sitLieAccelerometer_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#       df$sitLieAccelerometer_T1 &lt;= max(df$sitLieAccelerometer_T1, na.rm = TRUE) &amp;</span>
-<span class="co">#     df$sitBreaks_T1 &gt;= min(df$sitBreaks_T1, na.rm = TRUE) &amp;</span>
-<span class="co">#       df$sitBreaks_T1 &lt;= max(df$sitBreaks_T1, na.rm = TRUE),</span>
+<span class="co">#     df$sitBreaksAccelerometer_T1 &gt;= min(df$sitBreaksAccelerometer_T1, na.rm = TRUE) &amp;</span>
+<span class="co">#       df$sitBreaksAccelerometer_T1 &lt;= max(df$sitBreaksAccelerometer_T1, na.rm = TRUE),</span>
 <span class="co">#     na.rm= TRUE) </span>
 
 <span class="co"># # and</span>
 
-<span class="co"># sum(df$paAccelerometer_T1 &gt; min(df$paAccelerometer_T1, na.rm = TRUE) &amp;</span>
-<span class="co">#       df$paAccelerometer_T1 &lt; max(df$paAccelerometer_T1, na.rm = TRUE) &amp;</span>
+<span class="co"># sum(df$mvpaAccelerometer_T1 &gt; min(df$mvpaAccelerometer_T1, na.rm = TRUE) &amp;</span>
+<span class="co">#       df$mvpaAccelerometer_T1 &lt; max(df$mvpaAccelerometer_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#     df$padaysLastweek_T1 &gt; min(df$padaysLastweek_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#       df$padaysLastweek_T1 &lt; max(df$padaysLastweek_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#     df$sitLieAccelerometer_T1 &gt; min(df$sitLieAccelerometer_T1, na.rm = TRUE) &amp;</span>
 <span class="co">#       df$sitLieAccelerometer_T1 &lt; max(df$sitLieAccelerometer_T1, na.rm = TRUE) &amp;</span>
-<span class="co">#     df$sitBreaks_T1 &gt; min(df$sitBreaks_T1, na.rm = TRUE) &amp;</span>
-<span class="co">#       df$sitBreaks_T1 &lt; max(df$sitBreaks_T1, na.rm = TRUE),</span>
+<span class="co">#     df$sitBreaksAccelerometer_T1 &gt; min(df$sitBreaksAccelerometer_T1, na.rm = TRUE) &amp;</span>
+<span class="co">#       df$sitBreaksAccelerometer_T1 &lt; max(df$sitBreaksAccelerometer_T1, na.rm = TRUE),</span>
 <span class="co">#     na.rm= TRUE) </span>
 
 middle_df &lt;-<span class="st"> </span><span class="ot">NA</span>

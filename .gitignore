@@ -3,5 +3,6 @@
 .RData
 .Ruserdata
 data/
+Rdata_files/
 sandbox/
 sandbox/data/

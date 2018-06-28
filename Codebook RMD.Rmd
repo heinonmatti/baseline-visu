@@ -1,0 +1,14 @@
+---
+title: "Codebook"
+author: "Matti Heino"
+date: "20 kesäkuuta 2018"
+output: html_document
+---
+
+```{r codebook, echo = FALSE, include = FALSE}
+load("./data/df.Rdata")
+
+codebook::codebook(df)
+
+```
+

@@ -227,9 +227,7 @@ sm.density.compare2 <- function (x, group, h, model = "none", bandcol =
 
 # Prepare data with variables of interest
 
-# We do data manipulation and cleaning to come up with a dataaset with our variables of interests.
-
-#library(userfriendlyscience)
+# We do data manipulation and cleaning to come up with a dataset with our variables of interests.
 
 d <- lmi %>% dplyr::select(id = ID,
                            intervention = ryhma,
@@ -237,15 +235,15 @@ d <- lmi %>% dplyr::select(id = ID,
                            school = Aineisto.1,
                            girl = Kys0013.1,
                            big5agreeableness_01_T1 = Kys0155.1,
-                           big5agrReverseCoded_02_T1 = Kys0150.1,
+                           big5agreeablenessReverseCoded_02_T1 = Kys0150.1,
                            big5conscientiousness_01_T1 = Kys0151.1,
-                           big5consReverseCoded_02_T1 = Kys0156.1,
+                           big5conscientiousnessReverseCoded_02_T1 = Kys0156.1,
                            big5extraversion_01_T1 = Kys0149.1,
-                           big5extReverseCoded_02_T1 = Kys0154.1,
+                           big5extraversionReverseCoded_02_T1 = Kys0154.1,
                            big5neuroticism_01_T1 = Kys0152.1,
-                           big5neurReverseCoded_02_T1 = Kys0157.1,
+                           big5neuroticismReverseCoded_02_T1 = Kys0157.1,
                            big5openness_01_T1 = Kys0153.1,
-                           big5openReverseCoded_02_T1 = Kys0158.1,
+                           big5opennessReverseCoded_02_T1 = Kys0158.1,
                            fatpct_T1 = Rasva,
                            PA_actCop_01_T1 = Kys0115.1,
                            PA_actCop_01_T3 = Kys0115.3,
@@ -399,8 +397,6 @@ d <- lmi %>% dplyr::select(id = ID,
                            PA_selfefficacy_01_T3 = Kys0123.3,
                            PA_selfefficacyReverseCoded_02_T1 = Kys0124.1,
                            PA_selfefficacyReverseCoded_02_T3 = Kys0124.3,
-                           paAccelerometer_T1 = LiikuntaT1_ka,
-                           paAccelerometer_T3 = LiikuntaT3_ka,
                            padaysLastweek_T1 = Kys0045.1,
                            padaysLastweek_T3 = Kys0045.3,
                            pafreqUsually_T1 = Kys0048.1,
@@ -441,16 +437,16 @@ d <- lmi %>% dplyr::select(id = ID,
                            SB_outcomeExpectations_06_T3 = Kys0176.3,
                            SB_outcomeExpectationsNegative_07_T1 = Kys0177.1,
                            SB_outcomeExpectationsNegative_07_T3 = Kys0177.3,
-                           SB_sePbc_01_T1 = Kys0182.1,
-                           SB_sePbc_01_T3 = Kys0182.3,
-                           SB_sePbc_02_T1 = Kys0183.1,
-                           SB_sePbc_02_T3 = Kys0183.3,
-                           SB_sePbc_03_T1 = Kys0184.1,
-                           SB_sePbc_03_T3 = Kys0184.3,
-                           SB_sePbc_04_T1 = Kys0185.1,
-                           SB_sePbc_04_T3 = Kys0185.3,
-                           SB_sePbc_05_T1 = Kys0186.1,
-                           SB_sePbc_05_T3 = Kys0186.3,
+                           SB_selfEfficacyPBC_01_T1 = Kys0182.1,
+                           SB_selfEfficacyPBC_01_T3 = Kys0182.3,
+                           SB_selfEfficacyPBC_02_T1 = Kys0183.1,
+                           SB_selfEfficacyPBC_02_T3 = Kys0183.3,
+                           SB_selfEfficacyPBC_03_T1 = Kys0184.1,
+                           SB_selfEfficacyPBC_03_T3 = Kys0184.3,
+                           SB_selfEfficacyPBC_04_T1 = Kys0185.1,
+                           SB_selfEfficacyPBC_04_T3 = Kys0185.3,
+                           SB_selfEfficacyPBC_05_T1 = Kys0186.1,
+                           SB_selfEfficacyPBC_05_T3 = Kys0186.3,
                            sitLieAccelerometer_T1 = MaIsT1_ka,
                            sitLieAccelerometer_T3 = MaIsT3_ka,
                            symptom_neckShoulderPain_T1 = Kys0031.1,
@@ -469,24 +465,83 @@ d <- lmi %>% dplyr::select(id = ID,
                            symptom_headAche_T3 = Kys0037.3,
                            symptom_tirednessFaintness_T1 = Kys0038.1,
                            symptom_tirednessFaintness_T3 = Kys0038.3,
-                           PA_actplan_01_T1 = Kys0115.1,
-                           PA_actplan_02_T1 = Kys0116.1,
-                           PA_actplan_03_T1 = Kys0117.1,
-                           PA_actplan_04_T1 = Kys0118.1,
-                           PA_copplan_01_T1 = Kys0119.1,
-                           PA_copplan_02_T1 = Kys0120.1,
-                           PA_copplan_03_T1 = Kys0121.1,
-                           PA_copplan_04_T1 = Kys0122.1,
-                           PA_actplan_01_T3 = Kys0115.3,
-                           PA_actplan_02_T3 = Kys0116.3,
-                           PA_actplan_03_T3 = Kys0117.3,
-                           PA_actplan_04_T3 = Kys0118.3,
-                           PA_copplan_01_T3 = Kys0119.3,
-                           PA_copplan_02_T3 = Kys0120.3,
-                           PA_copplan_03_T3 = Kys0121.3,
-                           PA_copplan_04_T3 = Kys0122.3,
-                           sitBreaks_T1 = YlosT1_ka
-)
+                           PA_actionPlanning_01_T1 = Kys0115.1,
+                           PA_actionPlanning_02_T1 = Kys0116.1,
+                           PA_actionPlanning_03_T1 = Kys0117.1,
+                           PA_actionPlanning_04_T1 = Kys0118.1,
+                           PA_copingPlanning_01_T1 = Kys0119.1,
+                           PA_copingPlanning_02_T1 = Kys0120.1,
+                           PA_copingPlanning_03_T1 = Kys0121.1,
+                           PA_copingPlanning_04_T1 = Kys0122.1,
+                           PA_actionPlanning_01_T3 = Kys0115.3,
+                           PA_actionPlanning_02_T3 = Kys0116.3,
+                           PA_actionPlanning_03_T3 = Kys0117.3,
+                           PA_actionPlanning_04_T3 = Kys0118.3,
+                           PA_copingPlanning_01_T3 = Kys0119.3,
+                           PA_copingPlanning_02_T3 = Kys0120.3,
+                           PA_copingPlanning_03_T3 = Kys0121.3,
+                           PA_copingPlanning_04_T3 = Kys0122.3,
+                           mvpaAccelerometer_T1 = LiikuntaT1_ka,
+                           mvpaAccelerometer_T3 = LiikuntaT3_ka,
+                           lpaAccelerometer_T1 = KevytT1_ka,
+                           lpaAccelerometer_T3 = KevytT3_ka,
+                           mpaAccelerometer_T1 = ReipasT1_ka,
+                           mpaAccelerometer_T3 = ReipasT3_ka,
+                           vpaAccelerometer_T1 = RasittavaT1_ka,
+                           vpaAccelerometer_T3 = RasittavaT3_ka,
+                           sitBreaksAccelerometer_T1 = YlosT1_ka,
+                           sitBreaksAccelerometer_T3 = YlosT3_ka,
+                           standingAccelerometer_T1 = SeisooT1_ka,
+                           standingAccelerometer_T3 = SeisooT3_ka,
+                           walkStepsAccelerometer_T1 = AskelT1_ka,
+                           walkStepsAccelerometer_T3 = AskelT3_ka,
+                           runStepsAccelerometer_T1 = JuoksuT1_ka,
+                           runStepsAccelerometer_T3 = JuoksuT3_ka,
+                           weartimeAccelerometer_T1 = SummaT1_ka,
+                           weartimeAccelerometer_T3 = SummaT3_ka,
+                           SB_avgDailySelfRepSittingHoursLastWeekWeekday_T1 = Kys0159.1,
+                           SB_avgDailySelfRepSittingHoursLastWeekWeekday_T3 = Kys0159.3,
+                           SB_avgDailySelfRepSittingMinutesLastWeekWeekday_T1 = Kys0160.1,
+                           SB_avgDailySelfRepSittingMinutesLastWeekWeekday_T3 = Kys0160.3,
+                           SB_avgDailySelfRepSittingHoursLastWeekWeekend_T1 = Kys0161.1,
+                           SB_avgDailySelfRepSittingHoursLastWeekWeekend_T3 = Kys0161.3,
+                           SB_avgDailySelfRepSittingMinutesLastWeekWeekend_T1 = Kys0162.1,
+                           SB_avgDailySelfRepSittingMinutesLastWeekWeekend_T3 = Kys0162.3,
+                           SB_selfRepSittingMinutesDuringClass_T1 = Kys0163.1,
+                           SB_selfRepSittingMinutesDuringClass_T3 = Kys0163.3,
+                           SB_selfRepSitbreaksDuringClass_T1 = Kys0164.1,
+                           SB_selfRepSitbreaksDuringClass_T3 = Kys0164.3,
+                           SB_selfRepSitbreaksTVDVD_T1 = Kys0165.1,
+                           SB_selfRepSitbreaksTVDVD_T3 = Kys0165.3,
+                           SB_selfRepSitbreaksHomeComputer_T1 = Kys0166.1,
+                           SB_selfRepSitbreaksHomeComputer_T3 = Kys0166.3,
+                           SB_selfRepSitbreaksWithFriends_T1 = Kys0167.1,
+                           SB_selfRepSitbreaksWithFriends_T3 = Kys0167.3,
+                           SB_selfRepSitbreaksWorkPlacement_T1 = Kys0168.1,
+                           SB_selfRepSitbreaksWorkPlacement_T3 = Kys0168.3,
+                           SB_selfRepSitbreaksDidNotSit30min_T1 = Kys0169.1,
+                           SB_selfRepSitbreaksDidNotSit30min_T3 = Kys0169.3,
+                           SB_perceivedTooMuchSitting_T1 = Kys0170.1,
+                           SB_perceivedTooMuchSitting_T3 = Kys0170.3,
+                           SB_teachersProvideOpportunities_T1 = Kys0200.1,
+                           SB_teachersProvideOpportunities_T3 = Kys0200.3,
+                           SB_teachersInterruptSitting_T1 = Kys0201.1,
+                           SB_teachersInterruptSitting_T3 = Kys0201.3,
+                           SB_classesProvideOpportunities_T1 = Kys0202.1,
+                           SB_classesProvideOpportunities_T3 = Kys0202.3,
+                           SB_classesInterruptSitting_T1 = Kys0203.1,
+                           SB_classesInterruptSitting_T3 = Kys0203.3,
+                           groupSupportsMe_T1 = Kys0215.1,
+                           groupSupportsMe_T3 = Kys0215.3,
+                           groupListensToMe_T1 = Kys0216.1,
+                           groupListensToMe_T3 = Kys0216.3,
+                           groupUnderstandsMe_T1 = Kys0217.1,
+                           groupUnderstandsMe_T3 = Kys0217.3,
+                           groupValuesMe_T1 = Kys0218.1,
+                           groupValuesMe_T3 = Kys0218.3,
+                           groupFeelsSafe_T1 = Kys0219.1,
+                           groupFeelsSafe_T3 = Kys0219.3
+                           )
 
 # Reverse coded items to normal: 
 # Take vars that contain "ReverseCoded_", substract them from 8 (each scale is 1-7)
@@ -494,13 +549,11 @@ d <- d %>% dplyr::mutate_at(dplyr::vars(contains("ReverseCoded_")), funs(8 - .))
 
 # To check:
 # d %>% dplyr::select(contains("ReverseCoded_")), contains("Rev")) %>% View
-identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$big5extReverseCoded_02_T1))
+identical(as.numeric(8 - lmi$Kys0154.1), as.numeric(d$big5extraversionReverseCoded_02_T1))
 identical(as.numeric(8 - lmi$Kys0100.1), as.numeric(d$PA_opportunitiesReverseCoded_03_T1))
 
 # Group variable has empty missings
 d <- d %>% dplyr::mutate(group = ifelse(group == "", NA, group))
-
-# Create grouping variable, which indicates  
 
 # Fix intervention and gender variables
 d <- d %>% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
@@ -526,8 +579,8 @@ track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
 d <- bind_cols(d, track)
 
 # Separate variables for scale-creation purposes
-dT1 <- d %>% dplyr::select(contains("T1"))
-dT3 <- d %>% dplyr::select(contains("T3"))
+dT1 <- d %>% dplyr::select(contains("T1", ignore.case = FALSE))
+dT3 <- d %>% dplyr::select(contains("T3", ignore.case = FALSE))
 
 # Create T1 scales
 
@@ -554,10 +607,10 @@ scales_T1 <- list(big5agreeableness_T1 = grep('big5agreeableness', names(dT1), v
                   SB_inorm_T1 = grep('SB_inorm', names(dT1), value = TRUE),
                   SB_intention_T1 = grep('SB_intention', names(dT1), value = TRUE),
                   SB_outcomeExpectations_T1 = grep('SB_outcomeExpectations', names(dT1), value = TRUE),
-                  SB_sePbc_T1 = grep('SB_sePbc', names(dT1), value = TRUE),
+                  SB_selfEfficacyPBC_T1 = grep('SB_selfEfficacyPBC', names(dT1), value = TRUE),
                   symptom_T1 = grep('symptom', names(dT1), value = TRUE),
-                  PA_actionplan_T1 = grep('actplan', names(dT1), value = TRUE),
-                  PA_copingplan_T1 = grep('copplan', names(dT1), value = TRUE)
+                  PA_actionplan_T1 = grep('actionPlanning', names(dT1), value = TRUE),
+                  PA_copingplan_T1 = grep('copingPlanning', names(dT1), value = TRUE)
 )
 
 # Append the aggregate variables to the data frame
@@ -588,10 +641,10 @@ scales_T3 <- list(big5agreeableness_T3 = grep('big5agr', names(dT3), value = TRU
                   SB_inorm_T3 = grep('SB_inorm', names(dT3), value = TRUE),
                   SB_intention_T3 = grep('SB_intention', names(dT3), value = TRUE),
                   SB_outcomeExpectations_T3 = grep('SB_outcomeExpectations', names(dT3), value = TRUE),
-                  SB_sePbc_T3 = grep('SB_sePbc', names(dT3), value = TRUE),
+                  SB_selfEfficacyPBC_T3 = grep('SB_selfEfficacyPBC', names(dT3), value = TRUE),
                   symptom_T3 = grep('symptom', names(dT3), value = TRUE),
-                  PA_actionplan_T3 = grep('actplan', names(dT3), value = TRUE),
-                  PA_copingplan_T3 = grep('copplan', names(dT3), value = TRUE)
+                  PA_actionplan_T3 = grep('actionPlanning', names(dT3), value = TRUE),
+                  PA_copingplan_T3 = grep('copingPlanning', names(dT3), value = TRUE)
 )
 
 # Append the aggregate variables to the data frame
@@ -602,11 +655,11 @@ df <- cbind(d[ , c("id", "intervention", "group", "school", "girl", "track")], n
 
 # Create composite of self-efficacy and perceived behavioural control
 df <- df %>% rowwise %>%
-  mutate(PA_sePbc_T1 = mean(c(PA_pbc_T1, PA_selfefficacy_T1), na.rm = T),
-         PA_sePbc_T3 = mean(c(PA_pbc_T3, PA_selfefficacy_T3), na.rm = T))
+  mutate(PA_selfEfficacyPBC_T1 = mean(c(PA_pbc_T1, PA_selfefficacy_T1), na.rm = T),
+         PA_selfEfficacyPBC_T3 = mean(c(PA_pbc_T3, PA_selfefficacy_T3), na.rm = T))
 ## Fix the "NaN"s
-df$PA_sePbc_T1[is.nan(df$PA_sePbc_T1)] <- NA
-df$PA_sePbc_T3[is.nan(df$PA_sePbc_T3)] <- NA
+df$PA_selfEfficacyPBC_T1[is.nan(df$PA_selfEfficacyPBC_T1)] <- NA
+df$PA_selfEfficacyPBC_T3[is.nan(df$PA_selfEfficacyPBC_T3)] <- NA
 
 # Create composite of action planning and coping planning
 df <- df %>% rowwise %>%
@@ -672,11 +725,14 @@ df <- cbind(df, motidf1, motidf2)
 
 # Create change scores
 t1_vars <- grep("_T1", colnames(df), value = TRUE)
-t1_vars <- grep("big5|fat|paLastweek|PA_opportunitiesReverseCoded_08|sitBreaks_T1", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
+t1_vars <- grep("big5|fat|paLastweek|PA_opportunitiesReverseCoded_08", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
 t3_vars <- grep("_T3", colnames(df), value = TRUE)
 df[, paste0(stringr::str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars]
 
 # Create a combination of track and school variables
 df <- df %>% dplyr::mutate(trackSchool = paste0(track, school)) 
 
+# Remove the change scores from the baseline data frame
+df <- df %>% dplyr::select(-contains("_diff"))
 
+save(df, file = "./data/df.Rdata")

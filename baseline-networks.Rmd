@@ -40,7 +40,7 @@ bivariate_BCTs <- df %>% dplyr::select(
   'changes at home' = PA_frqbct_07_T1,
   'social support' = PA_frqbct_08_T1,
   'failure contemplated' = PA_frqbct_09_T1,
-  'PA accelerometer' = paAccelerometer_T1,
+  'PA accelerometer' = mvpaAccelerometer_T1,
   'PA self-report' = padaysLastweek_T1,
   'autonomous' = PA_autonomous_T1,
   'controlled' = PA_controlled_T1) %>%
@@ -97,7 +97,7 @@ Highest bivariate (Spearman) correlations with self-reported PA:
 bctdf_chunks <- df %>% dplyr::select(
   'agr-BCTs' = PA_agrbct_T1,
   'frq-BCTs' = PA_frqbct_T1,
-  'Accelerometer' = paAccelerometer_T1,
+  'Accelerometer' = mvpaAccelerometer_T1,
   'Self-report' = padaysLastweek_T1,
   'intrinsic' = PA_intrinsic_T1,
   'identified' = PA_identified_T1,
@@ -227,7 +227,7 @@ bctdf_pa_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
   'PA selfrep' = padaysLastweek_T1,
-  'PA accelerometer' = paAccelerometer_T1,
+  'PA accelerometer' = mvpaAccelerometer_T1,
   'goal setting' = PA_agrbct_01_T1,
   'implementation plan' = PA_agrbct_02_T1,
   'plan by other' = PA_agrbct_03_T1,
@@ -438,7 +438,7 @@ bootnet::corStability(bootnet_centrality_stability_individualAgreementBcts)
 
 bctdf_pa_combinedAgreementBcts <- df %>% dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
-  'PA accelerometer' = paAccelerometer_T1,
+  'PA accelerometer' = mvpaAccelerometer_T1,
   'goal setting' = PA_agrbct_01_T1,
   'implementation plan' = PA_agrbct_02_T1,
   'plan by other' = PA_agrbct_03_T1,
@@ -535,7 +535,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 combinedAgreementBcts_ggm_df <- df %>% dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
-  'PA accelerometer' = paAccelerometer_T1,
+  'PA accelerometer' = mvpaAccelerometer_T1,
   'goal setting' = PA_agrbct_01_T1,
   'implementation plan' = PA_agrbct_02_T1,
   'plan by other' = PA_agrbct_03_T1,
@@ -676,7 +676,7 @@ All tracks seem sufficiently similar on these BCTs.
 combinedAgreementBcts_tracks_df <- df %>% 
   dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
-  # 'PA accelerometer' = paAccelerometer_T1,
+  # 'PA accelerometer' = mvpaAccelerometer_T1,
   'Autonomous' = PA_autonomous_T1,
   'goal setting' = PA_agrbct_01_T1,
   'implementation plan' = PA_agrbct_02_T1,
@@ -1632,7 +1632,7 @@ bctdf_PA <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'MVPA' = paAccelerometer_T1,
+  'MVPA' = mvpaAccelerometer_T1,
   'Autonomous' = PA_autonomous_T1,
   'Controlled' = PA_controlled_T1,
   'goal setting' = PA_agrbct_01_T1,
@@ -2074,11 +2074,11 @@ summary(m) %>% broom::tidy() %>% dplyr::arrange(desc(estimate)) %>% papaja::apa_
 
 ```{r pa-determinants-correlations-raw}
 # Network without motivation variables
-data <- df %>% dplyr::select('PA' = paAccelerometer_T1, 'SB' = sitLieAccelerometer_T1,
+data <- df %>% dplyr::select('PA' = mvpaAccelerometer_T1, 'SB' = sitLieAccelerometer_T1,
 'fat%' = fatpct_T1,'action planning' = PA_actionplan_T1, 'coping planning' = PA_copingplan_T1, 'frequency-related BCTs' = PA_frqbct_T1, 'agreement-related BCTs' = PA_agrbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'self-efficacy / PBC' = PA_sePbc_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
   mutate_all(as.numeric)
 
-names <- df %>% dplyr::select('PA' = paAccelerometer_T1, 'SB' = sitLieAccelerometer_T1,
+names <- df %>% dplyr::select('PA' = mvpaAccelerometer_T1, 'SB' = sitLieAccelerometer_T1,
 'fat%' = fatpct_T1,'action planning' = PA_actionplan_T1, 'coping planning' = PA_copingplan_T1, 'frequency-related BCTs' = PA_frqbct_T1, 'agreement-related BCTs' = PA_agrbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'self-efficacy / PBC' = PA_sePbc_T1, 'perceived opportunities' = PA_opportunities_T1) %>% names
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
@@ -2145,7 +2145,7 @@ sympdf <- df %>% dplyr::select(id,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1,
   "Fat pct" = fatpct_T1,
-  "PA" = paAccelerometer_T1,
+  "PA" = mvpaAccelerometer_T1,
   "SB" = sitLieAccelerometer_T1
 ) %>% 
   mutate(
@@ -2198,7 +2198,7 @@ sympdf <- df %>% dplyr::select(id,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1,
   "Fat pct" = fatpct_T1,
-  "PA" = paAccelerometer_T1,
+  "PA" = mvpaAccelerometer_T1,
   "SB" = sitLieAccelerometer_T1
 ) %>% 
   mutate(
@@ -2270,7 +2270,7 @@ sympdf <- df %>% dplyr::select(id,
   "Headache" = symptom_headAche_T1,
   "Tiredness or faintness" = symptom_tirednessFaintness_T1,
   "Fat pct" = fatpct_T1,
-  "PA" = paAccelerometer_T1,
+  "PA" = mvpaAccelerometer_T1,
   "SB" = sitLieAccelerometer_T1
 ) %>% 
   mutate(
@@ -2456,7 +2456,7 @@ legend("topright", levels(dens$girl), fill=c(1, 2))
 
 data <- df %>% 
   dplyr::select(
-    "PA" = paAccelerometer_T1, 
+    "PA" = mvpaAccelerometer_T1, 
     "planning" = PA_actCop_T1, 
     "BCT" = PA_frqbct_T1, 
     "amotivation" = PA_amotivation_T1, 
@@ -2559,7 +2559,7 @@ names(data)
 
 data <- df %>% 
   dplyr::select(
-    "PA" = paAccelerometer_T1, 
+    "PA" = mvpaAccelerometer_T1, 
     "planning" = PA_actCop_T1, 
     "BCT" = PA_frqbct_T1, 
     "amotivation" = PA_amotivation_T1, 
@@ -2638,7 +2638,7 @@ bootnet::corStability(bootnet_centrality_stability_determinants)
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
-data <- df %>% dplyr::select(PA = paAccelerometer_T1, actCop = PA_actcop_T1, BCT = PA_frqbct_T1, amot = PA_amotivation_T1, auton = PA_autonomous_T1, cont = PA_controlled_T1, dnorm = PA_dnorm_T1, fatpct = fatpct_T1, inorm = PA_inorm_T1, intent = PA_intention_T1, outcomeExpectations = PA_outcomeExpectations_T1, opp = PA_opportunities_T1, sePbc = PA_sePbc_T1) %>% data.frame() %>% 
+data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, actCop = PA_actcop_T1, BCT = PA_frqbct_T1, amot = PA_amotivation_T1, auton = PA_autonomous_T1, cont = PA_controlled_T1, dnorm = PA_dnorm_T1, fatpct = fatpct_T1, inorm = PA_inorm_T1, intent = PA_intention_T1, outcomeExpectations = PA_outcomeExpectations_T1, opp = PA_opportunities_T1, sePbc = PA_sePbc_T1) %>% data.frame() %>% 
   dplyr::select(-auton, -cont, -amot)
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
@@ -2672,7 +2672,7 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
-data <- df %>% dplyr::select(PA = paAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frqbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / PBC' = PA_sePbc_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
+data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frqbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / PBC' = PA_sePbc_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
             dplyr::select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`) %>% 
   data.frame
 
@@ -2729,7 +2729,7 @@ plot(nwBoys, label.scale = FALSE, title = "Boys", label.cex = 0.75,
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
-data <- df %>% dplyr::select(PA = paAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frqbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / PBC' = PA_sePbc_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
+data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frqbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / PBC' = PA_sePbc_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
             dplyr::select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`, -PA, -`intention`, -`fat pct`) %>% 
   data.frame
 
