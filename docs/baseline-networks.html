@@ -366,8 +366,7 @@ div.tocify {
 </div>
 
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-<span class="kw">source</span>(<span class="st">&quot;baseline-datasetup.R&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;baseline-datasetup.R&quot;</span>)</code></pre></div>
 <p>Clicking the “Code”-buttons on the right shows code for each chunk.</p>
 <div id="chunked-bcts-pa-motivation" class="section level1">
 <h1>Chunked BCTs, PA, motivation</h1>
@@ -1059,7 +1058,7 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
   <span class="dt">main =</span> <span class="st">&quot;Bivariate (upper diagonal) and partial (lower diagonal)</span><span class="ch">\n</span><span class="st">correlations of key PA variables&quot;</span>)
 ## Warning in corrgram::corrgram(., type = &quot;cor&quot;, lower.panel =
 ## corrgram::panel.pie, : This is NOT a correlation matrix.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bivariate-correlations-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bivariate-correlations-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corMatrix_BCTs &lt;-<span class="st"> </span>bivariate_BCTs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">cor</span>(<span class="dt">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
 
@@ -1070,8 +1069,8 @@ corMatrix_BCTs &lt;-<span class="st"> </span>bivariate_BCTs <span class="op">%&g
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">Spearman correlation</span><span class="st">`</span> <span class="op">!=</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="st">`</span><span class="dt">Spearman correlation</span><span class="st">`</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Bivariate correlations between BCTs, motivation and PA. Sorted by strength.&quot;</span>)</code></pre></div>
-<div id="htmlwidget-8efff98da81a81e3820b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8efff98da81a81e3820b">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between BCTs, motivation and PA. Sorted by strength.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22"],["PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer"],["PA self-report","autonomous","goal setting","new PA options","PA life values","social support","implementation plan","relevance of PA","positive consequences","subgoals","goal contrast","plan by other","PA identity","failure contemplated","changes at home","log on paper","mnemonic cues","coping planning","reminder of plan","barrier identification","smartphone","controlled"],[0.295723480557139,0.28027789390836,0.23898525959328,0.207859523199628,0.181653861974333,0.169920093025593,0.16772548644755,0.159362021821931,0.157059106047451,0.149813700727033,0.13854859684845,0.137245110881921,0.128349530081264,0.124941944755079,0.112323860323636,0.108140398146786,0.0994514039361261,0.0914267834606727,0.0902280183986581,0.0798142679821312,0.0546198156050761,-0.0324326336632868]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Var1<\/th>\n      <th>Var2<\/th>\n      <th>Spearman correlation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-0644628bff5efb1b67d6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0644628bff5efb1b67d6">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between BCTs, motivation and PA. Sorted by strength.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22"],["PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer"],["PA self-report","autonomous","goal setting","new PA options","PA life values","social support","implementation plan","relevance of PA","positive consequences","subgoals","goal contrast","plan by other","PA identity","failure contemplated","changes at home","log on paper","mnemonic cues","coping planning","reminder of plan","barrier identification","smartphone","controlled"],[0.295723480557139,0.28027789390836,0.23898525959328,0.207859523199628,0.181653861974333,0.169920093025593,0.16772548644755,0.159362021821931,0.157059106047451,0.149813700727033,0.13854859684845,0.137245110881921,0.128349530081264,0.124941944755079,0.112323860323636,0.108140398146786,0.0994514039361261,0.0914267834606727,0.0902280183986581,0.0798142679821312,0.0546198156050761,-0.0324326336632868]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Var1<\/th>\n      <th>Var2<\/th>\n      <th>Spearman correlation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>Highest bivariate (Spearman) correlations with self-reported PA:</p>
 <ol style="list-style-type: decimal">
 <li>I have tried out new ways for me to be physically active.</li>
@@ -1115,7 +1114,7 @@ bctdf_chunks <span class="op">%&gt;%</span><span class="st"> </span>
            <span class="dt">bottom=</span><span class="kw">list</span>(<span class="dt">labels=</span>labs,<span class="dt">cex=</span>.<span class="dv">75</span>, <span class="dt">srt=</span><span class="dv">60</span>),
            <span class="dt">left=</span><span class="kw">list</span>(<span class="dt">labels=</span>labs,<span class="dt">cex=</span>.<span class="dv">75</span>, <span class="dt">srt=</span><span class="dv">30</span>))
          )</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-dataprep-corr-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-dataprep-corr-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Create a covariance matrix of the data</span>
 covMatrix &lt;-<span class="st"> </span>bctdf_chunks <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">cov</span>(<span class="dt">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>)
@@ -1247,7 +1246,7 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
   <span class="dt">main =</span> <span class="st">&quot;Bivariate (upper diagonal) and partial (lower diagonal)</span><span class="ch">\n</span><span class="st">correlations of key PA variables&quot;</span>)
 ## Warning in corrgram::corrgram(., type = &quot;cor&quot;, lower.panel =
 ## corrgram::panel.pie, : This is NOT a correlation matrix.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-dataprep-corr-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-dataprep-corr-2.png" width="2100" /></p>
 </div>
 <div id="estimate-and-plot-networks" class="section level2">
 <h2>Estimate and plot networks</h2>
@@ -1267,17 +1266,17 @@ nwBCT_chunks &lt;-<span class="st"> </span>bootnet<span class="op">::</span><spa
 ## TRUE will enforce high specificity, at the cost of sensitivity.
 
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_chunks, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-networks-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-networks-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_chunks), <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_chunks),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-networks-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-networks-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_chunks), <span class="dt">graph =</span> <span class="st">&quot;pcor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_chunks),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-networks-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-networks-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Average the layout and plot all according to that</span>
 avlayout &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">averageLayout</span>(bootnetgraph, corgraph, pcorgraph)
@@ -1291,7 +1290,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
        <span class="dt">maximum =</span> <span class="kw">max</span>(<span class="kw">c</span>(bootnetgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum,
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)))</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-networks-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-networks-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># To help with visual comparison, that last argument takes the maximum edge of the three </span>
 <span class="co"># graphs and places that as the benchmark for the thickest line in all plots.</span>
@@ -1305,7 +1304,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
        <span class="dt">maximum =</span> <span class="kw">max</span>(<span class="kw">c</span>(bootnetgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum,
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)))</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-networks-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-networks-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_chunks, 
                      <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
@@ -1314,7 +1313,7 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_ch
        <span class="dt">maximum =</span> <span class="kw">max</span>(<span class="kw">c</span>(bootnetgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum,
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)))</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-networks-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-networks-6.png" width="2100" /></p>
 <div id="stability" class="section level3">
 <h3>Stability</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bootnet_stability_output &lt;- bootnet::bootnet(nwBCT_chunks, nBoots=1000)</span>
@@ -1322,19 +1321,19 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_ch
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_stability_output.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_stability_output, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-stability-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_output, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
 ## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-stability-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_output &lt;- bootnet::bootnet(nwBCT_chunks, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
 <span class="co"># save(bootnet_centrality_stability_output, file = &quot;./Rdata_files/bootnet_centrality_stability_output.Rdata&quot;)</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_centrality_stability_output.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_centrality_stability_output)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-stability-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_centrality_stability_output, <span class="dt">perNode=</span>T, <span class="st">&quot;strength&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/chunked-stability-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/chunked-stability-4.png" width="2100" /></p>
 </div>
 </div>
 </div>
@@ -1609,7 +1608,7 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
   <span class="dt">main =</span> <span class="st">&quot;Bivariate (upper diagonal) and partial (lower diagonal)</span><span class="ch">\n</span><span class="st">correlations of agreement-BCTs and PA&quot;</span>)
 ## Warning in corrgram::corrgram(., type = &quot;cor&quot;, lower.panel =
 ## corrgram::panel.pie, : This is NOT a correlation matrix.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-dataprep-corr-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-dataprep-corr-1.png" width="2100" /></p>
 <div id="mgm-estimation" class="section level2">
 <h2>mgm estimation</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># devtools::install_github(&quot;jmbh/mgm&quot;)</span>
@@ -1643,7 +1642,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"NA","3":"NA","4":"0.279","5":"0.088","6":"0.209","_rn_":"1"},{"1":"PA accelerometer","2":"0.939","3":"0.116","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.909","5":"0.610","6":"0.767","_rn_":"3"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.889","5":"0.637","6":"0.694","_rn_":"4"},{"1":"plan by other","2":"NA","3":"NA","4":"0.784","5":"0.519","6":"0.551","_rn_":"5"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.840","5":"0.654","6":"0.538","_rn_":"6"},{"1":"subgoals","2":"NA","3":"NA","4":"0.860","5":"0.644","6":"0.607","_rn_":"7"},{"1":"new PA options","2":"NA","3":"NA","4":"0.829","5":"0.378","6":"0.725","_rn_":"8"},{"1":"barrier identification","2":"NA","3":"NA","4":"0.901","5":"0.629","6":"0.733","_rn_":"9"},{"1":"coping planning","2":"NA","3":"NA","4":"0.913","5":"0.672","6":"0.735","_rn_":"10"},{"1":"PA identity","2":"NA","3":"NA","4":"0.911","5":"0.492","6":"0.825","_rn_":"11"},{"1":"PA life values","2":"NA","3":"NA","4":"0.911","5":"0.534","6":"0.809","_rn_":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"NA","3":"NA","4":"0.274","5":"0.083","6":"0.208","_rn_":"1"},{"1":"PA accelerometer","2":"0.941","3":"0.113","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.909","5":"0.610","6":"0.767","_rn_":"3"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.890","5":"0.642","6":"0.693","_rn_":"4"},{"1":"plan by other","2":"NA","3":"NA","4":"0.784","5":"0.519","6":"0.551","_rn_":"5"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.840","5":"0.654","6":"0.538","_rn_":"6"},{"1":"subgoals","2":"NA","3":"NA","4":"0.860","5":"0.644","6":"0.607","_rn_":"7"},{"1":"new PA options","2":"NA","3":"NA","4":"0.829","5":"0.378","6":"0.725","_rn_":"8"},{"1":"barrier identification","2":"NA","3":"NA","4":"0.899","5":"0.618","6":"0.736","_rn_":"9"},{"1":"coping planning","2":"NA","3":"NA","4":"0.913","5":"0.672","6":"0.735","_rn_":"10"},{"1":"PA identity","2":"NA","3":"NA","4":"0.913","5":"0.500","6":"0.826","_rn_":"11"},{"1":"PA life values","2":"NA","3":"NA","4":"0.913","5":"0.541","6":"0.810","_rn_":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -1671,12 +1670,12 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
             <span class="dt">label.color =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="dv">12</span>)),
             <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-mgm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-mgm-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">flow</span>(BCT_mgm, <span class="st">&quot;PA accelerometer&quot;</span>, <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>, <span class="dt">vsize =</span> <span class="dv">8</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-mgm-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-mgm-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qgraph<span class="op">::</span><span class="kw">flow</span>(BCT_mgm, <span class="st">&quot;PA selfrep&quot;</span>, <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>, <span class="dt">vsize =</span> <span class="dv">8</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-mgm-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-mgm-3.png" width="2100" /></p>
 </div>
 <div id="ggm-estimation" class="section level2">
 <h2>ggm estimation</h2>
@@ -1701,21 +1700,21 @@ individualAgreementBCTs &lt;-<span class="st"> </span>bootnet<span class="op">::
 
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(individualAgreementBCTs, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
        <span class="dt">title =</span> <span class="st">&quot;partial correlation network, with LASSO regularisation and EBIC model selection&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_pa_mgm), <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_pa_mgm),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
        <span class="dt">title =</span> <span class="st">&quot;bivariate correlation network&quot;</span>)
 ## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_pa_mgm), <span class="dt">graph =</span> <span class="st">&quot;pcor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_pa_mgm),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
        <span class="dt">title =</span> <span class="st">&quot;partial correlation network&quot;</span>)
 ## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Average the layout and plot all according to that</span>
 avlayout &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">averageLayout</span>(bootnetgraph, corgraph, pcorgraph)
@@ -1731,7 +1730,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
 ## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># To help with visual comparison, that last argument takes the maximum edge of the three </span>
 <span class="co"># graphs and places that as the benchmark for the thickest line in all plots.</span>
@@ -1747,7 +1746,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
 ## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(individualAgreementBCTs, 
                      <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
@@ -1757,19 +1756,19 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(individu
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-6.png" width="2100" /></p>
 <div id="centrality-and-stability" class="section level3">
 <h3>Centrality and stability</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 combinedAgreementBcts_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph, 
                <span class="dt">include =</span> <span class="kw">c</span>(<span class="st">&quot;Strength&quot;</span>, <span class="st">&quot;ExpectedInfluence&quot;</span>),
                <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree
 ##             PA selfrep       PA accelerometer           goal setting 
@@ -1826,19 +1825,19 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_stability_individualAgreementBcts.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_stability_individualAgreementBcts, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_individualAgreementBcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
 ## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_individualAgreementBcts &lt;- bootnet::bootnet(individualAgreementBCTs, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
 <span class="co"># save(bootnet_centrality_stability_individualAgreementBcts, file = &quot;./Rdata_files/bootnet_centrality_stability_individualAgreementBcts.Rdata&quot;)</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_centrality_stability_individualAgreementBcts.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_centrality_stability_individualAgreementBcts)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_centrality_stability_individualAgreementBcts, <span class="dt">perNode=</span>T, <span class="st">&quot;strength&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-6.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_centrality_stability_individualAgreementBcts)
 ## === Correlation Stability Analysis === 
@@ -1948,7 +1947,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"0.897","3":"0.194","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"PA accelerometer","2":"0.946","3":"0.103","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.894","5":"0.549","6":"0.765","_rn_":"3"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.829","5":"0.630","6":"0.538","_rn_":"4"},{"1":"subgoals","2":"NA","3":"NA","4":"0.860","5":"0.644","6":"0.607","_rn_":"5"},{"1":"new PA options","2":"NA","3":"NA","4":"0.827","5":"0.373","6":"0.724","_rn_":"6"},{"1":"has plan","2":"NA","3":"NA","4":"0.889","5":"0.600","6":"0.722","_rn_":"7"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.880","5":"0.432","6":"0.789","_rn_":"8"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.920","5":"0.404","6":"0.866","_rn_":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"0.893","3":"0.201","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"PA accelerometer","2":"0.941","3":"0.112","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.894","5":"0.549","6":"0.765","_rn_":"3"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.829","5":"0.630","6":"0.538","_rn_":"4"},{"1":"subgoals","2":"NA","3":"NA","4":"0.859","5":"0.640","6":"0.608","_rn_":"5"},{"1":"new PA options","2":"NA","3":"NA","4":"0.827","5":"0.373","6":"0.724","_rn_":"6"},{"1":"has plan","2":"NA","3":"NA","4":"0.890","5":"0.605","6":"0.722","_rn_":"7"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.880","5":"0.432","6":"0.789","_rn_":"8"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.920","5":"0.404","6":"0.866","_rn_":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -1976,7 +1975,7 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
             <span class="dt">label.color =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="dv">9</span>)),
             <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-mgm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-mgm-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 
 <span class="co"># qgraph::flow(BCT_mgm, &quot;PA accelerometer&quot;, theme = &quot;colorblind&quot;, vsize = 8)</span>
@@ -2035,21 +2034,21 @@ combinedAgreementBcts_network &lt;-<span class="st"> </span>bootnet<span class="
 
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(combinedAgreementBcts_network, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>,
                      <span class="dt">title =</span> <span class="st">&quot;partial correlation network, with LASSO regularisation and EBIC model selection&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(combinedAgreementBcts_ggm_df), <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(combinedAgreementBcts_ggm_df),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
        <span class="dt">title =</span> <span class="st">&quot;bivariate correlation network&quot;</span>)
 ## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(combinedAgreementBcts_ggm_df), <span class="dt">graph =</span> <span class="st">&quot;pcor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(combinedAgreementBcts_ggm_df),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>,
        <span class="dt">title =</span> <span class="st">&quot;partial correlation network&quot;</span>)
 ## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Average the layout and plot all according to that</span>
 avlayout &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">averageLayout</span>(bootnetgraph, corgraph, pcorgraph)
@@ -2065,7 +2064,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
 ## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># To help with visual comparison, that last argument takes the maximum edge of the three </span>
 <span class="co"># graphs and places that as the benchmark for the thickest line in all plots.</span>
@@ -2081,7 +2080,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
 ## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(combinedAgreementBcts_network, 
                      <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
@@ -2091,23 +2090,23 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(combined
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-6.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">flow</span>(bootnetgraph, <span class="st">&quot;PA selfrep&quot;</span>, <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>, <span class="dt">vsize =</span> <span class="dv">8</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-7.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-7.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qgraph<span class="op">::</span><span class="kw">flow</span>(bootnetgraph, <span class="st">&quot;PA accelerometer&quot;</span>, <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>, <span class="dt">vsize =</span> <span class="dv">8</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-8.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-8.png" width="2100" /></p>
 <div id="centrality-and-stability-1" class="section level3">
 <h3>Centrality and stability</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">combinedAgreementBcts_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph, 
                <span class="dt">include =</span> <span class="kw">c</span>(<span class="st">&quot;Strength&quot;</span>, <span class="st">&quot;ExpectedInfluence&quot;</span>),
                <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree
 ##                         PA selfrep                   PA accelerometer 
@@ -2167,19 +2166,19 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_stability_combinedAgreementBcts.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_stability_combinedAgreementBcts, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_combinedAgreementBcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
 ## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_combinedAgreementBcts &lt;- bootnet::bootnet(combinedAgreementBcts_network, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
 <span class="co"># save(bootnet_centrality_stability_combinedAgreementBcts, file = &quot;./Rdata_files/bootnet_centrality_stability_combinedAgreementBcts.Rdata&quot;)</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_centrality_stability_combinedAgreementBcts.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_centrality_stability_combinedAgreementBcts)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_centrality_stability_combinedAgreementBcts, <span class="dt">perNode=</span>T, <span class="st">&quot;strength&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-6.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_centrality_stability_combinedAgreementBcts)
 ## === Correlation Stability Analysis === 
@@ -2318,13 +2317,13 @@ network_IT &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span 
 ## TRUE will enforce high specificity, at the cost of sensitivity.
 
 graph_Nur &lt;-<span class="st"> </span><span class="kw">plot</span>(network_Nur, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;Practical nurse&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_HRC &lt;-<span class="st"> </span><span class="kw">plot</span>(network_HRC, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;HRC&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_BA &lt;-<span class="st"> </span><span class="kw">plot</span>(network_BA, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;BA&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_IT &lt;-<span class="st"> </span><span class="kw">plot</span>(network_IT, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;IT&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 maxedge &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">c</span>(graph_Nur<span class="op">$</span>graphAttributes<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                  graph_HRC<span class="op">$</span>graphAttributes<span class="op">$</span>Graph<span class="op">$</span>maximum, 
@@ -2342,7 +2341,7 @@ graph_BA &lt;-<span class="st"> </span><span class="kw">plot</span>(network_BA, 
                  <span class="dt">maximum =</span> maxedge)
 graph_IT &lt;-<span class="st"> </span><span class="kw">plot</span>(network_IT, <span class="dt">layout=</span>L, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;IT&quot;</span>,
                  <span class="dt">maximum =</span> maxedge)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># nct_results &lt;- NetworkComparisonTest::NCT(heterogeneity_Nur, heterogeneity_IT, it=1000, binary.data=FALSE, paired=FALSE, test.edges=TRUE,</span>
 <span class="co"># edges=&#39;all&#39;, progressbar=TRUE)</span>
@@ -2353,20 +2352,7 @@ graph_IT &lt;-<span class="st"> </span><span class="kw">plot</span>(network_IT, 
 ## [1] &quot;These are the sizes of educational tracks:&quot;
 top5Bcts_tracks_df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(track) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">apa_table</span>()
-## &lt;caption&gt;(\#tab:combinedAgreementBcts-heterogeneity-nct)&lt;/caption&gt;
-## 
-## &lt;caption&gt;**&lt;/caption&gt;
-## 
-## 
-## 
-## track   n   
-## ------  ----
-## Other   24  
-## IT      163 
-## BA      282 
-## HRC     213 
-## Nur     402 
-## NA      81
+## Error in eval(lhs, parent, parent): object &#39;top5Bcts_tracks_df&#39; not found
 
 <span class="kw">print</span>(<span class="st">&quot;Similarity&quot;</span>)
 ## [1] &quot;Similarity&quot;
@@ -2379,40 +2365,12 @@ top5Bcts_tracks_df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<
 <span class="kw">print</span>(<span class="st">&quot;Difference&quot;</span>)
 ## [1] &quot;Difference&quot;
 <span class="kw">cat</span>(<span class="st">&quot;P-value for the test of identical network structure:&quot;</span>, nct_results_top5Bcts<span class="op">$</span>nwinv.pval)
-## P-value for the test of identical network structure: 0.791
+## Error in cat(&quot;P-value for the test of identical network structure:&quot;, nct_results_top5Bcts$nwinv.pval): object &#39;nct_results_top5Bcts&#39; not found
 <span class="kw">cat</span>(<span class="st">&quot;P-value for the test of identical connectivity in networks:&quot;</span>, nct_results_top5Bcts<span class="op">$</span>glstrinv.pval)
-## P-value for the test of identical connectivity in networks: 0.417
+## Error in cat(&quot;P-value for the test of identical connectivity in networks:&quot;, : object &#39;nct_results_top5Bcts&#39; not found
 nct_results_top5Bcts<span class="op">$</span>einv.pvals <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">apa_table</span>(<span class="dt">caption =</span> <span class="st">&quot;p-values on difference test in edges between Nur and IT&quot;</span>)
-## &lt;caption&gt;(\#tab:combinedAgreementBcts-heterogeneity-nct)&lt;/caption&gt;
-## 
-## &lt;caption&gt;*p-values on difference test in edges between Nur and IT*&lt;/caption&gt;
-## 
-## 
-## 
-##      Var1                  Var2                  p-value 
-## ---  --------------------  --------------------  --------
-## 8    PA                    Autonomous            1.00    
-## 15   PA                    new PA options        1.00    
-## 16   Autonomous            new PA options        1.00    
-## 22   PA                    implementation plan   1.00    
-## 23   Autonomous            implementation plan   1.00    
-## 24   new PA options        implementation plan   1.00    
-## 29   PA                    plan by other         1.00    
-## 30   Autonomous            plan by other         1.00    
-## 31   new PA options        plan by other         1.00    
-## 32   implementation plan   plan by other         1.00    
-## 36   PA                    goal setting          1.00    
-## 37   Autonomous            goal setting          1.00    
-## 38   new PA options        goal setting          1.00    
-## 39   implementation plan   goal setting          1.00    
-## 40   plan by other         goal setting          1.00    
-## 43   PA                    subgoals              1.00    
-## 44   Autonomous            subgoals              1.00    
-## 45   new PA options        subgoals              1.00    
-## 46   implementation plan   subgoals              1.00    
-## 47   plan by other         subgoals              1.00    
-## 48   goal setting          subgoals              1.00
+## Error in eval(lhs, parent, parent): object &#39;nct_results_top5Bcts&#39; not found
 
 <span class="kw">cat</span>(<span class="st">&quot;Number of edges, which appear different (p&lt;0.05):&quot;</span>, <span class="kw">sum</span>(nct_results<span class="op">$</span>einv.pvals<span class="op">$</span><span class="st">&quot;p-value&quot;</span> <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>))
 ## Number of edges, which appear different (p&lt;0.05): 0</code></pre></div>
@@ -2541,7 +2499,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA","2":"0.867","3":"0.247","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"goal setting","2":"NA","3":"NA","4":"0.904","5":"0.573","6":"0.775","_rn_":"2"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.892","5":"0.634","6":"0.705","_rn_":"3"},{"1":"plan by other","2":"NA","3":"NA","4":"0.792","5":"0.554","6":"0.534","_rn_":"4"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.838","5":"0.651","6":"0.536","_rn_":"5"},{"1":"subgoals","2":"NA","3":"NA","4":"0.855","5":"0.632","6":"0.606","_rn_":"6"},{"1":"new PA options","2":"NA","3":"NA","4":"0.843","5":"0.428","6":"0.726","_rn_":"7"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.903","5":"0.280","6":"0.865","_rn_":"8"},{"1":"goal contrast","2":"NA","3":"NA","4":"0.820","5":"0.609","6":"0.540","_rn_":"9"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.882","5":"0.457","6":"0.783","_rn_":"10"},{"1":"changes at home","2":"NA","3":"NA","4":"0.756","5":"0.454","6":"0.553","_rn_":"11"},{"1":"social support","2":"NA","3":"NA","4":"0.750","5":"0.478","6":"0.521","_rn_":"12"},{"1":"controlled","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"13"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.887","5":"0.487","6":"0.780","_rn_":"14"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.925","5":"0.481","6":"0.855","_rn_":"15"},{"1":"monitored PA","2":"NA","3":"NA","4":"0.759","5":"0.478","6":"0.538","_rn_":"16"},{"1":"autonomous","2":"0.808","3":"0.347","4":"NA","5":"NA","6":"NA","_rn_":"17"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA","2":"0.866","3":"0.249","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"goal setting","2":"NA","3":"NA","4":"0.904","5":"0.573","6":"0.775","_rn_":"2"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.894","5":"0.640","6":"0.706","_rn_":"3"},{"1":"plan by other","2":"NA","3":"NA","4":"0.792","5":"0.554","6":"0.534","_rn_":"4"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.838","5":"0.651","6":"0.536","_rn_":"5"},{"1":"subgoals","2":"NA","3":"NA","4":"0.855","5":"0.632","6":"0.606","_rn_":"6"},{"1":"new PA options","2":"NA","3":"NA","4":"0.843","5":"0.428","6":"0.726","_rn_":"7"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.902","5":"0.273","6":"0.865","_rn_":"8"},{"1":"goal contrast","2":"NA","3":"NA","4":"0.820","5":"0.611","6":"0.537","_rn_":"9"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.882","5":"0.457","6":"0.783","_rn_":"10"},{"1":"changes at home","2":"NA","3":"NA","4":"0.756","5":"0.454","6":"0.553","_rn_":"11"},{"1":"social support","2":"NA","3":"NA","4":"0.751","5":"0.480","6":"0.521","_rn_":"12"},{"1":"controlled","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"13"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.887","5":"0.487","6":"0.780","_rn_":"14"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.925","5":"0.481","6":"0.855","_rn_":"15"},{"1":"monitored PA","2":"NA","3":"NA","4":"0.758","5":"0.473","6":"0.541","_rn_":"16"},{"1":"autonomous","2":"0.808","3":"0.347","4":"NA","5":"NA","6":"NA","_rn_":"17"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -2572,10 +2530,10 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
             <span class="dt">label.color =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;white&quot;</span>, <span class="dv">1</span>), <span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="dv">16</span>)),
             <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-mgm-plot-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-mgm-plot-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">flow</span>(BCT_mgm, <span class="st">&quot;MVPA&quot;</span>, <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>, <span class="dt">vsize =</span> <span class="dv">8</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-mgm-plot-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-mgm-plot-2.png" width="2100" /></p>
 </div>
 <div id="ggm-estimation-plotting" class="section level3">
 <h3>ggm estimation &amp; plotting</h3>
@@ -2668,11 +2626,11 @@ BCT_ggm &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_ggm,
                 <span class="dt">pie =</span> piefill_ggm,
                 <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
                 <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 
 qgraph<span class="op">::</span><span class="kw">flow</span>(BCT_ggm, <span class="st">&quot;MVPA&quot;</span>, <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>, <span class="dt">vsize =</span> <span class="dv">8</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-2.png" width="2100" /></p>
 </div>
 <div id="centrality-and-stability-2" class="section level3">
 <h3>Centrality and stability</h3>
@@ -2681,7 +2639,7 @@ allBctsMotiSurveyPA &lt;-<span class="st"> </span>nwBCT_ggm
 
 allBctsMotiSurveyPA_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(allBctsMotiSurveyPA)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(allBctsMotiSurveyPA)<span class="op">$</span>InDegree <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">data.frame</span>(<span class="st">&quot;Node&quot;</span> =<span class="st"> </span><span class="kw">names</span>(.), <span class="st">&quot;Strength&quot;</span> =<span class="st"> </span>.) <span class="op">%&gt;%</span>
@@ -2806,19 +2764,19 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(allBctsMotiSu
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_stability_allBctsMotiSurveyPA.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_stability_allBctsMotiSurveyPA, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_allBctsMotiSurveyPA, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
 ## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_allBctsMotiSurveyPA &lt;- bootnet::bootnet(allBctsMotiSurveyPA, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
 <span class="co"># save(bootnet_centrality_stability_allBctsMotiSurveyPA, file = &quot;./Rdata_files/bootnet_centrality_stability_allBctsMotiSurveyPA.Rdata&quot;)</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_centrality_stability_allBctsMotiSurveyPA.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_centrality_stability_allBctsMotiSurveyPA)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_centrality_stability_allBctsMotiSurveyPA, <span class="dt">perNode=</span>T, <span class="st">&quot;strength&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_centrality_stability_allBctsMotiSurveyPA)
 ## === Correlation Stability Analysis === 
@@ -2874,7 +2832,7 @@ qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj<span clas
             <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
             <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/pa-bct-motivation-compare-ggm-mgm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/pa-bct-motivation-compare-ggm-mgm-1.png" width="2100" /></p>
 </div>
 <div id="correlation-and-partial-correlation-networks-visualised" class="section level2">
 <h2>Correlation and partial correlation networks visualised</h2>
@@ -2894,7 +2852,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
        <span class="dt">pieBorder =</span> <span class="dv">1</span>,
        <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>)
 ## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; positive consequences; goal contrast; relevance of PA; changes at home; social support</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/pa-bct-moti-compare-correlation-partialcorrelation-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/pa-bct-moti-compare-correlation-partialcorrelation-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 
 pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_ggm), <span class="dt">graph =</span> <span class="st">&quot;pcor&quot;</span>,
@@ -2911,7 +2869,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
        <span class="dt">pieBorder =</span> <span class="dv">1</span>,
        <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>)
 ## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; positive consequences; goal contrast; relevance of PA; changes at home; social support</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/pa-bct-moti-compare-correlation-partialcorrelation-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/pa-bct-moti-compare-correlation-partialcorrelation-2.png" width="2100" /></p>
 </div>
 <div id="correlation-matrix-visualised" class="section level2">
 <h2>Correlation matrix visualised</h2>
@@ -3308,7 +3266,7 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
   <span class="dt">main =</span> <span class="st">&quot;Bivariate (upper diagonal) and partial (lower diagonal)</span><span class="ch">\n</span><span class="st">correlations of BCTs, motivation and self-reported PA&quot;</span>)
 ## Warning in corrgram::corrgram(., type = &quot;cor&quot;, lower.panel =
 ## corrgram::panel.pie, : This is NOT a correlation matrix.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-corrmatrix-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-corrmatrix-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corMatrix_BCTs &lt;-<span class="st"> </span>bivariate_BCTs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">cor</span>(<span class="dt">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
 
@@ -3627,7 +3585,7 @@ Layout &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class
      <span class="dt">pie =</span> boymeans, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyAllBctsIsing-girlsboys-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyAllBctsIsing-girlsboys-1.png" width="2100" /></p>
 <p>For all participants.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 S.total &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(bctdf))
@@ -3688,7 +3646,7 @@ piefill &lt;-<span class="st"> </span>S.total <span class="op">%&gt;%</span>
      <span class="dt">pie =</span> piefill, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyAllBctsIsing-allparticipants-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyAllBctsIsing-allparticipants-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Estimate ising network without regularisation</span>
 nwBCT_nonreg &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total, <span class="dt">default=</span><span class="st">&quot;IsingSampler&quot;</span>)
@@ -3703,7 +3661,7 @@ nwBCT_nonreg &lt;-<span class="st"> </span>bootnet<span class="op">::</span><spa
      <span class="dt">pie =</span> piefill, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyAllBctsIsing-allparticipants-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyAllBctsIsing-allparticipants-2.png" width="2100" /></p>
 </div>
 <div id="ising-network-combined-items" class="section level2">
 <h2>Ising network Combined items</h2>
@@ -3809,7 +3767,7 @@ piefill &lt;-<span class="st"> </span>S.total <span class="op">%&gt;%</span>
      <span class="dt">pie =</span> piefill, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-dataprep-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-dataprep-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># # Estimate ising network without regularisation</span>
 <span class="co"># nwBCT_nonreg &lt;- bootnet::estimateNetwork(S.total, default=&quot;IsingSampler&quot;)</span>
@@ -3825,7 +3783,7 @@ onlyCombinedBctsIsing &lt;-<span class="st"> </span>nwBCT_ggm
 
 onlyCombinedBctsIsing_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(onlyCombinedBctsIsing)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(onlyCombinedBctsIsing)<span class="op">$</span>InDegree
 ##                               MVPA                         autonomous 
@@ -3917,19 +3875,19 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(onlyCombinedB
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_stability_onlyCombinedBctsIsing.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_stability_onlyCombinedBctsIsing, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_onlyCombinedBctsIsing, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-3.png" width="672" /></p>
+## Expected significance level given number of bootstrap samples is approximately: 0.051</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_onlyCombinedBctsIsing &lt;- bootnet::bootnet(onlyCombinedBctsIsing, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
 <span class="co"># save(bootnet_centrality_stability_onlyCombinedBctsIsing, file = &quot;./Rdata_files/bootnet_centrality_stability_onlyCombinedBctsIsing.Rdata&quot;)</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_centrality_stability_onlyCombinedBctsIsing.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_centrality_stability_onlyCombinedBctsIsing)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_centrality_stability_onlyCombinedBctsIsing, <span class="dt">perNode=</span>T, <span class="st">&quot;strength&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_centrality_stability_onlyCombinedBctsIsing)
 ## === Correlation Stability Analysis === 
@@ -9620,7 +9578,7 @@ corrgram<span class="op">::</span><span class="kw">corrgram</span>(S.total,
            <span class="dt">bottom=</span><span class="kw">list</span>(<span class="dt">labels=</span>labs,<span class="dt">cex=</span>.<span class="dv">75</span>, <span class="dt">srt=</span><span class="dv">60</span>),
            <span class="dt">left=</span><span class="kw">list</span>(<span class="dt">labels=</span>labs,<span class="dt">cex=</span>.<span class="dv">75</span>, <span class="dt">srt=</span><span class="dv">30</span>))
          )</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-moti-ggm-noncombined-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-moti-ggm-noncombined-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Create means for filling nodes</span>
 piefill &lt;-<span class="st"> </span>S.total <span class="op">%&gt;%</span>
@@ -9638,7 +9596,7 @@ piefill &lt;-<span class="st"> </span>piefill <span class="op">%&gt;%</span><spa
      <span class="dt">pie =</span> piefill, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-moti-ggm-noncombined-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-moti-ggm-noncombined-2.png" width="2100" /></p>
 <p>Network after combining goal setting and implementation planning, as well as barrier identification and coping planning:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Combine items further:</span>
 bctdf2 &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span>
@@ -9676,7 +9634,7 @@ piefill2 &lt;-<span class="st"> </span>piefill2 <span class="op">%&gt;%</span><s
      <span class="dt">pie =</span> piefill2, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-moti-ggm-combined-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-moti-ggm-combined-1.png" width="2100" /></p>
 <div id="stability-and-robustness" class="section level4">
 <h4>Stability and robustness</h4>
 <p>Robustness test</p>
@@ -9684,13 +9642,13 @@ piefill2 &lt;-<span class="st"> </span>piefill2 <span class="op">%&gt;%</span><s
 ## [1] &quot;Original items:&quot;
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-robustness-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-robustness-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">print</span>(<span class="st">&quot;Combined items:&quot;</span>)
 ## [1] &quot;Combined items:&quot;
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT2)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-robustness-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-robustness-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># BCTboot1 &lt;- bootnet::bootnet(nwBCT, nBoots = 2500)</span>
 <span class="co"># BCTboot2 &lt;- bootnet::bootnet(nwBCT2, nBoots = 2500)</span>
@@ -9703,12 +9661,12 @@ qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT2)
 <span class="kw">print</span>(<span class="st">&quot;Original items:&quot;</span>)
 ## [1] &quot;Original items:&quot;
 <span class="kw">plot</span>(BCTboot1, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-robustness-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-robustness-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">print</span>(<span class="st">&quot;Combined items:&quot;</span>)
 ## [1] &quot;Combined items:&quot;
 <span class="kw">plot</span>(BCTboot2, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-robustness-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-robustness-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 autEdges &lt;-<span class="st"> </span><span class="kw">summary</span>(BCTboot1, <span class="dt">statistics =</span> <span class="st">&quot;edge&quot;</span>, <span class="dt">rank =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(mean) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -9746,7 +9704,7 @@ userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>
                       <span class="dt">values =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],  
                       <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Relative strengths of edges containing autonomous </span><span class="ch">\n</span><span class="st">or controlled motivation (model with all items)&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-robustness-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-robustness-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">  
 <span class="co"># Combined items</span>
 
@@ -9786,7 +9744,7 @@ userfriendlyscience<span class="op">::</span><span class="kw">diamondPlot</span>
                       <span class="dt">values =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">2</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>],  
                       <span class="dt">guide =</span> <span class="kw">guide_legend</span>(<span class="dt">override.aes =</span> <span class="kw">list</span>(<span class="dt">alpha =</span> <span class="dv">1</span>))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Relative strengths of edges containing autonomous </span><span class="ch">\n</span><span class="st">or controlled motivation (model with combined items)&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-robustness-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-robustness-6.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># summary(BCTboot1, statistics = &quot;edge&quot;, rank = TRUE) %&gt;% </span>
 <span class="co">#   dplyr::arrange(mean) %&gt;% </span>
@@ -15449,7 +15407,7 @@ piefill &lt;-<span class="st"> </span>piefill <span class="op">%&gt;%</span><spa
      <span class="dt">pie =</span> piefill, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-pa-motivation-ggm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-pa-motivation-ggm-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Combine items further:</span>
 bctdf_PA2 &lt;-<span class="st"> </span>bctdf_PA <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span>
@@ -15490,7 +15448,7 @@ piefill_PA2 &lt;-<span class="st"> </span>piefill_PA2 <span class="op">%&gt;%</s
      <span class="dt">pie =</span> piefill_PA2, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/bct-pa-motivation-ggm-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/bct-pa-motivation-ggm-2.png" width="2100" /></p>
 </div>
 <div id="centrality-and-stability-4" class="section level4">
 <h4>Centrality and stability</h4>
@@ -15501,10 +15459,10 @@ piefill_PA2 &lt;-<span class="st"> </span>piefill_PA2 <span class="op">%&gt;%</s
 
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT_PA2)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">plot</span>(BCTbootPA, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-2.png" width="2100" /></p>
 </div>
 </div>
 </div>
@@ -15572,10 +15530,10 @@ graph_cor &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
                   <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, <span class="dt">labels =</span> <span class="kw">names</span>(top5Bcts_df),
                   <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Bivariate correlations&quot;</span>)
 ## Variables detected as ordinal: MVPA; Autonomous; goal contrast; implementation plan; plan by other; goal setting; subgoals</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_Ising &lt;-<span class="st"> </span><span class="kw">plot</span>(network_all, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Ising model&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># maxedge &lt;- max(c(graph_Ising$graphAttributes$Graph$maximum, </span>
 <span class="co">#                  graph_cor$graphAttributes$Graph$maximum))</span>
@@ -15589,7 +15547,7 @@ graph_cor &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
 ## Variables detected as ordinal: MVPA; Autonomous; goal contrast; implementation plan; plan by other; goal setting; subgoals
 graph_Ising &lt;-<span class="st"> </span><span class="kw">plot</span>(network_all, <span class="dt">layout=</span>L, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Ising model&quot;</span>, <span class="dt">label.cex =</span> <span class="fl">0.8</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">flow</span>(graph_Ising, 
              <span class="st">&quot;MVPA&quot;</span>, 
@@ -15603,11 +15561,11 @@ qgraph<span class="op">::</span><span class="kw">flow</span>(graph_Ising,
 ## Warning in qgraph(object, layout = Layout, curve = Curve, edgeConnectPoints
 ## = ECP, : The following arguments are not documented and likely not
 ## arguments of qgraph and thus ignored: colors</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-4.png" width="2100" /></p>
 <p>Centrality and stability:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Ising_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(graph_Ising)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(graph_Ising)<span class="op">$</span>InDegree
 ##                MVPA          Autonomous       goal contrast 
@@ -15653,19 +15611,19 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(graph_Ising)<
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_stability_top5Bcts.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_stability_top5Bcts, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_top5Bcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
 ## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_top5Bcts &lt;- bootnet::bootnet(network_all, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
 <span class="co"># save(bootnet_centrality_stability_top5Bcts, file = &quot;./Rdata_files/bootnet_centrality_stability_top5Bcts.Rdata&quot;)</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_centrality_stability_top5Bcts.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_centrality_stability_top5Bcts)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_centrality_stability_top5Bcts, <span class="dt">perNode=</span>T, <span class="st">&quot;strength&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-stability-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_centrality_stability_top5Bcts) 
 ## === Correlation Stability Analysis === 
@@ -15831,16 +15789,16 @@ network_IT &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span 
 
 graph_Nur &lt;-<span class="st"> </span><span class="kw">plot</span>(network_Nur, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> NurMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Practical nurse&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_HRC &lt;-<span class="st"> </span><span class="kw">plot</span>(network_HRC, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> HRCMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;HRC&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_BA &lt;-<span class="st"> </span><span class="kw">plot</span>(network_BA, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> BAMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;BA&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_IT &lt;-<span class="st"> </span><span class="kw">plot</span>(network_IT, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> ITMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;IT&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 maxedge &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">c</span>(graph_Nur<span class="op">$</span>graphAttributes<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                  graph_HRC<span class="op">$</span>graphAttributes<span class="op">$</span>Graph<span class="op">$</span>maximum, 
@@ -15858,7 +15816,7 @@ graph_BA &lt;-<span class="st"> </span><span class="kw">plot</span>(network_BA, 
                  <span class="dt">maximum =</span> maxedge, <span class="dt">pie =</span> BAMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>)
 graph_IT &lt;-<span class="st"> </span><span class="kw">plot</span>(network_IT, <span class="dt">layout=</span>L, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;IT&quot;</span>,
                  <span class="dt">maximum =</span> maxedge, <span class="dt">pie =</span> ITMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/top5Bcts-heterogeneity-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 
 <span class="co"># nct_results_top5Bcts &lt;- NetworkComparisonTest::NCT(heterogeneity_Nur, heterogeneity_IT, it=1000, binary.data=FALSE, paired=FALSE, test.edges=TRUE,</span>
@@ -16883,7 +16841,7 @@ nodeColors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="
      <span class="dt">edge.label.cex =</span> <span class="fl">0.75</span>,
      <span class="dt">minimum =</span> <span class="fl">0.1</span>,
      <span class="dt">title =</span> <span class="st">&quot;Bivariate correlations of PA determinants (&lt;0.1 not shown)&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/pa-determinants-correlations-raw-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/pa-determinants-correlations-raw-1.png" width="2100" /></p>
 <!-- Out of a hundred iterations, spinglass algorithm found `  table(matrix_spinglass)[[1]]` instances of ` table(matrix_spinglass)[1] %>% names` communities, `  table(matrix_spinglass)[[2]]` instances of `  table(matrix_spinglass)[2] %>% names` communities, and `  table(matrix_spinglass)[[3]]` instances of `  table(matrix_spinglass)[3] %>% names` communities. Thus, a random seed which found four communities was chosen.   -->
 <div id="symptom-network-all" class="section level2">
 <h2>Symptom network: all</h2>
@@ -16940,7 +16898,7 @@ allmeans &lt;-<span class="st"> </span>sympdf <span class="op">%&gt;%</span><spa
      <span class="dt">pie =</span> allmeans, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/symptoms-all-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/symptoms-all-1.png" width="2100" /></p>
 </div>
 <div id="symptom-network-boys-and-girls" class="section level2">
 <h2>Symptom network: boys and girls</h2>
@@ -17021,7 +16979,7 @@ boymeans &lt;-<span class="st"> </span>sympdf <span class="op">%&gt;%</span><spa
      <span class="dt">pie =</span> boymeans, 
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/symptoms-boygirl-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/symptoms-boygirl-1.png" width="2100" /></p>
 </div>
 <div id="symptom-network-educational-tracks" class="section level2">
 <h2>symptom network: educational tracks</h2>
@@ -17085,7 +17043,7 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
   <span class="dt">main =</span> <span class="st">&quot;Bivariate (upper diagonal) and partial (lower diagonal)</span><span class="ch">\n</span><span class="st">correlations of PA determinants&quot;</span>)
 ## Warning in corrgram::corrgram(., type = &quot;cor&quot;, lower.panel =
 ## corrgram::panel.pie, : This is NOT a correlation matrix.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-1.png" width="2100" /></p>
 <div id="ggm-estimation-1" class="section level2">
 <h2>ggm estimation</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -17105,21 +17063,21 @@ determinants_ggm_network &lt;-<span class="st"> </span>bootnet<span class="op">:
 
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(determinants_ggm_network, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, <span class="dt">labels =</span> <span class="kw">names</span>(data), <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
        <span class="dt">title =</span> <span class="st">&quot;partial correlation network, with LASSO regularisation and EBIC model selection&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-ggm-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-ggm-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(data), <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(data),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
        <span class="dt">title =</span> <span class="st">&quot;bivariate correlation network&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-ggm-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-ggm-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(data), <span class="dt">graph =</span> <span class="st">&quot;pcor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(data),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
        <span class="dt">title =</span> <span class="st">&quot;partial correlation network&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-ggm-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-ggm-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Average the layout and plot all according to that</span>
 avlayout &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">averageLayout</span>(bootnetgraph, corgraph, pcorgraph)
@@ -17134,7 +17092,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-ggm-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-ggm-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># To help with visual comparison, that last argument takes the maximum edge of the three </span>
 <span class="co"># graphs and places that as the benchmark for the thickest line in all plots.</span>
@@ -17149,7 +17107,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-ggm-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-ggm-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 
 
@@ -17161,7 +17119,7 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(determin
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
        <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-ggm-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-ggm-6.png" width="2100" /></p>
 <p>A dressed-up version of the last graph. Pies indicate mean as a proportion of the maximum value in tha variable in question.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 data &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>
@@ -17200,19 +17158,19 @@ determinantgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(
   <span class="dt">pieBorder =</span> <span class="dv">1</span>,
   <span class="dt">legend =</span> <span class="ot">FALSE</span>,
   <span class="dt">color =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">5</span>, <span class="dt">begin =</span> <span class="fl">0.5</span>, <span class="dt">option =</span> <span class="st">&quot;D&quot;</span>))</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-ggm-2-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-ggm-2-1.png" width="2100" /></p>
 <div id="centrality-and-stability-5" class="section level3">
 <h3>Centrality and stability</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 determinants_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-stability-1.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph, 
                <span class="dt">include =</span> <span class="kw">c</span>(<span class="st">&quot;Strength&quot;</span>, <span class="st">&quot;ExpectedInfluence&quot;</span>),
                <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)
 ## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-stability-2.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree
 ##   MVPA accelerometer             planning                  BCT 
@@ -17276,19 +17234,19 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_stability_determinants.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_stability_determinants, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-stability-3.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_determinants, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
 ## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-stability-4.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_determinants &lt;- bootnet::bootnet(determinants_bootnet, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
 <span class="co"># save(bootnet_centrality_stability_determinants, file = &quot;./Rdata_files/bootnet_centrality_stability_determinants.Rdata&quot;)</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/bootnet_centrality_stability_determinants.Rdata&quot;</span>)
 
 <span class="kw">plot</span>(bootnet_centrality_stability_determinants)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-stability-5.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-stability-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_centrality_stability_determinants, <span class="dt">perNode=</span>T, <span class="st">&quot;strength&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/determinants-stability-6.png" width="672" /></p>
+<p><img src="baseline-networks_files/figure-html/determinants-stability-6.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_centrality_stability_determinants)
 ## === Correlation Stability Analysis === 
