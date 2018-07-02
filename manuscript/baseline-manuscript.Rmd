@@ -19,7 +19,7 @@ author:
     affiliation   : "1" 
   - name          : "Antti Uutela"
     affiliation   : "1" 
-  - name          : "Vera Araújo-Soares"
+  - name          : "Vera Ara?jo-Soares"
     affiliation   : "1"        
   - name          : "Falko Sniehotta"
     affiliation   : "1"        
@@ -61,7 +61,7 @@ output:
 
 # Background
 
-Declining physical activity (PA) and increasing sedentary behaviour (SB) are growing concerns for public health, especially for individuals with low socioeconomic status (SES) (). Patterns of low PA among adults begin earlier in life. Among children, the evidence regarding psychosocial predictors of PA and SB, and especially objectively measured activity, is quite clear (CITE KATJA? ). There is however less knowledge about the predictors of PA and SB in adolescence. As there is evidence that the declines in PA and increases in SB are already evident in children and adolescence  (CITATION:Husu et al. BMC Publ Health 2016, Makelä et al. 2016 KATJA? TOMMI?  ), there is a need for further research on to how to improve PA and SB among adolescents, so that healthier behavioral patterns can be carried into adulthood. This is crucial from both the point of view of individuals' later quality of life, as well as from that of a healthcare system struggling with rising costs of treating non-communicable diseases (Dieleman et al. 2018 LancetREF :  ).
+Declining physical activity (PA) and increasing sedentary behaviour (SB) are growing concerns for public health, especially for individuals with low socioeconomic status (SES) (). Patterns of low PA among adults begin earlier in life. Among children, the evidence regarding psychosocial predictors of PA and SB, and especially objectively measured activity, is quite clear (CITE KATJA? ). There is however less knowledge about the predictors of PA and SB in adolescence. As there is evidence that the declines in PA and increases in SB are already evident in children and adolescence  (CITATION:Husu et al. BMC Publ Health 2016, Makel? et al. 2016 KATJA? TOMMI?  ), there is a need for further research on to how to improve PA and SB among adolescents, so that healthier behavioral patterns can be carried into adulthood. This is crucial from both the point of view of individuals' later quality of life, as well as from that of a healthcare system struggling with rising costs of treating non-communicable diseases (Dieleman et al. 2018 LancetREF :  ).
 
 
 \newpage
