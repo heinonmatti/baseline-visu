@@ -368,8 +368,564 @@ div.tocify {
 
 <p>Welcome to the LMI baseline supplement! This supplement will walk you through the analyses and provides additional graphs.</p>
 <p>Clicking the “Code”-buttons on the right shows code for each chunk.</p>
-<p>To start data analysis, we set up the basics to enable compiling the document.</p>
+<p>To start data analysis, we run a data compilation file to enable compiling the document. This file can be found under the tab “Data setup code” on top of the screen.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;baseline-datasetup.R&quot;</span>)</code></pre></div>
+<p>Description of the R environment can be found by opening the code chunk below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">session_info</span>()
+## Session info -------------------------------------------------------------
+##  setting  value                       
+##  version  R version 3.5.0 (2018-04-23)
+##  system   x86_64, mingw32             
+##  ui       RTerm                       
+##  language (EN)                        
+##  collate  Finnish_Finland.1252        
+##  tz       Europe/Helsinki             
+##  date     2018-07-04
+## Packages -----------------------------------------------------------------
+##  package               * version    date      
+##  abind                   1.4-5      2016-07-21
+##  acepack                 1.4.1      2016-10-29
+##  arm                     1.10-1     2018-04-13
+##  assertthat              0.2.0      2017-04-11
+##  backports               1.1.2      2017-12-13
+##  base                  * 3.5.0      2018-04-23
+##  base64enc               0.1-3      2015-07-28
+##  bayesplot               1.5.0      2018-03-30
+##  BDgraph                 2.51       2018-06-21
+##  BiasedUrn               1.07       2015-12-28
+##  bindr                   0.1.1      2018-03-13
+##  bindrcpp              * 0.2.2      2018-03-29
+##  bitops                  1.0-6      2013-08-17
+##  blme                    1.0-4      2015-06-14
+##  bookdown              * 0.7        2018-02-18
+##  boot                    1.3-20     2017-08-06
+##  bootnet               * 1.0.1      2017-09-06
+##  brew                    1.0-6      2011-04-13
+##  bridgesampling          0.4-0      2017-12-19
+##  brms                  * 2.3.1      2018-06-05
+##  brmstools             * 0.5.1      2018-03-07
+##  Brobdingnag             1.2-5      2018-03-18
+##  broom                 * 0.4.4      2018-03-29
+##  car                     3.0-0      2018-04-02
+##  carData                 3.0-1      2018-03-28
+##  caTools                 1.17.1     2014-09-10
+##  cellranger              1.1.0      2016-07-27
+##  checkmate               1.8.5      2017-10-24
+##  class                   7.3-14     2015-08-30
+##  cli                     1.0.0      2017-11-05
+##  cluster                 2.0.7-1    2018-04-13
+##  cmprsk                  2.2-7      2014-06-17
+##  coda                    0.19-1     2016-12-08
+##  codetools               0.2-15     2016-10-05
+##  coin                    1.2-2      2017-11-28
+##  colorspace              1.3-2      2016-12-14
+##  colourpicker            1.0        2017-09-27
+##  compiler                3.5.0      2018-04-23
+##  corpcor                 1.6.9      2017-04-01
+##  corrgram              * 1.12       2017-05-07
+##  cowplot                 0.9.2      2017-12-17
+##  crayon                  1.3.4      2017-09-16
+##  crosstalk               1.0.0      2016-12-21
+##  curl                    3.2        2018-03-28
+##  d3Network               0.5.2.1    2015-01-31
+##  data.table              1.11.4     2018-05-27
+##  data.tree               0.7.6      2018-06-16
+##  datasets              * 3.5.0      2018-04-23
+##  dendextend              1.8.0      2018-05-03
+##  DEoptimR                1.0-8      2016-11-19
+##  DescTools               0.99.24    2018-03-19
+##  devtools              * 1.13.6     2018-06-27
+##  DiagrammeR              1.0.0      2018-03-01
+##  digest                  0.6.15     2018-01-28
+##  diptest                 0.75-7     2016-12-05
+##  downloader              0.4        2015-07-09
+##  dplyr                 * 0.7.6      2018-06-29
+##  DT                      0.4        2018-01-30
+##  dygraphs                1.1.1.5    2018-06-28
+##  effects                 4.0-2      2018-06-19
+##  effsize                 0.7.1      2017-03-21
+##  ellipse                 0.4.1      2018-01-05
+##  emmeans                 1.2.2      2018-06-26
+##  Epi                     2.30       2018-05-15
+##  estimability            1.3        2018-02-11
+##  EstimateGroupNetwork  * 0.1.2      2017-03-20
+##  etm                     0.6-2.1    2018-06-11
+##  evaluate                0.10.1     2017-06-24
+##  expm                    0.999-2    2017-03-29
+##  fBasics                 3042.89    2017-11-17
+##  fdrtool                 1.2.15     2015-07-08
+##  flexmix                 2.3-14     2017-04-28
+##  forcats               * 0.3.0      2018-02-19
+##  foreach                 1.4.4      2017-12-12
+##  foreign                 0.8-70     2017-11-28
+##  Formula                 1.2-3      2018-05-03
+##  fpc                     2.1-11     2018-01-13
+##  gclus                   1.3.1      2012-06-25
+##  gdata                   2.18.0     2017-06-06
+##  GeneNet                 1.2.13     2015-08-02
+##  GGally                  1.4.0      2018-05-17
+##  ggcorrplot              0.1.1      2016-01-12
+##  ggeffects               0.3.4      2018-06-08
+##  ggExtra                 0.8        2018-04-04
+##  ggm                     2.3        2015-01-21
+##  ggplot2               * 2.2.1.9000 2018-06-30
+##  ggrepel                 0.8.0      2018-05-09
+##  ggridges              * 0.5.0      2018-04-05
+##  ggstatsplot           * 0.0.3      2018-05-22
+##  glasso                  1.8        2014-07-22
+##  glmmTMB                 0.2.1.0    2018-05-10
+##  glmnet                  2.0-16     2018-04-02
+##  glue                    1.2.0      2017-10-29
+##  GPArotation             2014.11-1  2014-11-25
+##  gplots                  3.0.1      2016-03-30
+##  graphics              * 3.5.0      2018-04-23
+##  grDevices             * 3.5.0      2018-04-23
+##  grid                    3.5.0      2018-04-23
+##  gridExtra             * 2.3        2017-09-09
+##  gtable                  0.2.0      2016-02-26
+##  gtools                  3.8.1      2018-06-26
+##  haven                 * 1.1.2      2018-06-27
+##  Hmisc                   4.1-1      2018-01-03
+##  hms                     0.4.2      2018-03-10
+##  htmlTable               1.12       2018-05-26
+##  htmltools               0.3.6      2017-04-28
+##  htmlwidgets             1.2        2018-04-19
+##  httpuv                  1.4.4.1    2018-06-18
+##  httr                    1.3.1      2017-08-20
+##  huge                    1.2.7      2015-09-16
+##  igraph                * 1.2.1      2018-03-10
+##  influenceR              0.1.0      2015-09-03
+##  inline                  0.3.15     2018-05-18
+##  IsingFit                0.3.1      2016-09-07
+##  IsingSampler            0.2        2015-03-02
+##  iterators               1.0.9      2017-12-12
+##  jmv                     0.8.6.2    2018-04-06
+##  jmvcore                 0.9.1      2018-06-12
+##  jpeg                    0.1-8      2014-01-23
+##  jsonlite                1.5        2017-06-01
+##  kernlab                 0.9-26     2018-04-30
+##  KernSmooth              2.23-15    2015-06-29
+##  knitr                 * 1.20       2018-02-20
+##  later                   0.7.3      2018-06-08
+##  lattice                 0.20-35    2017-03-25
+##  latticeExtra            0.6-28     2016-02-09
+##  lavaan                * 0.6-1      2018-05-22
+##  lazyeval                0.2.1      2017-10-29
+##  lme4                  * 1.1-17     2018-04-03
+##  lmtest                  0.9-36     2018-04-04
+##  longitudinal            1.1.12     2015-07-08
+##  loo                     2.0.0      2018-04-11
+##  lubridate               1.7.4      2018-04-11
+##  magrittr                1.5        2014-11-22
+##  manipulate              1.0.1      2014-12-24
+##  markdown                0.8        2017-04-20
+##  MASS                    7.3-50     2018-04-30
+##  Matrix                * 1.2-14     2018-04-13
+##  matrixcalc              1.0-3      2012-09-15
+##  matrixStats             0.53.1     2018-02-11
+##  MBESS                   4.4.3      2018-01-10
+##  mc2d                    0.1-18     2017-03-06
+##  mclust                  5.4.1      2018-06-27
+##  memoise                 1.1.0      2017-04-21
+##  merTools                0.4.1      2018-06-05
+##  methods               * 3.5.0      2018-04-23
+##  mgm                   * 1.2-3      2018-06-05
+##  mi                      1.0        2015-04-16
+##  mime                    0.5        2016-07-07
+##  miniUI                  0.1.1.1    2018-05-18
+##  minpack.lm              1.2-1      2016-11-20
+##  minqa                   1.2.4      2014-10-09
+##  mitools                 2.3        2014-09-20
+##  mlmRev                * 1.0-6      2014-03-11
+##  mnormt                  1.5-5      2016-10-15
+##  modelr                  0.1.2      2018-05-11
+##  modeltools              0.2-21     2013-09-02
+##  multcomp                1.4-8      2017-11-08
+##  munsell                 0.5.0      2018-06-12
+##  mvtnorm                 1.0-8      2018-05-31
+##  network                 1.13.0.1   2018-04-02
+##  NetworkComparisonTest * 2.0.1      2016-10-29
+##  nlme                    3.1-137    2018-04-07
+##  nloptr                  1.0.4      2017-08-22
+##  nnet                    7.3-12     2016-02-02
+##  nortest                 1.0-4      2015-07-30
+##  numDeriv                2016.8-1   2016-08-27
+##  openxlsx                4.1.0      2018-05-26
+##  pacman                * 0.4.6      2017-05-14
+##  pander                  0.6.1      2017-08-06
+##  papaja                * 0.1.0.9709 2018-03-04
+##  parallel                3.5.0      2018-04-23
+##  parcor                  0.2-6      2014-09-04
+##  patchwork             * 0.0.1      2018-06-30
+##  pbapply                 1.3-4      2018-01-10
+##  pbivnorm                0.6.0      2015-01-23
+##  pillar                  1.2.3      2018-05-25
+##  pkgconfig               2.0.1      2017-03-21
+##  plyr                    1.8.4      2016-06-08
+##  png                     0.1-7      2013-12-03
+##  ppls                    1.6-1      2014-09-04
+##  prabclus                2.2-6      2015-01-14
+##  prediction              0.3.6      2018-05-22
+##  promises                1.0.1      2018-04-13
+##  psych                 * 1.8.4      2018-05-06
+##  purrr                 * 0.2.5      2018-05-29
+##  pwr                     1.2-2      2018-03-03
+##  qgraph                * 1.5        2018-04-25
+##  R6                      2.2.2      2017-06-17
+##  RColorBrewer            1.1-2      2014-12-07
+##  Rcpp                  * 0.12.17    2018-05-18
+##  readr                 * 1.1.1      2017-05-16
+##  readxl                  1.1.0      2018-04-20
+##  registry                0.5        2017-12-03
+##  relaimpo                2.2-3      2018-03-10
+##  reshape                 0.8.7      2017-08-06
+##  reshape2                1.4.3      2017-12-11
+##  rgexf                   0.15.3     2015-03-24
+##  rio                     0.5.10     2018-03-29
+##  rjson                   0.2.20     2018-06-08
+##  rlang                   0.2.1      2018-05-30
+##  rmarkdown               1.10       2018-06-11
+##  robustbase              0.93-1     2018-06-23
+##  Rook                    1.1-1      2014-10-20
+##  rpart                   4.1-13     2018-02-23
+##  rprojroot               1.3-2      2018-01-03
+##  rsconnect               0.8.8      2018-03-09
+##  rstan                   2.17.3     2018-01-20
+##  rstanarm              * 2.17.4     2018-04-13
+##  rstantools              1.5.0      2018-04-17
+##  rstudioapi              0.7        2017-09-07
+##  rvest                   0.3.2      2016-06-17
+##  sandwich                2.4-0      2017-07-26
+##  scales                  0.5.0      2017-08-24
+##  SCRT                    1.2.2      2018-03-07
+##  sem                     3.1-9      2017-04-24
+##  seriation               1.2-3      2018-02-05
+##  sfsmisc                 1.1-2      2018-03-05
+##  shiny                   1.1.0      2018-05-17
+##  shinyjs                 1.0        2018-01-08
+##  shinystan               2.5.0      2018-05-01
+##  shinythemes             1.1.1      2016-10-12
+##  sjlabelled              1.0.11     2018-06-06
+##  sjmisc                  2.7.3      2018-06-20
+##  sjPlot                * 2.4.1      2018-02-05
+##  sjstats               * 0.15.0     2018-06-06
+##  sm                    * 2.2-5.5    2018-05-06
+##  sna                     2.4        2016-08-08
+##  snakecase               0.9.1      2018-03-25
+##  spatial                 7.3-11     2015-08-30
+##  splines                 3.5.0      2018-04-23
+##  StanHeaders             2.17.2     2018-01-20
+##  statnet.common          4.1.4      2018-06-22
+##  stats                 * 3.5.0      2018-04-23
+##  stats4                  3.5.0      2018-04-23
+##  stringdist              0.9.5.1    2018-06-08
+##  stringi                 1.2.3      2018-06-12
+##  stringr               * 1.3.1      2018-05-10
+##  SuppDists               1.1-9.4    2016-09-23
+##  survey                  3.33-2     2018-03-13
+##  survival                2.42-4     2018-06-30
+##  tcltk                   3.5.0      2018-04-23
+##  TH.data                 1.0-8      2017-01-23
+##  threejs                 0.3.1      2017-08-13
+##  tibble                * 1.4.2      2018-01-22
+##  tidyr                 * 0.8.1      2018-05-18
+##  tidyselect              0.2.4      2018-02-26
+##  tidyverse             * 1.2.1      2017-11-14
+##  timeDate                3043.102   2018-02-21
+##  timeSeries              3042.102   2017-11-17
+##  TMB                     1.7.14     2018-06-23
+##  tools                   3.5.0      2018-04-23
+##  trimcluster             0.1-2      2012-10-29
+##  TSP                     1.1-6      2018-04-30
+##  userfriendlyscience   * 0.7.1      2018-05-02
+##  utils                 * 3.5.0      2018-04-23
+##  viridis               * 0.5.1      2018-03-29
+##  viridisLite           * 0.3.0      2018-02-01
+##  visNetwork              2.0.4      2018-06-14
+##  visreg                * 2.5-0      2018-02-26
+##  whisker                 0.3-2      2013-04-28
+##  withr                   2.1.2      2018-03-15
+##  WRS2                    0.10-0     2018-06-15
+##  xfun                    0.2        2018-06-16
+##  XML                     3.98-1.11  2018-04-16
+##  xml2                    1.2.0      2018-01-24
+##  xtable                  1.8-2      2016-02-05
+##  xts                     0.10-2     2018-03-14
+##  yaml                    2.1.19     2018-05-01
+##  zip                     1.0.0      2017-04-25
+##  zoo                     1.8-2      2018-06-11
+##  source                              
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  Github (mvuorre/brmstools@a7526f7)  
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  Github (tidyverse/ggplot2@348b26f)  
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  local                               
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  Github (crsh/papaja@ae39c13)        
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  Github (thomasp85/patchwork@1d3eccb)
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  local                               
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)                      
+##  CRAN (R 3.5.0)</code></pre></div>
 <p><em>Note on using package brms</em></p>
 <p>To use package brms (Bayesian Regression Models using ‘Stan’) you need to set Rtools folder (if it’s not C:/Rtools/).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -506,33 +1062,39 @@ nonmissings &lt;-<span class="st"> </span><span class="ot">NA</span>
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/ci_total.Rdata&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 vardatatable2 &lt;-<span class="st"> </span>vardatatable
-vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;mvpaAccelerometer&quot;</span>, <span class="st">&quot;Daily MVPA time (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
-vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;padaysLastweek&quot;</span>, <span class="st">&quot;Number of days with &gt;30 MVPA min previous week (self-report)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
-vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;sitLieAccelerometer&quot;</span>, <span class="st">&quot;Daily time spent sitting or lying down (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
-vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;sitBreaksAccelerometer&quot;</span>, <span class="st">&quot;Daily number of times sitting was interrupted (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;mvpaAccelerometer&quot;</span>, <span class="st">&quot;Daily moderate-to-vigorous PA time (accelerometer)*&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;padaysLastweek&quot;</span>, <span class="st">&quot;Number of days with &gt;30 MVPA min previous week (self-report)*&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;sitLieAccelerometer&quot;</span>, <span class="st">&quot;Daily time spent sitting or lying down (accelerometer)*&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;sitBreaksAccelerometer&quot;</span>, <span class="st">&quot;Daily number of times sitting was interrupted (accelerometer)*&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;lpaAccelerometer&quot;</span>, <span class="st">&quot;Daily light PA time (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
+vardatatable2<span class="op">$</span>Variable &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;standingAccelerometer&quot;</span>, <span class="st">&quot;Daily standing time (accelerometer)&quot;</span>, vardatatable2<span class="op">$</span>Variable)
 
 vardatatable2 &lt;-<span class="st"> </span>vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(Variable <span class="op">==</span><span class="st"> &quot;Daily MVPA time (accelerometer)&quot;</span> <span class="op">|</span><span class="st"> </span>
-<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Daily time spent sitting or lying down (accelerometer)&quot;</span> <span class="op">|</span>
-<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Daily number of times sitting was interrupted (accelerometer)&quot;</span> <span class="op">|</span>
-<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Number of days with &gt;30 MVPA min previous week (self-report)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">orderVariable =</span> <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily MVPA time (accelerometer)&quot;</span>, <span class="st">&quot;a&quot;</span>,
-                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily time spent sitting or lying down (accelerometer)&quot;</span>, <span class="st">&quot;b&quot;</span>,
-                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily number of times sitting was interrupted (accelerometer)&quot;</span>, <span class="st">&quot;c&quot;</span>,
-                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Number of days with &gt;30 MVPA min previous week (self-report)&quot;</span>, <span class="st">&quot;d&quot;</span>, <span class="ot">NA</span>))))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(Variable <span class="op">==</span><span class="st"> &quot;Daily moderate-to-vigorous PA time (accelerometer)*&quot;</span> <span class="op">|</span><span class="st"> </span>
+<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Daily time spent sitting or lying down (accelerometer)*&quot;</span> <span class="op">|</span>
+<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Daily number of times sitting was interrupted (accelerometer)*&quot;</span> <span class="op">|</span>
+<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Number of days with &gt;30 MVPA min previous week (self-report)*&quot;</span> <span class="op">|</span>
+<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Daily light PA time (accelerometer)&quot;</span> <span class="op">|</span>
+<span class="st">           </span>Variable <span class="op">==</span><span class="st"> &quot;Daily standing time (accelerometer)&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">orderVariable =</span> <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily moderate-to-vigorous PA time (accelerometer)*&quot;</span>, <span class="st">&quot;a&quot;</span>,
+                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily light PA time (accelerometer)&quot;</span>, <span class="st">&quot;b&quot;</span>,
+                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily standing time (accelerometer)&quot;</span>, <span class="st">&quot;c&quot;</span>,
+                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily time spent sitting or lying down (accelerometer)*&quot;</span>, <span class="st">&quot;d&quot;</span>,
+                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Daily number of times sitting was interrupted (accelerometer)*&quot;</span>, <span class="st">&quot;e&quot;</span>,
+                                <span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Variable</span><span class="st">`</span> <span class="op">==</span><span class="st"> &quot;Number of days with &gt;30 MVPA min previous week (self-report)*&quot;</span>, <span class="st">&quot;f&quot;</span>, <span class="ot">NA</span>))))))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(orderVariable) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>orderVariable)
 
 vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span>papaja<span class="op">::</span><span class="kw">apa_table</span>(
-        <span class="dt">caption =</span> <span class="st">&quot;Primary outcome variables with their class and school ICCs&quot;</span>,
+        <span class="dt">caption =</span> <span class="st">&quot;Primary outcome variables with their class and school ICCs. Primary outcome variables highlighted with asterisks.&quot;</span>,
         <span class="dt">escape =</span> <span class="ot">TRUE</span>, <span class="dt">format.args =</span> <span class="kw">list</span>(<span class="dt">digits =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">0</span>), <span class="dt">margin =</span> <span class="dv">2</span>)
         )</code></pre></div>
 <caption>
 (#tab:primary-outcome-vars-table-total)
 </caption>
 <caption>
-<em>Primary outcome variables with their class and school ICCs</em>
+<em>Primary outcome variables with their class and school ICCs. Primary outcome variables highlighted with asterisks.</em>
 </caption>
 <table>
 <thead>
@@ -547,7 +1109,7 @@ vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Daily MVPA time (accelerometer)</td>
+<td align="left">Daily moderate-to-vigorous PA time (accelerometer)*</td>
 <td align="left">3h 3min</td>
 <td align="left">2h 46min - 3h 20min</td>
 <td align="left">0.072</td>
@@ -555,7 +1117,23 @@ vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
 <td align="left">706</td>
 </tr>
 <tr class="even">
-<td align="left">Daily time spent sitting or lying down (accelerometer)</td>
+<td align="left">Daily light PA time (accelerometer)</td>
+<td align="left">1h 34min</td>
+<td align="left">1h 26min - 1h 42min</td>
+<td align="left">0.074</td>
+<td align="left">0.074</td>
+<td align="left">706</td>
+</tr>
+<tr class="odd">
+<td align="left">Daily standing time (accelerometer)</td>
+<td align="left">1h 32min</td>
+<td align="left">1h 19min - 1h 45min</td>
+<td align="left">0.140</td>
+<td align="left">0.098</td>
+<td align="left">706</td>
+</tr>
+<tr class="even">
+<td align="left">Daily time spent sitting or lying down (accelerometer)*</td>
 <td align="left">9h 34min</td>
 <td align="left">8h 56min - 10h 12min</td>
 <td align="left">0.086</td>
@@ -563,7 +1141,7 @@ vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
 <td align="left">706</td>
 </tr>
 <tr class="odd">
-<td align="left">Daily number of times sitting was interrupted (accelerometer)</td>
+<td align="left">Daily number of times sitting was interrupted (accelerometer)*</td>
 <td align="left">  28.0</td>
 <td align="left">  24.7  -    31.4</td>
 <td align="left">0.058</td>
@@ -571,7 +1149,7 @@ vardatatable2 <span class="op">%&gt;%</span><span class="st"> </span>
 <td align="left">706</td>
 </tr>
 <tr class="even">
-<td align="left">Number of days with &gt;30 MVPA min previous week (self-report)</td>
+<td align="left">Number of days with &gt;30 MVPA min previous week (self-report)*</td>
 <td align="left">   2.8</td>
 <td align="left">   2.6  -     3.0</td>
 <td align="left">0.047</td>
@@ -2475,7 +3053,9 @@ Track &lt;-<span class="st"> </span>lmi <span class="op">%&gt;%</span><span clas
                  <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Other&quot;</span>, <span class="st">&quot;IT&quot;</span>, <span class="st">&quot;BA&quot;</span>, <span class="st">&quot;HRC&quot;</span>, <span class="st">&quot;Nur&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Kys0016.<span class="dv">1</span>, <span class="op">-</span>Kys0017.<span class="dv">1</span>)
 
-demographics &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(demographics, Track)</code></pre></div>
+demographics &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(demographics, Track)
+
+<span class="kw">save</span>(demographics, <span class="dt">file =</span> <span class="st">&quot;./data/demographics.Rdata&quot;</span>)</code></pre></div>
 <div id="create-demographic-tables" class="section level2">
 <h2>Create demographic tables</h2>
 <div id="by-educational-track" class="section level3">
@@ -2483,35 +3063,37 @@ demographics &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(dem
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">demotable &lt;-<span class="st"> </span>demographics <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">!=</span><span class="st"> &quot;Other&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(Track) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>(),
-                    <span class="st">&quot;Mean age (range, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;-&quot;</span>,
-                                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
-                                                <span class="kw">round</span>(<span class="kw">median</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-                    <span class="st">&quot;Mean study year (sd, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                                    <span class="kw">round</span>(<span class="kw">sd</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
-                                                    <span class="kw">round</span>(<span class="kw">median</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-                    <span class="st">&quot;% girl&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(girl, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
-                    <span class="st">&quot;% allocated to intervention&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(intervention, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
-                    <span class="st">&quot;Born in Finland (%)&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(bornInFinland, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>)
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(
+    <span class="dt">n =</span> <span class="kw">n</span>(),
+    <span class="st">&quot;Mean age (range, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;-&quot;</span>,
+                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
+                                <span class="kw">round</span>(<span class="kw">median</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+    <span class="st">&quot;Mean study year (sd, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                    <span class="kw">round</span>(<span class="kw">sd</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
+                                    <span class="kw">round</span>(<span class="kw">median</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+    <span class="st">&quot;% girl&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(girl, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
+    <span class="st">&quot;% allocated to intervention&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(intervention, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
+    <span class="st">&quot;Born in Finland (%)&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(bornInFinland, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>)
                                 ) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(Track)) 
 
 demotable_total &lt;-<span class="st"> </span>demographics <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>(),
-            <span class="st">&quot;Track&quot;</span> =<span class="st"> &quot;Full sample&quot;</span>,
-                    <span class="st">&quot;Mean age (range, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;-&quot;</span>,
-                                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
-                                                <span class="kw">round</span>(<span class="kw">median</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-                    <span class="st">&quot;Mean study year (sd, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
-                                                    <span class="kw">round</span>(<span class="kw">sd</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
-                                                    <span class="kw">round</span>(<span class="kw">median</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
-                    <span class="st">&quot;% girl&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(girl, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
-                    <span class="st">&quot;% allocated to intervention&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(intervention, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
-                    <span class="st">&quot;Born in Finland (%)&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(bornInFinland, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>)
-            )
+<span class="st">  </span><span class="kw">summarise</span>(
+    <span class="dt">n =</span> <span class="kw">n</span>(),
+    <span class="st">&quot;Track&quot;</span> =<span class="st"> &quot;Full sample&quot;</span>,
+    <span class="st">&quot;Mean age (range, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;-&quot;</span>,
+                                <span class="kw">range</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[<span class="dv">2</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
+                                <span class="kw">round</span>(<span class="kw">median</span>(age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+    <span class="st">&quot;Mean study year (sd, median)&quot;</span> =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">round</span>(<span class="kw">mean</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),<span class="st">&quot; (&quot;</span>, 
+                                    <span class="kw">round</span>(<span class="kw">sd</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;, &quot;</span>,
+                                    <span class="kw">round</span>(<span class="kw">median</span>(studyYear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>), <span class="st">&quot;)&quot;</span>),
+    <span class="st">&quot;% girl&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(girl, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
+    <span class="st">&quot;% allocated to intervention&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(intervention, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>),
+    <span class="st">&quot;Born in Finland (%)&quot;</span> =<span class="st"> </span><span class="kw">round</span>(<span class="kw">mean</span>(bornInFinland, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)<span class="op">*</span><span class="dv">100</span>, <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">format</span>(., <span class="dt">nsmall =</span> <span class="dv">1</span>)
+    )
 
 demotable &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(demotable, demotable_total)
 ## Warning in bind_rows_(x, .id): binding factor and character vector,
@@ -2526,6 +3108,8 @@ demotable &lt;-<span class="st"> </span>demotable <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">row_number</span>())
 
 <span class="co"># For some reason, sum of n&#39;s of all tracks is 1084.</span>
+
+<span class="kw">save</span>(demotable, <span class="dt">file =</span> <span class="st">&quot;./Rdata_files/demotable.Rdata&quot;</span>)
 
 papaja<span class="op">::</span><span class="kw">apa_table</span>(demotable, <span class="dt">caption =</span> <span class="st">&quot;Baseline demographics of educational tracks&quot;</span>, <span class="dt">digits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>))</code></pre></div>
 <caption>
@@ -3860,7 +4444,7 @@ averageDayActivityPlot_intervention &lt;-<span class="st"> </span>df <span class
                      <span class="st">&quot;Standing still&quot;</span> =<span class="st"> </span>standingAccelerometer_T1, 
                      <span class="st">&quot;Light PA&quot;</span> =<span class="st"> </span>lpaAccelerometer_T1, 
                      <span class="st">&quot;Moderate PA&quot;</span> =<span class="st"> </span>mpaAccelerometer_T1, 
-                     <span class="st">&quot;Vigorous PA&quot;</span> =<span class="st"> </span>vpaAccelerometer_T1) <span class="op">%&gt;%</span>
+                     <span class="st">&quot;Vigorous PA&quot;</span> =<span class="st"> </span>vpaAccelerometer_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(track <span class="op">!=</span><span class="st"> &quot;Other&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop small track &quot;Other&quot;</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(variable, value, <span class="op">-</span>(girl<span class="op">:</span>track)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Convert data to long form</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">track =</span> <span class="kw">factor</span>(track, <span class="dt">ordered =</span> <span class="ot">TRUE</span>,
@@ -7464,6 +8048,229 @@ grid<span class="op">::</span><span class="kw">grid.draw</span>(<span class="kw"
 </div>
 <div id="pa-motivation" class="section level2">
 <h2>PA motivation</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regulations.df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
+  id,
+  intervention,
+  group,
+  school,
+  girl,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1, 
+  PA_integrated_02_T1,
+  PA_integrated_03_T1, 
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1)
+
+
+motiGirls &lt;-<span class="st"> </span>regulations.df <span class="op">%&gt;%</span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;girl&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;darkolivegreen2&quot;</span>, <span class="st">&quot;darkolivegreen4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Girls&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+motiBoys &lt;-<span class="st"> </span>regulations.df <span class="op">%&gt;%</span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;boy&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;darkolivegreen2&quot;</span>, <span class="st">&quot;darkolivegreen4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Boys&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+motiInt &lt;-<span class="st"> </span>regulations.df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(intervention <span class="op">==</span><span class="st"> &quot;1&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;deepskyblue&quot;</span>, <span class="st">&quot;deepskyblue4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Intervention&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+motiCont &lt;-<span class="st"> </span>regulations.df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(intervention <span class="op">==</span><span class="st"> &quot;0&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;deepskyblue&quot;</span>, <span class="st">&quot;deepskyblue4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Control&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+<span class="co"># (&quot;Seldom or never&quot;, &quot;About once a month&quot;, &quot;About once a week&quot;, &quot;Almost daily&quot;)</span>
+
+<span class="co"># This draws all histograms next to each other:</span>
+motiInt <span class="op">+</span><span class="st"> </span>motiCont <span class="op">+</span><span class="st"> </span>motiGirls <span class="op">+</span><span class="st"> </span>motiBoys <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>)
+## Warning: Removed 196 rows containing non-finite values (stat_binline).
+## Warning: Removed 142 rows containing non-finite values (stat_binline).
+## Warning: Removed 215 rows containing non-finite values (stat_binline).
+## Warning: Removed 123 rows containing non-finite values (stat_binline).</code></pre></div>
+<p><img src="baseline-supplement_files/figure-html/motivation-histograms-gender-intervention-1.png" width="2100" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">regulations.df_tracks &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
+  id,
+  track,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1, 
+  PA_integrated_02_T1,
+  PA_integrated_03_T1, 
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1)
+
+
+motiNUR &lt;-<span class="st"> </span>regulations.df_tracks <span class="op">%&gt;%</span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;Nur&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;darkolivegreen2&quot;</span>, <span class="st">&quot;darkolivegreen4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Nur&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+motiHRC &lt;-<span class="st"> </span>regulations.df_tracks <span class="op">%&gt;%</span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;HRC&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;darkolivegreen2&quot;</span>, <span class="st">&quot;darkolivegreen4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;HRC&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+motiBA &lt;-<span class="st"> </span>regulations.df_tracks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;BA&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;deepskyblue&quot;</span>, <span class="st">&quot;deepskyblue4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;BA&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+motiIT &lt;-<span class="st"> </span>regulations.df_tracks <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(track <span class="op">==</span><span class="st"> &quot;IT&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Value, <span class="dt">y =</span> Variable, <span class="dt">group =</span> Variable)) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">geom_density_ridges2</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> Variable), <span class="dt">stat =</span> <span class="st">&quot;binline&quot;</span>, <span class="dt">binwidth =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>), <span class="dt">expand =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),
+                     <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="dv">0</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_fill_cyclical</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;deepskyblue&quot;</span>, <span class="st">&quot;deepskyblue4&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;IT&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">y =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>),
+        <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
+<span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">5.5</span>))
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+<span class="co"># (&quot;Seldom or never&quot;, &quot;About once a month&quot;, &quot;About once a week&quot;, &quot;Almost daily&quot;)</span>
+
+<span class="co"># This draws all histograms next to each other:</span>
+motiNUR <span class="op">+</span><span class="st"> </span>motiHRC <span class="op">+</span><span class="st"> </span>motiBA <span class="op">+</span><span class="st"> </span>motiIT <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>)
+## Warning: Removed 137 rows containing non-finite values (stat_binline).
+## Warning: Removed 33 rows containing non-finite values (stat_binline).
+## Warning: Removed 55 rows containing non-finite values (stat_binline).
+## Warning: Removed 18 rows containing non-finite values (stat_binline).</code></pre></div>
+<p><img src="baseline-supplement_files/figure-html/motivation-histograms-tracks-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
@@ -8879,6 +9686,8 @@ plot1 <span class="op">+</span><span class="st"> </span>plot2
 </div>
 <div id="informativeness-of-averages" class="section level1">
 <h1>Informativeness of averages</h1>
+<p>If we consider all four primary outcomes, how representative are the point estimates of the average values? It is perhaps no surprise, that no single individual can be exactly average on all the four variables, but creating a band of permissiveness around that average can help answer the aforementioned question.</p>
+<p>Plot below shows how large a band around the median (x-axis) is needed to be able to describe the proportion of participant on the y-axis.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># total_n &lt;- df %&gt;% select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, padaysLastweek_T1, sitBreaksAccelerometer_T1) %&gt;% </span>
 <span class="co">#   na.omit(.) %&gt;% </span>
@@ -8886,14 +9695,15 @@ plot1 <span class="op">+</span><span class="st"> </span>plot2
                      
 middle_x_percentile &lt;-<span class="st"> </span><span class="cf">function</span>(middle_percentile) {
   df <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>((df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
-<span class="st">                  </span>(df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span>
-<span class="st">                </span>(df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
-<span class="st">                 </span>(df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span><span class="st"> </span>
-<span class="st">                </span>(df<span class="op">$</span>padaysLastweek_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
-<span class="st">                  </span>(df<span class="op">$</span>padaysLastweek_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span>
-<span class="st">                </span>(df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
-<span class="st">                  </span>(df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]])) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(
+    (df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
+<span class="st">    </span>(df<span class="op">$</span>mvpaAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span>
+<span class="st">    </span>(df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
+<span class="st">    </span>(df<span class="op">$</span>sitLieAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">    </span>(df<span class="op">$</span>padaysLastweek_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
+<span class="st">    </span>(df<span class="op">$</span>padaysLastweek_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]]) <span class="op">&amp;</span>
+<span class="st">    </span>(df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">1</span>]]) <span class="op">&amp;</span>
+<span class="st">    </span>(df<span class="op">$</span>sitBreaksAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(df<span class="op">$</span>sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middle_percentile<span class="op">/</span><span class="dv">2</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)[[<span class="dv">2</span>]])) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">nrow</span>(.)
 }
   
@@ -8901,25 +9711,26 @@ middle_x_percentile &lt;-<span class="st"> </span><span class="cf">function</spa
 getmiddle &lt;-<span class="st"> </span><span class="cf">function</span>(middlePerc) {                                       
 df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mvpaAccelerometer_T1, padaysLastweek_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">na.omit</span>(.) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>(), 
-                   <span class="dt">middle =</span> <span class="kw">sum</span>((mvpaAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
-<span class="st">                                      </span>(mvpaAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
-<span class="st">                                      </span>(padaysLastweek_T1 <span class="op">&gt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
-<span class="st">                                      </span>(padaysLastweek_T1 <span class="op">&lt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
-<span class="st">                                      </span>(sitLieAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
-<span class="st">                                      </span>(sitLieAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
-<span class="st">                                      </span>(sitBreaksAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
-<span class="st">                                      </span>(sitBreaksAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
-<span class="st">                                       </span>(<span class="kw">quantile</span>(sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]]))
-                                     )) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">perc =</span> middle<span class="op">/</span>n)
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(
+    <span class="dt">n =</span> <span class="kw">n</span>(), 
+    <span class="dt">middle =</span> <span class="kw">sum</span>((mvpaAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                </span>(mvpaAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(mvpaAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
+<span class="st">                </span>(padaysLastweek_T1 <span class="op">&gt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                </span>(padaysLastweek_T1 <span class="op">&lt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(padaysLastweek_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
+<span class="st">                </span>(sitLieAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                </span>(sitLieAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(sitLieAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]])) <span class="op">&amp;</span>
+<span class="st">                </span>(sitBreaksAccelerometer_T1 <span class="op">&gt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">1</span>]])) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                </span>(sitBreaksAccelerometer_T1 <span class="op">&lt;</span><span class="st"> </span>
+<span class="st">                 </span>(<span class="kw">quantile</span>(sitBreaksAccelerometer_T1, <span class="dt">probs =</span> <span class="kw">c</span>(<span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>, <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span>middlePerc<span class="op">/</span><span class="dv">2</span>))[[<span class="dv">2</span>]]))
+               )) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="kw">mutate</span>(<span class="dt">perc =</span> middle<span class="op">/</span>n)
 }
 
 
@@ -9009,7 +9820,7 @@ meansplot_df <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="co">#   scale_y_continuous(breaks = seq(0, 100, by = 10)) +</span>
 <span class="co">#   scale_x_continuous(breaks = seq(0, 100, by = 10)) +</span>
 <span class="co">#   theme_light()</span></code></pre></div>
-<p>2 percent of participants fell in the middle 30% of all four outcome variables.</p>
+<p>We see that, for example, 2 percent of participants fell in the middle 30% of all four outcome variables.</p>
 </div>
 <div id="types-of-self-reported-exercise" class="section level1">
 <h1>Types of self-reported exercise</h1>
@@ -9067,16 +9878,6 @@ exerciseTypes_pvals[i<span class="op">-</span><span class="dv">1</span>] &lt;-<s
 ## Warning in prop.test(exerciseTypes_test[, 1], exerciseTypes_test[, 2]):
 ## Chi-squared approximation may be incorrect
 
-<span class="kw">data.frame</span>(<span class="st">&quot;Exercise type&quot;</span> =<span class="st"> </span><span class="kw">names</span>(exerciseTypes_df)[<span class="dv">1</span><span class="op">:</span><span class="dv">14</span>], <span class="st">&quot;p-values: educational tracks&quot;</span> =<span class="st"> </span>exerciseTypes_pvals) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-4a921f8ceb2012b391a6" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4a921f8ceb2012b391a6">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],["Team ball games","Other ball games","Gym training","Combat sports","Fitness classes","Home workout","Cycling","Swimming","Walking","Running","Skiing","Roller skating","Horseback riding","Other"],[0.00018,0.33314,0.00382,0.248,0.01828,6e-005,0,0,0,0.00049,0.00055,0.29701,0.47324,0.93672]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Exercise.type<\/th>\n      <th>p.values..educational.tracks<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-exerciseTypes_proportions <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-3b0f460beae27419a0fc" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3b0f460beae27419a0fc">{"x":{"filter":"none","data":[["1","2","3","4"],["IT","BA","HRC","Nur"],[0.159509202453988,0.301418439716312,0.164319248826291,0.194029850746269],[0.0674846625766871,0.0638297872340425,0.0328638497652582,0.0671641791044776],[0.294478527607362,0.450354609929078,0.413145539906103,0.350746268656716],[0.0858895705521472,0.0921985815602837,0.0657276995305164,0.054726368159204],[0.00613496932515337,0.0709219858156028,0.0469483568075117,0.0646766169154229],[0.0674846625766871,0.223404255319149,0.234741784037559,0.228855721393035],[0.153374233128834,0.0815602836879433,0.0751173708920188,0.236318407960199],[0.049079754601227,0.0354609929078014,0.0516431924882629,0.161691542288557],[0.521472392638037,0.390070921985816,0.52112676056338,0.659203980099503],[0.134969325153374,0.26241134751773,0.272300469483568,0.305970149253731],[0.0429447852760736,0.049645390070922,0.0751173708920188,0.00995024875621891],[0,0.00354609929078014,0.00469483568075117,0.0124378109452736],[0.0245398773006135,0.0354609929078014,0.0234741784037559,0.0447761194029851],[0.104294478527607,0.099290780141844,0.107981220657277,0.114427860696517]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>track<\/th>\n      <th>Team ball games<\/th>\n      <th>Other ball games<\/th>\n      <th>Gym training<\/th>\n      <th>Combat sports<\/th>\n      <th>Fitness classes<\/th>\n      <th>Home workout<\/th>\n      <th>Cycling<\/th>\n      <th>Swimming<\/th>\n      <th>Walking<\/th>\n      <th>Running<\/th>\n      <th>Skiing<\/th>\n      <th>Roller skating<\/th>\n      <th>Horseback riding<\/th>\n      <th>Other<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13,14,15]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># For girls and boys</span>
 
 exerciseTypes_girlboy_proportions &lt;-<span class="st"> </span>exerciseTypes_df <span class="op">%&gt;%</span>
@@ -9104,17 +9905,31 @@ exerciseTypes_girlboy_test &lt;-<span class="st"> </span><span class="kw">data.f
 exerciseTypes_girlboy_pvals[i<span class="op">-</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">prop.test</span>(exerciseTypes_girlboy_test[, <span class="dv">1</span>], exerciseTypes_girlboy_test[, <span class="dv">2</span>])<span class="op">$</span>p.value <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(., <span class="dv">5</span>)
 }
 ## Warning in prop.test(exerciseTypes_girlboy_test[, 1],
-## exerciseTypes_girlboy_test[, : Chi-squared approximation may be incorrect
-
-<span class="kw">data.frame</span>(<span class="st">&quot;Exercise type&quot;</span> =<span class="st"> </span><span class="kw">names</span>(exerciseTypes_girlboy_cases)[<span class="dv">2</span><span class="op">:</span><span class="dv">15</span>], <span class="st">&quot;p-values: boys vs. girls&quot;</span> =<span class="st"> </span>exerciseTypes_girlboy_pvals)  <span class="op">%&gt;%</span><span class="st"> </span>
+## exerciseTypes_girlboy_test[, : Chi-squared approximation may be incorrect</code></pre></div>
+<p>Here are the proportions of different sports as reported by participants in different educational tracks:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+exerciseTypes_proportions <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-c0a473d2993b2aba9f3e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c0a473d2993b2aba9f3e">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],["Team ball games","Other ball games","Gym training","Combat sports","Fitness classes","Home workout","Cycling","Swimming","Walking","Running","Skiing","Roller skating","Horseback riding","Other"],[0,0.06107,0.00165,0,0,0,0.36143,0.0061,0,0.00087,1,0.14735,0,0.96784]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Exercise.type<\/th>\n      <th>p.values..boys.vs..girls<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-0c8b872769f756cf56ad" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0c8b872769f756cf56ad">{"x":{"filter":"none","data":[["1","2","3","4"],["IT","BA","HRC","Nur"],[0.159509202453988,0.301418439716312,0.164319248826291,0.194029850746269],[0.0674846625766871,0.0638297872340425,0.0328638497652582,0.0671641791044776],[0.294478527607362,0.450354609929078,0.413145539906103,0.350746268656716],[0.0858895705521472,0.0921985815602837,0.0657276995305164,0.054726368159204],[0.00613496932515337,0.0709219858156028,0.0469483568075117,0.0646766169154229],[0.0674846625766871,0.223404255319149,0.234741784037559,0.228855721393035],[0.153374233128834,0.0815602836879433,0.0751173708920188,0.236318407960199],[0.049079754601227,0.0354609929078014,0.0516431924882629,0.161691542288557],[0.521472392638037,0.390070921985816,0.52112676056338,0.659203980099503],[0.134969325153374,0.26241134751773,0.272300469483568,0.305970149253731],[0.0429447852760736,0.049645390070922,0.0751173708920188,0.00995024875621891],[0,0.00354609929078014,0.00469483568075117,0.0124378109452736],[0.0245398773006135,0.0354609929078014,0.0234741784037559,0.0447761194029851],[0.104294478527607,0.099290780141844,0.107981220657277,0.114427860696517]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>track<\/th>\n      <th>Team ball games<\/th>\n      <th>Other ball games<\/th>\n      <th>Gym training<\/th>\n      <th>Combat sports<\/th>\n      <th>Fitness classes<\/th>\n      <th>Home workout<\/th>\n      <th>Cycling<\/th>\n      <th>Swimming<\/th>\n      <th>Walking<\/th>\n      <th>Running<\/th>\n      <th>Skiing<\/th>\n      <th>Roller skating<\/th>\n      <th>Horseback riding<\/th>\n      <th>Other<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13,14,15]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p>These are p-values for tests of differences in proportions across the tracks. Remember, that exactly zero differences would be unexpected, so testing the null hypothesis of zero difference isn’t very informative. In addition, tests do not take clustering into account, so interpret with care!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">data.frame</span>(<span class="st">&quot;Exercise type&quot;</span> =<span class="st"> </span><span class="kw">names</span>(exerciseTypes_df)[<span class="dv">1</span><span class="op">:</span><span class="dv">14</span>], <span class="st">&quot;p-values: educational tracks&quot;</span> =<span class="st"> </span>exerciseTypes_pvals) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
+<div id="htmlwidget-427d6a37872a8921d6db" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-427d6a37872a8921d6db">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],["Team ball games","Other ball games","Gym training","Combat sports","Fitness classes","Home workout","Cycling","Swimming","Walking","Running","Skiing","Roller skating","Horseback riding","Other"],[0.00018,0.33314,0.00382,0.248,0.01828,6e-005,0,0,0,0.00049,0.00055,0.29701,0.47324,0.93672]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Exercise.type<\/th>\n      <th>p.values..educational.tracks<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p>Here are the proportions by gender:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 exerciseTypes_girlboy_proportions <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
-<div id="htmlwidget-0f2d20efd170512b2c77" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0f2d20efd170512b2c77">{"x":{"filter":"none","data":[["1","2"],["girl","boy"],[0.110929853181077,0.339702760084926],[0.0473083197389886,0.0764331210191083],[0.33768352365416,0.43312101910828],[0.0309951060358891,0.123142250530786],[0.0864600326264274,0.0127388535031847],[0.283849918433931,0.0976645435244161],[0.159869494290375,0.138004246284501],[0.114192495921697,0.0636942675159236],[0.64926590538336,0.407643312101911],[0.301794453507341,0.210191082802548],[0.0391517128874388,0.0382165605095541],[0.0032626427406199,0.0127388535031847],[0.0603588907014682,0.00424628450106157],[0.110929853181077,0.10828025477707]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>girl<\/th>\n      <th>Team ball games<\/th>\n      <th>Other ball games<\/th>\n      <th>Gym training<\/th>\n      <th>Combat sports<\/th>\n      <th>Fitness classes<\/th>\n      <th>Home workout<\/th>\n      <th>Cycling<\/th>\n      <th>Swimming<\/th>\n      <th>Walking<\/th>\n      <th>Running<\/th>\n      <th>Skiing<\/th>\n      <th>Roller skating<\/th>\n      <th>Horseback riding<\/th>\n      <th>Other<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13,14,15]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-91bdfc710cecdbfab477" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-91bdfc710cecdbfab477">{"x":{"filter":"none","data":[["1","2"],["girl","boy"],[0.110929853181077,0.339702760084926],[0.0473083197389886,0.0764331210191083],[0.33768352365416,0.43312101910828],[0.0309951060358891,0.123142250530786],[0.0864600326264274,0.0127388535031847],[0.283849918433931,0.0976645435244161],[0.159869494290375,0.138004246284501],[0.114192495921697,0.0636942675159236],[0.64926590538336,0.407643312101911],[0.301794453507341,0.210191082802548],[0.0391517128874388,0.0382165605095541],[0.0032626427406199,0.0127388535031847],[0.0603588907014682,0.00424628450106157],[0.110929853181077,0.10828025477707]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>girl<\/th>\n      <th>Team ball games<\/th>\n      <th>Other ball games<\/th>\n      <th>Gym training<\/th>\n      <th>Combat sports<\/th>\n      <th>Fitness classes<\/th>\n      <th>Home workout<\/th>\n      <th>Cycling<\/th>\n      <th>Swimming<\/th>\n      <th>Walking<\/th>\n      <th>Running<\/th>\n      <th>Skiing<\/th>\n      <th>Roller skating<\/th>\n      <th>Horseback riding<\/th>\n      <th>Other<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5,6,7,8,9,10,11,12,13,14,15]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p>These are p-values for tests of differences in proportions across genders. Remember, that exactly zero differences would be unexpected, so testing the null hypothesis of zero difference isn’t very informative. In addition, tests do not take clustering into account, so interpret with care!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw">data.frame</span>(<span class="st">&quot;Exercise type&quot;</span> =<span class="st"> </span><span class="kw">names</span>(exerciseTypes_girlboy_cases)[<span class="dv">2</span><span class="op">:</span><span class="dv">15</span>], <span class="st">&quot;p-values: boys vs. girls&quot;</span> =<span class="st"> </span>exerciseTypes_girlboy_pvals)  <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>() <span class="co">#papaja::apa_table()</span></code></pre></div>
+<div id="htmlwidget-aa134e8d9b5e9e1d3485" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-aa134e8d9b5e9e1d3485">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],["Team ball games","Other ball games","Gym training","Combat sports","Fitness classes","Home workout","Cycling","Swimming","Walking","Running","Skiing","Roller skating","Horseback riding","Other"],[0,0.06107,0.00165,0,0,0,0.36143,0.0061,0,0.00087,1,0.14735,0,0.96784]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Exercise.type<\/th>\n      <th>p.values..boys.vs..girls<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>CIBER (not included for now)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#p_install(&quot;userfriendlyscience&quot;)</span>
 

@@ -1,6 +1,295 @@
 ---
-title: "baseline manuscript"
+title             : "Demonstrating opportunities of visualisation and network analysis in physical activity and its determinants: Baseline associations in the Let's Move It trial"
+shorttitle        : "Visualisation and network analysis in physical activity"
+author: 
+    
+  - name          : "Matti T. J. Heino"
+    affiliation   : "1,2*"
+    corresponding : yes    # Define only one corresponding author
+    address       : ""
+    email         : "matti.tj.heino@gmail.com"
+  - name          : "Eiko Fried"
+    affiliation   : "3"
+  - name          : "Reijo Sund"
+    affiliation   : "1,2"
+  - name          : "Ari Haukkala"
+    affiliation   : "1"
+  - name          : "Keegan Knittle"
+    affiliation   : "1"
+  - name          : "Katja Borodulin"
+    affiliation   : "1" 
+  - name          : "Antti Uutela"
+    affiliation   : "1" 
+  - name          : "Vera Araujo-Soares"
+    affiliation   : "1"        
+  - name          : "Falko Sniehotta"
+    affiliation   : "1"        
+  - name          : "Tommi Vasankari"
+    affiliation   : "1"        
+  - name          : "Nelli Hankonen"
+    affiliation   : "1"        
+        
+  - id            : "1"
+    institution   : "Department of Social Research, University of Helsinki"
+  - id            : "2"
+    institution   : "Faculty of Social Sciences, University of Tampere"
+  - id            : "3"
+    institution   : "Department of Psychology, Columbia University"
+author_note: >
+  Trial Registration Number: ISRCTN10979479. Registered retrospectively: 31.12.2015
+abstract: >
+  Background: Let's Move It is a cluster-randomised controlled trial evaluating a novel theory-based intervention, which aimed to reduce sedentary behaviour (SB) and increase physical activity (PA) among older adolescents in vocational schools, by targeting environmental and psychosocial determinants of the phenomena. This paper describes the characteristics of the LMI baseline cohort in both arms, and explores the possibilities for visually presenting such data, making use of recent developments in software and network analyses. We provide a template for researchers to apply these tools to other data.
+  Methods: At baseline, 1123 adolescents in 57 classes in 6 school units participated in the study. Data were gathered with 7-day accelerometry, bioimpedance measures and questionnaires, which were used to measure health status, activity behaviours, and potential constructs mediating the effect of the intervention on outcomes. Data were visualised e.g. combining ridge plots and diamond plots; network analysis was used to investigate relations between psychosocial variables and outcomes.
+  Results: The participants were 16-49 years old (M = 18.5, SD = xx, Md = 18.0). On average, they engaged in moderate-to-vigorous PA xx (SD = xx, Md = xx) and SB xx minutes daily and xx breaks in SB. Several variables differ among the four educational tracks, but not across intervention and control groups. 
+  Conclusion: The usage of behaviour change techniques  Autonomous motivation . Comparability to similar populations.. We have also shown benefits of presenting such data visually, and encourage researchers to routinely make the extensive analyses and descriptions they have produced, available in website supplements.
+keywords          : "exercise, physical activity, school-based intervention, behaviour change, sedentary behavior"
+wordcount         : "X"
+figsintext        : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : yes
+mask              : no
+bibliography      : baseline-visu.bib
+lang              : "english"
+documentclass     : "apa6"
+classoption       : "man"  # man / doc / jou (& other comma separated options)
+output: 
+  papaja::apa6_pdf: default
+  papaja::apa6_word: default
 ---
 
-Manuscript will be here once it gets moved from Google Docs.
+```{r setup, include = FALSE}
 
+knitr::opts_chunk$set(echo = FALSE, 
+               warning = FALSE,
+               error = TRUE,
+               cache = TRUE, 
+               collapse = TRUE)
+
+# rmarkdown::render(input = "_baseline-manuscript.Rmd", output_format = "papaja::apa6_word") 
+
+```
+
+```{r load-data}
+
+source("baseline-datasetup.R")
+
+```
+
+
+\newpage
+
+# Background
+
+Declining physical activity (PA) and increasing sedentary behaviour (SB) are growing concerns for public health, especially for individuals with low socioeconomic status (SES) [@elgarSocioeconomicInequalitiesAdolescent2015]. Patterns of low PA among adults begin earlier in life. Among children, the evidence regarding psychosocial predictors of PA and SB, and especially objectively measured activity, is quite clear (CITE KATJA? ). There is however less knowledge about the predictors of PA and SB in adolescence. As there is evidence that the declines in PA and increases in SB are already evident in childhood and adolescence [@husuObjectivelyMeasuredSedentary2016; @makelaPhysicalActivityScreen2016], there is a need for further research on to how to improve PA and SB among adolescents, so that healthier behavioral patterns can be carried into adulthood. This is crucial from both the point of view of individuals' later quality of life, as well as from that of a healthcare system struggling with rising costs of treating non-communicable diseases [@dielemanTrendsFutureHealth2018].
+
+As adolescents spend a significant amount of their time in schools, schools provide a promising opportunity for PA interventions REF[@vansluijsPhysicalActivityDietary2008]. However, few trials have evaluated the effectiveness of complex theory-based interventions in changing physical activity and sedentary behaviours among older adolescents in schools, and none of them have demonstrated lasting effects on physical activity behaviours [@hynynenSystematicReviewSchoolbased2016]. The Let's Move It intervention was designed to address this gap, and aimed to reduce SB and increase PA among adolescents in vocational schools.  Let's Move It is a multi-level intervention that was developed using stakeholder input and co-creation with target group representatives, as well as behavioural science theory and empirical evidence [@hankonenWhatExplainsSocioeconomic2017; @hynynenSystematicReviewSchoolbased2016]. The effectiveness of Let's Move It has now been tested in a cluster-randomised controlled trial. Contrary to typical school-based interventions with uniform study populations, this trial was carried out in vocational schools with different educational tracks, differences between which may be important to making accurate conclusions in the trial evaluation phase. 
+
+The programme theory (explicated in REF: DEVELOPMENT; see also process eval, @rogersUsingProgrammeTheory2008a p. 32) for changing PA and SB was hypothesised to be slightly different for PA and SB. In order to engage in PA, one needs to have a conscious effort and self-regulatory capacity to make use of the opportunities, such as planning for active times and overcoming barriers to exercise. In the intervention, one of the key emphases in helping adolescents change their PA was to help them understand and use techniques to manage their motivation and behaviour (see also Hankonen et al 2017 feasibility). The use of these techniques was also measured in the trial. Assessing what participants do to advances our understanding of what people themselves can do to in attempts to change their behaviour. To date, there is little systematic theorising on how these techniques link to each other, and it would be important to understand these interlinkages empirically. The model for SB, on the other hand, is more driven by environmental opportunities and incentives, such as having the option of standing up during class.
+
+In order to change moderate-to-vigorous-intensity PA, a central component of the intervention targeted autonomous motivation, social cognitions, as well as participants' skills to use behaviour change techniques to self-regulate motivation and behaviour (Hankonen et al, unpublished manuscript). To change SB, or specifically, to reduce total SB as well as introduce breaks in SB, the program aimed to change the school environment by training teachers in providing more active teaching and altering physical choice architecture in classrooms (Köykkä et al, under review) . The intervention included also poster campaign in schools and a website, as well as materials to target community actors and parents (Hankonen et al 2016). More information of the content of the intervention and the development of it is reported elsewhere (Hankonen et al 2017, Hankonen et al unpublished manuscript). The mediators postulated by the program theor  y included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, environmental opportunities, action and coping planning, and behaviour change technique (BCT) use. Key hypotheses regarding students' PA change have been registered OSF (https://osf.io/tb8fu/). It has long been a standard recommendation for quantitative analyses to investigate data visually as a core precursor of conducting statistical analyses (Tukey 1977 Exploratory Data Analysis; Cleveland 1993 Visualizing data). However, in social and life sciences, such visualizations have rarely been shared in publications. Information about data are usually limited to means and standard deviations, which presents at best limited information about the variables of interest. Medians, modes, skewness and kurtosis provide helpful additional information, but can still hide important distributional properties.
+
+Successful communication of important information includes additional means of communication to flooding readers with unintuitive numerical point values or easily reified bound estimates, such as confidence intervals. Visualizing data is imperative, because it allows for communicating large amounts of information-and the associated uncertainty-in an accessible format, without requiring extensive mathematical background from the reader. Unfortunately, traditional word count limits in scientific publications, along with a stringent limitations on the number of tables and figures that can be included, have prohibited researchers sharing data visualization. When researchers extend work on previous findings of others, they thus may not know that they are working with inadequately complete information; this has direct implications to the recent crisis of confidence in the reproducibility and replicability of research findings (REF).
+
+Three recent developments allow a different approach. First, many journals now allow for publication of supplementary online materials, which circumvents both word and figure restrictions of traditional manuscripts. Second, statistical software such as R (REF) has recently become increasingly mainstream among applied researchers, opening the door for a wide variety of data visualisation techniques. Third, novel statistical methods in social and health psychology, such as psychological network analysis, may help in understanding relationships of variables by making better use of visual representations of their associations. 
+
+**SOSPSYKAMMAT AIMIT?**
+In summary, by describing the characteristics of the Let's Move It baseline cohort, the current paper aims to (1) provide a strong rationale for the urgency of data visualization, discusses its advantages, and recent developments in scientific publishing, statistical software, and statistical models that enable researchers to use data visualization tools more easily and efficiently; (2) provides a detailed visualization of the LMI trial baseline data, with focus on psychosocial correlates and hypothesised mediators of the intervention effect on moderate-to-vigorous physical activity; and (3) provides all code and delivers the information in a format which only necessitates a web browser to access. 
+
+# Methods
+
+The study has been described earlier in [REF PROTOCOL].  In brief, the study was a cluster-randomised controlled trial of a complex multi-level intervention based in Finnish vocational schools. The consenting participants answered an electronic survey, underwent bioimpedance measurement and were instructed to wear an accelerometer for seven consecutive days. 
+
+Study design, screening and recruitment
+
+Five schools consisting of four educational tracks; 1. Practical Nurse (Nur), 2. Hotel, Restaurant and Catering (HRC), 3. Business and Administration (BA), and 4. Information and Communications Technology (IT) were recruited. Schools were paired so that there would be matching numbers of students from each educational track for both members of the pair. Blinded randomization by a statistician without knowledge of pairs, track or schools was then conducted so that a random member of each pair was selected as case school, the other as control school (details reported in REF protocol Hankonen et al 2016). Participants were blind to randomisation at baseline. 
+
+## Measures  
+
+The measurements have been previously described in [REF PROTOCOL], and all individual items of the scales described below are available in the supplementary file [MATTI TODO]. Thus, we will present these baseline measures only briefly.
+
+### Primary outcome variables
+
+The primary outcome for PA was moderate-to-vigorous intensity physical activity (MVPA). It was measured by accelerometry and self-reports. Primary outcomes for sedentary behaviour (SB) were measured by the accelerometer. They included time spent sitting or lying down, and the number of times sitting was interrupted during a day.
+
+*Self-reported MVPA.* Self-reported MVPA was measured with two questions in accordance with the NordPAQ measurement (FAGT, S., ANDERSEN, L. F., ANDERSSEN, S. A., BECKER, W., BORODULIN, K., FOGELHOLM, M., GROTH, M. V., GUNNARSDOTTIR, I., HELAKORPI, S., KOLLE, E., MATTHIESSEN, J., ROSENLUND-SORENSEN, M., SIMONEN, R., SVEINSSON, T., TAMMELIN, T., THORGEIRSDOTTIR, H., VALSTA, L. & TROLLE, E. (2011) Nordic Monitoring of diet, physical activity and overweight. Validation of indicators. Nordic Council of Ministers). The first question asked participants about the number of days in which they did more than 30 minutes of MVPA during the last week, the other asked about the overall amount of MVPA (in hours) during the previous week.   
+
+*Accelerometer-measured MVPA.*  Within one week after responding to the questionnaire, students were given an accelerometer to be worn for seven consecutive days. The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a digital triaxial acceleration sensor (ADXL345; Analog Devices, Norwood MA) was attached to a flexible belt and participants were instructed to wear the belt around their right hip for seven consecutive days during waking hours, except during shower and other water activities. The acceleration signal was collected at 100 Hz sampling frequency, ±16 g acceleration range and 0.004 g resolution. PA-parameters were based on mean amplitude deviation (MAD) of the resultant acceleration analysed in 6s epochs [@vaha-ypyaUniversalAccurateIntensitybased2015]. The MAD values were then converted to MET values [@vaha-ypyaValidationCutpointsEvaluating2015]. The epoch-wise MET values were further smoothed by calculating 1min [TOMMI CHECK if 1min moving avg or 6s epoch] exponential moving average. Using the smoothed MET values total PA was classified in terms of energy consumption covering MET values higher than 1.5 and moderate-to-vigorous PA (MVPA) covering MET values equal to or higher than 3 [@vaha-ypyaUniversalAccurateIntensitybased2015; @vaha-ypyaValidationCutpointsEvaluating2015]. 
+
+*Sedentary behaviour.* According to the definition of SB [@tremblaySedentaryBehaviorResearch2017], time spent in sitting and reclining positions were combined to indicate SB, whereas standing was analysed separately as another form of stationary behavior. Body postures were recognized from the raw acceleration data by employing both direction and intensity information from all three measurement axes. The recognition was based on the low intensity of movement (<1.5 MET) and the accelerometer orientation in relation to identified upright position (angle for posture estimation, APE) calculated at the end of each 6 s epoch [@vaha-ypyaReliableRecognitionLying2018]. 
+
+### Theoretical predictors of PA
+
+The mediators postulated by the program theory included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, opportunities, action- and coping planning, and behaviour change technique (BCT) use. Participants were allowed to skip questions, and scales were computed as means of all items where responses were available. Items and scales are available in the supplemental file.
+
+### Statistical analysis
+
+We used R … Data were visualised as density plots using packages sm, ggplot2 ...  [Program, this is what will be shown and this is how variables will be summarised]. 
+
+[from Kerala paper: “linear regression for continuous variables and logistic regression (including multinomial for unordered categories and ordinal for ordered categories) for categorical variables, with P values based on Huber–White standard errors that were adjusted for clustering by polling booths. Skewed variables were log-transformed before analysis. Two-sided P values <0.05 were taken to indicate statistical significance.”]
+
+We used psychological network analysis to estimate and visualize relations among items. Such networks contain nodes (variables) and edges (statistical relationships between variables). We used state-of-the-art network models that estimate conditional dependence relations among a set of items, which can be interpreted akin to partial correlations. An edge between two variables implies that they are related after controlling for all other items; the absence of an edge implies that the two items are conditionally independent. 
+
+Specifically, we used a Mixed Graphical Model that is the appropriate network model for our data. This model uses regularization, a procedure that has been shown to help recover the true network structure in data in case the data were simulated under a network model. Regularization has the goal to avoid estimating spurious relationships among items (i.e. false positive relations), and results in a parsimonious network structure. The regularization technique used here is the Least Absolute Shrinkage and Selection Operator (LASSO; @tibshiraniRegressionShrinkageSelection1996), which shrinks all edges and sets very small edges to exact zero. A paper that explains lasso regularization in network models in detail can be found elsewhere (REF). 
+
+Network analysis has recently shown promise in many fields such as personality, intelligence, psychopathology, and empathy research (REF), and is beginning to be applied for health behaviours on a broader scale (REF). Several helpful tutorial papers aimed at empirical researchers working in psychology are available (3-5 REFS).
+
+Network models applied to between-subjects data at one time-point can be useful for describing health psychological data, as well as facilitating group-level hypothesis generation regarding which parts of the system are central for a problem at hand (“Moving forward…”). Identifying these determinants of importance can thus supplement traditional structural equation modeling (SEM) approaches, while dealing with some possibly problematic approaches to SEM (REF Borsboom theoretical status of latent variables, Bringmann 2018, but see also Bringmann & Eronen, 2018).
+Network analysis naturally entails its own set of assumptions. As with any model, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to justify argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. Behaviour change technique usage seems less problematic in this regard. 
+
+Findings
+
+```{r demographics-load, echo = FALSE}
+
+load("./data/demographics.Rdata")
+load("./Rdata_files/demotable.Rdata")
+
+text_bornInFinland <- demographics %>% summarise(mean(bornInFinland, na.rm = TRUE)) %>% pull(.) %>% round(., 3) %>% scales::percent()
+text_girlPercentage <- demographics %>% summarise(mean(girl, na.rm = TRUE)) %>% pull(.) %>% round(., 3) %>% scales::percent()
+text_boyPercentage <- demographics %>% summarise(1 - mean(girl, na.rm = TRUE)) %>% pull(.) %>% round(., 3) %>% scales::percent()
+
+text_girlPercentageNursing <- demographics %>% group_by(Track) %>% summarise(mean(girl, na.rm = TRUE)) %>% filter(Track == "Nur") %>% pull(.) %>% round(., 3) %>% scales::percent()
+text_girlPercentageIT <- demographics %>% group_by(Track) %>% summarise(mean(girl, na.rm = TRUE)) %>% filter(Track == "IT") %>% pull(.) %>% round(., 3) %>% scales::percent()
+
+text_agerangeLow <- demographics %>% summarise(range(age, na.rm = TRUE)[1]) %>% pull(.)
+text_agerangeHigh <- demographics %>% summarise(range(age, na.rm = TRUE)[2]) %>% pull(.)
+text_ageMean <- demographics %>% summarise(mean(age, na.rm = TRUE)) %>% pull(.) %>% round(., 1) 
+text_over20yrOlds <- demographics %>% filter(age >= 20) %>% tally() %>% pull(.)
+```
+
+Table \@ref(tab:demographics-table) shows the main demographic variables of the cohort by educational track. Most (`r text_bornInFinland`) participants were born in Finland. While on average the sample consist of both boys and girls (`r text_boyPercentage` vs. `r text_girlPercentage`), educational tracks were heavily divided by gender: Practical Nurse track had the highest amount of girls (`r text_girlPercentageNursing`) and IT track lowest (`r text_girlPercentageIT`). Age ranged from `r text_agerangeLow` to `r text_agerangeHigh`, with the average age being `r text_ageMean`. Altogether there were `r text_over20yrOlds` students who reported being 20-year-olds or older.
+
+```{r demographics-table, echo = FALSE, results = "asis"}
+
+dt <- demotable %>% dplyr::select("Variable", "Full sample") %>% filter(Variable == "Born in Finland (%)") %>% dplyr::pull()
+papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering studies, BA = Business and administration, IT = Business information technology")
+
+```
+
+Table \@ref(tab:primary-outcome-vars-table-total) shows summary statistics for primary outcome variables with their intra-class correlations (ICCs) for class and school (see supplementary website for ICCs for all variables).
+At baseline, xx%  students provided at least xx days with a minimum of 10 hours per day of valid accelerometer data (xxx/xxxx) (jotain tällaista?).  On average, the youth reported engaging in 30 minutes of MVPA on 2.8 days a week.
+
+
+```{r primary-outcome-vars-table-total, results = 'asis'}
+
+load("./Rdata_files/vardatatable.Rdata")
+
+vardatatable2 <- vardatatable
+vardatatable2$Variable <- gsub("mvpaAccelerometer", "Daily moderate-to-vigorous PA time (accelerometer)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("padaysLastweek", "Number of days with >30 MVPA min previous week (self-report)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("sitLieAccelerometer", "Daily time spent sitting or lying down (accelerometer)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("sitBreaksAccelerometer", "Daily number of times sitting was interrupted (accelerometer)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("lpaAccelerometer", "Daily light PA time (accelerometer)", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("standingAccelerometer", "Daily standing time (accelerometer)", vardatatable2$Variable)
+
+vardatatable2 <- vardatatable2 %>% 
+  dplyr::filter(Variable == "Daily moderate-to-vigorous PA time (accelerometer)*" | 
+           Variable == "Daily time spent sitting or lying down (accelerometer)*" |
+           Variable == "Daily number of times sitting was interrupted (accelerometer)*" |
+           Variable == "Number of days with >30 MVPA min previous week (self-report)*" |
+           Variable == "Daily light PA time (accelerometer)" |
+           Variable == "Daily standing time (accelerometer)") %>% 
+  dplyr::mutate(orderVariable = ifelse(`Variable` == "Daily moderate-to-vigorous PA time (accelerometer)*", "a",
+                                ifelse(`Variable` == "Daily light PA time (accelerometer)", "b",
+                                ifelse(`Variable` == "Daily standing time (accelerometer)", "c",
+                                ifelse(`Variable` == "Daily time spent sitting or lying down (accelerometer)*", "d",
+                                ifelse(`Variable` == "Daily number of times sitting was interrupted (accelerometer)*", "e",
+                                ifelse(`Variable` == "Number of days with >30 MVPA min previous week (self-report)*", "f", NA))))))) %>% 
+  dplyr::arrange(orderVariable) %>% 
+  dplyr::select(-orderVariable)
+
+vardatatable2 %>% 
+    papaja::apa_table(
+        caption = "Primary outcome variables with their class and school ICCs. Primary outcome variables highlighted with asterisks.",
+        escape = TRUE, format.args = list(digits = c(3, 0), margin = 2)
+        )
+
+```
+
+
+```{r network-figure, message = FALSE, include = FALSE, warning = FALSE, echo = FALSE}
+
+bctdf_mgm <- df %>% dplyr::select(
+  'agr-BCTs' = PA_agrbct_T1,
+  'frq-BCTs' = PA_frqbct_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
+  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything(), -contains("-BCTs")) %>% 
+  mutate_all(as.numeric)
+
+bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA # Taking the mean earlier introduced NaN's instead of NAs. This fixes them.
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.) # Omit cases with missing data; # mgm wants full data. See package missForest for imputation methods.
+# bctdf_mgm %>% names()
+mgm_variable_types <- c(rep("g", 4), "c", "c", "g") # Set variable types; categorical for extrinsic and introjected and otherwise gaussian.
+mgm_variable_levels <- c(rep("1", 4), "2", "2", "1") # Set variable levels; "1" for gaussian, "2" for categorical.
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm)) # Check that the levels and types are correct.
+
+# Estimate the mgm object:
+mgm_obj <- mgm::mgm(data = bctdf_mgm, 
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1:4, 3],
+                pred_obj$errors[5:6, 4],
+                pred_obj$errors[7, 3])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need five colors (MVPA, BCTs, motivation x2 & the circle around nodes indicating predictability), and "begin" from ones that are not too dark, so that black text shows up ok.
+node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 2), # 2x Color 2 for autonomous
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 2), # 2x Color 3 for controlled
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[5], 1)) # 1x Color 2 for BCTs
+
+
+```
+
+```{r network-plot, fig.height = 8, fig.cap = "Mixed graphical model: PA, BCTs & motivation", echo = FALSE}
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99999, # To nudge the network from originally bad visual state
+            # title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.99)[2],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 1.5,
+            label.scale = FALSE,
+            node.width = 1.65,
+            theme = "colorblind")
+```
+
+\newpage
+
+# References
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id = "refs"></div>
+\endgroup

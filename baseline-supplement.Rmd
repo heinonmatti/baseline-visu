@@ -6,10 +6,16 @@ Welcome to the LMI baseline supplement! This supplement will walk you through th
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
 
-To start data analysis, we set up the basics to enable compiling the document.
+To start data analysis, we run a data compilation file to enable compiling the document. This file can be found under the tab "Data setup code" on top of the screen.
 
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
+```
+
+Description of the R environment can be found by opening the code chunk below.
+
+```{r session-info}
+devtools::session_info()
 ```
 
 *Note on using package brms*
@@ -161,26 +167,32 @@ load("./Rdata_files/ci_total.Rdata")
 ```{r primary-outcome-vars-table-total, results = 'asis'}
 
 vardatatable2 <- vardatatable
-vardatatable2$Variable <- gsub("mvpaAccelerometer", "Daily MVPA time (accelerometer)", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("padaysLastweek", "Number of days with >30 MVPA min previous week (self-report)", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("sitLieAccelerometer", "Daily time spent sitting or lying down (accelerometer)", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("sitBreaksAccelerometer", "Daily number of times sitting was interrupted (accelerometer)", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("mvpaAccelerometer", "Daily moderate-to-vigorous PA time (accelerometer)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("padaysLastweek", "Number of days with >30 MVPA min previous week (self-report)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("sitLieAccelerometer", "Daily time spent sitting or lying down (accelerometer)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("sitBreaksAccelerometer", "Daily number of times sitting was interrupted (accelerometer)*", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("lpaAccelerometer", "Daily light PA time (accelerometer)", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("standingAccelerometer", "Daily standing time (accelerometer)", vardatatable2$Variable)
 
 vardatatable2 <- vardatatable2 %>% 
-  dplyr::filter(Variable == "Daily MVPA time (accelerometer)" | 
-           Variable == "Daily time spent sitting or lying down (accelerometer)" |
-           Variable == "Daily number of times sitting was interrupted (accelerometer)" |
-           Variable == "Number of days with >30 MVPA min previous week (self-report)") %>% 
-  dplyr::mutate(orderVariable = ifelse(`Variable` == "Daily MVPA time (accelerometer)", "a",
-                                ifelse(`Variable` == "Daily time spent sitting or lying down (accelerometer)", "b",
-                                ifelse(`Variable` == "Daily number of times sitting was interrupted (accelerometer)", "c",
-                                ifelse(`Variable` == "Number of days with >30 MVPA min previous week (self-report)", "d", NA))))) %>% 
+  dplyr::filter(Variable == "Daily moderate-to-vigorous PA time (accelerometer)*" | 
+           Variable == "Daily time spent sitting or lying down (accelerometer)*" |
+           Variable == "Daily number of times sitting was interrupted (accelerometer)*" |
+           Variable == "Number of days with >30 MVPA min previous week (self-report)*" |
+           Variable == "Daily light PA time (accelerometer)" |
+           Variable == "Daily standing time (accelerometer)") %>% 
+  dplyr::mutate(orderVariable = ifelse(`Variable` == "Daily moderate-to-vigorous PA time (accelerometer)*", "a",
+                                ifelse(`Variable` == "Daily light PA time (accelerometer)", "b",
+                                ifelse(`Variable` == "Daily standing time (accelerometer)", "c",
+                                ifelse(`Variable` == "Daily time spent sitting or lying down (accelerometer)*", "d",
+                                ifelse(`Variable` == "Daily number of times sitting was interrupted (accelerometer)*", "e",
+                                ifelse(`Variable` == "Number of days with >30 MVPA min previous week (self-report)*", "f", NA))))))) %>% 
   dplyr::arrange(orderVariable) %>% 
   dplyr::select(-orderVariable)
 
 vardatatable2 %>% 
     papaja::apa_table(
-        caption = "Primary outcome variables with their class and school ICCs",
+        caption = "Primary outcome variables with their class and school ICCs. Primary outcome variables highlighted with asterisks.",
         escape = TRUE, format.args = list(digits = c(3, 0), margin = 2)
         )
 ```
@@ -1046,6 +1058,8 @@ Track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
   dplyr::select(-Kys0016.1, -Kys0017.1)
 
 demographics <- bind_cols(demographics, Track)
+
+save(demographics, file = "./data/demographics.Rdata")
 ```
 
 ## Create demographic tables
@@ -1056,35 +1070,37 @@ demographics <- bind_cols(demographics, Track)
 demotable <- demographics %>% 
   dplyr::filter(track != "Other") %>% 
   dplyr::group_by(Track) %>% 
-  dplyr::summarise(n = n(),
-                    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-                    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-                    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-                    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-                    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
+  dplyr::summarise(
+    n = n(),
+    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
+                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
+                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
+                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
+                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
+                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
+    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
+    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
                                 ) %>% 
   dplyr::filter(complete.cases(.)) %>% 
   dplyr::arrange(desc(Track)) 
 
 demotable_total <- demographics %>% 
-  summarise(n = n(),
-            "Track" = "Full sample",
-                    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-                    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-                    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-                    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-                    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
-            )
+  summarise(
+    n = n(),
+    "Track" = "Full sample",
+    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
+                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
+                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
+                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
+                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
+                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
+    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
+    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
+    )
 
 demotable <- bind_rows(demotable, demotable_total)
 
@@ -1095,6 +1111,8 @@ demotable <- demotable %>%
   dplyr::arrange(-row_number())
 
 # For some reason, sum of n's of all tracks is 1084.
+
+save(demotable, file = "./Rdata_files/demotable.Rdata")
 
 papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 1, 0))
 ```
@@ -1886,7 +1904,7 @@ averageDayActivityPlot_intervention <- df %>%
                      "Standing still" = standingAccelerometer_T1, 
                      "Light PA" = lpaAccelerometer_T1, 
                      "Moderate PA" = mpaAccelerometer_T1, 
-                     "Vigorous PA" = vpaAccelerometer_T1) %>%
+                     "Vigorous PA" = vpaAccelerometer_T1) %>% 
   dplyr::filter(track != "Other") %>% # Drop small track "Other"
   tidyr::gather(variable, value, -(girl:track)) %>% # Convert data to long form
   dplyr::mutate(track = factor(track, ordered = TRUE,
@@ -4144,6 +4162,210 @@ ggstatsplot::ggscatterstats(data = na.omit(dplyr::select(lmi, LiikuntaT1_ka, Kys
 
 ## PA motivation
 
+```{r motivation-histograms-gender-intervention}
+regulations.df <- df %>% dplyr::select(
+  id,
+  intervention,
+  group,
+  school,
+  girl,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1, 
+  PA_integrated_02_T1,
+  PA_integrated_03_T1, 
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1)
+
+
+motiGirls <- regulations.df %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(girl == "girl") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  labs(title = "Girls") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiBoys <- regulations.df %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(girl == "boy") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  labs(title = "Boys") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiInt <- regulations.df %>% 
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(intervention == "1") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "") +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  labs(title = "Intervention") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiCont <- regulations.df %>% 
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(intervention == "0") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  labs(title = "Control") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+# ("Seldom or never", "About once a month", "About once a week", "Almost daily")
+
+# This draws all histograms next to each other:
+motiInt + motiCont + motiGirls + motiBoys + plot_layout(nrow = 1)
+```
+
+```{r motivation-histograms-tracks}
+regulations.df_tracks <- df %>% dplyr::select(
+  id,
+  track,
+  PA_amotivation_02_T1,
+  PA_amotivation_01_T1,
+  PA_amotivation_03_T1,
+  PA_amotivation_04_T1,
+  PA_extrinsic_01_T1,
+  PA_extrinsic_02_T1,
+  PA_extrinsic_03_T1,
+  PA_introjected_01_T1,
+  PA_introjected_02_T1,
+  PA_identified_01_T1,
+  PA_identified_02_T1,
+  PA_identified_03_T1,
+  PA_integrated_01_T1, 
+  PA_integrated_02_T1,
+  PA_integrated_03_T1, 
+  PA_intrinsic_01_T1,
+  PA_intrinsic_02_T1,
+  PA_intrinsic_03_T1)
+
+
+motiNUR <- regulations.df_tracks %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(track == "Nur") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "") +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  labs(title = "Nur") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiHRC <- regulations.df_tracks %>%
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(track == "HRC") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = c("darkolivegreen2", "darkolivegreen4")) +
+  labs(title = "HRC") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiBA <- regulations.df_tracks %>% 
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(track == "BA") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  labs(title = "BA") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+motiIT <- regulations.df_tracks %>% 
+ tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+  filter(track == "IT") %>% 
+ ggplot(aes(x = Value, y = Variable, group = Variable)) +
+  ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
+  scale_x_continuous(breaks = c(1:6), expand = c(0, 0),
+                     name = "") +
+  scale_y_discrete(expand = c(0.01, 0), name = "", labels = NULL) +
+  ggridges::scale_fill_cyclical(values = c("deepskyblue", "deepskyblue4")) +
+  labs(title = "IT") +
+  guides(y = "none") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(axis.title.x = element_text(hjust = 0.5),
+        axis.title.y = element_text(hjust = 0.5),
+        axis.text=element_text(size=10)) +
+coord_cartesian(xlim = c(0.5, 5.5))
+
+# ("Seldom or never", "About once a month", "About once a week", "Almost daily")
+
+# This draws all histograms next to each other:
+motiNUR + motiHRC + motiBA + motiIT + plot_layout(nrow = 1)
+
+```
+
 ```{r pa-determinants-motivation}
 
 plot1 <- df %>% dplyr::select(id,
@@ -5489,6 +5711,10 @@ plot1 + plot2
 
 # Informativeness of averages
 
+If we consider all four primary outcomes, how representative are the point estimates of the average values? It is perhaps no surprise, that no single individual can be exactly average on all the four variables, but creating a band of permissiveness around that average can help answer the aforementioned question.
+
+Plot below shows how large a band around the median (x-axis) is needed to be able to describe the proportion of participant on the y-axis.
+
 ```{r average-coverage}
 
 # total_n <- df %>% select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, padaysLastweek_T1, sitBreaksAccelerometer_T1) %>% 
@@ -5497,14 +5723,15 @@ plot1 + plot2
                      
 middle_x_percentile <- function(middle_percentile) {
   df %>%
-  dplyr::filter((df$mvpaAccelerometer_T1 > quantile(df$mvpaAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
-                  (df$mvpaAccelerometer_T1 < quantile(df$mvpaAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]]) &
-                (df$sitLieAccelerometer_T1 > quantile(df$sitLieAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
-                 (df$sitLieAccelerometer_T1 < quantile(df$sitLieAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]]) & 
-                (df$padaysLastweek_T1 > quantile(df$padaysLastweek_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
-                  (df$padaysLastweek_T1 < quantile(df$padaysLastweek_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]]) &
-                (df$sitBreaksAccelerometer_T1 > quantile(df$sitBreaksAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
-                  (df$sitBreaksAccelerometer_T1 < quantile(df$sitBreaksAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]])) %>% 
+  dplyr::filter(
+    (df$mvpaAccelerometer_T1 > quantile(df$mvpaAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
+    (df$mvpaAccelerometer_T1 < quantile(df$mvpaAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]]) &
+    (df$sitLieAccelerometer_T1 > quantile(df$sitLieAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
+    (df$sitLieAccelerometer_T1 < quantile(df$sitLieAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]]) & 
+    (df$padaysLastweek_T1 > quantile(df$padaysLastweek_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
+    (df$padaysLastweek_T1 < quantile(df$padaysLastweek_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]]) &
+    (df$sitBreaksAccelerometer_T1 > quantile(df$sitBreaksAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[1]]) &
+    (df$sitBreaksAccelerometer_T1 < quantile(df$sitBreaksAccelerometer_T1, probs = c(0.5 - middle_percentile/2, 0.5 + middle_percentile/2), na.rm = TRUE)[[2]])) %>% 
     nrow(.)
 }
   
@@ -5512,25 +5739,26 @@ middle_x_percentile <- function(middle_percentile) {
 getmiddle <- function(middlePerc) {                                       
 df %>% dplyr::select(mvpaAccelerometer_T1, padaysLastweek_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1) %>% 
   na.omit(.) %>% 
-  dplyr::summarise(n = n(), 
-                   middle = sum((mvpaAccelerometer_T1 > 
-                                       (quantile(mvpaAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
-                                      (mvpaAccelerometer_T1 < 
-                                       (quantile(mvpaAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]])) &
-                                      (padaysLastweek_T1 > 
-                                       (quantile(padaysLastweek_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
-                                      (padaysLastweek_T1 < 
-                                       (quantile(padaysLastweek_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]])) &
-                                      (sitLieAccelerometer_T1 > 
-                                       (quantile(sitLieAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
-                                      (sitLieAccelerometer_T1 < 
-                                       (quantile(sitLieAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]])) &
-                                      (sitBreaksAccelerometer_T1 > 
-                                       (quantile(sitBreaksAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
-                                      (sitBreaksAccelerometer_T1 < 
-                                       (quantile(sitBreaksAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]]))
-                                     )) %>% 
-    mutate(perc = middle/n)
+  dplyr::summarise(
+    n = n(), 
+    middle = sum((mvpaAccelerometer_T1 > 
+                 (quantile(mvpaAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
+                (mvpaAccelerometer_T1 < 
+                 (quantile(mvpaAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]])) &
+                (padaysLastweek_T1 > 
+                 (quantile(padaysLastweek_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
+                (padaysLastweek_T1 < 
+                 (quantile(padaysLastweek_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]])) &
+                (sitLieAccelerometer_T1 > 
+                 (quantile(sitLieAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
+                (sitLieAccelerometer_T1 < 
+                 (quantile(sitLieAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]])) &
+                (sitBreaksAccelerometer_T1 > 
+                 (quantile(sitBreaksAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[1]])) & 
+                (sitBreaksAccelerometer_T1 < 
+                 (quantile(sitBreaksAccelerometer_T1, probs = c(0.5 - middlePerc/2, 0.5 + middlePerc/2))[[2]]))
+               )) %>% 
+mutate(perc = middle/n)
 }
 
 
@@ -5621,7 +5849,7 @@ meansplot_df %>%
 #   theme_light()
 ```
 
-`r ((middleprobs(0.35, 0.65) / 706) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
+We see that, for example, `r ((middleprobs(0.35, 0.65) / 706) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
 
 # Types of self-reported exercise
 
@@ -5679,12 +5907,6 @@ exerciseTypes_test <- data.frame(exerciseTypes_cases[ , i], exerciseTypes_totals
 exerciseTypes_pvals[i-1] <- prop.test(exerciseTypes_test[, 1], exerciseTypes_test[, 2])$p.value %>% round(., 5)
 }
 
-data.frame("Exercise type" = names(exerciseTypes_df)[1:14], "p-values: educational tracks" = exerciseTypes_pvals) %>% 
-  DT::datatable() #papaja::apa_table()
-
-exerciseTypes_proportions %>% 
-  DT::datatable() #papaja::apa_table()
-
 # For girls and boys
 
 exerciseTypes_girlboy_proportions <- exerciseTypes_df %>%
@@ -5712,10 +5934,39 @@ exerciseTypes_girlboy_test <- data.frame(exerciseTypes_girlboy_cases[ , i], exer
 exerciseTypes_girlboy_pvals[i-1] <- prop.test(exerciseTypes_girlboy_test[, 1], exerciseTypes_girlboy_test[, 2])$p.value %>% round(., 5)
 }
 
-data.frame("Exercise type" = names(exerciseTypes_girlboy_cases)[2:15], "p-values: boys vs. girls" = exerciseTypes_girlboy_pvals)  %>% 
+```
+Here are the proportions of different sports as reported by participants in different educational tracks:
+
+```{r}
+
+exerciseTypes_proportions %>% 
   DT::datatable() #papaja::apa_table()
 
+```
+
+These are p-values for tests of differences in proportions across the tracks. Remember, that exactly zero differences would be unexpected, so testing the null hypothesis of zero difference isn't very informative. In addition, tests do not take clustering into account, so interpret with care!
+
+```{r}
+
+data.frame("Exercise type" = names(exerciseTypes_df)[1:14], "p-values: educational tracks" = exerciseTypes_pvals) %>% 
+  DT::datatable() #papaja::apa_table()
+
+```
+
+Here are the proportions by gender:
+
+```{r}
+
 exerciseTypes_girlboy_proportions %>% 
+  DT::datatable() #papaja::apa_table()
+
+```
+
+These are p-values for tests of differences in proportions across genders. Remember, that exactly zero differences would be unexpected, so testing the null hypothesis of zero difference isn't very informative. In addition, tests do not take clustering into account, so interpret with care!
+
+```{r}
+
+data.frame("Exercise type" = names(exerciseTypes_girlboy_cases)[2:15], "p-values: boys vs. girls" = exerciseTypes_girlboy_pvals)  %>% 
   DT::datatable() #papaja::apa_table()
 
 ```

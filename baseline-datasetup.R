@@ -21,6 +21,7 @@ instpacks <- setdiff(CRANpacks, pacman::p_library())
 if (length(instpacks)>0) install.packages(instpacks)
 
 if (!require(papaja)) pacman::p_install_gh("crsh/papaja")
+if (!require(mgm)) pacman::p_install_gh("jmbh/mgm")
 if (!require(ggridges)) pacman::p_install_gh("clauswilke/ggridges")
 if (!require(brmstools)) pacman::p_install_gh("mvuorre/brmstools")
 if (!require(NetworkComparisonTest)) pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
