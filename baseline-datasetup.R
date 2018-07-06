@@ -482,8 +482,8 @@ d <- lmi %>% dplyr::select(id = ID,
                            PA_copingPlanning_02_T3 = Kys0120.3,
                            PA_copingPlanning_03_T3 = Kys0121.3,
                            PA_copingPlanning_04_T3 = Kys0122.3,
-                           mvpaAccelerometer_T1 = LiikuntaT1_ka,
-                           mvpaAccelerometer_T3 = LiikuntaT3_ka,
+                           mvpaAccelerometer_T1 = ReRaT1_ka,
+                           mvpaAccelerometer_T3 = ReRaT3_ka,
                            lpaAccelerometer_T1 = KevytT1_ka,
                            lpaAccelerometer_T3 = KevytT3_ka,
                            mpaAccelerometer_T1 = ReipasT1_ka,
@@ -541,7 +541,9 @@ d <- lmi %>% dplyr::select(id = ID,
                            groupValuesMe_T1 = Kys0218.1,
                            groupValuesMe_T3 = Kys0218.3,
                            groupFeelsSafe_T1 = Kys0219.1,
-                           groupFeelsSafe_T3 = Kys0219.3
+                           groupFeelsSafe_T3 = Kys0219.3,
+                           weartime_min4d10h_T1 = min4d10hT1,
+                           weartime_min4d10h_T3 = min4d10hT3
                            )
 
 # Reverse coded items to normal: 
@@ -564,7 +566,15 @@ d <- d %>% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
                          school = factor(school, levels = c("1", "2", "3", "4", "5")))
 
 # Create the self-reported PA time variable
-d <- d %>% dplyr::mutate(paLastweek_T1 = (pahrsLastweek_T1 * 60) + ifelse(paminLastweek_T1 == 2, 30, 0))
+d <- d %>% dplyr::mutate(leisuretimeMvpaHoursLastweek_T1 = ((pahrsLastweek_T1 * 60) + ifelse(paminLastweek_T1 == 2, 30, 0)) / 60,
+                         leisuretimeMvpaHoursLastweek_T3 = ((pahrsLastweek_T3 * 60) + ifelse(paminLastweek_T3 == 2, 30, 0)) / 60 #,
+                         # mvpaAccelerometer_T1 = mvpaAccelerometer_T1 / 60, # Changes to hours reverted, as it leads to problems in making tables.
+                         # mvpaAccelerometer_T3 = mvpaAccelerometer_T3 / 60,
+                         # weartimeAccelerometer_T1 = weartimeAccelerometer_T1 /60,
+                         # weartimeAccelerometer_T3 = weartimeAccelerometer_T3 / 60,
+                         # sitLieAccelerometer_T1 = sitLieAccelerometer_T1 / 60,
+                         # sitLieAccelerometer_T3 = sitLieAccelerometer_T3 / 60
+                         )
 
 # Insert track variable with those who answered "other" with one of the actual category labels given the appropriate category:
 track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
@@ -724,11 +734,11 @@ motidf2 <- userfriendlyscience::makeScales(regulationVariables_T3, motiscales_T3
 
 df <- cbind(df, motidf1, motidf2)
 
-# Create change scores
+# Create change scores; see https://stackoverflow.com/questions/47478125/create-new-columns-by-substracting-column-pairs-from-each-other-in-r
 t1_vars <- grep("_T1", colnames(df), value = TRUE)
 t1_vars <- grep("big5|fat|paLastweek|PA_opportunitiesReverseCoded_08", t1_vars, value = TRUE, invert = TRUE) # drop variables not in T3
 t3_vars <- grep("_T3", colnames(df), value = TRUE)
-df[, paste0(stringr::str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars]
+df[, paste0(stringr::str_sub(t1_vars, end = -4), "_diff")] <- df[, t3_vars] - df[, t1_vars] # This creates the change score for each variable
 
 # Create a combination of track and school variables
 df <- df %>% dplyr::mutate(trackSchool = paste0(track, school)) 

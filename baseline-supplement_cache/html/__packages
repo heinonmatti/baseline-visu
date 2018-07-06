@@ -1,8 +1,9 @@
 base
 pacman
 papaja
-ggplot2
+mgm
 ggridges
+ggplot2
 Rcpp
 brms
 brmstools
@@ -19,6 +20,7 @@ dplyr
 stringr
 forcats
 bindrcpp
+corrgram
 haven
 Matrix
 lme4
@@ -36,10 +38,9 @@ viridis
 bootnet
 rstanarm
 mlmRev
-corrgram
 broom
 visreg
 sjPlot
 psych
 lavaan
-mgm
+shiny

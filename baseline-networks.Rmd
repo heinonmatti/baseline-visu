@@ -1349,7 +1349,7 @@ node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for 
 BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
             layout = "spring",
             repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "Cogintive/motivational BCTs, PA & motivation",
+            title = "cognitive/motivational BCTs, PA & motivation",
             edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
             pie = pie_errors,
             pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
@@ -1467,7 +1467,7 @@ node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for 
 BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
             layout = "spring",
             repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "Cogintive/motivational BCTs, PA & motivation",
+            title = "cognitive/motivational BCTs, PA & motivation",
             edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
             pie = pie_errors,
             pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
@@ -1583,7 +1583,7 @@ node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for 
 BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
             layout = "spring",
             repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "Cogintive/motivational BCTs, PA & motivation",
+            title = "cognitive/motivational BCTs, PA & motivation",
             edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
             pie = pie_errors,
             pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
@@ -1700,7 +1700,7 @@ node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for 
 BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
             layout = "spring",
             repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "Cogintive/motivational BCTs, PA & motivation",
+            title = "cognitive/motivational BCTs, PA & motivation",
             edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
             pie = pie_errors,
             pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
@@ -3529,8 +3529,8 @@ corMatrix_motivations %>%
   as.data.frame(.) %>% 
   dplyr::transmute(Variable = variableNames,
                    "Accelerometer minus self-report" = mvpaAccelerometer_T1 - padaysLastweek_T1,
-                   "Accelerometer minus accelerometer as % weartime" = mvpaAccelerometer_T1 - mvpaAccelerometer_percentageWeartime_T1) %>% 
-  dplyr::arrange(desc(`Accelerometer - self-report`)) %>% 
+                   "Accelerometer minus accelerometer-as-%-weartime" = mvpaAccelerometer_T1 - mvpaAccelerometer_percentageWeartime_T1) %>% 
+  dplyr::arrange(desc(`Accelerometer minus self-report`)) %>% 
   DT::datatable(caption = "Differences in correlations among the measures")
 
 ```

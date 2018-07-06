@@ -1,6 +1,7 @@
 base
 pacman
 papaja
+mgm
 ggridges
 ggplot2
 Rcpp
@@ -42,4 +43,4 @@ visreg
 sjPlot
 psych
 lavaan
-mgm
+shiny
