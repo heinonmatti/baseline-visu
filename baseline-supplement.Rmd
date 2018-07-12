@@ -79,7 +79,7 @@ The answer scale for frequency-dependent BCTs was as follows: 0 = not once, 1 = 
 8. I have asked my friends or family for support to reach my PA goals.
 9. If I haven't reached my PA goal, I have evaluated, what went wrong.
 
-# Estimating means with CIs taking clustering into account 
+# Means with CIs taking clustering into account 
 
 The code chunks create linear models for all variables. The results are used to estimate confidence intervals and intra-class correlations (ICC).
 
@@ -594,7 +594,7 @@ ci_uncorrected %>%
 
 ```
 
-# Compare mean- and CI-estimates visually 
+# Compare different estimates for means and CIs visually 
 
 This section contains diamond plots comparing different estimates for means and CIs.
 
@@ -1020,7 +1020,7 @@ save(ci_sandwich, file = "./Rdata_files/ci_sandwich.Rdata")
 load("./Rdata_files/ci_sandwich.Rdata")
 ```
 
-# Descriptive tables
+# Demographic tables
 
 Next code chunk prepares data.
 
@@ -1062,9 +1062,7 @@ demographics <- bind_cols(demographics, Track)
 save(demographics, file = "./data/demographics.Rdata")
 ```
 
-## Create demographic tables
-
-### By educational track
+## By educational track
 
 ```{r demographics-table-track, results = 'asis'}
 demotable <- demographics %>% 
@@ -1117,7 +1115,7 @@ save(demotable, file = "./Rdata_files/demotable.Rdata")
 papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 1, 0))
 ```
 
-### By gender
+## By gender
 
 ```{r demographics-table-gender, results = 'asis'}
 # demographics$Girl <- factor(demographics$girl)
@@ -1167,7 +1165,7 @@ names(demotable) <- c("", "Boy", "Girl", "Full sample")
 papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
 ```
 
-### By intervention participation
+## By intervention participation
 
 ```{r demographics-table-intervention, results = 'asis'}
 demographics$intervention <- factor(demographics$intervention)
@@ -1219,12 +1217,13 @@ names(demotable) <- c("", "Control", "Intervention", "Full sample")
 papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
 ```
 
-## Create outcome tables
+## Outcome tables
 
 ```{r outcome-table, results = 'asis'}
 
 outtable_track <- df %>%
   dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes 
+          weartimeAccelerometer_T1,
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -1292,13 +1291,16 @@ outtable_track <- df %>%
                                                                       " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                     " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
+                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             n = n()) %>% 
   dplyr::filter(complete.cases(.)) %>% 
-  arrange(desc(track)) %>% 
+  arrange((track)) %>% 
   dplyr::filter(track != "Other")
 
 outtable_intervention <- df %>%
-  dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes 
+  dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes  
+          weartimeAccelerometer_T1,
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -1366,11 +1368,14 @@ outtable_intervention <- df %>%
                                                                       " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                     " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
+                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             n = n()) %>% 
   dplyr::filter(complete.cases(.))
 
 outtable_girl <- df %>%
-  dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes 
+  dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes  
+          weartimeAccelerometer_T1,
           PA_actionplan_T1,
           PA_copingplan_T1,
           PA_agrbct_T1,
@@ -1438,6 +1443,8 @@ outtable_girl <- df %>%
                                                                       " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                     " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
+                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             n = n()) %>% 
   dplyr::filter(complete.cases(.))
 
@@ -1487,6 +1494,8 @@ outtable_total <- df %>%
                                                                       " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                     " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
+            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
+                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             n = n())
 
 
@@ -1502,9 +1511,9 @@ outtable_girl <- bind_rows(outtable_girl, outtable_total)
 outtable_girl <- outtable_girl %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(girl, val)
 names(outtable_girl) <- c("Variable", "Boy", "Girl", "Full sample")
 
-# Are all variables the same?
-identical(outtable_track$Variable, outtable_girl$Variable)
-identical(outtable_track$Variable, outtable_intervention$Variable)
+# Are all variables the same? They should be, for the table to work!
+# identical(outtable_track$Variable, outtable_girl$Variable)
+# identical(outtable_track$Variable, outtable_intervention$Variable)
 
 # Create large table with all variables
 outtable_mega <- bind_cols(outtable_track, outtable_intervention, outtable_girl) %>% 
@@ -1518,7 +1527,7 @@ outtable_mega <- bind_rows(out1, out2)
 # Fix names: leave first blank, have the rest as they were
 names(outtable_mega) <- c("", names(outtable_mega)[2:(length(names(outtable_mega)))])
 
-papaja::apa_table(outtable_mega, caption = "Baseline demographics of educational tracks")
+papaja::apa_table(outtable_mega, caption = "Baseline demographics of educational tracks. Values indicate mean (sd, without taking clustering into account)")
 
 
 ```
@@ -1855,7 +1864,7 @@ averageDayActivityPlot_intervention
  
 ## Stacking percentages
 
-In these plots, the time values are first converted to proportions for each participant. The function mutate_at is used to take each variable which contains the word Accelerometer, but not those that contain the word weartime, and for each of those variables, a division by weartime is conducted. 
+In these plots, the time values are first converted to proportions for each participant. The function dplyr::mutate_at is used to take each variable which contains the word Accelerometer, but not those that contain the word weartime, and for each of those variables, a division by weartime is conducted. 
 
 As can be seen, the result is exactly the same, as when raw values were stacked.
 
@@ -1891,7 +1900,8 @@ averageDayActivityPlot_gender <- df %>%
   scale_y_continuous(labels = scales::percent) +
   scale_fill_viridis_d(option = "inferno", begin = 0.1, end = 0.8) +
   labs(x = NULL, y = NULL) +
-  theme(legend.title=element_blank()) +
+  theme(legend.position="none", 
+        axis.text.x = element_text(angle = 55, hjust = 1, size = 10)) + # Adjust label text
   guides(fill = guide_legend(reverse = TRUE)) + # Make the legend order match the plot order
   facet_wrap("track", nrow = 1)
 
@@ -1931,12 +1941,12 @@ averageDayActivityPlot_intervention <- df %>%
   scale_fill_viridis_d(option = "inferno", begin = 0.1, end = 0.8) +
   labs(x = NULL, y = NULL) +
   theme(legend.title=element_blank(),
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 10)) + # Adjust label text
+        axis.text.x = element_text(angle = 55, hjust = 1, size = 10)) + # Adjust label text
   guides(fill = guide_legend(reverse = TRUE)) + # Make the legend order match the plot order
   facet_wrap("track", nrow = 1)
 
 
-averageDayActivityPlot_gender
+averageDayActivityPlot_gender +
 averageDayActivityPlot_intervention
 
 ```
@@ -1974,8 +1984,8 @@ df <- df %>% dplyr::mutate(
 ```{r mvpa-accelerometer-selfreport-scatterplot}
 
 lmi %>% ggplot2::ggplot(aes(x = LiikuntaT1_ka, y = Kys0045.1)) + geom_point() + geom_smooth(method = "loess") +
-  geom_vline(xintercept = 120, col = "red") +
-  labs(x = "accelerometer-measured MVPA", y = "self-reported MVPA days last week")
+  # geom_vline(xintercept = 120, col = "red") +
+  labs(x = "accelerometer-measured MVPA, following week", y = "self-reported days of 30+ min MVPA, last week")
 
 corrgram::corrgram(data.frame("Self-rep PA" = df$padaysLastweek_T1, 
                               "Accelerometer PA" = df$mvpaAccelerometer_T1, 
@@ -1991,13 +2001,13 @@ corrgram::corrgram(data.frame("Self-rep PA" = df$padaysLastweek_T1,
 ```{r weartime-accelerometer-sm}
 
 # Create data frame
-
+densplot <- d
 levels(densplot$intervention) <- c("Control", "Intervention")
 levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -2042,7 +2052,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "Weartime hours", pos = 1)
 ```
 
@@ -2163,9 +2173,9 @@ Weartime_trackintervention_diamonds_intervention
 Weartime_trackintervention_diamonds_control
 ```
 
-#### Compare interval estimates to those of a multilevel model
+#### Sensitivity analyses and robustness checks
 
-Because of the lack of observations in gender-intervention combinations (for which we require the CIs), we take only clustering on the educational track into account (i.e. random effects for tracks).
+Ideally, one would perform sensitivity analyses and robustness checks; e.g. comparing the estimates with frequentist multilevel models and following the [WAMBS-checklist](https://doi.org/10.1037/met0000065). Due to resource constraints, we are forced to forego this phase of analysis and instead, only show the linear model results for intercepts in each intervention-gender-track combination separately.
 
 ```{r lm-for-comparison-weartimeAccelerometer}
 
@@ -2180,20 +2190,23 @@ df_for_models_nested <- df %>%
 # This produced a data frame with columns "girl", "intervention", "track" and "data", the last of which is a data frame in each cell. E.g. for row wit intervention group girls in IT, there's a data frame for their values in the last column.
 
 df_fitted <- df_for_models_nested %>% 
-  mutate(fit = map(data, ~ lm(weartimeAccelerometer_T1 ~ 1, data = .x)))
+  dplyr::mutate(fit = map(data, ~ lm(weartimeAccelerometer_T1 ~ 1, data = .x)))
 # Now there's a linear model for each combination in the data frame
 
 df_fitted <- df_fitted %>% 
-  mutate(
+  dplyr::mutate(
     mean = map_dbl(fit, ~ coef(.x)[["(Intercept)"]]),
     ci_low = map_dbl(fit, ~ confint(.x)["(Intercept)", 1]),
     ci_high = map_dbl(fit, ~ confint(.x)["(Intercept)", 2]),
     nonmissings = map_dbl(fit, ~ nobs(.x))
-  )
+  ) %>% 
+  dplyr::mutate(mean = round(mean, 2),
+         ci_low = round(ci_low, 2),
+         ci_high = round(ci_high, 2))
 
 ## (here was an earlier attempt for random effects)
 # df_fitted <- df_fitted %>% 
-#   mutate(
+#   dplyr::mutate(
 #     mean = map_dbl(fit, ~ lme4::fixef(.x)),
 #     m_p = map(fit, ~ profile(.x)),
 #     ci_low = map_dbl(m_p, ~ confint(.x)["(Intercept)", 1]),
@@ -2299,7 +2312,7 @@ plot1 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(1, 3)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(24, 4),
+                                                                         point_shape = c(3, 4),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -2311,7 +2324,7 @@ plot1 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(3, 1)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(4, 24),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -2363,7 +2376,7 @@ plot2 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(21, 3),
+                                                                         point_shape = c(4, 3),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -2375,7 +2388,10 @@ plot2 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 3),
+                                  values = c(4, 3),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = 0.06,
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -2399,6 +2415,18 @@ plot2 <- plot2 +
 plot1 + plot2
 
 
+```
+```{r}
+df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              Weartime = weartimeAccelerometer_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  dplyr::filter(track == "IT") %>% 
+  DT::datatable()
 ```
 
 
@@ -2444,7 +2472,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -2489,7 +2517,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "MVPA hours", pos = 1)
 ```
 
@@ -2610,11 +2638,11 @@ PA_trackintervention_diamonds_intervention
 PA_trackintervention_diamonds_control
 ```
 
-#### Compare interval estimates to those of a multilevel model
+#### Sensitivity analyses and robustness checks
 
-Because of the lack of observations in gender-intervention combinations (for which we require the CIs), we take only clustering on the educational track into account (i.e. random effects for tracks).
+Ideally, one would perform sensitivity analyses and robustness checks; e.g. comparing the estimates with frequentist multilevel models and following the [WAMBS-checklist](https://doi.org/10.1037/met0000065). Due to resource constraints, we are forced to forego this phase of analysis and instead, only show the linear model results for intercepts in each intervention-gender-track combination separately.
 
-```{r lm-for-comparison-mvpaAccelerometer}
+```{r lm-for-comparison-mvpaAccelerometer, eval = FALSE}
 
 # To test the code with a single variable:
 df_for_models_nested <- df %>% 
@@ -2627,20 +2655,24 @@ df_for_models_nested <- df %>%
 # This produced a data frame with columns "girl", "intervention", "track" and "data", the last of which is a data frame in each cell. E.g. for row wit intervention group girls in IT, there's a data frame for their values in the last column.
 
 df_fitted <- df_for_models_nested %>% 
-  mutate(fit = map(data, ~ lm(mvpaAccelerometer_T1 ~ 1, data = .x)))
+  dplyr::mutate(fit = map(data, ~ lm(mvpaAccelerometer_T1 ~ 1, data = .x)))
 # Now there's a linear model for each combination in the data frame
 
 df_fitted <- df_fitted %>% 
-  mutate(
+  dplyr::mutate(
     mean = map_dbl(fit, ~ coef(.x)[["(Intercept)"]]),
     ci_low = map_dbl(fit, ~ confint(.x)["(Intercept)", 1]),
     ci_high = map_dbl(fit, ~ confint(.x)["(Intercept)", 2]),
     nonmissings = map_dbl(fit, ~ nobs(.x))
-  )
+  ) %>% 
+  dplyr::mutate(mean = round(mean, 2),
+         ci_low = round(ci_low, 2),
+         ci_high = round(ci_high, 2))
+
 
 ## (here was an earlier attempt for random effects)
 # df_fitted <- df_fitted %>% 
-#   mutate(
+#   dplyr::mutate(
 #     mean = map_dbl(fit, ~ lme4::fixef(.x)),
 #     m_p = map(fit, ~ profile(.x)),
 #     ci_low = map_dbl(m_p, ~ confint(.x)["(Intercept)", 1]),
@@ -2746,7 +2778,7 @@ plot1 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(1, 3)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(24, 4),
+                                                                         point_shape = c(3, 4),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -2758,7 +2790,7 @@ plot1 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(3, 1)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(4, 24),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -2810,7 +2842,7 @@ plot2 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(21, 3),
+                                                                         point_shape = c(4, 3),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -2822,7 +2854,7 @@ plot2 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 3),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -2843,8 +2875,9 @@ plot2 <- plot2 +
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15))
 
-plot1 + plot2
+MVPAplot <- (plot1 + plot2)
 
+save(MVPAplot, file = "./Rdata_files/MVPAplot.Rdata")
 
 ```
 
@@ -2986,7 +3019,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -3033,7 +3066,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "Self-reported number of days with >30 MVPA min previous week", pos = 1)
 ```
 
@@ -3070,7 +3103,7 @@ plot1 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(1, 3)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(24, 4),
+                                                                         point_shape = c(3, 4),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -3082,7 +3115,7 @@ plot1 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(3, 1)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(4, 24),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -3135,7 +3168,7 @@ plot2 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(21, 3),
+                                                                         point_shape = c(4, 3),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -3147,7 +3180,7 @@ plot2 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 3),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -3426,7 +3459,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -3471,7 +3504,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "nordpaq_dysfunctional_item hours", pos = 1)
 ```
 
@@ -3592,11 +3625,11 @@ nordpaq_dysfunctional_item_trackintervention_diamonds_intervention
 nordpaq_dysfunctional_item_trackintervention_diamonds_control
 ```
 
-#### Compare interval estimates to those of a multilevel model
+#### Sensitivity analyses and robustness checks
 
-Because of the lack of observations in gender-intervention combinations (for which we require the CIs), we take only clustering on the educational track into account (i.e. random effects for tracks).
+Ideally, one would perform sensitivity analyses and robustness checks; e.g. comparing the estimates with frequentist multilevel models and following the [WAMBS-checklist](https://doi.org/10.1037/met0000065). Due to resource constraints, we are forced to forego this phase of analysis and instead, only show the linear model results for intercepts in each intervention-gender-track combination separately.
 
-```{r lm-for-comparison-nordpaq_dysfunctional_itemAccelerometer}
+```{r lm-for-comparison-nordpaq_dysfunctional_itemAccelerometer, eval = FALSE}
 
 # To test the code with a single variable:
 df_for_models_nested <- df %>% 
@@ -3609,20 +3642,23 @@ df_for_models_nested <- df %>%
 # This produced a data frame with columns "girl", "intervention", "track" and "data", the last of which is a data frame in each cell. E.g. for row wit intervention group girls in IT, there's a data frame for their values in the last column.
 
 df_fitted <- df_for_models_nested %>% 
-  mutate(fit = map(data, ~ lm(leisuretimeMvpaHoursLastweek_T1 ~ 1, data = .x)))
+  dplyr::mutate(fit = map(data, ~ lm(leisuretimeMvpaHoursLastweek_T1 ~ 1, data = .x)))
 # Now there's a linear model for each combination in the data frame
 
 df_fitted <- df_fitted %>% 
-  mutate(
+  dplyr::mutate(
     mean = map_dbl(fit, ~ coef(.x)[["(Intercept)"]]),
     ci_low = map_dbl(fit, ~ confint(.x)["(Intercept)", 1]),
     ci_high = map_dbl(fit, ~ confint(.x)["(Intercept)", 2]),
     nonmissings = map_dbl(fit, ~ nobs(.x))
-  )
+  ) %>% 
+  dplyr::mutate(mean = round(mean, 2),
+         ci_low = round(ci_low, 2),
+         ci_high = round(ci_high, 2))
 
 ## (here was an earlier attempt for random effects)
 # df_fitted <- df_fitted %>% 
-#   mutate(
+#   dplyr::mutate(
 #     mean = map_dbl(fit, ~ lme4::fixef(.x)),
 #     m_p = map(fit, ~ profile(.x)),
 #     ci_low = map_dbl(m_p, ~ confint(.x)["(Intercept)", 1]),
@@ -3728,7 +3764,7 @@ plot1 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(1, 3)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(24, 4),
+                                                                         point_shape = c(3, 4),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -3740,7 +3776,7 @@ plot1 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(3, 1)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(4, 24),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -3792,7 +3828,7 @@ plot2 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(21, 3),
+                                                                         point_shape = c(4, 3),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -3804,7 +3840,7 @@ plot2 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 3),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -3968,7 +4004,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -4013,7 +4049,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "Average number of breaks in daily sitting", pos = 1)
 ```
 
@@ -4049,7 +4085,7 @@ plot1 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(1, 3)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(24, 4),
+                                                                         point_shape = c(3, 4),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -4061,7 +4097,7 @@ plot1 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(3, 1)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(4, 24),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -4113,7 +4149,7 @@ plot2 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(21, 3),
+                                                                         point_shape = c(4, 3),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -4125,7 +4161,7 @@ plot2 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 3),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -4163,7 +4199,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -4208,7 +4244,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "Average daily hours spent sitting or lying down", pos = 1)
 ```
 
@@ -4419,7 +4455,7 @@ plot1 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(1, 3)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(24, 4),
+                                                                         point_shape = c(3, 4),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -4431,7 +4467,7 @@ plot1 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(3, 1)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(4, 24),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -4483,7 +4519,7 @@ plot2 <- df %>% dplyr::select(id,
                                 values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                 name = "", 
                                 guide = guide_legend(override.aes = list(alpha = 1, 
-                                                                         point_shape = c(21, 3),
+                                                                         point_shape = c(4, 3),
                                                                          point_size = 2))) +
   ggridges::scale_colour_cyclical(values = "black") +
   ggridges::theme_ridges(grid = FALSE) +
@@ -4495,7 +4531,7 @@ plot2 <- df %>% dplyr::select(id,
                                   values = viridis::viridis(4, end = 0.8)[c(2, 4)],
                                   guide = "none") +
   ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 3),
+                                  values = c(4, 3),
                                   guide = "none") +
   papaja::theme_apa() +
   theme(legend.position = "bottom")
@@ -5125,7 +5161,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -5172,7 +5208,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "Frequency-based BCT sumscore mean", pos = 1)
 ```
 
@@ -5187,7 +5223,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -5232,7 +5268,7 @@ sm.PA_agrbct_T1_2 <- sm.density.compare2(as.numeric(dens$PA_agrbct_T1),
                                                xlim = c(1, 6))
 legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.8)[c(2, 4)], lty=c(3,1), lwd=(c(2,2)))
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "Agreement-based BCT sumscore mean", pos = 1) # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 
 
@@ -6382,7 +6418,7 @@ Here are the proportions of different sports as reported by participants in diff
 
 ```{r}
 
-exerciseTypes_proportions %>% 
+exerciseTypes_proportions %>% t() %>% 
   DT::datatable() #papaja::apa_table()
 
 ```
@@ -6400,7 +6436,7 @@ Here are the proportions by gender:
 
 ```{r}
 
-exerciseTypes_girlboy_proportions %>% 
+exerciseTypes_girlboy_proportions %>% t() %>% 
   DT::datatable() #papaja::apa_table()
 
 ```
@@ -6554,7 +6590,7 @@ levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
 
 # This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
 layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
-       widths = c(0.5, 0.5),heights = c(0.45,0.05))
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
 
 # Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
 par(mai = c(0.3, 0.3, 0.1, 0.0)) 
@@ -6601,7 +6637,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
-plot(1, 1, type = "n", frame.plot = FALSE,axes = FALSE) # Fake plot
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
 text(x = 1.02, y = 1.3, labels = "Symptom sumscore mean", pos = 1)
 
 

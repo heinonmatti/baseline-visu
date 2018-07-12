@@ -10,6 +10,397 @@ source("baseline-datasetup.R")
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
 
+# Exercise types
+
+The first network is an Ising model with all participants. 
+
+```{r exercisetypes-ising}
+
+exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
+  dplyr::select(contains(".1")) %>% 
+  dplyr::mutate_all(funs(replace_na(., 0)))
+# exerciseTypes_df$track <- df$track
+# exerciseTypes_df$girl <- df$girl
+
+names(exerciseTypes_df) <- c("Team ball games", 
+                             "Other ball games",
+                             "Gym training",
+                             "Combat sports",
+                             "Fitness classes",
+                             "Home workout",
+                             "Cycling",
+                             "Swimming",
+                             "Walking",
+                             "Running",
+                             "Skiing",
+                             "Roller skating", 
+                             "Horseback riding",
+                             "Other"
+                             )
+
+exerciseTypes_df %>% dplyr::summarise_all(funs(sum))
+
+# Roller skating has only 8 observations; leave out
+exerciseTypes_df <- exerciseTypes_df %>% dplyr::select(-`Roller skating`)
+
+# Variable types are muddled, change all to numeric
+exerciseTypes_df <- as.data.frame(purrr::map(exerciseTypes_df, `class<-`, c("numeric"))) 
+
+# Change data frame to type tbl to allow for spaces
+exerciseTypes_df <- as.tbl(exerciseTypes_df)
+
+# Take all names, replace the dots with space
+names(exerciseTypes_df) <- stringr::str_replace_all(names(exerciseTypes_df), pattern = "\\.", replacement = " ")
+
+exerciseTypes_network <- bootnet::estimateNetwork(exerciseTypes_df, default="IsingFit")
+
+# Create means for filling nodes
+piefill <- exerciseTypes_df %>%
+  summarise_all(funs(mean(., na.rm = TRUE))) 
+
+# Plot network
+exerciseTypes_ising <- plot(
+  exerciseTypes_network, 
+  layout = "spring", 
+  label.scale = FALSE, 
+  title = "Ising fit: self-reported exercise types", 
+  # label.cex = 0.75,
+  pie = piefill, 
+  color = "skyblue",
+  pieBorder = 1)
+
+```
+
+Same network, but estimated with mgm
+```{r exercisetypes-mgm}
+
+exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
+  dplyr::select(contains(".1")) %>% 
+  dplyr::mutate_all(funs(replace_na(., 0)))
+# exerciseTypes_df$track <- df$track
+# exerciseTypes_df$girl <- df$girl
+# exerciseTypes_df$`PA accelerometer` <- df$mvpaAccelerometer_T1
+# exerciseTypes_df$`PA self-report` <- df$padaysLastweek_T1
+
+names(exerciseTypes_df) <- c("Team ball games", 
+                             "Other ball games",
+                             "Gym training",
+                             "Combat sports",
+                             "Fitness classes",
+                             "Home workout",
+                             "Cycling",
+                             "Swimming",
+                             "Walking",
+                             "Running",
+                             "Skiing",
+                             "Roller skating",
+                             "Horseback riding",
+                             "Other"
+                             # "PA accelerometer",
+                             # "PA self-report"
+                             )
+
+# Roller skating has only 8 observations; leave out
+exerciseTypes_df <- exerciseTypes_df %>% dplyr::select(-`Roller skating`)
+
+# Variable types are muddled, change all to numeric
+exerciseTypes_df <- as.data.frame(purrr::map(exerciseTypes_df, `class<-`, c("numeric"))) 
+
+# Change data frame to type tbl to allow for spaces
+exerciseTypes_df <- as.tbl(exerciseTypes_df)
+
+# Take all names, replace the dots with space
+names(exerciseTypes_df) <- stringr::str_replace_all(names(exerciseTypes_df), pattern = "\\.", replacement = " ")
+
+# Remove incomplete cases
+exerciseTypes_df_fullobs <- exerciseTypes_df %>% na.omit()
+
+# Tell mgm, that the first 14 variables are categorical and the last two are gaussian
+exerciseTypes_df_variable_types <- c(rep("c", 13))
+exerciseTypes_df_variable_levels <- c(rep("2", 13))
+# data.frame(exerciseTypes_df_variable_types, exerciseTypes_df_variable_levels, names(exerciseTypes_df))
+
+mgm_obj <- mgm::mgm(data = exerciseTypes_df_fullobs,
+  type = exerciseTypes_df_variable_types,
+  level = exerciseTypes_df_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = exerciseTypes_df_fullobs)
+
+# pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1:13, 4])
+
+# Define node colors
+node_colors <- c(rep(viridis::viridis(3, begin = 0.4, end = 0.95)[1], 13))
+
+exerciseTypes_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.999, # To nudge the network from originally bad visual state
+            title = "Mixed graphical model: Types of reported physical activity",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
+            color = node_colors,
+            labels = names(exerciseTypes_df_fullobs),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            label.color = c(rep("black", 13)))
+
+```
+
+```{r exercisetypes-comparison}
+avglayout <- averageLayout(exerciseTypes_mgm, exerciseTypes_ising)
+
+layout(t(1:2))
+
+exerciseTypes_ising <- plot(
+  exerciseTypes_network, 
+  layout = avglayout, 
+  label.scale = FALSE, 
+  title = "Ising fit (EBIC model selection)", 
+  label.cex = 0.75,
+  pie = piefill, 
+  color = "skyblue",
+  pieBorder = 1)
+
+exerciseTypes_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = avglayout,
+            repulsion = 0.999, # To nudge the network from originally bad visual state
+            title = "Mixed graphical model (Cross-validation)",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
+            color = node_colors,
+            labels = names(exerciseTypes_df_fullobs),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            label.color = c(rep("black", 13))
+            )
+
+
+```
+
+```{r exercisetypes-mgm-CV, fig.cap = "Model selection with cross-validation"}
+
+exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
+  dplyr::select(contains(".1")) %>% 
+  dplyr::mutate_all(funs(replace_na(., 0)))
+# exerciseTypes_df$track <- df$track
+# exerciseTypes_df$girl <- df$girl
+exerciseTypes_df$`PA accelerometer` <- df$mvpaAccelerometer_T1
+exerciseTypes_df$`PA self-report` <- df$padaysLastweek_T1
+
+names(exerciseTypes_df) <- c("Team ball games", 
+                             "Other ball games",
+                             "Gym training",
+                             "Combat sports",
+                             "Fitness classes",
+                             "Home workout",
+                             "Cycling",
+                             "Swimming",
+                             "Walking",
+                             "Running",
+                             "Skiing",
+                             "Roller skating",
+                             "Horseback riding",
+                             "Other",
+                             "PA accelerometer",
+                             "PA self-report"
+                             )
+
+# Roller skating has only 8 observations; leave out
+exerciseTypes_df <- exerciseTypes_df %>% dplyr::select(-`Roller skating`)
+
+# Variable types are muddled, change all to numeric
+exerciseTypes_df <- as.data.frame(purrr::map(exerciseTypes_df, `class<-`, c("numeric"))) 
+
+# Change data frame to type tbl to allow for spaces
+exerciseTypes_df <- as.tbl(exerciseTypes_df)
+
+# Take all names, replace the dots with space
+names(exerciseTypes_df) <- stringr::str_replace_all(names(exerciseTypes_df), pattern = "\\.", replacement = " ")
+
+# Remove incomplete cases
+exerciseTypes_df_fullobs <- exerciseTypes_df %>% na.omit()
+
+# Tell mgm, that the first 14 variables are categorical and the last two are gaussian
+exerciseTypes_df_variable_types <- c(rep("c", 13), rep("g", 2))
+exerciseTypes_df_variable_levels <- c(rep("2", 13), rep("1", 2))
+# data.frame(exerciseTypes_df_variable_types, exerciseTypes_df_variable_levels, names(exerciseTypes_df))
+
+mgm_obj_CV <- mgm::mgm(data = exerciseTypes_df_fullobs,
+  type = exerciseTypes_df_variable_types,
+  level = exerciseTypes_df_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj_CV,
+                         data = exerciseTypes_df_fullobs)
+
+# pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1:13, 4],
+                pred_obj$errors[14:15, 3])
+
+# Define node colors
+node_colors <- c(rep(viridis::viridis(3, begin = 0.4, end = 0.95)[1], 13),
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.95)[3], 2))
+
+exerciseTypes_mgm_withMeasures <- qgraph::qgraph(mgm_obj_CV$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "Mixed graphical model: Types of reported physical activity and their relations to measured MVPA",
+            edge.color = ifelse(mgm_obj_CV$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_CV$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
+            color = node_colors,
+            labels = names(exerciseTypes_df_fullobs),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            label.color = c(rep("black", 15)))
+
+exerciseTypes_mgm_withMeasures <- qgraph::qgraph(mgm_obj_CV$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "Mixed graphical model: Types of reported physical activity and their relations to measured MVPA",
+            edge.color = ifelse(mgm_obj_CV$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_CV$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
+            color = node_colors,
+            labels = names(exerciseTypes_df_fullobs),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            label.color = c(rep("black", 15)))
+```
+
+
+```{r exercisetypes-mgm-EBIC, fig.cap = "Model selection with EBIC"}
+
+exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
+  dplyr::select(contains(".1")) %>% 
+  dplyr::mutate_all(funs(replace_na(., 0)))
+# exerciseTypes_df$track <- df$track
+# exerciseTypes_df$girl <- df$girl
+exerciseTypes_df$`PA accelerometer` <- df$mvpaAccelerometer_T1
+exerciseTypes_df$`PA self-report` <- df$padaysLastweek_T1
+
+names(exerciseTypes_df) <- c("Team ball games", 
+                             "Other ball games",
+                             "Gym training",
+                             "Combat sports",
+                             "Fitness classes",
+                             "Home workout",
+                             "Cycling",
+                             "Swimming",
+                             "Walking",
+                             "Running",
+                             "Skiing",
+                             "Roller skating",
+                             "Horseback riding",
+                             "Other",
+                             "PA accelerometer",
+                             "PA self-report"
+                             )
+
+# Roller skating has only 8 observations; leave out
+exerciseTypes_df <- exerciseTypes_df %>% dplyr::select(-`Roller skating`)
+
+# Variable types are muddled, change all to numeric
+exerciseTypes_df <- as.data.frame(purrr::map(exerciseTypes_df, `class<-`, c("numeric"))) 
+
+# Change data frame to type tbl to allow for spaces
+exerciseTypes_df <- as.tbl(exerciseTypes_df)
+
+# Take all names, replace the dots with space
+names(exerciseTypes_df) <- stringr::str_replace_all(names(exerciseTypes_df), pattern = "\\.", replacement = " ")
+
+# Remove incomplete cases
+exerciseTypes_df_fullobs <- exerciseTypes_df %>% na.omit()
+
+# Tell mgm, that the first 14 variables are categorical and the last two are gaussian
+exerciseTypes_df_variable_types <- c(rep("c", 13), rep("g", 2))
+exerciseTypes_df_variable_levels <- c(rep("2", 13), rep("1", 2))
+# data.frame(exerciseTypes_df_variable_types, exerciseTypes_df_variable_levels, names(exerciseTypes_df))
+
+mgm_obj_EBIC <- mgm::mgm(data = exerciseTypes_df_fullobs,
+  type = exerciseTypes_df_variable_types,
+  level = exerciseTypes_df_variable_levels,
+  lambdaSel = "EBIC",
+  # lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj2 <- predict(object = mgm_obj_EBIC,
+                         data = exerciseTypes_df_fullobs)
+
+# pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors2 <- c(pred_obj2$errors[1:13, 4],
+                pred_obj2$errors[14:15, 3])
+
+# Define node colors
+node_colors <- c(rep(viridis::viridis(3, begin = 0.4, end = 0.95)[1], 13),
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.95)[3], 2))
+
+exerciseTypes_mgm_withMeasures2 <- qgraph::qgraph(mgm_obj_EBIC$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "Mixed graphical model: Types of reported physical activity and their relations to measured MVPA",
+            edge.color = ifelse(mgm_obj_EBIC$pairwise$edgecolor == "darkgreen", "blue",
+                                mgm_obj_EBIC$pairwise$edgecolor),
+            pie = pie_errors2,
+            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
+            color = node_colors,
+            labels = names(exerciseTypes_df_fullobs),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            label.color = c(rep("black", 15)))
+
+```
+
+```{r exercisetypes-comparison2}
+avglayout <- averageLayout(exerciseTypes_mgm_withMeasures, exerciseTypes_mgm_withMeasures2)
+
+layout(t(1:2))
+
+qgraph::qgraph(mgm_obj_CV$pairwise$wadj, 
+            layout = avglayout,
+            title = "Mixed graphical model (Cross-validation)",
+            edge.color = ifelse(mgm_obj_CV$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_CV$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
+            color = node_colors,
+            labels = names(exerciseTypes_df_fullobs),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            label.color = c(rep("black", 13)))
+
+qgraph::qgraph(mgm_obj_EBIC$pairwise$wadj, 
+            layout = avglayout,
+            title = "Mixed graphical model (EBIC model selection)",
+            edge.color = ifelse(mgm_obj2$pairwise$edgecolor == "darkgreen", "blue", mgm_obj2$pairwise$edgecolor),
+            pie = pie_errors2,
+            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
+            color = node_colors,
+            labels = names(exerciseTypes_df_fullobs),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            label.color = c(rep("black", 15)))
+
+
+
+```
+
 # Chunked BCTs, PA, motivation 
 
 This section shows the correlations structure between BCTs (lumped into chunks based on whether they relate to frequency or agreement), motivational regulations and PA (self-reported PA the previous week and accelerometer-measured PA the following week).
@@ -335,11 +726,8 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             labels = names(bctdf_pa_mgm_fullobs),
             label.cex = 0.75,
             label.scale = FALSE,
-            label.color = c(rep("black", 12)),
-            theme = "colorblind")
+            label.color = c(rep("black", 12)))
 
-qgraph::flow(BCT_mgm, "PA accelerometer", theme = "colorblind", vsize = 8)
-qgraph::flow(BCT_mgm, "PA selfrep", theme = "colorblind", vsize = 8)
 ```
 
 ## ggm estimation
@@ -525,12 +913,9 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             labels = names(bctdf_pa_combinedAgreementBcts),
             label.cex = 0.75,
             label.scale = FALSE,
-            label.color = c(rep("black", 9)),
-            theme = "colorblind")
+            label.color = c(rep("black", 9)))
 
 
-# qgraph::flow(BCT_mgm, "PA accelerometer", theme = "colorblind", vsize = 8)
-# qgraph::flow(BCT_mgm, "PA selfrep", theme = "colorblind", vsize = 8)
 ```
 
 ## GGM plot
@@ -784,8 +1169,6 @@ cat("Number of edges, which appear different (p<0.05):", sum(nct_results$einv.pv
 
 ```
 
-
-
 # Agreement and frequency dependent BCTs with motivation and MVPA
 
 ## Combined BCT chunks
@@ -860,12 +1243,85 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             labels = names(bctdf_mgm),
             label.cex = 0.8,
             label.scale = FALSE,
-            node.width = 1.65,
-            theme = "colorblind")
+            node.width = 1.65)
 
 ```
 
-## Individual items
+```{r}
+
+bctdf_mgm <- df %>% dplyr::select(
+  'agr-BCTs' = PA_agrbct_T1,
+  'frq-BCTs' = PA_frqbct_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1,
+  'Amotivation' = PA_amotivation_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
+  # 'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'Amotivation' = ifelse(`Amotivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything(), -contains("-BCTs")) %>% 
+  mutate_all(as.numeric)
+
+bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+# mgm wants full data, see package missForest for imputation methods
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c(rep("g", 4), "c", "c", "c", "g")
+mgm_variable_levels <- c(rep("1", 4), "2", "2", "2", "1")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1:4, 3],
+                pred_obj$errors[5:7, 4],
+                pred_obj$errors[8, 3])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for autonomous
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 3), # 3x Color 3 for controlled/amotivation
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1)) # 1x Color 2 for BCTs
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 1, # To nudge the network from originally bad visual state
+            # title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.8,
+            label.scale = FALSE,
+            node.width = 1.65)
+
+```
+
+## Individual BCT items
 
 This section presents a Mixed Graphical Model (MGM) and a Gaussian Graphical Model (GGM). In the MGM, we opted to dichotomise the BCTs in order to increase interpretability while not violating model assumptions. Results do not differ very much. Some nodes were still combined, to reduce estimation burden.
 
@@ -1000,8 +1456,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             color = node_colors,
             labels = names(bctdf_mgm),
             label.cex = 0.75,
-            label.scale = FALSE,
-            theme = "colorblind")
+            label.scale = FALSE)
 
 ```
 
@@ -1035,17 +1490,18 @@ bctdf_ggm <- df %>% dplyr::select(
   'changes at home' = PA_frqbct_07_T1,
   'social support' = PA_frqbct_08_T1,
   'failure contemplated' = PA_frqbct_09_T1,
-  'MVPA' = padaysLastweek_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
   'identified' = PA_identified_T1,
-  'controlled' = PA_controlled_T1) %>%
+  'controlled motivation' = PA_controlled_T1) %>%
  rowwise() %>% 
  mutate(
 #  'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
   'barriers identified or planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE),
   'identity, life values' = mean(c(`PA identity` == 1, `PA life values`), na.rm = TRUE),
-  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE),
-  'autonomous' = mean(c(identified, intrinsic), na.rm = T)) %>% 
+  'monitoring PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = T)) %>% 
 #  'girl' = ifelse(girl == "girl", 1, 0),
 #  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
   dplyr::select(-`log on paper`, -`smartphone`, 
@@ -1055,7 +1511,7 @@ bctdf_ggm <- df %>% dplyr::select(
          -`barrier identification`, -`coping planning`, # closely related
          -`PA identity`, -`PA life values`) %>% # closely related
 #  dplyr::select(-controlled) %>% # Not really gaussian at all 
-  dplyr::select(MVPA, autonomous, controlled, everything()) %>% 
+  dplyr::select("MVPA questionnaire", "MVPA accelerometer", "autonomous motivation", "controlled motivation", everything()) %>% 
   dplyr::mutate_all(as.numeric)
 
 # Network for all participants
@@ -1066,15 +1522,16 @@ labs_ggm <- colnames(S.total_ggm)
 
 # Create means for filling nodes
 piefill_ggm <- S.total_ggm %>% 
-  dplyr::select(-MVPA, -autonomous, -controlled) %>% data.frame %>% 
+  dplyr::select(-contains("MVPA"), -contains("motivation")) %>% data.frame %>% 
   dplyr::summarise_all(funs(mean(., na.rm = TRUE) /6))
 
-piefill_ggm$MVPA <- median(S.total_ggm$MVPA, na.rm = TRUE) / 7
-piefill_ggm$autonomous <- median(S.total_ggm$autonomous, na.rm = TRUE) / 5
-piefill_ggm$controlled <- median(S.total_ggm$controlled, na.rm = TRUE) / 5
+piefill_ggm$`MVPA accelerometer` <- median(S.total_ggm$`MVPA accelerometer`, na.rm = TRUE) / (60 * 24)
+piefill_ggm$`MVPA questionnaire` <- median(S.total_ggm$`MVPA questionnaire`, na.rm = TRUE) / 7
+piefill_ggm$autonomous <- median(S.total_ggm$`autonomous motivation`, na.rm = TRUE) / 5
+piefill_ggm$controlled <- median(S.total_ggm$`controlled motivation`, na.rm = TRUE) / 5
   
 piefill_ggm <- piefill_ggm %>% 
-  dplyr::select(MVPA, autonomous, controlled, everything()) 
+  dplyr::select("MVPA questionnaire", "MVPA accelerometer", autonomous, controlled, everything())
 
 # Plot network
 
@@ -1089,7 +1546,8 @@ BCT_ggm <- plot(nwBCT_ggm,
                 pieBorder = 1)
 
 
-qgraph::flow(BCT_ggm, "MVPA", theme = "colorblind", vsize = 8)
+qgraph::flow(BCT_ggm, "MVPA accelerometer", theme = "colorblind", vsize = 8)
+qgraph::flow(BCT_ggm, "MVPA questionnaire", theme = "colorblind", vsize = 8)
 ```
 
 ### Centrality and stability
@@ -1146,11 +1604,11 @@ layout_mgm_ggm <- qgraph::averageLayout(BCT_ggm, BCT_mgm)
 layout(t(1:2))
 
 plot(nwBCT_ggm, layout = layout_mgm_ggm, label.scale = FALSE, title = "GGM: PA, BCTs & motivation", label.cex = 0.75,
-     pie = piefill_ggm, 
+     pie = piefill_ggm,
      color = "skyblue",
      pieBorder = 1)
 
-qgraph::qgraph(mgm_obj$pairwise$wadj, 
+qgraph::qgraph(mgm_obj$pairwise$wadj,
             layout = layout_mgm_ggm,
             title = "MGM: PA, BCTs & motivation",
             edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
@@ -1159,8 +1617,7 @@ qgraph::qgraph(mgm_obj$pairwise$wadj,
             color = node_colors,
             labels = names(bctdf_mgm),
             label.cex = 0.75,
-            label.scale = FALSE,
-            theme = "colorblind")
+            label.scale = FALSE)
 
 ```
 
@@ -1176,7 +1633,7 @@ corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "cor",
        edge.labels = TRUE,
        edge.label.cex = 0.75,
        label.scale = FALSE,
-       layout = qgraph::averageLayout(BCT_mgm, BCT_mgm), # get the mgm layout 
+       layout = qgraph::averageLayout(BCT_ggm, BCT_mgm), # get the mgm layout 
        title = "bivariate correlation network",
        theme = "colorblind",
        label.cex = 0.75,
@@ -1191,7 +1648,7 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "pcor",
        edge.labels = TRUE,
        edge.label.cex = 0.75,
        label.scale = FALSE,
-       layout = qgraph::averageLayout(BCT_mgm, BCT_mgm), # get the mgm layout 
+       layout = qgraph::averageLayout(BCT_ggm, BCT_mgm), # get the mgm layout 
        title = "Partial correlation network",
        theme = "colorblind",
        label.cex = 0.75,
@@ -1357,9 +1814,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             labels = names(bctdf_mgm),
             label.cex = 0.75,
             label.scale = FALSE,
-            vertex.label.dist = 2,
-            # label.color = c(rep("white", 1), rep("black", 16)),
-            theme = "colorblind")
+            vertex.label.dist = 2)
 
 ```
 
@@ -1474,8 +1929,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             color = node_colors,
             labels = names(bctdf_mgm),
             label.cex = 0.75,
-            label.scale = FALSE,
-            theme = "colorblind")
+            label.scale = FALSE)
 
 ```
 
@@ -1590,9 +2044,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             color = node_colors,
             labels = names(bctdf_mgm),
             label.cex = 0.75,
-            label.scale = FALSE,
-            # label.color = c(rep("white", 1), rep("black", 16)),
-            theme = "colorblind")
+            label.scale = FALSE)
 
 ```
 
@@ -1707,9 +2159,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             color = node_colors,
             labels = names(bctdf_mgm),
             label.cex = 0.75,
-            label.scale = FALSE,
-            # label.color = c(rep("white", 1), rep("black", 16)),
-            theme = "colorblind")
+            label.scale = FALSE)
 
 ```
 
@@ -1765,11 +2215,10 @@ bctdf <- df %>% dplyr::select(id,
   'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
   'changes at home' = ifelse(`changes at home` == 1, 0, 1),
   'social support' = ifelse(`social support` == 1, 0, 1),
-  'failure contemplated' = ifelse(`failure contemplated` == 1, 0, 1)) %>% 
-  data.frame
+  'failure contemplated' = ifelse(`failure contemplated` == 1, 0, 1)) 
 
-S.boys <- bctdf %>% filter(girl == "boy") %>% dplyr::select(6:ncol(bctdf)) %>% na.omit(.) 
-S.girls <- bctdf %>% filter(girl == "girl") %>% dplyr::select(6:ncol(bctdf)) %>% na.omit(.)
+S.boys <- bctdf %>% filter(girl == "boy") %>% dplyr::select(`goal setting`:ncol(bctdf)) %>% na.omit(.) 
+S.girls <- bctdf %>% filter(girl == "girl") %>% dplyr::select(`goal setting`:ncol(bctdf)) %>% na.omit(.)
 nwBoys <- bootnet::estimateNetwork(S.boys, default="IsingFit")
 nwGirls <- bootnet::estimateNetwork(S.girls, default="IsingFit")
 

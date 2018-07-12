@@ -42,7 +42,7 @@ abstract: >
   Methods: At baseline, 1123 adolescents in 57 classes in 6 school units participated in the study. Data were gathered with 7-day accelerometry, bioimpedance measures and questionnaires, which were used to measure health status, activity behaviours, and potential constructs mediating the effect of the intervention on outcomes. Data were visualised e.g. combining ridge plots and diamond plots; network analysis was used to investigate relations between psychosocial variables and outcomes.
   Results: The participants were 16-49 years old (M = 18.5, SD = xx, Md = 18.0). On average, they engaged in moderate-to-vigorous PA xx (SD = xx, Md = xx) and SB xx minutes daily and xx breaks in SB. Several variables differ among the four educational tracks, but not across intervention and control groups. 
   Conclusion: The usage of behaviour change techniques  Autonomous motivation . Comparability to similar populations.. We have also shown benefits of presenting such data visually, and encourage researchers to routinely make the extensive analyses and descriptions they have produced, available in website supplements.
-keywords          : "exercise, physical activity, school-based intervention, behaviour change, sedentary behavior"
+keywords          : "exercise, physical activity, school-based intervention, behaviour change, sedentary behaviour"
 wordcount         : "X"
 figsintext        : yes
 figurelist        : no
@@ -59,21 +59,20 @@ output:
   papaja::apa6_pdf: default
 ---
 
-```{r setup, include = FALSE}
-
-knitr::opts_chunk$set(echo = FALSE, 
-               warning = FALSE,
-               error = TRUE,
-               cache = TRUE, 
-               collapse = TRUE)
-
-# rmarkdown::render(input = "_baseline-manuscript.Rmd", output_format = "papaja::apa6_word") 
-
-```
-
-```{r load-data}
+```{r load-data, include = FALSE}
 
 source("baseline-datasetup.R")
+library(knitr)
+knitr::opts_chunk$set(echo = FALSE, 
+               warning = FALSE,
+               message = FALSE,
+               error = TRUE,
+               cache = FALSE, 
+               collapse = TRUE,
+               dpi = 300
+               )
+
+# rmarkdown::render(input = "_baseline-manuscript.Rmd", output_format = "papaja::apa6_word") 
 
 ```
 
@@ -88,7 +87,7 @@ As adolescents spend a significant amount of their time in schools, schools prov
 
 The programme theory (explicated in REF: DEVELOPMENT; see also@rogersUsingProgrammeTheory2008a, and @mooreProcessEvaluationComplex2015, p. 32) for changing PA and SB was hypothesised to be slightly different for PA and SB. In order to engage in PA, one needs to have a conscious effort and self-regulatory capacity to make use of the opportunities, such as planning for active times and overcoming barriers to exercise. In the intervention, one of the key emphases in helping adolescents change their PA was to help them understand and use techniques to manage their motivation and behaviour (see also @hankonenRandomisedControlledFeasibility2017). Assessing what participants do to advances our understanding of what people themselves can do to in attempts to change their behaviour. To date, there is little systematic theorising on how the use of these techniques link to each other, and it would be important to understand these interlinkages empirically. The model for SB, on the other hand, is more driven by environmental opportunities and incentives, such as having the option of standing up during class.
 
-In order to change moderate-to-vigorous-intensity PA, a central component of the intervention targeted autonomous motivation, social cognitions, as well as participants' skills to use behaviour change techniques to self-regulate motivation and behaviour (Hankonen et al, unpublished manuscript). To change SB, or specifically, to reduce total SB as well as introduce breaks in SB, the program aimed to change the school environment by training teachers in providing more active teaching and altering physical choice architecture in classrooms (Köykkä et al, accepted) . The intervention included also poster campaign in schools and a website, as well as materials to target community actors and parents [@hankonenLetMoveIt2016]. More information of the content of the intervention and the development of it is reported elsewhere (Hankonen et al 2017 NELLI?), Hankonen et al unpublished manuscript). The mediators postulated by the program theory included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, environmental opportunities, action and coping planning, and behaviour change technique (BCT) use. Key hypotheses regarding students' PA change have been registered OSF (https://osf.io/tb8fu/). It has long been a standard recommendation for quantitative analyses to investigate data visually as a core precursor of conducting statistical analyses (Tukey 1977 Exploratory Data Analysis; Cleveland 1993 Visualizing data). However, in social and life sciences, such visualizations have rarely been shared in publications. Information about data are usually limited to means and standard deviations, which presents at best limited information about the variables of interest. Medians, modes, skewness and kurtosis provide helpful additional information, but can still hide important distributional properties.
+In order to change moderate-to-vigorous-intensity PA, a central component of the intervention targeted autonomous motivation, social cognitions, as well as participants' skills to use behaviour change techniques to self-regulate motivation and behaviour (Hankonen et al, unpublished manuscript). To change SB, or specifically, to reduce total SB as well as introduce breaks in SB, the program aimed to change the school environment by training teachers in providing more active teaching and altering physical choice architecture in classrooms (K�ykk� et al, accepted) . The intervention included also poster campaign in schools and a website, as well as materials to target community actors and parents [@hankonenLetMoveIt2016]. More information of the content of the intervention and the development of it is reported elsewhere (Hankonen et al 2017 NELLI?), Hankonen et al unpublished manuscript). The mediators postulated by the program theory included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, environmental opportunities, action and coping planning, and behaviour change technique (BCT) use. Key hypotheses regarding students' PA change have been registered OSF (https://osf.io/tb8fu/). It has long been a standard recommendation for quantitative analyses to investigate data visually as a core precursor of conducting statistical analyses (Tukey 1977 Exploratory Data Analysis; Cleveland 1993 Visualizing data). However, in social and life sciences, such visualizations have rarely been shared in publications. Information about data are usually limited to means and standard deviations, which presents at best limited information about the variables of interest. Medians, modes, skewness and kurtosis provide helpful additional information, but can still hide important distributional properties.
 
 Successful communication of important information includes additional means of communication to flooding readers with unintuitive numerical point values or easily reified bound estimates, such as confidence intervals. Visualizing data is imperative, because it allows for communicating large amounts of information-and the associated uncertainty-in an accessible format, without requiring extensive mathematical background from the reader. Unfortunately, traditional word count limits in scientific publications, along with a stringent limitations on the number of tables and figures that can be included, have prohibited researchers sharing data visualization. When researchers extend work on previous findings of others, they thus may not know that they are working with inadequately complete information; this has direct implications to the recent crisis of confidence in the reproducibility and replicability of research findings (REF).
 
@@ -104,7 +103,7 @@ Study design, screening and recruitment
 
 Five schools providing four educational tracks; 1. Practical Nurse (Nur), 2. Hotel, Restaurant and Catering (HRC), 3. Business and Administration (BA), and 4. Information and Communications Technology (IT) were recruited. Schools were paired so that there would be matching numbers of students from each educational track for both members of the pair. Blinded randomization by a statistician without knowledge of pairs, track or schools was then conducted so that a random member of each pair was selected as case school, the other as control school (details reported in @hankonenLetMoveIt2016). Participants were blind to randomisation at baseline. 
 
-## Measures  
+## Measures
 
 The measurements have been previously described in @hankonenLetMoveIt2016, and all individual items of the scales are available in the supplementary file [MATTI TODO]. Thus, we will present these baseline measures only briefly.
 
@@ -114,9 +113,9 @@ The primary outcome for PA was moderate-to-vigorous intensity physical activity 
 
 *Self-reported MVPA.* Self-reported MVPA was measured with two questions in accordance with the NordPAQ measurement [@fagtNordicMonitoringDiet2012]. The first question asked participants about the number of days in which they did more than 30 minutes of MVPA during the last week, the other asked about the overall amount of MVPA (in hours) during the previous week. 
 
-*Accelerometer-measured MVPA.*  Within one week after responding to the questionnaire, students were given an accelerometer to be worn for seven consecutive days. The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a digital triaxial acceleration sensor (ADXL345; Analog Devices, Norwood MA) was attached to a flexible belt and participants were instructed to wear the belt around their right hip for seven consecutive days during waking hours, except during shower and other water activities. The acceleration signal was collected at 100 Hz sampling frequency, ±16 g acceleration range and 0.004 g resolution. PA-parameters were based on mean amplitude deviation (MAD) of the resultant acceleration analysed in 6s epochs [@vaha-ypyaUniversalAccurateIntensitybased2015]. The MAD values were then converted to metabolic equivalent (MET) values [@vaha-ypyaValidationCutpointsEvaluating2015]. The epoch-wise MET values were further smoothed by calculating 1min exponential moving average [**TOMMI CHECK if 1min moving avg or 6s epoch] exponential moving average**]. Using the smoothed MET values total PA was classified in terms of energy consumption covering MET values higher than 1.5 and moderate-to-vigorous PA (MVPA) covering MET values equal to or higher than 3 [@vaha-ypyaUniversalAccurateIntensitybased2015; @vaha-ypyaValidationCutpointsEvaluating2015]. 
+*Accelerometer-measured MVPA.* Within one week after responding to the questionnaire, students were given an accelerometer to be worn for seven consecutive days. The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a digital triaxial acceleration sensor (ADXL345; Analog Devices, Norwood MA) was attached to a flexible belt and participants were instructed to wear the belt around their right hip for seven consecutive days during waking hours, except during shower and other water activities. The acceleration signal was collected at 100 Hz sampling frequency, �16 g acceleration range and 0.004 g resolution. PA-parameters were based on mean amplitude deviation (MAD) of the resultant acceleration analysed in 6s epochs [@vaha-ypyaUniversalAccurateIntensitybased2015]. The MAD values were then converted to metabolic equivalent (MET) values [@vaha-ypyaValidationCutpointsEvaluating2015]. The epoch-wise MET values were further smoothed by calculating 1min exponential moving average [**TOMMI CHECK if 1min moving avg or 6s epoch] exponential moving average**]. Using the smoothed MET values total PA was classified in terms of energy consumption covering MET values higher than 1.5 and moderate-to-vigorous PA (MVPA) covering MET values equal to or higher than 3 [@vaha-ypyaUniversalAccurateIntensitybased2015; @vaha-ypyaValidationCutpointsEvaluating2015]. 
 
-*Sedentary behaviour.* According to the definition of SB [@tremblaySedentaryBehaviorResearch2017], time spent in sitting and reclining positions were combined to indicate SB, whereas standing was analysed separately as another form of stationary behavior. Body postures were recognized from the raw acceleration data by employing both direction and intensity information from all three measurement axes. The recognition was based on the low intensity of movement (<1.5 MET) and the accelerometer orientation in relation to identified upright position (angle for posture estimation, APE) calculated at the end of each 6 s epoch [@vaha-ypyaReliableRecognitionLying2018]. 
+*Sedentary behaviour.* According to the definition of SB [@tremblaySedentarybehaviourResearch2017], time spent in sitting and reclining positions were combined to indicate SB, whereas standing was analysed separately as another form of stationary behaviour. Body postures were recognized from the raw acceleration data by employing both direction and intensity information from all three measurement axes. The recognition was based on the low intensity of movement (<1.5 MET) and the accelerometer orientation in relation to identified upright position (angle for posture estimation, APE) calculated at the end of each 6 s epoch [@vaha-ypyaReliableRecognitionLying2018]. 
 
 ### Theoretical predictors of PA
 
@@ -124,9 +123,7 @@ The mediators postulated by the program theory included behavioural beliefs (out
 
 ### Statistical analysis
 
-We used RStudio [@rstudioteamRStudioIntegratedDevelopment2016] running `r papaja::cite_r("r-and-packages.bib", withhold = FALSE)` for all our analyses and figures.
-
-[from Kerala paper: “linear regression for continuous variables and logistic regression (including multinomial for unordered categories and ordinal for ordered categories) for categorical variables, with P values based on Huber–White standard errors that were adjusted for clustering by polling booths. Skewed variables were log-transformed before analysis. Two-sided P values <0.05 were taken to indicate statistical significance.”]
+We used RStudio [@rstudioteamRStudioIntegratedDevelopment2016] running `r papaja::cite_r("r-and-packages.bib", withhold = FALSE)` for all our analyses and figures. 
 
 We used psychological network analysis to estimate and visualize relations among items. Such networks contain nodes (variables) and edges (statistical relationships between variables). We used state-of-the-art network models that estimate conditional dependence relations among a set of items, which can be interpreted akin to partial correlations. An edge between two variables implies that they are related after controlling for all other items; the absence of an edge implies that the two items are conditionally independent. 
 
@@ -134,10 +131,10 @@ Specifically, we demonstrate use of a Mixed Graphical Model that is the appropri
 
 Network analysis has recently shown promise in many fields such as social psychology [@dalegeFormalizedAccountAttitudes2016; @dalegeNetworkStructureExplains2017], personality [@mottusWhyTraitsCome2017], intelligence [@vandermaasNetworkModelsCognitive2017], psychopathology [@friedMentalDisordersNetworks2017], and empathy research [@brigantiNetworkAnalysisEmpathy2018], and is beginning to be applied for health behaviours on a broader scale. Several helpful tutorial papers aimed at empirical researchers working in psychology are available (@dalegeNetworkAnalysisAttitudes2017; @epskampTutorialRegularizedPartial2018; @epskampEstimatingPsychologicalNetworks2016; @costantiniStateARtPersonality2015; @costantiniStabilityVariabilityPersonality2017].
 
-Network models applied to between-subjects data at one time-point can be useful for describing health psychological data, as well as facilitating group-level hypothesis generation regarding which parts of the system are central for a problem at hand (“Moving forward…”). Identifying these determinants of importance can thus supplement traditional structural equation modeling (SEM) approaches, while dealing with some possibly problematic approaches to SEM (REF Borsboom theoretical status of latent variables, Bringmann 2018, but see also Bringmann & Eronen, 2018).
+Network models applied to between-subjects data at one time-point can be useful for describing health psychological data, as well as facilitating group-level hypothesis generation regarding which parts of the system are central for a problem at hand ("Moving forward."). Identifying these determinants of importance can thus supplement traditional structural equation modeling (SEM) approaches, while dealing with some possibly problematic approaches to SEM (REF Borsboom theoretical status of latent variables, Bringmann 2018, but see also Bringmann & Eronen, 2018).
 Network analysis naturally entails its own set of assumptions. As with any model, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to justify argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. Behaviour change technique usage seems less problematic in this regard. 
 
-Findings
+# Findings
 
 ```{r demographics-load, echo = FALSE}
 
@@ -161,8 +158,7 @@ Table \@ref(tab:demographics-table) shows the main demographic variables of the 
 
 ```{r demographics-table, echo = FALSE, results = "asis"}
 
-dt <- demotable %>% dplyr::select("Variable", "Full sample") %>% filter(Variable == "Born in Finland (%)") %>% dplyr::pull()
-papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering studies, BA = Business and administration, IT = Business information technology")
+papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering studies, BA = Business and administration, IT = Business information technology. Omitted are 24 participants, who reported \"other\" as their track, as well as 81 participants from whom the data is not available.")
 
 ```
 
@@ -174,7 +170,7 @@ text_mean_mvpaDays <- df$padaysLastweek_T1 %>% mean(na.rm = TRUE) %>% round(., 1
 ```
 
 Table \@ref(tab:primary-outcome-vars-table-total) shows summary statistics for primary outcome variables with their intra-class correlations (ICCs) for class and school (see supplementary website for ICCs for all variables).
-At baseline, `r cutoff_reached_percentage` students provided at least 4 days with a minimum of 10 hours per day of valid accelerometer data. On average, the youth reported engaging in at least 30 minutes of MVPA on `r text_mean_mvpaDays` days a week.
+At baseline, `r text_cutoff_reached_percentage` students provided at least 4 days with a minimum of 10 hours per day of valid accelerometer data. On average, the youth reported engaging in at least 30 minutes of MVPA on `r text_mean_mvpaDays` days a week.
 
 
 ```{r primary-outcome-vars-table-total, results = 'asis'}
@@ -188,6 +184,7 @@ vardatatable2$Variable <- gsub("sitLieAccelerometer", "Daily time spent sitting 
 vardatatable2$Variable <- gsub("sitBreaksAccelerometer", "Daily number of times sitting was interrupted (accelerometer)*", vardatatable2$Variable)
 vardatatable2$Variable <- gsub("lpaAccelerometer", "Daily light PA time (accelerometer)", vardatatable2$Variable)
 vardatatable2$Variable <- gsub("standingAccelerometer", "Daily standing time (accelerometer)", vardatatable2$Variable)
+vardatatable2$Variable <- gsub("weartimeAccelerometer", "Average daily accelerometer wear time", vardatatable2$Variable)
 
 vardatatable2 <- vardatatable2 %>% 
   dplyr::filter(Variable == "Daily moderate-to-vigorous PA time (accelerometer)*" | 
@@ -195,38 +192,279 @@ vardatatable2 <- vardatatable2 %>%
            Variable == "Daily number of times sitting was interrupted (accelerometer)*" |
            Variable == "Number of days with >30 MVPA min previous week (self-report)*" |
            Variable == "Daily light PA time (accelerometer)" |
-           Variable == "Daily standing time (accelerometer)") %>% 
+           Variable == "Daily standing time (accelerometer)" |
+           Variable == "Average total accelerometer wear time (if cutoff reached)") %>% 
   dplyr::mutate(orderVariable = ifelse(`Variable` == "Daily moderate-to-vigorous PA time (accelerometer)*", "a",
                                 ifelse(`Variable` == "Daily light PA time (accelerometer)", "b",
                                 ifelse(`Variable` == "Daily standing time (accelerometer)", "c",
                                 ifelse(`Variable` == "Daily time spent sitting or lying down (accelerometer)*", "d",
-                                ifelse(`Variable` == "Daily number of times sitting was interrupted (accelerometer)*", "e",
-                                ifelse(`Variable` == "Number of days with >30 MVPA min previous week (self-report)*", "f", NA))))))) %>% 
+                                ifelse(`Variable` == "Average daily accelerometer wear time", "e",
+                                ifelse(`Variable` == "Daily number of times sitting was interrupted (accelerometer)*", "f", 
+                                ifelse(`Variable` == "Number of days with >30 MVPA min previous week (self-report)*", "g", NA))))))),
+                `ICC class` = stringr::str_replace(`ICC class`, pattern = "0.", replacement = "."),
+                `ICC school` = stringr::str_replace(`ICC school`, pattern = "0.", replacement = ".")) %>% 
   dplyr::arrange(orderVariable) %>% 
   dplyr::select(-orderVariable)
 
 vardatatable2 %>% 
     papaja::apa_table(
-        caption = "Primary outcome variables with their class and school ICCs. Primary outcome variables highlighted with asterisks.",
+        caption = "Primary outcome variables with their class and school ICCs. Primary outcome variables highlighted with asterisks. Accelerometer results, including wear time, are only included from those participants who met the cutoff of at least 10 hours of measurement time for at least four days.",
         escape = TRUE, format.args = list(digits = c(3, 0), margin = 2)
         )
 
-row.names(vardatatable2) <- vardatatable2$Variable
+vardatatable3 <- vardatatable2
+row.names(vardatatable3) <- vardatatable3$Variable
 
-text_ICCschool <- vardatatable2["Daily time spent sitting or lying down (accelerometer)*", "ICC class"] %>% as.numeric() %>% scales::percent() 
-text_ICCclass <- vardatatable2["Daily time spent sitting or lying down (accelerometer)*", "ICC school"] %>% as.numeric() %>% scales::percent() 
+text_ICCschool <- vardatatable3["Daily time spent sitting or lying down (accelerometer)*", "ICC class"] %>% as.numeric() %>% scales::percent() 
+text_ICCclass <- vardatatable3["Daily time spent sitting or lying down (accelerometer)*", "ICC school"] %>% as.numeric() %>% scales::percent() 
 
 ```
 
-As shown, almost `r text_ICCschool` of variance in time spent sitting or lying down can be explained by school, and `r text_ICCclass` by classroom membership.
+As shown, `r text_ICCschool` of variance in time spent sitting or lying down can be explained by school, and `r text_ICCclass` by classroom membership.
 
-# Theoretical mediators: Traditionally presented results
+## Theoretical mediators: Traditionally presented results
 
-In table XXX below, we present the means for the primary outcome variables by gender and intervention group allocation. We do not present statistical tests for several reasons. First of all, following the logic of Neyman-Pearson hypothesis testing [cite nickerson, etc], to keep error rate under the alpha level, one would have to correct for multiple testing and it is unclear how many tests one should correct for, when hypotheses are not pre-specified [cite wagenmakers, ask for recent]. Ignoring this -- especially in our case, where it is unclear how to heed the recommendation to justify one’s alpha level [cite “justify your alpha”] -- error rates can become surprisingly high [cite simonsohn].  A Fisherian approach, on the other hand, would necessitate ... Besides the logic of hypothesis testing, and more importantly, we are not interested in whether the populations differ by any arbitrarily small amount on any on the variables. What matters is, whether this difference will affect the analysis and interpretation of outcomes for the main trial (i.e. a null hypothesis of nil difference is not sensible in our case), and thus the effect size is of primary importance here. However, two caveats follow: Firstly, effect sizes not accounting for the multilevel structure of the data inflate the standard errors, possibly even making zero effects appear as medium-sized ones [REF Lai & Kwok]. Secondly, it is not a trivial task to derive trustworthy effect sizes for nested data [cite bolker?]. Although some solutions exist (e.g. Lai & Kwok REF), they have not yet been empirically validated for finite populations in the second or third levels (Lai, Kwok, Hsiao, Cao 2018), nor is there a straightforward software implementation at the time of writing. [REIJO maybe refurbish this?] Therefore, we opt to present the means with their corresponding confidence intervals, encouraging the readers to refrain from merely considering non-overlapping intervals between groups as hypothesis tests.
+In table \@ref(tab:mediator-table) below, we present the means for the primary outcome variables by gender and intervention group allocation. We do not present statistical tests for several reasons. First of all, following the logic of Neyman-Pearson hypothesis testing [@haigTestsStatisticalSignificance2016; @nickersonNullHypothesisSignificance2000], to keep error rate under the alpha level, one would have to correct for multiple testing and it is unclear how many tests one should correct for, when hypotheses are not pre-specified [cite wagenmakers, ask for recent]. Ignoring this -- especially in our case, where it is unclear how to heed the recommendation to justify one's alpha level [@lakensJustifyYourAlpha2018] -- error rates can become surprisingly high [@simmonsFalsePositivePsychologyUndisclosed2011]. Besides the logic of hypothesis testing, and more importantly, we are not interested in whether the populations differ by any arbitrarily small amount on any on the variables. What matters is, whether this difference will affect the analysis and interpretation of outcomes for the main trial (i.e. a null hypothesis of nil difference is not sensible in our case), and the minimal meaningful effect size is of primary importance here. However, two caveats follow: Firstly, effect sizes not accounting for the multilevel structure of the data inflate the standard errors, possibly even making zero effects appear as medium-sized ones [@laiEstimatingStandardizedEffect2016]. Secondly, it is not a trivial task to derive trustworthy effect sizes for nested data [cite bolker?]. Although some solutions exist (e.g. @laiEstimatingStandardizedEffect2016), they have not yet been empirically validated for finite populations in the second or third levels [@laiFinitePopulationCorrection2018], nor is there a straightforward software implementation at the time of writing. [REIJO maybe refurbish this?] Therefore, we opt to present the means with their corresponding confidence intervals, encouraging the readers to refrain from merely considering non-overlapping intervals between groups as hypothesis tests.
+
+```{r mediator-table, results = 'asis'}
+load("./Rdata_files/mega_mediatortable.Rdata")
+
+
+papaja::apa_table(mega_mediatortable, caption = "Main mediating variables of PA and SB")
+```
+
+## Graphical presentation
+
+Next, we present results graphically, to give the reader a richer perspective than from what can be gauged from considering means only.  
+
+### Activity during the day
+
+From plot \@ref(fig:average-day-activity-plot), we can see that the patterns of activity within gender and intervention allocation groups are similar, but the educational tracks differ in their activity levels to an extent. 
+
+```{r average-day-activity-plot, fig.cap = "Averaged proportions of activity during an average day.", fig.width = 12, fig.height = 6}
+
+averageDayActivityPlot_gender <- df %>% 
+  dplyr::mutate_at(vars(contains("Accelerometer"), -contains("weartime")), funs(./weartimeAccelerometer_T1)) %>% 
+  dplyr::select(girl, intervention, track,
+                     "Sedentary behaviour" = sitLieAccelerometer_T1, 
+                     "Standing still" = standingAccelerometer_T1, 
+                     "Light PA" = lpaAccelerometer_T1, 
+                     "Moderate PA" = mpaAccelerometer_T1, 
+                     "Vigorous PA" = vpaAccelerometer_T1) %>%
+  dplyr::filter(track != "Other") %>% # Drop small track "Other"
+  tidyr::gather(variable, value, -(girl:track)) %>% # Convert data to long form
+  dplyr::mutate(track = factor(track, ordered = TRUE,
+                               levels = c("Nur",
+                                          "HRC",
+                                          "BA",
+                                          "IT",
+                                          "Other")), # Order factors, to preserve presentation order
+                variable = factor(variable, ordered = TRUE,
+                                  levels = c("Sedentary behaviour", 
+                                             "Standing still", 
+                                             "Light PA", 
+                                             "Moderate PA", 
+                                             "Vigorous PA"))) %>% 
+  ggplot2::ggplot(aes(y = value, x = girl)) +
+  # coord_flip() +
+  geom_bar(aes(fill = variable), 
+           position = position_fill(reverse = TRUE),
+           stat = "identity") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d(option = "inferno", begin = 0.1, end = 0.8) +
+  labs(x = NULL, y = NULL) +
+  papaja::theme_apa(base_size = 18) +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 55, hjust = 1)) + # Adjust label text
+  guides(fill = guide_legend(reverse = TRUE)) + # Make the legend order match the plot order
+  facet_wrap("track", nrow = 1) 
+
+# Same plot but for intervention/control:
+
+averageDayActivityPlot_intervention <- df %>% 
+  dplyr::select(girl, intervention, track,
+                     "Sedentary behaviour" = sitLieAccelerometer_T1, 
+                     "Standing still" = standingAccelerometer_T1, 
+                     "Light PA" = lpaAccelerometer_T1, 
+                     "Moderate PA" = mpaAccelerometer_T1, 
+                     "Vigorous PA" = vpaAccelerometer_T1) %>% 
+  dplyr::filter(track != "Other") %>% # Drop small track "Other"
+  tidyr::gather(variable, value, -(girl:track)) %>% # Convert data to long form
+  dplyr::mutate(track = factor(track, ordered = TRUE,
+                               levels = c("Nur",
+                                          "HRC",
+                                          "BA",
+                                          "IT",
+                                          "Other")), 
+                variable = factor(variable, ordered = TRUE,
+                                  levels = c("Sedentary behaviour", 
+                                             "Standing still", 
+                                             "Light PA", 
+                                             "Moderate PA", 
+                                             "Vigorous PA")),
+                intervention = factor(intervention, ordered = TRUE,
+                                      levels = c(0, 1),
+                                      labels = c("Control", "Intervention"))) %>% 
+  ggplot2::ggplot(aes(y = value, x = intervention)) +
+  # coord_flip() +
+  geom_bar(aes(fill = variable), 
+           position = position_fill(reverse = TRUE),
+           stat = "identity") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d(option = "inferno", begin = 0.1, end = 0.8) +
+  labs(x = NULL, y = NULL) +
+  papaja::theme_apa(base_size = 18) +
+  theme(legend.title = element_blank(),
+        axis.text.x = element_text(angle = 55, hjust = 1)) + # Adjust label text
+  guides(fill = guide_legend(reverse = TRUE)) + # Make the legend order match the plot order
+  facet_wrap("track", nrow = 1)
+
+
+averageDayActivityPlot_gender +
+averageDayActivityPlot_intervention
+
+```
+
+```{r text_sb_means}
+activityPercentages_df <- df %>% 
+  dplyr::mutate_at(vars(contains("Accelerometer"), -contains("weartime")), funs(./weartimeAccelerometer_T1)) %>% 
+  dplyr::select(girl, intervention, track,
+                     "Sedentary behaviour" = sitLieAccelerometer_T1, 
+                     "Standing still" = standingAccelerometer_T1, 
+                     "Light PA" = lpaAccelerometer_T1, 
+                     "Moderate PA" = mpaAccelerometer_T1, 
+                     "Vigorous PA" = vpaAccelerometer_T1)
+
+text_sb <- activityPercentages_df$`Sedentary behaviour`
+text_sb_mean <- mean(text_sb, na.rm = TRUE) %>% round(., 2) %>% scales::percent()
+
+text_sb_75plus <- (sum(text_sb > .75, na.rm = TRUE) / sum(!is.na(text_sb))) %>% 
+  round(., 2) %>% scales::percent()
+# sum of non-missing observations is 713 instead of the 706 reported in the CI tables, 
+# because there were 7 observations without track membership
+
+```
+
+The plot shows the averages aggregated across individuals and, while being clear, hides variability in the activity types. For example, while the average portion of the day spent in sedentary behaviour was `r text_sb_mean`, almost every fourth (`r text_sb_75plus`) participant was sedentary more than 75% of the measurement time.
+
+Figure \@ref(fig:MVPA-accelerometer-sm) displays a density plot. It can be read like a histogram, but the shape is not dependent on the bar size, which is often set by software defaults and may not reflect the research needs at hand. The density curve also helps illustrate differences across groups.
+
+```{r MVPA-accelerometer-sm, fig.cap = "Accelerometer-measured MVPA minutes. Grey region in depicts bootstrapped area of equivalence, given independent observations. Figure implemented by R package sm."}
+
+# Create data frame
+densplot <- d
+levels(densplot$intervention) <- c("Control", "Intervention")
+levels(densplot$girl) <- recode(densplot$girl, "boy" = "Boys", "girl" = "Girls")
+densplot$mvpaAccelerometer_T1 <- d$mvpaAccelerometer_T1 / 60 # convert to hours
+
+# This gives side-by-side plots. There's a third plot below the two, which is fake to include x-axis text.
+layout(matrix(c(1, 2, 3, 3), nrow = 2, ncol = 2, byrow = TRUE),
+       widths = c(0.5, 0.5), heights = c(0.45, 0.05))
+
+# Minimise whitespace; see https://stackoverflow.com/questions/15848942/how-to-reduce-space-gap-between-multiple-graphs-in-r
+par(mai = c(0.3, 0.3, 0.1, 0.0)) 
+
+## Girls vs. boys
+# Choose only the variables needed and drop NA
+dens <- densplot %>% dplyr::select(mvpaAccelerometer_T1, girl) %>% 
+  dplyr::filter(complete.cases(.))
+
+# Set random number generator for reproducibility of bootstrap test of equal densities
+set.seed(10)
+
+# Make plot
+sm.mvpaAccelerometer_T1_gender <- sm.density.compare2(as.numeric(dens$mvpaAccelerometer_T1), 
+                                               as.factor(dens$girl), 
+                                               model = "equal",
+                                               xlab = "", ylab = "",
+                                               col = viridis::viridis(4, end  =  0.8)[c(3, 1)], 
+                                               lty = c(1,3), yaxt = "n",
+                                               bandcol = 'LightGray', 
+                                               lwd = (c(2,2)))
+legend("topright", levels(dens$girl), col = viridis::viridis(4, end = 0.8)[c(1, 3)], lty = c(3,1), lwd = (c(2,2)))
+mtext(side = 2, "", line = 0.5) # Add y-axis label between the ""
+
+## Intervention vs. control
+# Choose only the variables needed and drop NA
+dens <- densplot %>% dplyr::select(mvpaAccelerometer_T1, intervention) %>% 
+  dplyr::filter(complete.cases(.))
+
+# Set random number generator for reproducibility of bootstrap test of equal densities
+set.seed(10)
+# Make plot
+sm.mvpaAccelerometer_T1_intervention <- sm.density.compare2(as.numeric(dens$mvpaAccelerometer_T1), 
+                                               as.factor(dens$intervention), 
+                                               model = "equal", 
+                                               xlab = "", ylab = "",
+                                               col = viridis::viridis(4, end = 0.8)[c(2, 4)], 
+                                               lty = c(3,1), yaxt = "n",
+                                               bandcol = 'LightGray', 
+                                               lwd = (c(2,2)))
+legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.8)[c(2, 4)], lty=c(3,1), lwd=(c(2,2)))
+
+# Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
+par(mar = c(0,0,0,0)) 
+plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
+text(x = 1.02, y = 1.3, labels = "Average daily moderate-to-vigorous PA hours", pos = 1)
+```
+ 
+We can see, that girls seem to be more active than boys, or more specifically, there are more girls who reached an average of 1.5-2 hours of MVPA, and less of them who were lower. Although the grey band does not take clustering in classes, schools and educational tracks into account, it provides a heuristic for determining divergences between groups. Given that boys are generally more active than girls [@husuObjectivelyMeasuredSedentary2016], this warrants a closer inspection, as presented by the density plots in figure \@ref(fig:MVPA-accelerometer-plot). 
+
+```{r MVPA-accelerometer-plot, fig.cap = "Hours of moderate-to-vigorous PA for different educational tracks. Midpoints of diamonds indicate means, endpoints 95% credible intervals. Individual observations are presented under the density curves, with random scatter on the y-axis to ease inspection. Figure implemented by R package ggridges. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+
+# The preparation of this plot depends on lenghty prior code  for the interval estimates in the diamonds (which can be greatly improved by shortening and using R package purrr), and is thus presented only in the supplement.
+
+load("./Rdata_files/MVPAplot.Rdata")
+
+MVPAplot
+
+```
+
+```{r text_diffmins}
+text_diffmins <- df %>% dplyr::group_by(track, girl) %>% 
+  summarise(mean = mean(mvpaAccelerometer_T1, na.rm = TRUE)) %>% 
+  tidyr::spread(girl, mean) %>% 
+  mutate(mean = boy - girl,
+         minutes = round(mean, 1)) %>% 
+  filter(track != "Other", !is.na(track)) %>% 
+  arrange(-row_number()) %>% 
+  dplyr::pull(minutes)
+  
+```
+
+As can be seen from the x-axis placement of diamonds in figure \@ref(fig:MVPA-accelerometer-plot), participants who study to be practical nurses are the most active, followed by HRC students and BA students, with the IT track being the least active, though there is considerable variation within tracks. This also explains the difference in MVPA among girls and boys: the practical nurse track is the largest, and its students are most active, as well as mostly girls. The information technology students are the least active, but mostly boys. 
+ 	
+In sum, boys are slightly more active in most of the tracks (mean differences---`r text_diffmins[1]` minutes for Practical nurse, `r text_diffmins[2]` for Hotel, restaurant and catering, `r text_diffmins[3]` for Business and administration, and `r text_diffmins[4]` for Information and communications technology---are small and can be attributed to random variation). In spite of this, girls appear more active in the aggregate. This is also known as the Simpson's paradox, and is best approached by visualising data (see @kievitSimpsonParadoxPsychological2013 for an introduction).
+
+## Self-reported MVPA
+
+The number of days participants reported doing PA on, suggested a different picture of difference between genders in activity.
+ 
+Figure xxx. Self-reported frequency of MVPA.
+From figure xxx, we can see that there were more boys reporting a high number of MVPA days, and fewer boys reported low numbers. 
+This effect was consistent among educational tracks. Boys and girls, as well as different educational tracks, differed largely in the types of PA they reported having engaged in during the previous month (see supplement at "Types of self-reported exercise").
+
+## Breaks in sedentary time
+
+Girls in all educational tracks interrupted sitting more than boys.
+ 
+Figure xxx. Breaks in sedentary time.
+
+## Time spent sitting and lying down
+Differences in time spent sitting and lying down emerged between boys and girls, the former having more sedentary time. Even though there was some heterogeneity among schools, again the aggregated intervention and control schools showed no differences.
+ 
+Breaking the distributions down by tracks, this is what we see:
+ 
+Figure xxx.   Average time spent sitting or lying down during a day. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.
+
+Figure XXX shows, that boys are more sedentary in all groups, but the IT group--which consists of mostly boys--is also most sedentary regardless of gender. Distributions between intervention and control groups exhibit some differences, but the most pronounced one can be seen in the HRC track.
 
 
 
-```{r network-figure, message = FALSE, include = FALSE, warning = FALSE, echo = FALSE}
+
+Figure \@ref(fig:network-plot) shows the network model
+
+```{r network-dataprep, message = FALSE, include = FALSE, warning = FALSE, echo = FALSE}
 
 bctdf_mgm <- df %>% dplyr::select(
   'agr-BCTs' = PA_agrbct_T1,
@@ -284,11 +522,11 @@ node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for 
 
 ```
 
-```{r network-plot, fig.height = 8, fig.cap = "Mixed graphical model: PA, BCTs & motivation", echo = FALSE}
+```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "Mixed graphical model: PA, BCTs & motivation", echo = FALSE}
 
 BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
             layout = "spring",
-            repulsion = 0.99999, # To nudge the network from originally bad visual state
+            repulsion = 0.999, # To nudge the network from originally bad visual state
             # title = "Mixed graphical model: PA, BCTs & motivation",
             edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
             pie = pie_errors,
