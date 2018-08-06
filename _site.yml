@@ -21,7 +21,9 @@ navbar:
     href: index.html
   - text: Manuscript
     href: baseline-manuscript.html
-  - text: Descriptives
+  - text: Descriptive tables
+    href: baseline-tables.html
+  - text: Descriptive plots
     href: baseline-supplement.html
   - text: Networks
     href: baseline-networks.html

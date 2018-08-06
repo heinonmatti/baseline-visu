@@ -12,12 +12,6 @@ To start data analysis, we run a data compilation file to enable compiling the d
 source("baseline-datasetup.R")
 ```
 
-Description of the R environment can be found by opening the code chunk below.
-
-```{r session-info}
-devtools::session_info()
-```
-
 *Note on using package brms*
 
 To use package brms (Bayesian Regression Models using 'Stan') you need to set Rtools folder (if it's not C:/Rtools/). 
@@ -79,1604 +73,6 @@ The answer scale for frequency-dependent BCTs was as follows: 0 = not once, 1 = 
 8. I have asked my friends or family for support to reach my PA goals.
 9. If I haven't reached my PA goal, I have evaluated, what went wrong.
 
-# Means with CIs taking clustering into account 
-
-The code chunks create linear models for all variables. The results are used to estimate confidence intervals and intra-class correlations (ICC).
-
-The CIs are calculated with a multilevel model, accounting for school and classroom membership.
-
-```{r multilevel-clusters}
-# Create a vector with all names of the variables we want. Exclude T3 variables.
-names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
-
-# Create empty soon-to-be-filled objects
-m <- NA
-mean <- NA
-m_p <- NA
-ci_low <- NA
-ci_high <- NA
-ICC_group <- NA
-ICC_School <- NA
-nonmissings <- NA
-
-## # Use this to test a single variable:
-## dftest <- df #%>% na.omit()
-## m <- lme4::lmer(sitLieAccelerometer_diff ~ (1|school) + (1|group), data=dftest)
-## mean <- lme4::fixef(m)
-## m_p <- profile(m, which = "beta_")
-## ci_low <- confint(m_p)[, 1]
-## ci_high <- confint(m_p)[, 2]
-## ICC_group <- icc(m)[1]
-## ICC_School <- icc(m)[2]
-## nonmissings <- length(m@resp$y)
-
-
-# # UNCOMMENT below and run code
-
-# for (i in names){ # Loop over each variable name for all participants, extract statistics
-# m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group)"), data=df)
-# mean[i] <- lme4::fixef(m)
-# m_p <- profile(m, which = "beta_")
-# ci_low[i] <- confint(m_p)[, 1]
-# ci_high[i] <- confint(m_p)[, 2]
-# ICC_group[i] <- sjstats::icc(m)[1]
-# ICC_School[i] <- sjstats::icc(m)[2]
-# nonmissings[i] <- length(m@resp$y)
-# }
-# 
-# vardatatable <- data_frame(
-#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-#   "Mean" = round(mean, 1) %>% format(., nsmall = 1),
-#   "CI95" = paste(round(ci_low, 1) %>% format(., nsmall = 1), " - ", round(ci_high, 1) %>% format(., nsmall = 1)),
-#   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3) %>% format(., nsmall = 3)),
-#   "ICC school" = ifelse(round(ICC_School, 3) == 0, "< 0.001", round(ICC_School, 3) %>% format(., nsmall = 3)),
-#   n = nonmissings) %>%
-#   dplyr::arrange(Variable) %>%
-#   dplyr::filter(Variable != "") %>% #remove first row, which is empty
-#   as.data.frame()
-# 
-# ci_total <- data_frame(
-#   "ciLo" = ci_low,
-#   "mean" = mean,
-#   "ciHi" = ci_high,
-#   "diamondlabels" = names(mean)) %>%
-#   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
-#   as.data.frame()
-# 
-# # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
-# 
-# for (variableToChange in timeVariables) {
-# originalMean <- vardatatable[vardatatable$Variable == variableToChange, "Mean"] %>% as.numeric()
-# newMean <- paste0(floor(originalMean/60), "h ", round(originalMean, 0) %% 60, "min")
-# vardatatable[vardatatable$Variable == variableToChange, "Mean"] <- newMean
-# originalCI <- vardatatable[vardatatable$Variable == variableToChange, "CI95"]
-# originalCIL <- stringi::stri_extract_first_words(originalCI) %>% as.numeric()
-# originalCIH <- stringi::stri_extract_last_words(originalCI) %>% as.numeric()
-# newCI <- paste0(floor(originalCIL/60), "h ", round(originalCIL, 0) %% 60, "min - ",
-#                 floor(originalCIH/60), "h ", round(originalCIH, 0) %% 60, "min")
-# vardatatable[vardatatable$Variable == variableToChange, "CI95"] <- newCI
-# }
-# 
-# save(vardatatable, file = "./Rdata_files/vardatatable.Rdata")
-# save(ci_total, file = "./Rdata_files/ci_total.Rdata")
-load("./Rdata_files/vardatatable.Rdata")
-load("./Rdata_files/ci_total.Rdata")
-```
-
-```{r primary-outcome-vars-table-total, results = 'asis'}
-
-vardatatable2 <- vardatatable
-vardatatable2$Variable <- gsub("mvpaAccelerometer", "Daily moderate-to-vigorous PA time (accelerometer)*", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("padaysLastweek", "Number of days with >30 MVPA min previous week (self-report)*", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("sitLieAccelerometer", "Daily time spent sitting or lying down (accelerometer)*", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("sitBreaksAccelerometer", "Daily number of times sitting was interrupted (accelerometer)*", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("lpaAccelerometer", "Daily light PA time (accelerometer)", vardatatable2$Variable)
-vardatatable2$Variable <- gsub("standingAccelerometer", "Daily standing time (accelerometer)", vardatatable2$Variable)
-
-vardatatable2 <- vardatatable2 %>% 
-  dplyr::filter(Variable == "Daily moderate-to-vigorous PA time (accelerometer)*" | 
-           Variable == "Daily time spent sitting or lying down (accelerometer)*" |
-           Variable == "Daily number of times sitting was interrupted (accelerometer)*" |
-           Variable == "Number of days with >30 MVPA min previous week (self-report)*" |
-           Variable == "Daily light PA time (accelerometer)" |
-           Variable == "Daily standing time (accelerometer)") %>% 
-  dplyr::mutate(orderVariable = ifelse(`Variable` == "Daily moderate-to-vigorous PA time (accelerometer)*", "a",
-                                ifelse(`Variable` == "Daily light PA time (accelerometer)", "b",
-                                ifelse(`Variable` == "Daily standing time (accelerometer)", "c",
-                                ifelse(`Variable` == "Daily time spent sitting or lying down (accelerometer)*", "d",
-                                ifelse(`Variable` == "Daily number of times sitting was interrupted (accelerometer)*", "e",
-                                ifelse(`Variable` == "Number of days with >30 MVPA min previous week (self-report)*", "f", NA))))))) %>% 
-  dplyr::arrange(orderVariable) %>% 
-  dplyr::select(-orderVariable)
-
-vardatatable2 %>% 
-    papaja::apa_table(
-        caption = "Primary outcome variables with their class and school ICCs. Primary outcome variables highlighted with asterisks.",
-        escape = TRUE, format.args = list(digits = c(3, 0), margin = 2)
-        )
-```
-
-## All main variables, their means, CIs and ICCs.
-
-Values calculated with a multilevel model accounting for school and classroom.
-
-```{r allvars-total, results = 'asis'}
-
-vardatatable %>%
-   DT::datatable( #papaja::apa_table(
-        caption = "All variables with their class and school ICCs (values calculated with a multilevel model accounting for school and classroom)",
-        escape = TRUE #, format.args = list(digits = c(1, 3, 0), margin = 2)
-   )
-
-```
-
-## Assorted tables with ICCs {.tabset}
-
-### Description
-
-**See tabs above for differently sorted tables** 
-
-### Model with school and class: ICC top 20 items, sorted by classroom ICC
-
-```{r icc-school-class-sortbyclass, results = 'asis'}
-
-vardatatable %>% 
-  dplyr::select(Variable, `ICC class`, `ICC school`, n) %>% 
-  arrange(desc(`ICC class`)) %>% slice(1:20) %>% 
-  as.tbl() %>% 
-  papaja::apa_table(caption = "Intra-class correlations sorted by classroom ICC",
-        format.args = list(digits = c(3, 0), margin = 2))
-
-```
-
-### Model with school and class: ICC top 20 items, sorted by school ICC
-
-```{r icc-school-class-sortbyschool, results = 'asis'}
-
-vardatatable %>% dplyr::select(Variable, `ICC class`, `ICC school`, n) %>% 
-  arrange(desc(`ICC school`)) %>% 
-  slice(1:20) %>% 
-  papaja::apa_table(caption = "Intra-class correlations sorted by school ICC",
-        format.args = list(digits = c(3, 0), margin = 2))
-
-```
-
-## Model with school, class and educational track {.tabset}
-
-The model below is the same as the one above, except it adds educational track. 
-
-As before, we create a table with all variables, their means, CIs and ICCs.
-
-```{r multilevel-edutrack-school-group}
-#library(sjstats)
-#library(lme4)
-
-names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
-
-# Create empty soon-to-be-filled objects
-m <- NA
-mean <- NA
-m_p <- NA
-ci_low <- NA
-ci_high <- NA
-ICC_group <- NA
-ICC_School <- NA
-nonmissings <- NA
-ICC_track <- NA
-
-
-## To test the code with a single variable:
-# dftest <- df #%>% na.omit()
-# m <- lme4::lmer(sitLieAccelerometer_T1 ~ (1|school) + (1|group) + (1|track), data=df)
-# mean <- lme4::fixef(m)
-# m_p <- profile(m)
-# ci_low <- confint(m_p)[5]
-# ci_high <- confint(m_p)[10]
-# ICC_group <- icc(m)[1]
-# ICC_School <- icc(m)[2]
-# nonmissings <- length(m@resp$y)
-
-# # UNCOMMENT below and run code
-
-# for (i in names){ # Loop over each variable name for all participants, extract statistics
-# m <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + (1|track)"), data=df)
-# mean[i] <- lme4::fixef(m)
-# m_p <- profile(m, which = "beta_")
-# ci_low[i] <- confint(m_p)[1]
-# ci_high[i] <- confint(m_p)[2]
-# ICC_group[i] <- sjstats::icc(m)[1]
-# ICC_School[i] <- sjstats::icc(m)[3]
-# ICC_track[i] <- sjstats::icc(m)[2]
-# nonmissings[i] <- length(m@resp$y)
-# }
-# 
-# vardatatable_containing_edutrack <- data_frame(
-#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-#   "Mean" = round(mean, 1) %>% format(., nsmall = 1),
-#   "CI95" = paste(round(ci_low, 1) %>% format(., nsmall = 1), " - ", round(ci_high, 1) %>% format(., nsmall = 1)),
-#   "ICC class" =ifelse(round(ICC_group, 3) == 0, "< 0.001", round(ICC_group, 3) %>% format(., nsmall = 3)),
-#   "ICC school" = ifelse(round(ICC_School, 3) == 0, "< 0.001", round(ICC_School, 3) %>% format(., nsmall = 3)),
-#   "ICC educational track" = ifelse(round(ICC_track, 3) == 0, "< 0.001", round(ICC_track, 3) %>% format(., nsmall = 3)),
-#   n = nonmissings) %>%
-#   dplyr::arrange(Variable) %>%
-#   dplyr::filter(Variable != "") #remove first row, which is empty
-# 
-# ci_edutrack <- data_frame(
-#   "ciLo" = ci_low,
-#   "mean" = mean,
-#   "ciHi" = ci_high,
-#   "diamondlabels" = names(mean)) %>%
-#   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
-#   as.data.frame()
-# 
-# # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
-# 
-# for (variableToChange in timeVariables) {
-# originalMean <- vardatatable_containing_edutrack[vardatatable_containing_edutrack$Variable == variableToChange, "Mean"] %>% as.numeric()
-# newMean <- paste0(floor(originalMean/60), "h ", round(originalMean, 0) %% 60, "min")
-# vardatatable_containing_edutrack[vardatatable_containing_edutrack$Variable == variableToChange, "Mean"] <- newMean
-# originalCI <- vardatatable_containing_edutrack[vardatatable_containing_edutrack$Variable == variableToChange, "CI95"]
-# originalCIL <- stringi::stri_extract_first_words(originalCI) %>% as.numeric()
-# originalCIH <- stringi::stri_extract_last_words(originalCI) %>% as.numeric()
-# newCI <- paste0(floor(originalCIL/60), "h ", round(originalCIL, 0) %% 60, "min - ",
-#                 floor(originalCIH/60), "h ", round(originalCIH, 0) %% 60, "min")
-# vardatatable_containing_edutrack[vardatatable_containing_edutrack$Variable == variableToChange, "CI95"] <- newCI
-# }
-# 
-# save(vardatatable_containing_edutrack, file = "./Rdata_files/vardatatable_containing_edutrack.Rdata")
-# save(ci_edutrack, file = "./Rdata_files/ci_edutrack.Rdata")
-load("./Rdata_files/vardatatable_containing_edutrack.Rdata")
-load("./Rdata_files/ci_edutrack.Rdata")
-
-```
-
-### Main table
-
-```{r}
-
-vardatatable_containing_edutrack %>% 
-  DT::datatable(caption = "Values calculated with a multilevel model accounting for school, classroom and educational track")
-
-```
-
-### Model with school, class and track: Top 20 items, sorted by school
-
-```{r icc-school-class-track-sortbyschool, results = 'asis'}
-
-vardatatable_containing_edutrack %>% 
-  dplyr::select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% 
-  arrange(desc(`ICC school`)) %>% 
-  top_n(20) %>% 
-  papaja::apa_table(caption = "Intra-class correlations sorted by school ICC",
-        format.args = list(digits = c(0), margin = 2))
-
-```
-
-### Model with school, class and track: Top 20 items, sorted by classroom
-
-```{r icc-school-class-track-sortbyclass, results = 'asis'}
-
-vardatatable_containing_edutrack %>% dplyr::select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC class`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by classroom ICC",
-        format.args = list(digits = c(0), margin = 2))
-
-```
-
-### Model with school, class and track: Top 20 items, sorted by educational track
-
-```{r icc-school-class-track-sortbytrack, results = 'asis'}
-
-vardatatable_containing_edutrack %>% dplyr::select(Variable, `ICC educational track`, `ICC class`, `ICC school`, n) %>% arrange(desc(`ICC educational track`)) %>% top_n(20) %>% papaja::apa_table(caption = "Intra-class correlations sorted by educational track ICC",
-        format.args = list(digits = c(0), margin = 2))
-
-```
-
-## Model with educational track only {.tabset}
-
-```{r parameters-multilevel-edutrack-only}
-#library(sjstats)
-#library(lme4)
-
-names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
-
-# Create empty soon-to-be-filled objects
-m <- NA
-mean <- NA
-m_p <- NA
-ci_low <- NA
-ci_high <- NA
-ICC_group <- NA
-ICC_School <- NA
-nonmissings <- NA
-ICC_track <- NA
-
-
-## To test the code with a single variable:
-# dftest <- df #%>% na.omit()
-# m <- lme4::lmer(sitLieAccelerometer_T1 ~ (1|track), data=df)
-# mean <- lme4::fixef(m)
-# m_p <- profile(m)
-# ci_low <- confint(m_p)[3]
-# ci_high <- confint(m_p)[6]
-# ICC_group <- sjstats::icc(m)[1]
-# nonmissings <- length(m@resp$y)
-
-# # UNCOMMENT below and run code
-
-# for (i in names){ # Loop over each variable name for all participants, extract statistics
-# m <- lme4::lmer(paste0(i," ~ (1|track)"), data=df)
-# mean[i] <- lme4::fixef(m)
-# m_p <- profile(m, which = "beta_")
-# ci_low[i] <- confint(m_p)[1]
-# ci_high[i] <- confint(m_p)[2]
-# ICC_track[i] <- sjstats::icc(m)[1]
-# nonmissings[i] <- length(m@resp$y)
-# }
-# 
-# vardatatable_edutrack_only <- data_frame(
-#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-#   "Mean" = round(mean, 1) %>% format(., nsmall = 1),
-#   "CI95" = paste(round(ci_low, 1) %>% format(., nsmall = 1), " - ", round(ci_high, 1) %>% format(., nsmall = 1)),
-#   "ICC educational track" = ifelse(round(ICC_track, 3) == 0, "< 0.001", round(ICC_track, 3) %>% format(., nsmall = 3)),
-#   n = nonmissings) %>%
-#   dplyr::arrange(Variable) %>%
-#   dplyr::filter(Variable != "") #remove first row, which is empty
-# 
-# ci_edutrack_only <- data_frame(
-#   "ciLo" = ci_low,
-#   "mean" = mean,
-#   "ciHi" = ci_high,
-#   "diamondlabels" = names(mean)) %>%
-#   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
-#   as.data.frame()
-# 
-# # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
-# 
-# for (variableToChange in timeVariables) {
-# originalMean <- vardatatable_edutrack_only[vardatatable_edutrack_only$Variable == variableToChange, "Mean"] %>% as.numeric()
-# newMean <- paste0(floor(originalMean/60), "h ", round(originalMean, 0) %% 60, "min")
-# vardatatable_edutrack_only[vardatatable_edutrack_only$Variable == variableToChange, "Mean"] <- newMean
-# originalCI <- vardatatable_edutrack_only[vardatatable_edutrack_only$Variable == variableToChange, "CI95"]
-# originalCIL <- stringi::stri_extract_first_words(originalCI) %>% as.numeric()
-# originalCIH <- stringi::stri_extract_last_words(originalCI) %>% as.numeric()
-# newCI <- paste0(floor(originalCIL/60), "h ", round(originalCIL, 0) %% 60, "min - ",
-#                 floor(originalCIH/60), "h ", round(originalCIH, 0) %% 60, "min")
-# vardatatable_edutrack_only[vardatatable_edutrack_only$Variable == variableToChange, "CI95"] <- newCI
-# }
-# 
-# save(vardatatable_edutrack_only, file = "./Rdata_files/vardatatable_edutrack_only.Rdata")
-# save(ci_edutrack_only, file = "./Rdata_files/ci_edutrack_only.Rdata")
-load("./Rdata_files/vardatatable_edutrack_only.Rdata")
-load("./Rdata_files/ci_edutrack_only.Rdata")
-
-
-```
-
-### Main table 
-
-```{r datatable-edutrack-only}
-
-vardatatable_edutrack_only %>% 
-  DT::datatable(caption = "Values calculated with a multilevel model accounting for educational track only")
-
-```
-
-### Model with educational track only: Top 20 items, sorted by ICC educational track
-
-```{r icc-edu-track-only, results = 'asis'}
-
-vardatatable_edutrack_only %>% 
-  dplyr::select(Variable, `ICC educational track`, n) %>% 
-  arrange(desc(`ICC educational track`)) %>% 
-  top_n(20) %>% 
-  papaja::apa_table(caption = "Intra-class correlations sorted by educational track ICC",
-        format.args = list(digits = c(0), margin = 2))
-
-```
-
-## Calculating CIs using the sandwich estimator
-
-```{r table-parameters-sandwich}
-# Basic instructions are from https://web.archive.org/web/20180206180739/http://thestatsgeek.com/2014/02/14/the-robust-sandwich-variance-estimator-for-linear-regression-using-r/
-
-names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
-
-# Create empty soon-to-be-filled objects
-m <- NA
-sandwich_se <- NA
-mean <- NA
-ci_low <- NA
-ci_high <- NA
-nonmissings <- NA
-
-## To test the code with a single variable:
-# df_for_sandwich <- df %>% dplyr::select(group, school, track, sitLieAccelerometer_T1) %>% na.omit()
-# sandwich_clusters <- df_for_sandwich %>% dplyr::select(group, school, track)
-# m <- lm(sitLieAccelerometer_T1 ~ 1, data=df_for_sandwich)
-# sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
-# mean <- m$coefficients[[1]]
-# ci_low <- coef(m) - 1.96 * sandwich_se
-# ci_high <- coef(m) + 1.96 * sandwich_se
-# nonmissings <- nrow(m$model)
-
-
-# # UNCOMMENT below and run code
-
-# for (i in names){ # Loop over each variable name for all participants, extract statistics
-# df_for_sandwich <- df %>% dplyr::select(
-#   group, school, track, i) %>%
-#   na.omit()
-# sandwich_clusters <- df_for_sandwich %>% dplyr::select(group, school, track)
-# m <- lm(paste0(i," ~ 1"), data = df_for_sandwich)
-# sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
-# mean[i] <- m$coefficients[[1]]
-# ci_low[i] <- coef(m) - 1.96 * sandwich_se
-# ci_high[i] <- coef(m) + 1.96 * sandwich_se
-# nonmissings[i] <- nrow(m$model)
-# }
-# 
-# vardatatable_sandwich <- data_frame(
-#   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-#   "Mean" = round(mean, 1) %>% format(., nsmall = 1),
-#   "CI95" = paste(round(ci_low, 1) %>% format(., nsmall = 1), " - ", round(ci_high, 1) %>% format(., nsmall = 1)),
-#   n = nonmissings) %>%
-#   dplyr::arrange(Variable) %>%
-#   dplyr::filter(Variable != "") #remove first row, which is empty
-# 
-# ci_sandwich <- data_frame(
-#   "ciLo" = ci_low,
-#   "mean" = mean,
-#   "ciHi" = ci_high,
-#   "diamondlabels" = names(mean)) %>%
-#   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
-#   as.data.frame()
-# 
-# # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
-# 
-# for (variableToChange in timeVariables) {
-# originalMean <- vardatatable_sandwich[vardatatable_sandwich$Variable == variableToChange, "Mean"] %>% as.numeric()
-# newMean <- paste0(floor(originalMean/60), "h ", round(originalMean, 0) %% 60, "min")
-# vardatatable_sandwich[vardatatable_sandwich$Variable == variableToChange, "Mean"] <- newMean
-# originalCI <- vardatatable_sandwich[vardatatable_sandwich$Variable == variableToChange, "CI95"]
-# originalCIL <- stringi::stri_extract_first_words(originalCI) %>% as.numeric()
-# originalCIH <- stringi::stri_extract_last_words(originalCI) %>% as.numeric()
-# newCI <- paste0(floor(originalCIL/60), "h ", round(originalCIL, 0) %% 60, "min - ",
-#                 floor(originalCIH/60), "h ", round(originalCIH, 0) %% 60, "min")
-# vardatatable_sandwich[vardatatable_sandwich$Variable == variableToChange, "CI95"] <- newCI
-# }
-# 
-# save(vardatatable_sandwich, file = "./Rdata_files/vardatatable_sandwich.Rdata")
-# save(ci_sandwich, file = "./Rdata_files/ci_sandwich.Rdata")
-load("./Rdata_files/vardatatable_sandwich.Rdata")
-load("./Rdata_files/ci_sandwich.Rdata")
-```
-
-```{r datatable-sandwich}
-
-vardatatable_sandwich %>% 
-  DT::datatable(caption = "Values calculated with a sandwich estimator accounting for school, class and educational track")
-
-```
-
-## Calculating observed means and CIs, without clustering
-
-```{r table-parameters-observed}
-
-df_for_uncorrected <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff"))
-
-# Create empty soon-to-be-filled objects
-mean_uncorrected <- NA
-ci_low <- NA
-ci_high <- NA
-nonmissings <- NA
-
-ci_uncorrected <- rbind(
-  df_for_uncorrected %>% dplyr::summarise_all(funs(t.test(.)$conf.int[1])),
-  df_for_uncorrected %>% dplyr::summarise_all(funs(mean(., na.rm = TRUE))),
-  df_for_uncorrected %>% dplyr::summarise_all(funs(t.test(.)$conf.int[2]))) %>% 
-  t() %>% 
-  data.frame
-
-names(ci_uncorrected) <- c("ciLo", "mean", "ciHi")
-
-```
-
-```{r datatable-observed}
-
-ci_uncorrected %>% 
-  dplyr::mutate(Variable = labels(ci_uncorrected)[[1]]) %>% 
-  dplyr::mutate_at(vars(-Variable), funs(round(., digits = 3))) %>% 
-  dplyr::select(Variable, everything()) %>% 
-  DT::datatable(caption = "Values calculated without accounting for clustering")
-
-```
-
-# Compare different estimates for means and CIs visually 
-
-This section contains diamond plots comparing different estimates for means and CIs.
-
-## High-mean variables
-
-```{r parameter-comparison-highmean-plots}
-ci_total_big <- ci_total %>% dplyr::filter(mean > 10)
-ci_edutrack_big <- ci_edutrack %>% dplyr::filter(mean > 10)
-ci_uncorrected_big <- ci_uncorrected %>% dplyr::filter(mean > 10)
-ci_sandwich_big <- ci_sandwich %>% dplyr::filter(mean > 10)
-
-
-for (i in 1:4){
-plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ], 
-                                          color = viridis::viridis(4)[1], 
-                                          alpha=.15, 
-                                          yLabels = ci_total_big[i, ]$diamondlabels, 
-                                          fixedSize = 0.3, 
-                                          xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_edutrack_big[i, ], 
-                                   returnLayerOnly = TRUE,
-                                   color = viridis::viridis(4)[2], 
-                                   alpha=.15, 
-                                   yLabels = ci_edutrack_big[i, ]$diamondlabels, 
-                                   fixedSize = 0.5, 
-                                   xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_uncorrected_big[i, ], 
-                                   returnLayerOnly = TRUE,
-                                   color = viridis::viridis(4)[3], 
-                                   alpha=.15, 
-                                   yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
-                                   fixedSize = 0.3, 
-                                   xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_sandwich_big[i, ], 
-                                   returnLayerOnly = TRUE,
-                                   color = viridis::viridis(4)[4], 
-                                   alpha=.15, 
-                                   yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
-                                   fixedSize = 0.3, 
-                                   xlab = NULL) + 
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom & school"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom, school & track"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Uncorrected"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  scale_fill_manual('Model',
-                    values = c(viridis::viridis(4)[1], 
-                               viridis::viridis(4)[2], 
-                               viridis::viridis(4)[4], 
-                               viridis::viridis(4)[3]),
-                    guide = guide_legend(override.aes = list(alpha = 1), ncol = 2)) +
-  theme(legend.position="right") 
-  plot(plot1)
-}
-```
-
-
-## Other variables
-
-```{r estimates for other variables, results = "asis", fig.show = "asis"}
-# Take the high-mean variables out, because otherwise you'd have something with a mean of 200 
-# and a mean of 2 in the same plot, and scaling of the x-axis would smudge differences between the
-# diamonds, which indicate the estimates
-
-ci_total_small <- ci_total %>% dplyr::filter(mean <= 10)
-ci_edutrack_small <- ci_edutrack %>% dplyr::filter(mean <= 10)
-ci_uncorrected_small <- ci_uncorrected %>% dplyr::filter(mean <= 10)
-ci_sandwich_small <- ci_sandwich %>% dplyr::filter(mean <= 10)
-
-# Now, four data frames contain columns ciLo, mean, ciHi, and variable name, for each variable (i.e. row).
-# Make a diamondPlot layer from each of these data frames, so that i number of variables are in the same plot: 
-
-for (i in c(seq(from = 1, to = 171, by = 8))) {
-plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 8), ], 
-                                          color = viridis::viridis(4)[1], 
-                                          alpha=.15, 
-                                          yLabels = ci_total_small[i:(i + 8), ]$diamondlabels, 
-                                          fixedSize = 0.3, 
-                                          xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_edutrack_small[i:(i + 8), ], 
-                                   returnLayerOnly = TRUE,
-                                   color = viridis::viridis(4)[2], 
-                                   alpha=.15, 
-                                   yLabels = ci_edutrack_small[i:(i + 8), ]$diamondlabels, 
-                                   fixedSize = 0.5, 
-                                   xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_uncorrected_small[i:(i + 8), ], 
-                                   returnLayerOnly = TRUE,
-                                   color = viridis::viridis(4)[3], 
-                                   alpha=.15, 
-                                   yLabels = ci_uncorrected_small[i:(i + 8), ]$diamondlabels, 
-                                   fixedSize = 0.3, 
-                                   xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_sandwich_small[i:(i + 8), ], 
-                                   returnLayerOnly = TRUE,
-                                   color = viridis::viridis(4)[4], 
-                                   alpha=.15, 
-                                   yLabels = ci_uncorrected_small[i:(i + 8), ]$diamondlabels, 
-                                   fixedSize = 0.3, 
-                                   xlab = NULL) + 
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom & school"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom, school & track"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Uncorrected"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  scale_fill_manual('Model: ',
-                    values = c(viridis::viridis(4)[1], 
-                               viridis::viridis(4)[2], 
-                               viridis::viridis(4)[4], 
-                               viridis::viridis(4)[3]),
-                    guide = guide_legend(override.aes = list(alpha = 1), ncol = 2)) +
-  theme(legend.position="bottom") 
-#  cat('\n\n####', i, '\n\n  ') 
-  print(plot1)
-}
-```
-
-
-```{r ci-widths, include = FALSE, eval = FALSE}
-# These are perhaps not meaningful, and as variables change, locations of the bumps change.
-
-CI_widths <- data.frame(
-  "Label" = ci_total$diamondlabels,
-  "Classroom & school" = (ci_total$ciHi - ci_total$ciLo), 
-  "Classroom, school & track" = (ci_edutrack$ciHi - ci_edutrack$ciLo), 
-  "Uncorrected" = (ci_uncorrected$ciHi - ci_uncorrected$ciLo),
-  "Sandwich" = (ci_sandwich$ciHi - ci_sandwich$ciLo)) %>% 
-  dplyr::arrange(Sandwich)
-
-CI_widths %>%
-  dplyr::mutate(Label = as.numeric(as.factor(ci_total$diamondlabels)))  %>% 
-  tidyr::gather(estimator, value, 2:Sandwich) %>% 
-  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
-    geom_line(aes(color = estimator)) +
-    ggtitle("All variables")
-
-CI_widths %>%
-  dplyr::mutate(Label = paste(ci_total$diamondlabels,
-                              as.numeric(as.factor(ci_total$diamondlabels))))  %>% 
-  tidyr::gather(estimator, value, 2:Sandwich) %>% 
-  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
-    geom_line(aes(color = estimator)) +
-    coord_cartesian(xlim = c(75, 100), ylim = c(0, 100)) +
-    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
-    ggtitle("Zoomed into bumps")
-
-CI_widths %>%
-  dplyr::mutate(Label = (ci_total$diamondlabels))  %>% 
-  tidyr::gather(estimator, value, 2:Sandwich) %>% 
-  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
-    geom_line(aes(color = estimator)) +
-    coord_cartesian(xlim = c(81, 83), ylim = c(0, 100)) +
-    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
-    ggtitle("Zoomed into first bump")
-
-CI_widths %>%
-  dplyr::mutate(Label = (ci_total$diamondlabels))  %>% 
-  tidyr::gather(estimator, value, 2:Sandwich) %>% 
-  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
-    geom_line(aes(color = estimator)) +
-    coord_cartesian(xlim = c(87, 89), ylim = c(0, 100)) +
-    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
-    ggtitle("Zoomed into second bump")
-
-CI_widths %>%
-  dplyr::mutate(Label = (ci_total$diamondlabels))  %>% 
-  tidyr::gather(estimator, value, 2:Sandwich) %>% 
-  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
-    geom_line(aes(color = estimator)) +
-    coord_cartesian(xlim = c(92, 96), ylim = c(0, 100)) +
-    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
-    ggtitle("Zoomed into third bump")
-
-CI_widths %>%
-  dplyr::mutate(Label = (ci_total$diamondlabels))  %>% 
-  tidyr::gather(estimator, value, 2:Sandwich) %>% 
-  ggplot2::ggplot(aes(x = Label, y = value, group = estimator)) +
-    geom_line(aes(color = estimator)) +
-    coord_cartesian(xlim = c(97, 99), ylim = c(0, 100)) +
-    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
-    ggtitle("Zoomed into fourth bump")
-
-# # test to see all labels are in the right order
-# data.frame(
-#   Label = ci_total$diamondlabels,
-#   label2 = ci_edutrack$diamondlabels,
-#   label3 = ci_uncorrected$diamondlabels,
-#   label4 = ci_sandwich) %>% rowwise %>% 
-#   dplyr::mutate(test1 = ifelse(Label == label2, "OK",
-#                         ifelse(label2 == label3, "OK", 
-#                                ifelse(label3 == label4, "OK", "DISCREPANCY"))))
-
-```
-
-
-Create confidence bounds for all items by gender and intervention allocation
-
-These numbers are visualised with diamond plots later.
-
-```{r CIs-for-diamondplots}
-# names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
-# 
-# # Intercepts for boys; when boy is 1, girl is 0, but boy is a factor, so intercept is for boys even though boy is 1 for boys and 0 for girls.
-# m.boys <- NA
-# mean.boys <- NA
-# m_p.boys <- NA
-# ci_low.boys <- NA
-# ci_high.boys <- NA
-# ICC_group.boys <- NA
-# ICC_School.boys <- NA
-# nonmissings.boys <- NA
-# 
-# df.boys <- df %>% dplyr::mutate(boy = factor(ifelse(girl == "girl", 0, 1), levels = c(1, 0)))
-# 
-# for (i in names){
-# m.boys <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + boy"), data=df.boys)
-# mean.boys[i] <- lme4::fixef(m.boys)[1]
-# m_p.boys <- profile(m.boys, which = "beta_")
-# ci_low.boys[i] <- confint(m_p.boys)[1, 1]
-# ci_high.boys[i] <- confint(m_p.boys)[1, 2]
-# ICC_group.boys[i] <- sjstats::icc(m.boys)[1]
-# ICC_School.boys[i] <- sjstats::icc(m.boys)[2]
-# nonmissings.boys[i] <- length(m.boys@resp$y)
-# }
-# 
-# cat("The labels are arranged such that intercept is not for girls:", labels(lme4::fixef(m.boys))[2] == "boy0")
-# 
-# ci_boys <- data.frame(ciLo = ci_low.boys, mean = mean.boys, ciHi = ci_high.boys)
-# diamondlabels <- labels(ci_boys)[[1]]
-# ci_boys <- data.frame(ci_boys, diamondlabels)
-# 
-# # Intercepts for girls; when boy is 1, girl is 0, but boy is a factor, so intercept is for girls even though girl is 1 for girls and 0 for boys.
-# m.girls <- NA
-# mean.girls <- NA
-# m_p.girls <- NA
-# ci_low.girls <- NA
-# ci_high.girls <- NA
-# ICC_group.girls <- NA
-# ICC_School.girls <- NA
-# nonmissings.girls <- NA
-# 
-# for (i in names){
-# m.girls <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + girl"), data=df)
-# mean.girls[i] <- lme4::fixef(m.girls)[1]
-# m_p.girls <- profile(m.girls, which = "beta_")
-# ci_low.girls[i] <- confint(m_p.girls)[1, 1]
-# ci_high.girls[i] <- confint(m_p.girls)[1, 2]
-# ICC_group.girls[i] <- sjstats::icc(m.girls)[1]
-# ICC_School.girls[i] <- sjstats::icc(m.girls)[2]
-# nonmissings.girls[i] <- length(m.girls@resp$y)
-# }
-# 
-# cat("The labels are arranged such that intercept is not for boys:", labels(lme4::fixef(m.girls))[2] == "girl0")
-# 
-# ci_girls <- data.frame(ciLo = ci_low.girls, mean = mean.girls, ciHi = ci_high.girls)
-# diamondlabels <- labels(ci_girls)[[1]]
-# ci_girls <- data.frame(ci_girls, diamondlabels)
-# 
-# 
-# # Intercepts for intervention
-# m.intervention <- NA
-# mean.intervention <- NA
-# m_p.intervention <- NA
-# ci_low.intervention <- NA
-# ci_high.intervention <- NA
-# ICC_group.intervention <- NA
-# ICC_School.intervention <- NA
-# nonmissings.intervention <- NA
-# 
-# ## change "intervention" to be consistent regarding level order with "girl".
-# df.intervention <- df %>% dplyr::mutate(intervention = factor(intervention, levels = c(1, 0)))
-# 
-# for (i in names){
-# m.intervention <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + intervention"), data=df.intervention)
-# mean.intervention[i] <- lme4::fixef(m.intervention)[1]
-# m_p.intervention <- profile(m.intervention, which = "beta_")
-# ci_low.intervention[i] <- confint(m_p.intervention)[1, 1]
-# ci_high.intervention[i] <- confint(m_p.intervention)[1, 2]
-# ICC_group.intervention[i] <- sjstats::icc(m.intervention)[1]
-# ICC_School.intervention[i] <- sjstats::icc(m.intervention)[2]
-# nonmissings.intervention[i] <- length(m.intervention@resp$y)
-# }
-# 
-# cat("The labels are arranged such that intercept is not for control:", labels(lme4::fixef(m.intervention))[2] == "intervention0")
-# 
-# ci_intervention <- data.frame(ciLo = ci_low.intervention, mean = mean.intervention, ciHi = ci_high.intervention)
-# diamondlabels <- labels(ci_intervention)[[1]]
-# ci_intervention <- data.frame(ci_intervention, diamondlabels)
-# 
-# # Intercepts for control
-# 
-# m.control <- NA
-# mean.control <- NA
-# m_p.control <- NA
-# ci_low.control <- NA
-# ci_high.control <- NA
-# ICC_group.control <- NA
-# ICC_School.control <- NA
-# nonmissings.control <- NA
-# 
-# df.control <- df %>% dplyr::mutate(control = factor(ifelse(intervention == 1, 0, 1), levels = c(1, 0)))
-# 
-# for (i in names){
-# m.control <- lme4::lmer(paste0(i," ~ (1|school) + (1|group) + control"), data=df.control)
-# mean.control[i] <- lme4::fixef(m.control)[1]
-# m_p.control <- profile(m.control, which = "beta_")
-# ci_low.control[i] <- confint(m_p.control)[1, 1]
-# ci_high.control[i] <- confint(m_p.control)[1, 2]
-# ICC_group.control[i] <- sjstats::icc(m.control)[1]
-# ICC_School.control[i] <- sjstats::icc(m.control)[2]
-# nonmissings.control[i] <- length(m.control@resp$y)
-# }
-# 
-# cat("The labels are arranged such that intercept is not for intervention:", labels(lme4::fixef(m.control))[2] == "control0")
-# 
-# ci_control <- data.frame(ciLo = ci_low.control, mean = mean.control, ciHi = ci_high.control)
-# diamondlabels <- labels(ci_control)[[1]]
-# ci_control <- data.frame(ci_control, diamondlabels)
-# 
-# # # Same ICC results you'd get with e.g.:
-# # m1 <- as.data.frame(VarCorr(m))
-# # m1$vcov[1] / (m1$vcov[1] + m1$vcov[3])
-# 
-# # Or from broom:
-# # tidy(m)$estimate[2]^2 / (tidy(m)$estimate[2]^2 + tidy(m)$estimate[4]^2)
-# 
-# # Or from sjstats:
-# # sum(get_re_var(m)) / (sum(get_re_var(m)) + get_re_var(m, "sigma_2"))
-# 
-# save(ci_control, file = "./Rdata_files/ci_control.Rdata")
-# save(ci_intervention, file = "./Rdata_files/ci_intervention.Rdata")
-# save(ci_girls, file = "./Rdata_files/ci_girls.Rdata")
-# save(ci_boys, file = "./Rdata_files/ci_boys.Rdata")
-
-load("./Rdata_files/ci_control.Rdata")
-load("./Rdata_files/ci_intervention.Rdata")
-load("./Rdata_files/ci_girls.Rdata")
-load("./Rdata_files/ci_boys.Rdata")
-```
-
-<!-- ### Gender and intervention group CIs with sandwich estimator -->
-<!-- NOT INCLUDED, because the line beginning with "sandwich_se <- diag(..." gives a negative sandwich variance estimate, which can't be square-rooted -->
-
-```{r sandwich_genderintervention, include = FALSE, eval = FALSE}
-# Basic instructions are from https://web.archive.org/web/20180206180739/http://thestatsgeek.com/2014/02/14/the-robust-sandwich-variance-estimator-for-linear-regression-using-r/
-
-names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
-
-# Create empty soon-to-be-filled objects
-m <- NA
-sandwich_se <- NA
-mean_girl <- NA
-mean_boy <- NA
-ci_low_girl <- NA
-ci_high_girl <- NA
-ci_low_boy <- NA
-ci_high_boy <- NA
-nonmissings <- NA
-
-# To test the code with a single variable:
-df_for_sandwich <- df %>% dplyr::select(group, school, track, girl, sitLieAccelerometer_T1) %>% na.omit()
-sandwich_clusters <- df_for_sandwich %>% dplyr::select(group, school, track, girl)
-m <- lm(sitLieAccelerometer_T1 ~ girl, data=df_for_sandwich)
-sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
-
-mean_girl <- m$coefficients[[1]]
-mean_boy <- m$coefficients[[1]] + m$coefficients[[2]]
-
-ci_low_girl <- mean_girl - 1.96 * sandwich_se
-ci_high_girl <- mean_girl + 1.96 * sandwich_se
-ci_low_boy <- mean_boy - 1.96 * sandwich_se
-ci_high_boy <- mean_boy + 1.96 * sandwich_se
-
-nonmissings <- nrow(m$model)
-
-
-# # Loop over each variable name, extract statistics:
-for (i in names){
-df_for_sandwich <- df %>% dplyr::select(
-  group, school, track, girl, i) %>%
-  na.omit()
-sandwich_clusters <- df_for_sandwich %>% dplyr::select(group, school, track, girl)
-m <- lm(paste0(i," ~ girl"), data = df_for_sandwich)
-sandwich_se <- diag(sandwich::vcovCL(m, type = "HC1", cluster = sandwich_clusters))^0.5
- 
-mean_girl[i] <- m$coefficients[[1]]
-mean_boy[i] <- m$coefficients[[1]] + m$coefficients[[2]]
- 
-ci_low_girl[i] <- m$coefficients[[1]] - 1.96 * sandwich_se
-ci_high_girl[i] <- mean_girl + 1.96 * sandwich_se
-ci_low_boy[i] <- mean_boy - 1.96 * sandwich_se
-ci_high_boy[i] <- mean_boy + 1.96 * sandwich_se
-
-nonmissings[i] <- nrow(m$model)
-}
-
-vardatatable_sandwich <- data_frame(
-  Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
-  Mean = round(mean, 1),
-  CI95 = paste(round(ci_low, 1), "-", round(ci_high, 1)),
-  n = nonmissings) %>%
-  dplyr::arrange(Variable) %>%
-  dplyr::filter(Variable != "") #remove first row, which is empty
-
-save(vardatatable_sandwich, file = "./Rdata_files/vardatatable_sandwich.Rdata")
-load("./Rdata_files/vardatatable_sandwich.Rdata")
-
-ci_sandwich <- data_frame(
-  "ciLo" = ci_low,
-  "mean" = mean,
-  "ciHi" = ci_high,
-  "diamondlabels" = names(mean)) %>%
-  dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
-  as.data.frame()
-
-save(ci_sandwich, file = "./Rdata_files/ci_sandwich.Rdata")
-load("./Rdata_files/ci_sandwich.Rdata")
-```
-
-# Demographic tables
-
-Next code chunk prepares data.
-
-```{r demographics-prep}
-
-demographics <- lmi %>% dplyr::select(id = ID,
-  birthYear = Kys0004.1,
-  surveyDate = StartDateTime.1,
-  intervention = ryhma,
-  school = Aineisto.1,
-  girl = Kys0013.1,
-  ethnicity = Kys0005.1,
-  studyYear = Kys0014.1) %>% 
-  dplyr::mutate(
-    surveyYear = lubridate::year(surveyDate),
-    age = as.numeric(surveyYear) - as.numeric(birthYear),
-    intervention = ifelse(intervention == 1, 1, 0),
-    intervention = as.numeric(intervention, levels = c("0", "1")),
-    girl = ifelse(girl == "2", 1, 0),
-    girl = as.numeric(girl, levels = c("1", "0")),
-    school = factor(school, levels = c("1", "2", "3", "4", "5")),
-    bornInFinland = as.numeric(ifelse(ethnicity == 1, 1, 0)),
-    studyYear = ifelse(as.numeric(studyYear) == 0, NA, as.numeric(studyYear))) %>%  # Remove "other" from study year
-  dplyr::select(-surveyDate, -surveyYear)
-
-# Insert track variable with those who answered "other" with one of the actual category labels given the appropriate category:
-Track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
-  Kys0016.1 = as.character(Kys0016.1), # Because I had an Evaluation error: `x` and `labels` must be same type.
-  Kys0017.1 = as.character(Kys0017.1),
-  Kys0016.1 = ifelse(Kys0017.1 == "Merkonomi" | Kys0017.1 == "merkonomi", 3,
-                     ifelse(Kys0017.1 == "Datanomi" | Kys0017.1 == "datanomi", 2, Kys0016.1)),
-  Track = factor(Kys0016.1, # Fix track labels first
-                 levels = c(0, 1, 2, 3, 4),
-                 labels = c("Other", "IT", "BA", "HRC", "Nur"))) %>% 
-  dplyr::select(-Kys0016.1, -Kys0017.1)
-
-demographics <- bind_cols(demographics, Track)
-
-save(demographics, file = "./data/demographics.Rdata")
-```
-
-## By educational track
-
-```{r demographics-table-track, results = 'asis'}
-demotable <- demographics %>% 
-  dplyr::filter(track != "Other") %>% 
-  dplyr::group_by(Track) %>% 
-  dplyr::summarise(
-    n = n(),
-    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
-                                ) %>% 
-  dplyr::filter(complete.cases(.)) %>% 
-  dplyr::arrange(desc(Track)) 
-
-demotable_total <- demographics %>% 
-  summarise(
-    n = n(),
-    "Track" = "Full sample",
-    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
-    )
-
-demotable <- bind_rows(demotable, demotable_total)
-
-demotable <- demotable %>% 
-  tidyr::gather(Variable, val, 2:ncol(demotable)) %>% 
-  tidyr::spread(Track, val) %>% 
-  dplyr::select(Variable, Nur, HRC, BA, IT, `Full sample`) %>% 
-  dplyr::arrange(-row_number())
-
-# For some reason, sum of n's of all tracks is 1084.
-
-save(demotable, file = "./Rdata_files/demotable.Rdata")
-
-papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 1, 0))
-```
-
-## By gender
-
-```{r demographics-table-gender, results = 'asis'}
-# demographics$Girl <- factor(demographics$girl)
-
-demotable <- demographics %>% 
-  group_by(girl) %>% 
-  summarise(
-    n = n(),
-    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
-    ) %>% 
-  dplyr::filter(complete.cases(.)) %>% 
-  arrange(desc(girl)) 
-
-demotable_total <- demographics %>% 
-  summarise(
-    n = n(),
-    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "% allocated to intervention" = round(mean(intervention, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1)
-    )
-
-demotable <- bind_rows(demotable, demotable_total)
-
-demotable <- demotable %>% 
-  tidyr::gather(Variable, val, 2:ncol(demotable)) %>% 
-  tidyr::spread(girl, val) %>% 
-  dplyr::arrange(-row_number())
-
-names(demotable) <- c("", "Boy", "Girl", "Full sample")
-
-# For some reason, sum of n's of all tracks is 1084.
-
-papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
-```
-
-## By intervention participation
-
-```{r demographics-table-intervention, results = 'asis'}
-demographics$intervention <- factor(demographics$intervention)
-demographics$girl <- as.numeric(demographics$girl)
-
-demotable <- demographics %>% 
-  group_by(intervention) %>% 
-  summarise(
-    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    n = n()
-    ) %>% 
-  dplyr::filter(complete.cases(.)) %>% 
-  arrange(desc(intervention)) 
-
-demotable_total <- demographics %>% 
-  summarise(
-    "intervention" = "Full sample",
-    "Mean age (range, median)" = paste0(round(mean(age, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                range(age, na.rm = TRUE)[1] %>% format(., nsmall = 1), "-",
-                                range(age, na.rm = TRUE)[2] %>% format(., nsmall = 1), ", ",
-                                round(median(age, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "Mean study year (sd, median)" = paste0(round(mean(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1)," (", 
-                                    round(sd(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ", ",
-                                    round(median(studyYear, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-    "% girl" = round(mean(girl, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    "Born in Finland (%)" = round(mean(bornInFinland, na.rm = TRUE)*100, 1) %>% format(., nsmall = 1),
-    n = n()
-    )
-
-demotable <- bind_rows(demotable, demotable_total)
-
-demotable <- demotable %>% 
-  tidyr::gather(Variable, val, 2:ncol(demotable)) %>% 
-  tidyr::spread(intervention, val) %>% 
-  dplyr::arrange(-row_number())
-
-names(demotable) <- c("", "Control", "Intervention", "Full sample")
-
-# For some reason, sum of n's of all tracks is 1084.
-
-papaja::apa_table(demotable, caption = "Baseline demographics of educational tracks", digits = c(0, 1, 1, 1, 1, 0))
-```
-
-## Outcome tables
-
-```{r outcome-table, results = 'asis'}
-
-outtable_track <- df %>%
-  dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes 
-          weartimeAccelerometer_T1,
-          PA_actionplan_T1,
-          PA_copingplan_T1,
-          PA_agrbct_T1,
-          PA_frqbct_T1,
-          PA_amotivation_T1,
-          PA_autonomous_T1,
-          PA_controlled_T1,
-          PA_goal_T1,
-          PA_inorm_T1,
-          PA_dnorm_T1,
-          PA_intention_T1,
-          PA_outcomeExpectations_T1,
-          PA_opportunities_T1,
-          PA_pbc_T1,
-          PA_selfefficacy_T1,
-          SB_dnorm_T1,
-          SB_inorm_T1,
-          SB_intention_T1,
-          SB_outcomeExpectations_T1,
-          SB_selfEfficacyPBC_T1,
-         track, girl, intervention) %>% 
-  group_by(track) %>% 
-  summarise(
-            "PA action planning" = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA coping planning" = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA agreement-BCTs" = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA frequency-BCTs" = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA amotivation" = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                      " (", round(sd(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA autonomous regulation" = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA controlled regulation" = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA injunctive norm" = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA descriptive norm" = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA intention" = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA outcome expectations" = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA opportunities" = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA perceived behavioural control" = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                        " (", round(sd(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA self-efficacy" = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB descriptive norm" = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB injunctive norm" = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB intention" = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB outcome expectations" = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB self-efficacy & perceived behavioural control" = paste0(round(mean(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                                        " (", round(sd(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily MVPA minutes" = paste0(round(mean(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                               " (", round(sd(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                                      " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            n = n()) %>% 
-  dplyr::filter(complete.cases(.)) %>% 
-  arrange((track)) %>% 
-  dplyr::filter(track != "Other")
-
-outtable_intervention <- df %>%
-  dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes  
-          weartimeAccelerometer_T1,
-          PA_actionplan_T1,
-          PA_copingplan_T1,
-          PA_agrbct_T1,
-          PA_frqbct_T1,
-          PA_amotivation_T1,
-          PA_autonomous_T1,
-          PA_controlled_T1,
-          PA_goal_T1,
-          PA_inorm_T1,
-          PA_dnorm_T1,
-          PA_intention_T1,
-          PA_outcomeExpectations_T1,
-          PA_opportunities_T1,
-          PA_pbc_T1,
-          PA_selfefficacy_T1,
-          SB_dnorm_T1,
-          SB_inorm_T1,
-          SB_intention_T1,
-          SB_outcomeExpectations_T1,
-          SB_selfEfficacyPBC_T1,
-         track, girl, intervention) %>% 
-  group_by(intervention) %>% 
-  summarise(
-            "PA action planning" = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA coping planning" = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA agreement-BCTs" = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA frequency-BCTs" = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA amotivation" = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                      " (", round(sd(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA autonomous regulation" = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA controlled regulation" = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA injunctive norm" = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA descriptive norm" = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA intention" = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA outcome expectations" = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA opportunities" = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA perceived behavioural control" = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                        " (", round(sd(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA self-efficacy" = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB descriptive norm" = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB injunctive norm" = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB intention" = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB outcome expectations" = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB self-efficacy & perceived behavioural control" = paste0(round(mean(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                                        " (", round(sd(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily MVPA minutes" = paste0(round(mean(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                               " (", round(sd(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                                      " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            n = n()) %>% 
-  dplyr::filter(complete.cases(.))
-
-outtable_girl <- df %>%
-  dplyr::select(mvpaAccelerometer_T1, sitLieAccelerometer_T1, sitBreaksAccelerometer_T1, # Main outcomes  
-          weartimeAccelerometer_T1,
-          PA_actionplan_T1,
-          PA_copingplan_T1,
-          PA_agrbct_T1,
-          PA_frqbct_T1,
-          PA_amotivation_T1,
-          PA_autonomous_T1,
-          PA_controlled_T1,
-          PA_goal_T1,
-          PA_inorm_T1,
-          PA_dnorm_T1,
-          PA_intention_T1,
-          PA_outcomeExpectations_T1,
-          PA_opportunities_T1,
-          PA_pbc_T1,
-          PA_selfefficacy_T1,
-          SB_dnorm_T1,
-          SB_inorm_T1,
-          SB_intention_T1,
-          SB_outcomeExpectations_T1,
-          SB_selfEfficacyPBC_T1,
-         track, girl, intervention) %>% 
-  group_by(girl) %>% 
-  summarise(
-            "PA action planning" = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA coping planning" = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA agreement-BCTs" = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA frequency-BCTs" = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA amotivation" = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                      " (", round(sd(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA autonomous regulation" = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA controlled regulation" = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA injunctive norm" = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA descriptive norm" = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA intention" = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA outcome expectations" = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA opportunities" = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA perceived behavioural control" = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                        " (", round(sd(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA self-efficacy" = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB descriptive norm" = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB injunctive norm" = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB intention" = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB outcome expectations" = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB self-efficacy & perceived behavioural control" = paste0(round(mean(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                                        " (", round(sd(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily MVPA minutes" = paste0(round(mean(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                               " (", round(sd(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                                      " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            n = n()) %>% 
-  dplyr::filter(complete.cases(.))
-
-outtable_total <- df %>% 
-  summarise("girl" = "Full sample",
-            "PA action planning" = paste0(round(mean(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_actionplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA coping planning" = paste0(round(mean(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_copingplan_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA agreement-BCTs" = paste0(round(mean(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_agrbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA frequency-BCTs" = paste0(round(mean(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                         " (", round(sd(PA_frqbct_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA amotivation" = paste0(round(mean(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                      " (", round(sd(PA_amotivation_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA autonomous regulation" = paste0(round(mean(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_autonomous_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA controlled regulation" = paste0(round(mean(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                " (", round(sd(PA_controlled_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA injunctive norm" = paste0(round(mean(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(PA_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA descriptive norm" = paste0(round(mean(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(PA_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA intention" = paste0(round(mean(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(PA_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA outcome expectations" = paste0(round(mean(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(PA_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA opportunities" = paste0(round(mean(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_opportunities_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA perceived behavioural control" = paste0(round(mean(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                        " (", round(sd(PA_pbc_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "PA self-efficacy" = paste0(round(mean(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                        " (", round(sd(PA_selfefficacy_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB descriptive norm" = paste0(round(mean(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                           " (", round(sd(SB_dnorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB injunctive norm" = paste0(round(mean(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                          " (", round(sd(SB_inorm_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB intention" = paste0(round(mean(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                    " (", round(sd(SB_intention_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB outcome expectations" = paste0(round(mean(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                               " (", round(sd(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "SB self-efficacy & perceived behavioural control" = paste0(round(mean(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
-                                                                        " (", round(sd(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily MVPA minutes" = paste0(round(mean(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                               " (", round(sd(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                                      " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
-                                                    " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            n = n())
-
-
-
-# Transpose each table
-outtable_track <- outtable_track %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(track, val)
-
-outtable_intervention <- outtable_intervention %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(intervention, val)
-names(outtable_intervention) <- c("Variable", "Control", "Intervention")
-
-## In the last table, have a column for total before transposing
-outtable_girl <- bind_rows(outtable_girl, outtable_total)
-outtable_girl <- outtable_girl %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(girl, val)
-names(outtable_girl) <- c("Variable", "Boy", "Girl", "Full sample")
-
-# Are all variables the same? They should be, for the table to work!
-# identical(outtable_track$Variable, outtable_girl$Variable)
-# identical(outtable_track$Variable, outtable_intervention$Variable)
-
-# Create large table with all variables
-outtable_mega <- bind_cols(outtable_track, outtable_intervention, outtable_girl) %>% 
-  dplyr::select(-Variable1, -Variable2) 
-
-# Move n to be the first row
-out1 <- outtable_mega %>% dplyr::filter(Variable == "n")
-out2 <- outtable_mega %>% dplyr::filter(Variable != "n")
-outtable_mega <- bind_rows(out1, out2)
-
-# Fix names: leave first blank, have the rest as they were
-names(outtable_mega) <- c("", names(outtable_mega)[2:(length(names(outtable_mega)))])
-
-papaja::apa_table(outtable_mega, caption = "Baseline demographics of educational tracks. Values indicate mean (sd, without taking clustering into account)")
-
-
-```
-
-
-## Mediator table with CIs
-
-```{r outcome-table2, results = 'asis'}
-
-mediatortable_intervention <- ci_intervention %>%
-  dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_intervention$diamondlabels)) %>% 
-  dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
-  dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
-         mean = round(mean, 1) %>% format(., nsmall = 1))
-
-mediatortable_intervention$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_agrbct_T1', 'PA agreement-BCTs', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_frqbct_T1', 'PA frequency-BCTs', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_amotivation_T1', 'PA amotivation', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_autonomous_T1', 'PA autonomous regulation', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_controlled_T1', 'PA controlled regulation', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_inorm_T1', 'PA injunctive norm', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_dnorm_T1', 'PA descriptive norm', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_intention_T1', 'PA intention', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_outcomeExpectations_T1', 'PA outcome expectations', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_opportunities_T1', 'PA opportunities', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_pbc_T1', 'PA perceived behavioural control', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('PA_selfefficacy_T1', 'PA self-efficacy', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('SB_dnorm_T1', 'SB descriptive norm', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('SB_inorm_T1', 'SB injunctive norm', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('SB_intention_T1', 'SB intention', mediatortable_intervention$diamondlabels)
-mediatortable_intervention$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outcome expectations', mediatortable_intervention$diamondlabels)
-
-mediatortable_control <- ci_control %>%
-  dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_control$diamondlabels)) %>% 
-  dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
-  dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
-         mean = round(mean, 1) %>% format(., nsmall = 1))
-
-mediatortable_control$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_agrbct_T1', 'PA agreement-BCTs', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_frqbct_T1', 'PA frequency-BCTs', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_amotivation_T1', 'PA amotivation', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_autonomous_T1', 'PA autonomous regulation', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_controlled_T1', 'PA controlled regulation', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_inorm_T1', 'PA injunctive norm', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_dnorm_T1', 'PA descriptive norm', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_intention_T1', 'PA intention', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_outcomeExpectations_T1', 'PA outcome expectations', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_opportunities_T1', 'PA opportunities', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_pbc_T1', 'PA perceived behavioural control', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('PA_selfefficacy_T1', 'PA self-efficacy', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('SB_dnorm_T1', 'SB descriptive norm', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('SB_inorm_T1', 'SB injunctive norm', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('SB_intention_T1', 'SB intention', mediatortable_control$diamondlabels)
-mediatortable_control$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outcome expectations', mediatortable_control$diamondlabels)
-
-mediatortable_girls <- ci_girls %>%
-  dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_girls$diamondlabels)) %>% 
-  dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
-  dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
-         mean = round(mean, 1) %>% format(., nsmall = 1))
-
-mediatortable_girls$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_agrbct_T1', 'PA agreement-BCTs', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_frqbct_T1', 'PA frequency-BCTs', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_amotivation_T1', 'PA amotivation', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_autonomous_T1', 'PA autonomous regulation', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_controlled_T1', 'PA controlled regulation', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_inorm_T1', 'PA injunctive norm', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_dnorm_T1', 'PA descriptive norm', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_intention_T1', 'PA intention', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_outcomeExpectations_T1', 'PA outcome expectations', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_opportunities_T1', 'PA opportunities', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_pbc_T1', 'PA perceived behavioural control', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('PA_selfefficacy_T1', 'PA self-efficacy', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('SB_dnorm_T1', 'SB descriptive norm', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('SB_inorm_T1', 'SB injunctive norm', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('SB_intention_T1', 'SB intention', mediatortable_girls$diamondlabels)
-mediatortable_girls$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outcome expectations', mediatortable_girls$diamondlabels)
-
-mediatortable_boys <- ci_boys %>%
-  dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_boys$diamondlabels)) %>% 
-  dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
-  dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
-         mean = round(mean, 1) %>% format(., nsmall = 1))
-
-mediatortable_boys$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_agrbct_T1', 'PA agreement-BCTs', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_frqbct_T1', 'PA frequency-BCTs', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_amotivation_T1', 'PA amotivation', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_autonomous_T1', 'PA autonomous regulation', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_controlled_T1', 'PA controlled regulation', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_inorm_T1', 'PA injunctive norm', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_dnorm_T1', 'PA descriptive norm', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_intention_T1', 'PA intention', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_outcomeExpectations_T1', 'PA outcome expectations', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_opportunities_T1', 'PA opportunities', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_pbc_T1', 'PA perceived behavioural control', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('PA_selfefficacy_T1', 'PA self-efficacy', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('SB_dnorm_T1', 'SB descriptive norm', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('SB_inorm_T1', 'SB injunctive norm', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('SB_intention_T1', 'SB intention', mediatortable_boys$diamondlabels)
-mediatortable_boys$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outcome expectations', mediatortable_boys$diamondlabels)
-
-mediatortable_total <- ci_total %>%
-  dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agrbct_T1|PA_frqbct_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_inorm_T1|PA_dnorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_pbc_T1|PA_selfefficacy_T1|SB_dnorm_T1|SB_inorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_total$diamondlabels)) %>% 
-  dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
-  dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
-         mean = round(mean, 1) %>% format(., nsmall = 1))
-
-mediatortable_total$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_agrbct_T1', 'PA agreement-BCTs', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_frqbct_T1', 'PA frequency-BCTs', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_amotivation_T1', 'PA amotivation', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_autonomous_T1', 'PA autonomous regulation', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_controlled_T1', 'PA controlled regulation', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_inorm_T1', 'PA injunctive norm', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_dnorm_T1', 'PA descriptive norm', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_intention_T1', 'PA intention', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_outcomeExpectations_T1', 'PA outcome expectations', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_opportunities_T1', 'PA opportunities', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_pbc_T1', 'PA perceived behavioural control', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('PA_selfefficacy_T1', 'PA self-efficacy', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('SB_dnorm_T1', 'SB descriptive norm', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('SB_inorm_T1', 'SB injunctive norm', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('SB_intention_T1', 'SB intention', mediatortable_total$diamondlabels)
-mediatortable_total$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outcome expectations', mediatortable_total$diamondlabels)
-
-mega_mediatortable <- data.frame(
-  Variable = mediatortable_girls$diamondlabels, 
-  "Girls" = paste0(round(mediatortable_girls$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_girls$CI95, ")"),
-  "Boys" = paste0(round(mediatortable_boys$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_boys$CI95, ")"),
-  "Intervention" = paste0(round(mediatortable_intervention$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_intervention$CI95, ")"),
-  "Control" = paste0(round(mediatortable_control$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_control$CI95, ")"),
-  "Total" = paste0(round(mediatortable_total$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_total$CI95, ")")
-  ) %>% 
-  arrange(Variable)
-
-save(mega_mediatortable, file = "./Rdata_files/mega_mediatortable.Rdata")
-papaja::apa_table(mega_mediatortable, caption = "Main mediating variables of PA and SB")
-
-
-```
 
 <!-- # Visualising random effects using full posterior -->
 
@@ -2416,18 +812,6 @@ plot1 + plot2
 
 
 ```
-```{r}
-df %>% dplyr::select(id,
-                              track = track,
-                              girl,
-                              Weartime = weartimeAccelerometer_T1)  %>%
-  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
-  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
-                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
-                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
-  dplyr::filter(track == "IT") %>% 
-  DT::datatable()
-```
 
 
 ## Accelerometer-measured MVPA 
@@ -2883,9 +1267,9 @@ save(MVPAplot, file = "./Rdata_files/MVPAplot.Rdata")
 
 ## Self-reported MVPA days, previous week 
 
-Description
+**Description**
 
-This section reports the question on how many days the participants did MVPA during the previous week.
+This section reports the question on how many days the participants did MVPA during the previous week. Question was formulated as "During the last 7 days, on how many days were you physically active so, that the activity was at least moderately vigorous, and at least 30 minutes of activity was accumulated during the day? Choose the correct option".The scale allowed discrete values from zero to seven.
 
 ### Data preparation {.tabset}
 
@@ -3446,11 +1830,13 @@ hist_padaysLastweek_intervention_density <- df %>% dplyr::select(id,
 hist_padaysLastweek_intervention_count + hist_padaysLastweek_intervention_density
 ```
 
-## Self-reported MVPA time: dysfunctional item
+## Self-reported MVPA time
+
+This question was "During the last 7 days, how many hours of the previously described [i.e. moderate-to-vigorous] physical activity was accumulated during your free time? Give your answer to the nearest 30 minutes." The answer was given by inputing hours and minutes, the latter field allowing for either zero or 30 minutes to be inputed.
 
 ### Density plot by intervention and gender
 
-```{r nordpaq_dysfunctional_item-accelerometer-sm}
+```{r nordpaq_alternative_item-accelerometer-sm}
 
 # Create data frame
 densplot <- d
@@ -3505,7 +1891,7 @@ legend("topright", levels(dens$intervention), col = viridis::viridis(4, end = 0.
 # Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r
 par(mar = c(0,0,0,0)) 
 plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis label
-text(x = 1.02, y = 1.3, labels = "nordpaq_dysfunctional_item hours", pos = 1)
+text(x = 1.02, y = 1.3, labels = "nordpaq_alternative_item hours", pos = 1)
 ```
 
 ### Data preparation {.tabset}
@@ -3518,30 +1904,30 @@ The tab "Information on data preparation" of this section present information on
 
 Prepare data
 
-```{r nordpaq_dysfunctional_item-accelerometer-data}
-m_nordpaq_dysfunctional_itemAccelerometer_trackgirl <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:girl)) %>% 
+```{r nordpaq_alternative_item-accelerometer-data}
+m_nordpaq_alternative_itemAccelerometer_trackgirl <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:girl)) %>% 
   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
 
-brms::prior_summary(m_nordpaq_dysfunctional_itemAccelerometer_trackgirl, data = df)
+brms::prior_summary(m_nordpaq_alternative_itemAccelerometer_trackgirl, data = df)
 
-m_nordpaq_dysfunctional_itemAccelerometer_trackgirl
+m_nordpaq_alternative_itemAccelerometer_trackgirl
 
-b_intercept <- brms::fixef(m_nordpaq_dysfunctional_itemAccelerometer_trackgirl)[1]
+b_intercept <- brms::fixef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[1]
 
 # This gives estimates only:
-nordpaq_dysfunctional_item_trackgirl_estimates <- brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackgirl)[[1]][1:10]
+nordpaq_alternative_item_trackgirl_estimates <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][1:10]
 
 # The 2.5%ile:
-nordpaq_dysfunctional_item_trackgirl_CIL <- brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackgirl)[[1]][21:30]
+nordpaq_alternative_item_trackgirl_CIL <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][21:30]
 
 # The 97.5%ile:
-nordpaq_dysfunctional_item_trackgirl_CIH <- brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackgirl)[[1]][31:40]
+nordpaq_alternative_item_trackgirl_CIH <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][31:40]
 
-nordpaq_dysfunctional_item_trackgirl_ci <- data.frame(nordpaq_dysfunctional_item_trackgirl_CIL, nordpaq_dysfunctional_item_trackgirl_estimates, nordpaq_dysfunctional_item_trackgirl_CIH, Variable = labels(brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackgirl))) %>% 
+nordpaq_alternative_item_trackgirl_ci <- data.frame(nordpaq_alternative_item_trackgirl_CIL, nordpaq_alternative_item_trackgirl_estimates, nordpaq_alternative_item_trackgirl_CIH, Variable = labels(brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl))) %>% 
   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(nordpaq_dysfunctional_item_trackgirl_CIL = nordpaq_dysfunctional_item_trackgirl_CIL + b_intercept,
-         nordpaq_dysfunctional_item_trackgirl_estimates = nordpaq_dysfunctional_item_trackgirl_estimates + b_intercept,
-         nordpaq_dysfunctional_item_trackgirl_CIH = nordpaq_dysfunctional_item_trackgirl_CIH + b_intercept,
+  dplyr::mutate(nordpaq_alternative_item_trackgirl_CIL = nordpaq_alternative_item_trackgirl_CIL + b_intercept,
+         nordpaq_alternative_item_trackgirl_estimates = nordpaq_alternative_item_trackgirl_estimates + b_intercept,
+         nordpaq_alternative_item_trackgirl_CIH = nordpaq_alternative_item_trackgirl_CIH + b_intercept,
          track = c('BA_boy',
                    'BA_girl',
                    'HRC_boy',
@@ -3554,45 +1940,45 @@ nordpaq_dysfunctional_item_trackgirl_ci <- data.frame(nordpaq_dysfunctional_item
                    'Other_girl'
 ))
 
-nordpaq_dysfunctional_item_trackgirl_diamonds_girl <- rbind(
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
+nordpaq_alternative_item_trackgirl_diamonds_girl <- rbind(
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
 
-nordpaq_dysfunctional_item_trackgirl_diamonds_boy <- rbind(
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
-nordpaq_dysfunctional_item_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
+nordpaq_alternative_item_trackgirl_diamonds_boy <- rbind(
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
+nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
 
 
-m_nordpaq_dysfunctional_itemAccelerometer_trackintervention <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:intervention)) %>% 
+m_nordpaq_alternative_itemAccelerometer_trackintervention <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:intervention)) %>% 
   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
 
-brms::prior_summary(m_nordpaq_dysfunctional_itemAccelerometer_trackintervention, data = df)
+brms::prior_summary(m_nordpaq_alternative_itemAccelerometer_trackintervention, data = df)
 
-m_nordpaq_dysfunctional_itemAccelerometer_trackintervention
+m_nordpaq_alternative_itemAccelerometer_trackintervention
 
-b_intercept <- brms::fixef(m_nordpaq_dysfunctional_itemAccelerometer_trackintervention)[1]
+b_intercept <- brms::fixef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[1]
 
 # This gives estimates only:
-nordpaq_dysfunctional_item_trackintervention_estimates <- brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackintervention)[[1]][1:10]
+nordpaq_alternative_item_trackintervention_estimates <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][1:10]
 
 
 # The 2.5%ile:
-nordpaq_dysfunctional_item_trackintervention_CIL <- brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackintervention)[[1]][21:30]
+nordpaq_alternative_item_trackintervention_CIL <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][21:30]
 
 # The 97.5%ile:
-nordpaq_dysfunctional_item_trackintervention_CIH <- brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackintervention)[[1]][31:40]
+nordpaq_alternative_item_trackintervention_CIH <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][31:40]
 
-nordpaq_dysfunctional_item_trackintervention_ci <- data.frame(nordpaq_dysfunctional_item_trackintervention_CIL, nordpaq_dysfunctional_item_trackintervention_estimates, nordpaq_dysfunctional_item_trackintervention_CIH, Variable = labels(brms::ranef(m_nordpaq_dysfunctional_itemAccelerometer_trackintervention))) %>% 
+nordpaq_alternative_item_trackintervention_ci <- data.frame(nordpaq_alternative_item_trackintervention_CIL, nordpaq_alternative_item_trackintervention_estimates, nordpaq_alternative_item_trackintervention_CIH, Variable = labels(brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention))) %>% 
   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(nordpaq_dysfunctional_item_trackintervention_CIL = nordpaq_dysfunctional_item_trackintervention_CIL + b_intercept,
-         nordpaq_dysfunctional_item_trackintervention_estimates = nordpaq_dysfunctional_item_trackintervention_estimates + b_intercept,
-         nordpaq_dysfunctional_item_trackintervention_CIH = nordpaq_dysfunctional_item_trackintervention_CIH + b_intercept,
+  dplyr::mutate(nordpaq_alternative_item_trackintervention_CIL = nordpaq_alternative_item_trackintervention_CIL + b_intercept,
+         nordpaq_alternative_item_trackintervention_estimates = nordpaq_alternative_item_trackintervention_estimates + b_intercept,
+         nordpaq_alternative_item_trackintervention_CIH = nordpaq_alternative_item_trackintervention_CIH + b_intercept,
          track = c('BA_control',
                    'BA_intervention',
                    'HRC_control',
@@ -3605,31 +1991,31 @@ nordpaq_dysfunctional_item_trackintervention_ci <- data.frame(nordpaq_dysfunctio
                    'Other_intervention'
 ))
 
-nordpaq_dysfunctional_item_trackintervention_diamonds_intervention <- rbind(
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
+nordpaq_alternative_item_trackintervention_diamonds_intervention <- rbind(
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
 
-nordpaq_dysfunctional_item_trackintervention_diamonds_control <- rbind(
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
-nordpaq_dysfunctional_item_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
+nordpaq_alternative_item_trackintervention_diamonds_control <- rbind(
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
+nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
 
-nordpaq_dysfunctional_item_trackgirl_diamonds_girl
-nordpaq_dysfunctional_item_trackgirl_diamonds_boy
-nordpaq_dysfunctional_item_trackintervention_diamonds_intervention
-nordpaq_dysfunctional_item_trackintervention_diamonds_control
+nordpaq_alternative_item_trackgirl_diamonds_girl
+nordpaq_alternative_item_trackgirl_diamonds_boy
+nordpaq_alternative_item_trackintervention_diamonds_intervention
+nordpaq_alternative_item_trackintervention_diamonds_control
 ```
 
 #### Sensitivity analyses and robustness checks
 
 Ideally, one would perform sensitivity analyses and robustness checks; e.g. comparing the estimates with frequentist multilevel models and following the [WAMBS-checklist](https://doi.org/10.1037/met0000065). Due to resource constraints, we are forced to forego this phase of analysis and instead, only show the linear model results for intercepts in each intervention-gender-track combination separately.
 
-```{r lm-for-comparison-nordpaq_dysfunctional_itemAccelerometer, eval = FALSE}
+```{r lm-for-comparison-nordpaq_alternative_itemAccelerometer, eval = FALSE}
 
 # To test the code with a single variable:
 df_for_models_nested <- df %>% 
@@ -3677,7 +2063,7 @@ DT::datatable(df_fitted)
 
 #### Density plot of girls and boys in different educational tracks and schools
 
-```{r nordpaq_dysfunctional_item-trackschool-tables}
+```{r nordpaq_alternative_item-trackschool-tables}
 
 df %>% dplyr::select(leisuretimeMvpaHoursLastweek_T1, girl, trackSchool) %>% 
   group_by(girl, trackSchool) %>% 
@@ -3701,15 +2087,15 @@ df %>% dplyr::select(leisuretimeMvpaHoursLastweek_T1, girl, trackSchool) %>%
 
 ```
 
-```{r nordpaq_dysfunctional_item-trackshool-density}
+```{r nordpaq_alternative_item-trackshool-density}
 
 plot1 <- df %>% dplyr::select(id,
                               trackSchool = trackSchool,
                               girl,
-                              nordpaq_dysfunctional_item = leisuretimeMvpaHoursLastweek_T1)  %>%
+                              nordpaq_alternative_item = leisuretimeMvpaHoursLastweek_T1)  %>%
   dplyr::filter(!is.na(trackSchool), !grepl('Other|NANA|BA4|HRC2|Nur2', trackSchool)) %>% # Drop categories with just few participants
   ggplot2::ggplot(aes(y = trackSchool)) +
-  ggridges::geom_density_ridges2(aes(x = nordpaq_dysfunctional_item, colour = "black", 
+  ggridges::geom_density_ridges2(aes(x = nordpaq_alternative_item, colour = "black", 
                                     fill = paste(trackSchool, girl)),
                                   scale = 1,
                                   alpha = 0.6, size = 0.25,
@@ -3734,18 +2120,18 @@ plot1
 
 ### Density plot by track
 
-```{r nordpaq_dysfunctional_item-accelerometer-plot}
+```{r nordpaq_alternative_item-accelerometer-plot}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
                               girl,
-                              nordpaq_dysfunctional_item = leisuretimeMvpaHoursLastweek_T1)  %>%
+                              nordpaq_alternative_item = leisuretimeMvpaHoursLastweek_T1)  %>%
   dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
   dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
                 track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
                                       "HRC" = "HRC", "Nur" = "Nur")) %>% 
   ggplot2::ggplot(aes(y = track)) +
-  ggridges::geom_density_ridges2(aes(x = nordpaq_dysfunctional_item, colour = "black", 
+  ggridges::geom_density_ridges2(aes(x = nordpaq_alternative_item, colour = "black", 
                                     fill = paste(track, girl),
                                     point_color = girl,
                                     point_fill = girl,
@@ -3782,14 +2168,14 @@ plot1 <- df %>% dplyr::select(id,
   theme(legend.position = "bottom")
 
 plot1 <- plot1 + 
-  userfriendlyscience::diamondPlot(nordpaq_dysfunctional_item_trackgirl_diamonds_girl, 
+  userfriendlyscience::diamondPlot(nordpaq_alternative_item_trackgirl_diamonds_girl, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    color=viridis::viridis(4, end = 0.8)[3],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
-  userfriendlyscience::diamondPlot(nordpaq_dysfunctional_item_trackgirl_diamonds_boy, 
+  userfriendlyscience::diamondPlot(nordpaq_alternative_item_trackgirl_diamonds_boy, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    linetype = "solid", 
@@ -3803,13 +2189,13 @@ plot1 <- plot1 +
 plot2 <- df %>% dplyr::select(id,
                               track = track,
                               intervention,
-                              nordpaq_dysfunctional_item = leisuretimeMvpaHoursLastweek_T1)  %>%
+                              nordpaq_alternative_item = leisuretimeMvpaHoursLastweek_T1)  %>%
   dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
   dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
                 track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
                                       "HRC" = "HRC", "Nur" = "Nur")) %>% 
   ggplot2::ggplot(aes(y = track)) +
-  ggridges::geom_density_ridges2(aes(x = nordpaq_dysfunctional_item, colour = "black", 
+  ggridges::geom_density_ridges2(aes(x = nordpaq_alternative_item, colour = "black", 
                                     fill = paste(track, intervention),
                                     point_color = intervention,
                                     point_fill = intervention,
@@ -3846,14 +2232,14 @@ plot2 <- df %>% dplyr::select(id,
   theme(legend.position = "bottom")
 
 plot2 <- plot2 + 
-  userfriendlyscience::diamondPlot(nordpaq_dysfunctional_item_trackintervention_diamonds_intervention, 
+  userfriendlyscience::diamondPlot(nordpaq_alternative_item_trackintervention_diamonds_intervention, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black",  
                                    color=viridis::viridis(4, end = 0.8)[4],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15)) +
-  userfriendlyscience::diamondPlot(nordpaq_dysfunctional_item_trackintervention_diamonds_control, 
+  userfriendlyscience::diamondPlot(nordpaq_alternative_item_trackintervention_diamonds_control, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black",  
                                    color=viridis::viridis(4, end = 0.8)[2],
@@ -4573,10 +2959,26 @@ df %>% dplyr::select(sitLieAccelerometer_T1, girl, intervention, track) %>%
 ```
 
 
-
 # PA Determinants
 
 This section reports various hypothesised determinants of physical activity.
+
+Code chunk below loads data written in the section named Tables and Estimators.
+
+```{r load-rdata}
+load("./Rdata_files/ci_control.Rdata")
+load("./Rdata_files/ci_intervention.Rdata")
+load("./Rdata_files/ci_girls.Rdata")
+load("./Rdata_files/ci_boys.Rdata")
+load("./Rdata_files/vardatatable.Rdata")
+load("./Rdata_files/ci_total.Rdata")
+load("./Rdata_files/vardatatable_containing_edutrack.Rdata")
+load("./Rdata_files/ci_edutrack.Rdata")
+load("./Rdata_files/vardatatable_edutrack_only.Rdata")
+load("./Rdata_files/ci_edutrack_only.Rdata")
+load("./Rdata_files/vardatatable_sandwich.Rdata")
+load("./Rdata_files/ci_sandwich.Rdata")
+```
 
 ## Simple diamond plot
 
@@ -6329,127 +4731,6 @@ meansplot_df %>%
 ```
 
 We see that, for example, `r ((middleprobs(0.35, 0.65) / 706) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
-
-# Types of self-reported exercise
-
-This section describes the proportions of participants reporting they did a certain type of activity during the last month.
-
-```{r exerciseTypes, results = "asis"}
-
-exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
-  dplyr::select(contains(".1"))
-exerciseTypes_df$track <- df$track
-exerciseTypes_df$girl <- df$girl
-
-names(exerciseTypes_df) <- c("Team ball games", 
-                             "Other ball games",
-                             "Gym training",
-                             "Combat sports",
-                             "Fitness classes",
-                             "Home workout",
-                             "Cycling",
-                             "Swimming",
-                             "Walking",
-                             "Running",
-                             "Skiing",
-                             "Roller skating",
-                             "Horseback riding",
-                             "Other",
-                             "track",
-                             "girl"
-                             )
-
-# For educational tracks
-
-exerciseTypes_proportions <- exerciseTypes_df %>%
-  dplyr::filter(!is.na(track), track != "Other") %>% 
-  dplyr::mutate_at(vars(`Team ball games`:`Other`), funs(replace_na(., 0))) %>% # replace NA's with 0
-  dplyr::group_by(track) %>% 
-  dplyr::summarise_at(vars(`Team ball games`:`Other`), funs(mean(., na.rm = TRUE)))
-
-exerciseTypes_cases <- exerciseTypes_df %>%
-  dplyr::filter(!is.na(track), track != "Other") %>% 
-  dplyr::mutate_at(vars(`Team ball games`:`Other`), funs(replace_na(., 0))) %>% # replace NA's with 0
-  dplyr::group_by(track) %>% 
-  dplyr::summarise_at(vars(`Team ball games`:`Other`), sum) 
-
-exerciseTypes_totals <- exerciseTypes_df %>%
-  dplyr::filter(!is.na(track), track != "Other") %>% 
-  dplyr::mutate_at(vars(`Team ball games`:`Other`), funs(replace_na(., 0))) %>% # replace NA's with 0
-  dplyr::group_by(track) %>% 
-  dplyr::summarise_at(vars(`Team ball games`:`Other`), funs(sum(!is.na(.))))
-
-exerciseTypes_pvals <- NA # Empty vector to be filled
-
-for (i in (2:15)) {
-exerciseTypes_test <- data.frame(exerciseTypes_cases[ , i], exerciseTypes_totals[ , i])
-exerciseTypes_pvals[i-1] <- prop.test(exerciseTypes_test[, 1], exerciseTypes_test[, 2])$p.value %>% round(., 5)
-}
-
-# For girls and boys
-
-exerciseTypes_girlboy_proportions <- exerciseTypes_df %>%
-  dplyr::filter(!is.na(girl)) %>% 
-  dplyr::mutate_at(vars(`Team ball games`:`Other`), funs(replace_na(., 0))) %>% # replace NA's with 0
-  dplyr::group_by(girl) %>% 
-  dplyr::summarise_at(vars(`Team ball games`:`Other`), funs(mean(., na.rm = TRUE))) 
-
-exerciseTypes_girlboy_cases <- exerciseTypes_df %>%
-  dplyr::filter(!is.na(girl)) %>% 
-  dplyr::mutate_at(vars(`Team ball games`:`Other`), funs(replace_na(., 0))) %>% # replace NA's with 0
-  dplyr::group_by(girl) %>% 
-  dplyr::summarise_at(vars(`Team ball games`:`Other`), sum)
-
-exerciseTypes_girlboy_totals <- exerciseTypes_df %>%
-  dplyr::filter(!is.na(girl)) %>% 
-  dplyr::mutate_at(vars(`Team ball games`:`Other`), funs(replace_na(., 0))) %>% # replace NA's with 0
-  dplyr::group_by(girl) %>% 
-  dplyr::summarise_at(vars(`Team ball games`:`Other`), funs(sum(!is.na(.))))
-
-exerciseTypes_girlboy_pvals <- NA # Empty vector to be filled
-
-for (i in (2:15)) {
-exerciseTypes_girlboy_test <- data.frame(exerciseTypes_girlboy_cases[ , i], exerciseTypes_girlboy_totals[ , i])
-exerciseTypes_girlboy_pvals[i-1] <- prop.test(exerciseTypes_girlboy_test[, 1], exerciseTypes_girlboy_test[, 2])$p.value %>% round(., 5)
-}
-
-```
-Here are the proportions of different sports as reported by participants in different educational tracks:
-
-```{r}
-
-exerciseTypes_proportions %>% t() %>% 
-  DT::datatable() #papaja::apa_table()
-
-```
-
-These are p-values for tests of differences in proportions across the tracks. Remember, that exactly zero differences would be unexpected, so testing the null hypothesis of zero difference isn't very informative. In addition, tests do not take clustering into account, so interpret with care!
-
-```{r}
-
-data.frame("Exercise type" = names(exerciseTypes_df)[1:14], "p-values: educational tracks" = exerciseTypes_pvals) %>% 
-  DT::datatable() #papaja::apa_table()
-
-```
-
-Here are the proportions by gender:
-
-```{r}
-
-exerciseTypes_girlboy_proportions %>% t() %>% 
-  DT::datatable() #papaja::apa_table()
-
-```
-
-These are p-values for tests of differences in proportions across genders. Remember, that exactly zero differences would be unexpected, so testing the null hypothesis of zero difference isn't very informative. In addition, tests do not take clustering into account, so interpret with care!
-
-```{r}
-
-data.frame("Exercise type" = names(exerciseTypes_girlboy_cases)[2:15], "p-values: boys vs. girls" = exerciseTypes_girlboy_pvals)  %>% 
-  DT::datatable() #papaja::apa_table()
-
-```
-
 
 CIBER (not included for now)
 

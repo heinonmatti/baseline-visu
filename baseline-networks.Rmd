@@ -1192,18 +1192,31 @@ bctdf_mgm <- df %>% dplyr::select(
   # 'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
   'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem. 
   'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything(), -contains("-BCTs")) %>% 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', 'BCT usage', everything(), -contains("-BCTs")) %>% 
   mutate_all(as.numeric)
 
 bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA
+
+
+
+# If you need mock data:
+# bctdf_mgm <- data.frame(
+#   'MVPA questionnaire' = sample(1:8, size = 700, replace = TRUE),
+#   'MVPA accelerometer' = rnorm(mean = 130, sd = 40, n = 700),
+#   'BCT usage' = replicate(19, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
+#   'Intrinsic' = replicate(3, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
+#   'Identified' = replicate(3, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
+#   'Introjected' = sample(0:1, 700, rep = TRUE) %>% as.data.frame() %>% rowMeans(.),
+#   'Extrinsic' = sample(0:1, 700, rep = TRUE) %>% as.data.frame() %>% rowMeans(.)
+# )
 
 labs <- names(bctdf_mgm)
 
 # mgm wants full data, see package missForest for imputation methods
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
 bctdf_mgm %>% names()
-mgm_variable_types <- c(rep("g", 4), "c", "c", "g")
-mgm_variable_levels <- c(rep("1", 4), "2", "2", "1")
+mgm_variable_types <- c(rep("g", 5), "c", "c")
+mgm_variable_levels <- c(rep("1", 5), "2", "2")
 data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
@@ -1220,17 +1233,16 @@ pred_obj <- predict(object = mgm_obj,
 pred_obj$errors
 
 # Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1:4, 3],
-                pred_obj$errors[5:6, 4],
-                pred_obj$errors[7, 3])
+pie_errors <- c(pred_obj$errors[1:5, 3],
+                pred_obj$errors[6:7, 4])
 
 # Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
 
 node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
                  viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1), # 1x Color 4 for BCTs
                  rep(viridis::viridis(5, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for autonomous
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 2), # 2x Color 3 for controlled
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1)) # 1x Color 2 for BCTs
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 2)) # 2x Color 3 for controlled
 
 BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
             layout = "spring",
@@ -1244,6 +1256,26 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.cex = 0.8,
             label.scale = FALSE,
             node.width = 1.65)
+
+# adjacency_noAmotivation <- mgm_obj$pairwise$wadj
+# save(adjacency_noAmotivation, file = "./Rdata_files/adjacency_noAmotivation.Rdata")
+# signs_noAmotivation <- mgm_obj$pairwise$signs
+# save(signs_noAmotivation, file = "./Rdata_files/signs_noAmotivation.Rdata")
+
+# BCT_mgm_noAmotivation_stability <- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)
+# save(BCT_mgm_noAmotivation_stability, file = "./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
+load("./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
+
+# # Plotting the bootstrapped edge between variables 1 and 4:
+# hist(BCT_mgm_noAmotivation_stability$bootParameters[1, 4, ],
+# main = "",
+# xlab = "Parameter Estimate")
+
+mgm::plotRes(object = BCT_mgm_noAmotivation_stability, 
+        quantiles = c(.05, .95), 
+        cex.label = 1.25, 
+        lwd.qtl = 2.5, 
+        cex.mean = .5)
 
 ```
 
@@ -1266,7 +1298,7 @@ bctdf_mgm <- df %>% dplyr::select(
   'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
   'Amotivation' = ifelse(`Amotivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
   'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything(), -contains("-BCTs")) %>% 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', 'BCT usage', everything(), -contains("-BCTs")) %>% 
   mutate_all(as.numeric)
 
 bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA
@@ -1276,8 +1308,8 @@ labs <- names(bctdf_mgm)
 # mgm wants full data, see package missForest for imputation methods
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
 bctdf_mgm %>% names()
-mgm_variable_types <- c(rep("g", 4), "c", "c", "c", "g")
-mgm_variable_levels <- c(rep("1", 4), "2", "2", "2", "1")
+mgm_variable_types <- c(rep("g", 5), "c", "c", "c")
+mgm_variable_levels <- c(rep("1", 5), "2", "2", "2")
 data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
@@ -1294,17 +1326,16 @@ pred_obj <- predict(object = mgm_obj,
 pred_obj$errors
 
 # Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1:4, 3],
-                pred_obj$errors[5:7, 4],
-                pred_obj$errors[8, 3])
+pie_errors <- c(pred_obj$errors[1:5, 3],
+                pred_obj$errors[6:8, 4])
 
 # Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
 
 node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
                  viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1), # 1x Color 4 for BCTs
                  rep(viridis::viridis(5, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for autonomous
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 3), # 3x Color 3 for controlled/amotivation
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1)) # 1x Color 2 for BCTs
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 3)) # 3x Color 3 for controlled/amotivation
 
 BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
             layout = "spring",
@@ -1318,6 +1349,16 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.cex = 0.8,
             label.scale = FALSE,
             node.width = 1.65)
+
+# BCT_mgm_withAmotivation_stability <- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)
+# save(BCT_mgm_withAmotivation_stability, file = "./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata")
+load("./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata")
+
+mgm::plotRes(object = BCT_mgm_withAmotivation_stability, 
+        quantiles = c(.05, .95), 
+        cex.label = 1.25, 
+        lwd.qtl = 2.5, 
+        cex.mean = .5)
 
 ```
 
