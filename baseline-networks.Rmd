@@ -10,6 +10,1379 @@ source("baseline-datasetup.R")
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
 
+# Agreement and frequency dependent BCTs with motivation and MVPA
+
+## Combined BCT chunks
+
+This network is featured in the manuscript. 
+
+```{r}
+
+bctdf_mgm <- df %>% dplyr::select(
+  'agr-BCTs' = PA_agrbct_T1,
+  'frq-BCTs' = PA_frqbct_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
+  # 'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', 'BCT usage', everything(), -contains("-BCTs")) %>% 
+  mutate_all(as.numeric)
+
+bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA
+
+
+
+# If you need mock data:
+# bctdf_mgm <- data.frame(
+#   'MVPA questionnaire' = sample(1:8, size = 700, replace = TRUE),
+#   'MVPA accelerometer' = rnorm(mean = 130, sd = 40, n = 700),
+#   'BCT usage' = replicate(19, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
+#   'Intrinsic' = replicate(3, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
+#   'Identified' = replicate(3, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
+#   'Introjected' = sample(0:1, 700, rep = TRUE) %>% as.data.frame() %>% rowMeans(.),
+#   'Extrinsic' = sample(0:1, 700, rep = TRUE) %>% as.data.frame() %>% rowMeans(.)
+# )
+
+labs <- names(bctdf_mgm)
+
+# mgm wants full data, see package missForest for imputation methods
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c(rep("g", 5), "c", "c")
+mgm_variable_levels <- c(rep("1", 5), "2", "2")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1:5, 3],
+                pred_obj$errors[6:7, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1), # 1x Color 4 for BCTs
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for autonomous
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 2)) # 2x Color 3 for controlled
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 1, # To nudge the network from originally bad visual state
+            # title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.8,
+            label.scale = FALSE,
+            node.width = 1.65)
+
+# adjacency_noAmotivation <- mgm_obj$pairwise$wadj
+# save(adjacency_noAmotivation, file = "./Rdata_files/adjacency_noAmotivation.Rdata")
+# signs_noAmotivation <- mgm_obj$pairwise$signs
+# save(signs_noAmotivation, file = "./Rdata_files/signs_noAmotivation.Rdata")
+
+# BCT_mgm_noAmotivation_stability <- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)
+# save(BCT_mgm_noAmotivation_stability, file = "./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
+load("./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
+
+# # Plotting the bootstrapped edge between variables 1 and 4:
+# hist(BCT_mgm_noAmotivation_stability$bootParameters[1, 4, ],
+# main = "",
+# xlab = "Parameter Estimate")
+
+mgm::plotRes(object = BCT_mgm_noAmotivation_stability, 
+        quantiles = c(.05, .95), 
+        cex.label = 1.25, 
+        lwd.qtl = 2.5, 
+        cex.mean = .5)
+
+```
+
+## Correlation network and mixed graphical model compared
+
+```{r network-dataprep, message = FALSE, include = FALSE, warning = FALSE, echo = FALSE}
+
+bctdf_mgm <- df %>% dplyr::select(
+  'agr-BCTs' = PA_agrbct_T1,
+  'frq-BCTs' = PA_frqbct_T1,
+  'MVPA survey' = padaysLastweek_T1,
+  'MVPA accelerom.' = mvpaAccelerometer_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
+  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  dplyr::select('MVPA survey', 'MVPA accelerom.', everything(), -contains("-BCTs")) %>% 
+  mutate_all(as.numeric)
+
+bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA # Taking the mean earlier introduced NaN's instead of NAs. This fixes them.
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.) # Omit cases with missing data; # mgm wants full data. See package missForest for imputation methods.
+# bctdf_mgm %>% names()
+mgm_variable_types <- c(rep("g", 4), "c", "c", "g") # Set variable types; categorical for extrinsic and introjected and otherwise gaussian.
+mgm_variable_levels <- c(rep("1", 4), "2", "2", "1") # Set variable levels; "1" for gaussian, "2" for categorical.
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm)) # Check that the levels and types are correct.
+
+# Estimate the mgm object:
+mgm_obj <- mgm::mgm(data = bctdf_mgm, 
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1:4, 3],
+                pred_obj$errors[5:6, 4],
+                pred_obj$errors[7, 3])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need five colors (MVPA, BCTs, motivation x2 & the circle around nodes indicating predictability), and "begin" from ones that are not too dark, so that black text shows up ok.
+node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 2), # 2x Color 2 for autonomous
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 2), # 2x Color 3 for controlled
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[5], 1)) # 1x Color 2 for BCTs
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.9913, # To nudge the network from originally bad visual state
+            # title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.99)[2],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 1.5,
+            label.scale = FALSE,
+            node.width = 1.65,
+            theme = "colorblind")
+
+corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), graph = "cor",
+              color = node_colors,
+              labels = names(bctdf_mgm),
+              label.cex = 1.5,
+              label.scale = FALSE,
+              node.width = 1.65,
+              edge.labels = TRUE, 
+              title = "bivariate correlation network")
+
+```
+
+```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "A) Mixed graphical model with LASSO regularisation and model selection by cross-validation, B) Bivariate correlation network", echo = FALSE}
+
+averagedLayout <- qgraph::averageLayout(BCT_mgm, corgraph)
+
+layout(t(1:2))
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = averagedLayout,
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.99)[2],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            # label.cex = 1,
+            label.scale = FALSE,
+            # node.width = 1,
+            theme = "colorblind",
+            title = "A)")
+
+corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), 
+              layout = averagedLayout,
+              graph = "cor",
+              color = node_colors,
+              labels = names(bctdf_mgm),
+              # label.cex = 1,
+              label.scale = FALSE,
+              # node.width = 1,
+              edge.labels = TRUE, 
+              title = "B)")
+```
+
+
+```{r}
+
+bctdf_mgm <- df %>% dplyr::select(
+  'agr-BCTs' = PA_agrbct_T1,
+  'frq-BCTs' = PA_frqbct_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1,
+  'Amotivation' = PA_amotivation_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
+  # 'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'Amotivation' = ifelse(`Amotivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', 'BCT usage', everything(), -contains("-BCTs")) %>% 
+  mutate_all(as.numeric)
+
+bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+# mgm wants full data, see package missForest for imputation methods
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c(rep("g", 5), "c", "c", "c")
+mgm_variable_levels <- c(rep("1", 5), "2", "2", "2")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1:5, 3],
+                pred_obj$errors[6:8, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1), # 1x Color 4 for BCTs
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for autonomous
+                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 3)) # 3x Color 3 for controlled/amotivation
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 1, # To nudge the network from originally bad visual state
+            # title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.8,
+            label.scale = FALSE,
+            node.width = 1.65)
+
+# BCT_mgm_withAmotivation_stability <- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)
+# save(BCT_mgm_withAmotivation_stability, file = "./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata")
+load("./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata")
+
+mgm::plotRes(object = BCT_mgm_withAmotivation_stability, 
+        quantiles = c(.05, .95), 
+        cex.label = 1.25, 
+        lwd.qtl = 2.5, 
+        cex.mean = .5)
+
+```
+
+## Individual BCT items
+
+This section presents a Mixed Graphical Model (MGM) and a Gaussian Graphical Model (GGM). In the MGM, we opted to dichotomise the BCTs in order to increase interpretability while not violating model assumptions. Results do not differ very much. Some nodes were still combined, to reduce estimation burden.
+
+```{r allBctsMotiSurveyPA-dataprep}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplation' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+#  'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+#  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+#  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+#  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+#  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+#  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  'social support' = ifelse(`social support` == 1, 0, 1),
+  'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = T),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+#  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
+  dplyr::select(-`log on paper`, -`smartphone`, 
+                # -`plan by other`, -`implementation plan`, 
+                -identified, -intrinsic,
+         -`failure contemplation`, # only concerns those who haven't reached goals
+         -`barrier identification`, -`coping planning`, # closely related
+         -`PA identity`, -`PA life values`) %>% # closely related
+#  dplyr::select(-controlled) %>% # Not really gaussian at all 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
+
+bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+```
+
+#### mgm estimation
+
+```{r allBctsMotiSurveyPA-mgm}
+# devtools::install_github("jmbh/mgm")
+# Restart R for the latest package
+# .r.restartR()
+
+# mgm wants full data, see package missForest for imputation methods
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 15), "g")
+mgm_variable_levels <- c("1", "1", rep("2", 15), "1")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2, 3],
+                pred_obj$errors[3:17, 4],
+                pred_obj$errors[18, 3])
+
+
+```
+
+#### mgm plotting
+
+```{r allBctsMotiSurveyPA-mgm-plot}
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 11), # 11x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)  
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 3), # 3x Color 2 for BCTs
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.9999, # To nudge the network from originally bad visual state
+            title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE)
+
+```
+
+
+### ggm estimation & plotting
+
+```{r allBctsMotiSurveyPA-ggm}
+
+bctdf_ggm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ mutate(
+#  'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
+  'barriers identified or planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE),
+  'identity, life values' = mean(c(`PA identity` == 1, `PA life values`), na.rm = TRUE),
+  'monitoring PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = T)) %>% 
+#  'girl' = ifelse(girl == "girl", 1, 0),
+#  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
+  dplyr::select(-`log on paper`, -`smartphone`, 
+#                -`plan by other`, -`implementation plan`,
+                -identified, -intrinsic,
+         -`failure contemplated`, # only concerns those who haven't reached goals
+         -`barrier identification`, -`coping planning`, # closely related
+         -`PA identity`, -`PA life values`) %>% # closely related
+#  dplyr::select(-controlled) %>% # Not really gaussian at all 
+  dplyr::select("MVPA questionnaire", "MVPA accelerometer", "autonomous motivation", "controlled motivation", everything()) %>% 
+  dplyr::mutate_all(as.numeric)
+
+# Network for all participants
+S.total_ggm <- bctdf_ggm
+nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="EBICglasso")
+
+labs_ggm <- colnames(S.total_ggm)
+
+# Create means for filling nodes
+piefill_ggm <- S.total_ggm %>% 
+  dplyr::select(-contains("MVPA"), -contains("motivation")) %>% data.frame %>% 
+  dplyr::summarise_all(funs(mean(., na.rm = TRUE) /6))
+
+piefill_ggm$`MVPA accelerometer` <- median(S.total_ggm$`MVPA accelerometer`, na.rm = TRUE) / (60 * 24)
+piefill_ggm$`MVPA questionnaire` <- median(S.total_ggm$`MVPA questionnaire`, na.rm = TRUE) / 7
+piefill_ggm$autonomous <- median(S.total_ggm$`autonomous motivation`, na.rm = TRUE) / 5
+piefill_ggm$controlled <- median(S.total_ggm$`controlled motivation`, na.rm = TRUE) / 5
+  
+piefill_ggm <- piefill_ggm %>% 
+  dplyr::select("MVPA questionnaire", "MVPA accelerometer", autonomous, controlled, everything())
+
+# Plot network
+
+BCT_ggm <- plot(nwBCT_ggm, 
+                layout = "spring", 
+                repulsion = 0.99, # To nudge the network from originally bad visual state
+                label.scale = FALSE, 
+                title = "GGM: PA, BCTs & motivation", 
+                label.cex = 0.75,
+                pie = piefill_ggm,
+                color = "skyblue",
+                pieBorder = 1)
+
+
+qgraph::flow(BCT_ggm, "MVPA accelerometer", theme = "colorblind", vsize = 8)
+qgraph::flow(BCT_ggm, "MVPA questionnaire", theme = "colorblind", vsize = 8)
+```
+
+### Centrality and stability
+
+```{r allBctsMotiSurveyPA-ggm-stability}
+
+allBctsMotiSurveyPA <- nwBCT_ggm
+
+allBctsMotiSurveyPA_centralityPlot <- qgraph::centralityPlot(allBctsMotiSurveyPA)
+
+qgraph::centrality(allBctsMotiSurveyPA)$InDegree %>% 
+  data.frame("Node" = names(.), "Strength" = .) %>%
+  dplyr::arrange(desc(Strength)) %>% 
+  papaja::apa_table()
+
+scale(qgraph::centrality(allBctsMotiSurveyPA)$InDegree) %>% 
+  data.frame(Node = labels(.), `Standardised strength` = .) %>%
+  plyr::arrange(desc(`Standardised.strength`)) %>% 
+  papaja::apa_table()
+  
+qgraph::centrality(allBctsMotiSurveyPA)$Closeness %>% data.frame(Closeness = .) %>% papaja::apa_table()
+
+qgraph::centrality(allBctsMotiSurveyPA)$Betweenness %>% data.frame(names(.), .) %>% papaja::apa_table()
+
+cor(qgraph::centrality(allBctsMotiSurveyPA)$InDegree, qgraph::centrality(allBctsMotiSurveyPA)$Betweenness, 
+    method = "spearman") 
+
+# bootnet_stability_allBctsMotiSurveyPA <- bootnet::bootnet(allBctsMotiSurveyPA, nBoots=1000)
+# save(bootnet_stability_allBctsMotiSurveyPA, file = "./Rdata_files/bootnet_stability_allBctsMotiSurveyPA.Rdata")
+load("./Rdata_files/bootnet_stability_allBctsMotiSurveyPA.Rdata")
+
+plot(bootnet_stability_allBctsMotiSurveyPA, labels = FALSE, order = "sample") 
+plot(bootnet_stability_allBctsMotiSurveyPA, labels = FALSE, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
+
+# bootnet_centrality_stability_allBctsMotiSurveyPA <- bootnet::bootnet(allBctsMotiSurveyPA, nBoots=1000,nCores=8, type="case")
+# save(bootnet_centrality_stability_allBctsMotiSurveyPA, file = "./Rdata_files/bootnet_centrality_stability_allBctsMotiSurveyPA.Rdata")
+load("./Rdata_files/bootnet_centrality_stability_allBctsMotiSurveyPA.Rdata")
+
+plot(bootnet_centrality_stability_allBctsMotiSurveyPA)
+plot(bootnet_centrality_stability_allBctsMotiSurveyPA, perNode=T, "strength")
+
+bootnet::corStability(bootnet_centrality_stability_allBctsMotiSurveyPA)
+
+```
+
+## Visually compare ggm and mgm
+
+<!-- TODO -->
+
+```{r pa-bct-motivation-compare-ggm-mgm, eval = FALSE}
+
+layout_mgm_ggm <- qgraph::averageLayout(BCT_ggm, BCT_mgm)
+
+layout(t(1:2))
+
+plot(nwBCT_ggm, layout = layout_mgm_ggm, label.scale = FALSE, title = "GGM: PA, BCTs & motivation", label.cex = 0.75,
+     pie = piefill_ggm,
+     color = "skyblue",
+     pieBorder = 1)
+
+qgraph::qgraph(mgm_obj$pairwise$wadj,
+            layout = layout_mgm_ggm,
+            title = "MGM: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(6, begin = 0.3, end = 0.8)[6],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE)
+
+```
+
+## Correlation and partial correlation networks visualised
+
+As we can see, the bivariate correlation network is uninterpretable due to high number of edges. 
+
+```{r pa-bct-moti-compare-correlation-partialcorrelation}
+
+corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "cor",
+                           repulsion = 0.99,
+       labels = names(bctdf_ggm),
+       edge.labels = TRUE,
+       edge.label.cex = 0.75,
+       label.scale = FALSE,
+       layout = qgraph::averageLayout(BCT_ggm, BCT_mgm), # get the mgm layout 
+       title = "bivariate correlation network",
+       theme = "colorblind",
+       label.cex = 0.75,
+       pie = piefill_ggm,
+       pieBorder = 1,
+       color = "skyblue")
+
+
+pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "pcor",
+                           repulsion = 0.99,
+       labels = names(bctdf_ggm),
+       edge.labels = TRUE,
+       edge.label.cex = 0.75,
+       label.scale = FALSE,
+       layout = qgraph::averageLayout(BCT_ggm, BCT_mgm), # get the mgm layout 
+       title = "Partial correlation network",
+       theme = "colorblind",
+       label.cex = 0.75,
+       pie = piefill_ggm,
+       pieBorder = 1,
+       color = "skyblue")
+
+```
+
+## Correlation matrix visualised
+
+```{r allBctsMotiSurveyPA-corrmatrix, results = "asis"}
+# Create a covariance matrix of the data
+covMatrix <- bctdf_ggm %>% cov(use = "pairwise.complete.obs")
+
+# Transform the matrix so, that lower diagonal of the matrix shows partial correlations,
+# while the upper one shows bivariate correlations.
+matrix_corLower_parcorUpper <- covMatrix %>% ggm::correlations()
+
+# Show the matrix
+matrix_corLower_parcorUpper %>% papaja::apa_table(caption = "Correlation matrix of key variables of interest. Lower diagonal shows bivariate correlations, upper diagonal shows partial correlations")
+
+labs <- names(bctdf_ggm)
+# Plot the matrix as a correlogram
+matrix_corLower_parcorUpper %>% corrgram::corrgram(
+  type = "cor",
+  lower.panel = corrgram::panel.pie,
+  upper.panel = corrgram::panel.pie,
+  outer.labels = list(bottom = list(labels = labs, cex = 0.75, srt = 30),
+                      left = list(labels = labs, cex = 0.75, srt = 30)),
+  main = "Bivariate (upper diagonal) and partial (lower diagonal)\ncorrelations of BCTs, motivation and self-reported PA")
+
+corMatrix_BCTs <- bivariate_BCTs %>% cor(use = "pairwise.complete.obs", method = "spearman")
+
+as.data.frame(as.table(corMatrix_BCTs)) %>% 
+  dplyr::filter(Var1 == "PA accelerometer" | Var1 == "PA self report") %>% 
+  dplyr::mutate("Spearman correlation" = Freq) %>% 
+  dplyr::select(-Freq) %>% 
+  dplyr::filter(`Spearman correlation` != 1) %>% 
+  dplyr::arrange(desc(`Spearman correlation`)) %>% 
+  papaja::apa_table(caption = "Bivariate correlations between BCTs, motivation and self-reported PA. Sorted by strength.")
+
+```
+
+## Cognitive BCTs only, added one at a time
+
+Four BCTs can be categorised as being completely cognitive, i.e. not being observable to an outsider. These are (in order of correlation with accelerometer-measured MVPA:
+
+1. I have attempted to find ways to exercise so, that it won't obstruct but instead helps actualise my other life values.
+2. I have thought about which reasons to do PA are important to me personally.
+3. I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life.
+4. I have thought about how PA fits my identity (self concept).
+
+First, we fit a model with only the first one:
+
+```{r cognitiveBCTs1}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplation' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ dplyr::transmute(
+  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+ 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  # 'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'social support' = ifelse(`social support` == 1, 0, 1),
+  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
+  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
+
+bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 1), "g", "c")
+mgm_variable_levels <- c("1", "1", rep("2", 1), "1", "2")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2, 3],
+                pred_obj$errors[3, 4],
+                pred_obj$errors[4, 3],
+                pred_obj$errors[5, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 1), # 4x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "cognitive/motivational BCTs, PA & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE,
+            vertex.label.dist = 2)
+
+```
+
+Adding the second (I have thought about which reasons to do PA are important to me personally)
+
+```{r cognitiveBCTs2}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplation' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ dplyr::transmute(
+  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+ 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'social support' = ifelse(`social support` == 1, 0, 1),
+  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
+  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
+
+bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 2), "g", "c")
+mgm_variable_levels <- c("1", "1", rep("2", 2), "1", "2")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2, 3],
+                pred_obj$errors[3:4, 4],
+                pred_obj$errors[5, 3],
+                pred_obj$errors[6, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "cognitive/motivational BCTs, PA & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE)
+
+```
+
+Adding the third (I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life)
+
+```{r cognitiveBCTs3}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplation' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ dplyr::transmute(
+  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+ 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'social support' = ifelse(`social support` == 1, 0, 1),
+  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
+  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
+
+bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 3), "g", "c")
+mgm_variable_levels <- c("1", "1", rep("2", 3), "1", "2")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2, 3],
+                pred_obj$errors[3:5, 4],
+                pred_obj$errors[6, 3],
+                pred_obj$errors[7, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 3), # 3x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "cognitive/motivational BCTs, PA & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE)
+
+```
+
+Adding the fourth (I have thought about how PA fits my identity (self concept))
+
+```{r cognitiveBCTs4}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplation' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ dplyr::transmute(
+  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+ 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+ 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'social support' = ifelse(`social support` == 1, 0, 1),
+  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
+  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
+
+bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 4), "g", "c")
+mgm_variable_levels <- c("1", "1", rep("2", 4), "1", "2")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2, 3],
+                pred_obj$errors[3:6, 4],
+                pred_obj$errors[7, 3],
+                pred_obj$errors[8, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 4), # 4x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "cognitive/motivational BCTs, PA & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE)
+
+```
+
+Removing motivation items makes the negative connection between positive consequences and MVPA questionnaire disappear (see following plot). One explanation would be [conditioning on a collider](https://web.archive.org/web/20180807095037/http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/): if both physical activity and thinking about its positive consequences lead to autonomous motivation, this creates a spurious negative link between the two antecedents.
+
+```{r cognitiveBCTs_collider1}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplation' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ dplyr::transmute(
+  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+ 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+ 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'social support' = ifelse(`social support` == 1, 0, 1),
+  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
+  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything()) %>% 
+  dplyr::select(-'autonomous motivation', -'controlled motivation')
+
+# bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 4))
+mgm_variable_levels <- c("1", "1", rep("2", 4))
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2, 3],
+                pred_obj$errors[3:6, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 4)) # 4x Color 2 for BCTs
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "cognitive/motivational BCTs, PA & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE)
+```
+
+Keeping only the three items showing a presumable conditioning on a collider effect, does not lend support for the simple collider hypothesis with these variables.
+
+```{r cognitiveBCTs_collider2}
+bctdf_mgm <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplation' = PA_frqbct_09_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ dplyr::transmute(
+  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+ 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'social support' = ifelse(`social support` == 1, 0, 1),
+  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
+  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
+  dplyr::select('MVPA questionnaire', 'autonomous motivation', 'positive consequences')
+
+bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm)
+
+bctdf_mgm <- bctdf_mgm %>% na.omit(.)
+bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", "c")
+mgm_variable_levels <- c("1", "1", "2")
+data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj <- mgm::mgm(data = bctdf_mgm,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+pred_obj <- predict(object = mgm_obj,
+                         data = bctdf_mgm)
+
+pred_obj$errors
+
+# Take R2 from gaussian, CC from categorical variables 
+pie_errors <- c(pred_obj$errors[1, 3],
+                pred_obj$errors[2, 3],
+                pred_obj$errors[3, 4])
+
+# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3], # Color 3 for motivation (autonomous) 
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[2]) # Color 2 for BCTs
+
+BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            title = "cognitive/motivational BCTs, PA & motivation",
+            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
+            pie = pie_errors,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm),
+            label.cex = 0.75,
+            label.scale = FALSE)
+
+```
+
+
+
 # Exercise types
 
 The first network is an Ising model with all participants. 
@@ -1191,1263 +2564,6 @@ nct_results_top5Bcts$einv.pvals %>%
   papaja::apa_table(caption = "p-values on difference test in edges between Nur and IT")
 
 cat("Number of edges, which appear different (p<0.05):", sum(nct_results$einv.pvals$"p-value" < 0.05))
-
-```
-
-# Agreement and frequency dependent BCTs with motivation and MVPA
-
-## Combined BCT chunks
-
-This network is featured in the manuscript. 
-
-```{r}
-
-bctdf_mgm <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'Intrinsic' = PA_intrinsic_T1,
-  'Identified' = PA_identified_T1,
-  'Introjected' = PA_introjected_T1,
-  'Extrinsic' = PA_extrinsic_T1) %>%
- rowwise() %>% 
- mutate(
-  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
-  # 'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem. 
-  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', 'BCT usage', everything(), -contains("-BCTs")) %>% 
-  mutate_all(as.numeric)
-
-bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA
-
-
-
-# If you need mock data:
-# bctdf_mgm <- data.frame(
-#   'MVPA questionnaire' = sample(1:8, size = 700, replace = TRUE),
-#   'MVPA accelerometer' = rnorm(mean = 130, sd = 40, n = 700),
-#   'BCT usage' = replicate(19, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
-#   'Intrinsic' = replicate(3, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
-#   'Identified' = replicate(3, sample(1:5, 700, rep = TRUE)) %>% as.data.frame() %>% rowMeans(.),
-#   'Introjected' = sample(0:1, 700, rep = TRUE) %>% as.data.frame() %>% rowMeans(.),
-#   'Extrinsic' = sample(0:1, 700, rep = TRUE) %>% as.data.frame() %>% rowMeans(.)
-# )
-
-labs <- names(bctdf_mgm)
-
-# mgm wants full data, see package missForest for imputation methods
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c(rep("g", 5), "c", "c")
-mgm_variable_levels <- c(rep("1", 5), "2", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1:5, 3],
-                pred_obj$errors[6:7, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1), # 1x Color 4 for BCTs
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for autonomous
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 2)) # 2x Color 3 for controlled
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 1, # To nudge the network from originally bad visual state
-            # title = "Mixed graphical model: PA, BCTs & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.8,
-            label.scale = FALSE,
-            node.width = 1.65)
-
-# adjacency_noAmotivation <- mgm_obj$pairwise$wadj
-# save(adjacency_noAmotivation, file = "./Rdata_files/adjacency_noAmotivation.Rdata")
-# signs_noAmotivation <- mgm_obj$pairwise$signs
-# save(signs_noAmotivation, file = "./Rdata_files/signs_noAmotivation.Rdata")
-
-# BCT_mgm_noAmotivation_stability <- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)
-# save(BCT_mgm_noAmotivation_stability, file = "./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
-load("./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
-
-# # Plotting the bootstrapped edge between variables 1 and 4:
-# hist(BCT_mgm_noAmotivation_stability$bootParameters[1, 4, ],
-# main = "",
-# xlab = "Parameter Estimate")
-
-mgm::plotRes(object = BCT_mgm_noAmotivation_stability, 
-        quantiles = c(.05, .95), 
-        cex.label = 1.25, 
-        lwd.qtl = 2.5, 
-        cex.mean = .5)
-
-```
-
-```{r}
-
-bctdf_mgm <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'Intrinsic' = PA_intrinsic_T1,
-  'Identified' = PA_identified_T1,
-  'Introjected' = PA_introjected_T1,
-  'Extrinsic' = PA_extrinsic_T1,
-  'Amotivation' = PA_amotivation_T1) %>%
- rowwise() %>% 
- mutate(
-  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
-  # 'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'Amotivation' = ifelse(`Amotivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', 'BCT usage', everything(), -contains("-BCTs")) %>% 
-  mutate_all(as.numeric)
-
-bctdf_mgm$`BCT usage`[is.nan(bctdf_mgm$`BCT usage`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-# mgm wants full data, see package missForest for imputation methods
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c(rep("g", 5), "c", "c", "c")
-mgm_variable_levels <- c(rep("1", 5), "2", "2", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1:5, 3],
-                pred_obj$errors[6:8, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(5, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[4], 1), # 1x Color 4 for BCTs
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for autonomous
-                 rep(viridis::viridis(5, begin = 0.4, end = 0.99)[3], 3)) # 3x Color 3 for controlled/amotivation
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 1, # To nudge the network from originally bad visual state
-            # title = "Mixed graphical model: PA, BCTs & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.8,
-            label.scale = FALSE,
-            node.width = 1.65)
-
-# BCT_mgm_withAmotivation_stability <- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)
-# save(BCT_mgm_withAmotivation_stability, file = "./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata")
-load("./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata")
-
-mgm::plotRes(object = BCT_mgm_withAmotivation_stability, 
-        quantiles = c(.05, .95), 
-        cex.label = 1.25, 
-        lwd.qtl = 2.5, 
-        cex.mean = .5)
-
-```
-
-## Individual BCT items
-
-This section presents a Mixed Graphical Model (MGM) and a Gaussian Graphical Model (GGM). In the MGM, we opted to dichotomise the BCTs in order to increase interpretability while not violating model assumptions. Results do not differ very much. Some nodes were still combined, to reduce estimation burden.
-
-```{r allBctsMotiSurveyPA-dataprep}
-bctdf_mgm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- mutate(
-  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-#  'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
-  'plan by other' = ifelse(`plan by other` == 1, 0, 1),
-  'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
-  'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-#  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-#  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
-#  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
-#  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-#  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
-  'social support' = ifelse(`social support` == 1, 0, 1),
-  'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = T),
-#  'girl' = ifelse(girl == "girl", 1, 0),
-  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
-#  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
-  dplyr::select(-`log on paper`, -`smartphone`, 
-                # -`plan by other`, -`implementation plan`, 
-                -identified, -intrinsic,
-         -`failure contemplation`, # only concerns those who haven't reached goals
-         -`barrier identification`, -`coping planning`, # closely related
-         -`PA identity`, -`PA life values`) %>% # closely related
-#  dplyr::select(-controlled) %>% # Not really gaussian at all 
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
-
-bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-```
-
-#### mgm estimation
-
-```{r allBctsMotiSurveyPA-mgm}
-# devtools::install_github("jmbh/mgm")
-# Restart R for the latest package
-# .r.restartR()
-
-# mgm wants full data, see package missForest for imputation methods
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c("g", "g", rep("c", 15), "g")
-mgm_variable_levels <- c("1", "1", rep("2", 15), "1")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1, 3],
-                pred_obj$errors[2, 3],
-                pred_obj$errors[3:17, 4],
-                pred_obj$errors[18, 3])
-
-
-```
-
-#### mgm plotting
-
-```{r allBctsMotiSurveyPA-mgm-plot}
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 11), # 11x Color 2 for BCTs
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)  
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 3), # 3x Color 2 for BCTs
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.9999, # To nudge the network from originally bad visual state
-            title = "Mixed graphical model: PA, BCTs & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE)
-
-```
-
-
-### ggm estimation & plotting
-
-```{r allBctsMotiSurveyPA-ggm}
-
-bctdf_ggm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- mutate(
-#  'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
-  'barriers identified or planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE),
-  'identity, life values' = mean(c(`PA identity` == 1, `PA life values`), na.rm = TRUE),
-  'monitoring PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = T)) %>% 
-#  'girl' = ifelse(girl == "girl", 1, 0),
-#  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
-  dplyr::select(-`log on paper`, -`smartphone`, 
-#                -`plan by other`, -`implementation plan`,
-                -identified, -intrinsic,
-         -`failure contemplated`, # only concerns those who haven't reached goals
-         -`barrier identification`, -`coping planning`, # closely related
-         -`PA identity`, -`PA life values`) %>% # closely related
-#  dplyr::select(-controlled) %>% # Not really gaussian at all 
-  dplyr::select("MVPA questionnaire", "MVPA accelerometer", "autonomous motivation", "controlled motivation", everything()) %>% 
-  dplyr::mutate_all(as.numeric)
-
-# Network for all participants
-S.total_ggm <- bctdf_ggm
-nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="EBICglasso")
-
-labs_ggm <- colnames(S.total_ggm)
-
-# Create means for filling nodes
-piefill_ggm <- S.total_ggm %>% 
-  dplyr::select(-contains("MVPA"), -contains("motivation")) %>% data.frame %>% 
-  dplyr::summarise_all(funs(mean(., na.rm = TRUE) /6))
-
-piefill_ggm$`MVPA accelerometer` <- median(S.total_ggm$`MVPA accelerometer`, na.rm = TRUE) / (60 * 24)
-piefill_ggm$`MVPA questionnaire` <- median(S.total_ggm$`MVPA questionnaire`, na.rm = TRUE) / 7
-piefill_ggm$autonomous <- median(S.total_ggm$`autonomous motivation`, na.rm = TRUE) / 5
-piefill_ggm$controlled <- median(S.total_ggm$`controlled motivation`, na.rm = TRUE) / 5
-  
-piefill_ggm <- piefill_ggm %>% 
-  dplyr::select("MVPA questionnaire", "MVPA accelerometer", autonomous, controlled, everything())
-
-# Plot network
-
-BCT_ggm <- plot(nwBCT_ggm, 
-                layout = "spring", 
-                repulsion = 0.99, # To nudge the network from originally bad visual state
-                label.scale = FALSE, 
-                title = "GGM: PA, BCTs & motivation", 
-                label.cex = 0.75,
-                pie = piefill_ggm,
-                color = "skyblue",
-                pieBorder = 1)
-
-
-qgraph::flow(BCT_ggm, "MVPA accelerometer", theme = "colorblind", vsize = 8)
-qgraph::flow(BCT_ggm, "MVPA questionnaire", theme = "colorblind", vsize = 8)
-```
-
-### Centrality and stability
-
-```{r allBctsMotiSurveyPA-ggm-stability}
-
-allBctsMotiSurveyPA <- nwBCT_ggm
-
-allBctsMotiSurveyPA_centralityPlot <- qgraph::centralityPlot(allBctsMotiSurveyPA)
-
-qgraph::centrality(allBctsMotiSurveyPA)$InDegree %>% 
-  data.frame("Node" = names(.), "Strength" = .) %>%
-  dplyr::arrange(desc(Strength)) %>% 
-  papaja::apa_table()
-
-scale(qgraph::centrality(allBctsMotiSurveyPA)$InDegree) %>% 
-  data.frame(Node = labels(.), `Standardised strength` = .) %>%
-  plyr::arrange(desc(`Standardised.strength`)) %>% 
-  papaja::apa_table()
-  
-qgraph::centrality(allBctsMotiSurveyPA)$Closeness %>% data.frame(Closeness = .) %>% papaja::apa_table()
-
-qgraph::centrality(allBctsMotiSurveyPA)$Betweenness %>% data.frame(names(.), .) %>% papaja::apa_table()
-
-cor(qgraph::centrality(allBctsMotiSurveyPA)$InDegree, qgraph::centrality(allBctsMotiSurveyPA)$Betweenness, 
-    method = "spearman") 
-
-# bootnet_stability_allBctsMotiSurveyPA <- bootnet::bootnet(allBctsMotiSurveyPA, nBoots=1000)
-# save(bootnet_stability_allBctsMotiSurveyPA, file = "./Rdata_files/bootnet_stability_allBctsMotiSurveyPA.Rdata")
-load("./Rdata_files/bootnet_stability_allBctsMotiSurveyPA.Rdata")
-
-plot(bootnet_stability_allBctsMotiSurveyPA, labels = FALSE, order = "sample") 
-plot(bootnet_stability_allBctsMotiSurveyPA, labels = FALSE, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
-
-# bootnet_centrality_stability_allBctsMotiSurveyPA <- bootnet::bootnet(allBctsMotiSurveyPA, nBoots=1000,nCores=8, type="case")
-# save(bootnet_centrality_stability_allBctsMotiSurveyPA, file = "./Rdata_files/bootnet_centrality_stability_allBctsMotiSurveyPA.Rdata")
-load("./Rdata_files/bootnet_centrality_stability_allBctsMotiSurveyPA.Rdata")
-
-plot(bootnet_centrality_stability_allBctsMotiSurveyPA)
-plot(bootnet_centrality_stability_allBctsMotiSurveyPA, perNode=T, "strength")
-
-bootnet::corStability(bootnet_centrality_stability_allBctsMotiSurveyPA)
-
-```
-
-## Visually compare ggm and mgm
-
-<!-- TODO -->
-
-```{r pa-bct-motivation-compare-ggm-mgm, eval = FALSE}
-
-layout_mgm_ggm <- qgraph::averageLayout(BCT_ggm, BCT_mgm)
-
-layout(t(1:2))
-
-plot(nwBCT_ggm, layout = layout_mgm_ggm, label.scale = FALSE, title = "GGM: PA, BCTs & motivation", label.cex = 0.75,
-     pie = piefill_ggm,
-     color = "skyblue",
-     pieBorder = 1)
-
-qgraph::qgraph(mgm_obj$pairwise$wadj,
-            layout = layout_mgm_ggm,
-            title = "MGM: PA, BCTs & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(6, begin = 0.3, end = 0.8)[6],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE)
-
-```
-
-## Correlation and partial correlation networks visualised
-
-As we can see, the bivariate correlation network is uninterpretable due to high number of edges. 
-
-```{r pa-bct-moti-compare-correlation-partialcorrelation}
-
-corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "cor",
-                           repulsion = 0.99,
-       labels = names(bctdf_ggm),
-       edge.labels = TRUE,
-       edge.label.cex = 0.75,
-       label.scale = FALSE,
-       layout = qgraph::averageLayout(BCT_ggm, BCT_mgm), # get the mgm layout 
-       title = "bivariate correlation network",
-       theme = "colorblind",
-       label.cex = 0.75,
-       pie = piefill_ggm,
-       pieBorder = 1,
-       color = "skyblue")
-
-
-pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "pcor",
-                           repulsion = 0.99,
-       labels = names(bctdf_ggm),
-       edge.labels = TRUE,
-       edge.label.cex = 0.75,
-       label.scale = FALSE,
-       layout = qgraph::averageLayout(BCT_ggm, BCT_mgm), # get the mgm layout 
-       title = "Partial correlation network",
-       theme = "colorblind",
-       label.cex = 0.75,
-       pie = piefill_ggm,
-       pieBorder = 1,
-       color = "skyblue")
-
-```
-
-## Correlation matrix visualised
-
-```{r allBctsMotiSurveyPA-corrmatrix, results = "asis"}
-# Create a covariance matrix of the data
-covMatrix <- bctdf_ggm %>% cov(use = "pairwise.complete.obs")
-
-# Transform the matrix so, that lower diagonal of the matrix shows partial correlations,
-# while the upper one shows bivariate correlations.
-matrix_corLower_parcorUpper <- covMatrix %>% ggm::correlations()
-
-# Show the matrix
-matrix_corLower_parcorUpper %>% papaja::apa_table(caption = "Correlation matrix of key variables of interest. Lower diagonal shows bivariate correlations, upper diagonal shows partial correlations")
-
-labs <- names(bctdf_ggm)
-# Plot the matrix as a correlogram
-matrix_corLower_parcorUpper %>% corrgram::corrgram(
-  type = "cor",
-  lower.panel = corrgram::panel.pie,
-  upper.panel = corrgram::panel.pie,
-  outer.labels = list(bottom = list(labels = labs, cex = 0.75, srt = 30),
-                      left = list(labels = labs, cex = 0.75, srt = 30)),
-  main = "Bivariate (upper diagonal) and partial (lower diagonal)\ncorrelations of BCTs, motivation and self-reported PA")
-
-corMatrix_BCTs <- bivariate_BCTs %>% cor(use = "pairwise.complete.obs", method = "spearman")
-
-as.data.frame(as.table(corMatrix_BCTs)) %>% 
-  dplyr::filter(Var1 == "PA accelerometer" | Var1 == "PA self report") %>% 
-  dplyr::mutate("Spearman correlation" = Freq) %>% 
-  dplyr::select(-Freq) %>% 
-  dplyr::filter(`Spearman correlation` != 1) %>% 
-  dplyr::arrange(desc(`Spearman correlation`)) %>% 
-  papaja::apa_table(caption = "Bivariate correlations between BCTs, motivation and self-reported PA. Sorted by strength.")
-
-```
-
-## Cognitive BCTs only, added one at a time
-
-Four BCTs can be categorised as being completely cognitive, i.e. not being observable to an outsider. These are (in order of correlation with accelerometer-measured MVPA:
-
-1. I have attempted to find ways to exercise so, that it won't obstruct but instead helps actualise my other life values.
-2. I have thought about which reasons to do PA are important to me personally.
-3. I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life.
-4. I have thought about how PA fits my identity (self concept).
-
-First, we fit a model with only the first one:
-
-```{r cognitiveBCTs1}
-bctdf_mgm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- dplyr::transmute(
-  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
-  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
-  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
-  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  # 'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
-  # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-#  'girl' = ifelse(girl == "girl", 1, 0),
-  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
-  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
-
-bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c("g", "g", rep("c", 1), "g", "c")
-mgm_variable_levels <- c("1", "1", rep("2", 1), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1, 3],
-                pred_obj$errors[2, 3],
-                pred_obj$errors[3, 4],
-                pred_obj$errors[4, 3],
-                pred_obj$errors[5, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 1), # 4x Color 2 for BCTs
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "cognitive/motivational BCTs, PA & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE,
-            vertex.label.dist = 2)
-
-```
-
-Adding the second (I have thought about which reasons to do PA are important to me personally)
-
-```{r cognitiveBCTs2}
-bctdf_mgm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- dplyr::transmute(
-  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
-  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
-  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
-  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
-  # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-#  'girl' = ifelse(girl == "girl", 1, 0),
-  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
-  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
-
-bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c("g", "g", rep("c", 2), "g", "c")
-mgm_variable_levels <- c("1", "1", rep("2", 2), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1, 3],
-                pred_obj$errors[2, 3],
-                pred_obj$errors[3:4, 4],
-                pred_obj$errors[5, 3],
-                pred_obj$errors[6, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 2), # 2x Color 2 for BCTs
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "cognitive/motivational BCTs, PA & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE)
-
-```
-
-Adding the third (I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life)
-
-```{r cognitiveBCTs3}
-bctdf_mgm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- dplyr::transmute(
-  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
-  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
-  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
-  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
-  # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-#  'girl' = ifelse(girl == "girl", 1, 0),
-  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
-  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
-
-bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c("g", "g", rep("c", 3), "g", "c")
-mgm_variable_levels <- c("1", "1", rep("2", 3), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1, 3],
-                pred_obj$errors[2, 3],
-                pred_obj$errors[3:5, 4],
-                pred_obj$errors[6, 3],
-                pred_obj$errors[7, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 3), # 3x Color 2 for BCTs
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "cognitive/motivational BCTs, PA & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE)
-
-```
-
-Adding the fourth (I have thought about how PA fits my identity (self concept))
-
-```{r cognitiveBCTs4}
-bctdf_mgm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- dplyr::transmute(
-  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
-  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
-  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
-  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
-  # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-#  'girl' = ifelse(girl == "girl", 1, 0),
-  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
-  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
-
-bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c("g", "g", rep("c", 4), "g", "c")
-mgm_variable_levels <- c("1", "1", rep("2", 4), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1, 3],
-                pred_obj$errors[2, 3],
-                pred_obj$errors[3:6, 4],
-                pred_obj$errors[7, 3],
-                pred_obj$errors[8, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 4), # 4x Color 2 for BCTs
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "cognitive/motivational BCTs, PA & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE)
-
-```
-
-Removing motivation items makes the negative connection between positive consequences and MVPA questionnaire disappear (see following plot). One explanation would be [conditioning on a collider](https://web.archive.org/web/20180807095037/http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/): if both physical activity and thinking about its positive consequences lead to autonomous motivation, this creates a spurious negative link between the two antecedents.
-
-```{r cognitiveBCTs_collider1}
-bctdf_mgm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- dplyr::transmute(
-  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
-  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
-  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
-  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
-  # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-#  'girl' = ifelse(girl == "girl", 1, 0),
-  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
-  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
-  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything()) %>% 
-  dplyr::select(-'autonomous motivation', -'controlled motivation')
-
-# bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c("g", "g", rep("c", 4))
-mgm_variable_levels <- c("1", "1", rep("2", 4))
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1, 3],
-                pred_obj$errors[2, 3],
-                pred_obj$errors[3:6, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
-                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 4)) # 4x Color 2 for BCTs
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "cognitive/motivational BCTs, PA & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE)
-```
-
-Keeping only the three items showing a presumable conditioning on a collider effect, does not lend support for the simple collider hypothesis with these variables.
-
-```{r cognitiveBCTs_collider2}
-bctdf_mgm <- df %>% dplyr::select(
-#  id,
-#  intervention,
-#  group,
-#  school,
-#  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
-  'MVPA questionnaire' = padaysLastweek_T1,
-  'MVPA accelerometer' = mvpaAccelerometer_T1,
-  'intrinsic' = PA_intrinsic_T1,
-  'identified' = PA_identified_T1,
-  'controlled motivation' = PA_controlled_T1) %>%
- rowwise() %>% 
- dplyr::transmute(
-  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
-  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
-  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
-  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
-  # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
-  'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
-#  'girl' = ifelse(girl == "girl", 1, 0),
-  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
-  'MVPA questionnaire' = `MVPA questionnaire` * 1, 
-  'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
-  dplyr::select('MVPA questionnaire', 'autonomous motivation', 'positive consequences')
-
-bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
-
-labs <- names(bctdf_mgm)
-
-bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
-mgm_variable_types <- c("g", "g", "c")
-mgm_variable_levels <- c("1", "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
-
-mgm_obj <- mgm::mgm(data = bctdf_mgm,
-  type = mgm_variable_types,
-  level = mgm_variable_levels,
-  lambdaSel = "CV",
-  lambdaFolds = 10,
-  pbar = FALSE, 
-  binarySign = TRUE)
-
-pred_obj <- predict(object = mgm_obj,
-                         data = bctdf_mgm)
-
-pred_obj$errors
-
-# Take R2 from gaussian, CC from categorical variables 
-pie_errors <- c(pred_obj$errors[1, 3],
-                pred_obj$errors[2, 3],
-                pred_obj$errors[3, 4])
-
-# Coloring nodes: make a sequence of colors from the viridis palette. We need three colors (MVPA, BCTs, motivation), and "begin" from ones that are not too dark, so that black text shows up ok.
-
-node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[3], # Color 3 for motivation (autonomous) 
-                 viridis::viridis(3, begin = 0.4, end = 0.99)[2]) # Color 2 for BCTs
-
-BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "cognitive/motivational BCTs, PA & motivation",
-            edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
-            color = node_colors,
-            labels = names(bctdf_mgm),
-            label.cex = 0.75,
-            label.scale = FALSE)
 
 ```
 
