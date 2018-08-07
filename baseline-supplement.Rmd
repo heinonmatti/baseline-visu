@@ -678,7 +678,7 @@ plot1
 
 ### Density plot by track
 
-```{r weartime-accelerometer-plot}
+```{r weartime-accelerometer-plot, fig.cap = "Accelerometer wear time. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
@@ -1132,7 +1132,7 @@ plot1
 
 ### Density plot by track
 
-```{r MVPA-accelerometer-plot}
+```{r MVPA-accelerometer-plot, fig.cap = "Accelerometer-measured MVPA. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
@@ -1258,6 +1258,8 @@ plot2 <- plot2 +
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15))
+
+plot1 + plot2
 
 MVPAplot <- (plot1 + plot2)
 
@@ -1454,9 +1456,12 @@ plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis 
 text(x = 1.02, y = 1.3, labels = "Self-reported number of days with >30 MVPA min previous week", pos = 1)
 ```
 
+From the figure, we can see that there were more boys reporting a high number of MVPA days, and fewer boys reported low numbers. 
+This effect was consistent among educational tracks. Boys and girls, as well as different educational tracks, differed largely in the types of PA they reported having engaged in during the previous month (see tab Tables and Estimators, at "Types of self-reported exercise").
+
 ### Density plot by track
 
-```{r padaysLastweek-densityplot}
+```{r padaysLastweek-densityplot, fig.cap = "Self-reported number of days with > 30 MVPA min previous week. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
@@ -1830,6 +1835,8 @@ hist_padaysLastweek_intervention_density <- df %>% dplyr::select(id,
 hist_padaysLastweek_intervention_count + hist_padaysLastweek_intervention_density
 ```
 
+The number of days participants reported doing PA on, suggested a different picture of difference between genders in activity. Boys reported being more active in all but the IT track. The effect is also shown in the following variable on self-reported MVPA time.
+
 ## Self-reported MVPA time
 
 This question was "During the last 7 days, how many hours of the previously described [i.e. moderate-to-vigorous] physical activity was accumulated during your free time? Give your answer to the nearest 30 minutes." The answer was given by inputing hours and minutes, the latter field allowing for either zero or 30 minutes to be inputed.
@@ -2120,7 +2127,7 @@ plot1
 
 ### Density plot by track
 
-```{r nordpaq_alternative_item-accelerometer-plot}
+```{r nordpaq_alternative_item-accelerometer-plot, fig.cap = "Self-reported minutes of MVPA during the previous week. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
@@ -2441,7 +2448,7 @@ text(x = 1.02, y = 1.3, labels = "Average number of breaks in daily sitting", po
 
 ### Density plot by track
 
-```{r sitBreaksAccelerometer-densityplot}
+```{r sitBreaksAccelerometer-densityplot, fig.cap = "Breaks in sedentary time. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
@@ -2572,6 +2579,8 @@ plot1 + plot2
 
 ```
 
+Girls in all educational tracks interrupted sitting more than boys.
+
 ## SB, Accelerometer-measured
 
 ### Density plot by intervention and gender
@@ -2634,6 +2643,8 @@ plot(1, 1, type = "n", frame.plot = FALSE, axes = FALSE) # Fake plot for x-axis 
 text(x = 1.02, y = 1.3, labels = "Average daily hours spent sitting or lying down", pos = 1)
 ```
 
+Differences in time spent sitting and lying down emerged between boys and girls, the former spending more time being sedentary. Even though there was some heterogeneity among schools, again the aggregated intervention and control schools showed no differences.
+ 
 ### Data preparation {.tabset}
 
 #### Description
@@ -2811,7 +2822,7 @@ df %>% dplyr::select(sitLieAccelerometer_T1, intervention, track) %>%
 
 Time spent sitting or lying down
 
-```{r sitLie-accelerometer-plot}
+```{r sitLie-accelerometer-plot, fig.cap = "Average time spent sitting or lying down during a day. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               track = track,
@@ -2941,6 +2952,8 @@ plot2 <- plot2 +
 plot1 + plot2
 
 ```
+
+Breaking the distributions down by tracks, this is what we see: boys are more sedentary in all groups, but the IT group--which consists of mostly boys--is also most sedentary regardless of gender. Distributions between intervention and control groups exhibit some differences, but the most pronounced one can be seen in the HRC track.
 
 <!-- Check for plot correctness -->
 
