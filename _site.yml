@@ -25,7 +25,7 @@ navbar:
     href: baseline-tables.html
   - text: Descriptive plots
     href: baseline-supplement.html
-  - text: Networks
+  - text: Networks and correlations
     href: baseline-networks.html
   - text: Data setup code
     href: https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R

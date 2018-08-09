@@ -46,7 +46,7 @@ Use of BCTs was assessed by asking whether the participants had engaged in them 
 
 *Agreement-dependent BCTs.* 
 
-Agreement-dependent BCTs were asked with the lead "Have you done the following during the last three weeks?". The response scale ranged from 0 = not at all true to 5 = completely true. Items are as follows: 
+Agreement-dependent BCTs were asked with the lead "Have you done the following during the last three weeks?". The response scale ranged from 1 = not at all true to 6 = completely true. Items are as follows: 
 
 1. I have set PA goals for myself.  
 2. I have personally made a specific plan ("what, where, how") to implement my PA.  
@@ -61,7 +61,7 @@ Agreement-dependent BCTs were asked with the lead "Have you done the following d
 
 *Frequency-dependent BCTs.* 
 
-The answer scale for frequency-dependent BCTs was as follows: 0 = not once, 1 = once, 2 = twice, 3 = weekly, 4 = about every second day, 5 = daily. Items are as follows: 
+The answer scale for frequency-dependent BCTs was as follows: 1 = not once, 2 = once, 3 = twice, 4 = weekly, 5 = about every second day, 6 = daily. Items are as follows: 
 
 1. I have reminded myself in my spare time what kind of positive consequences frequent PA would have in my life.
 2. I have monitored my PA by marking the PA occasions on an exercise log on paper.
@@ -3056,6 +3056,8 @@ ggstatsplot::ggscatterstats(data = na.omit(dplyr::select(lmi, LiikuntaT1_ka, Kys
 
 ## PA motivation
 
+The participants in control and intervention groups, as well as boys and girls, reported on PA motivation similarly. Averages describe the variables poorly, as autonomous motivation is relatively flat and the two others are skewed. 
+
 ```{r motivation-histograms-gender-intervention}
 regulations.df <- df %>% dplyr::select(
   id,
@@ -3084,7 +3086,7 @@ regulations.df <- df %>% dplyr::select(
 
 
 motiGirls <- regulations.df %>%
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(girl == "girl") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3102,7 +3104,7 @@ motiGirls <- regulations.df %>%
 coord_cartesian(xlim = c(0.5, 5.5))
 
 motiBoys <- regulations.df %>%
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(girl == "boy") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3120,7 +3122,7 @@ motiBoys <- regulations.df %>%
 coord_cartesian(xlim = c(0.5, 5.5))
 
 motiInt <- regulations.df %>% 
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(intervention == "1") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3133,11 +3135,12 @@ motiInt <- regulations.df %>%
   ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
 coord_cartesian(xlim = c(0.5, 5.5))
 
 motiCont <- regulations.df %>% 
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(intervention == "0") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3150,6 +3153,7 @@ motiCont <- regulations.df %>%
   ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
 coord_cartesian(xlim = c(0.5, 5.5))
 
@@ -3184,7 +3188,7 @@ regulations.df_tracks <- df %>% dplyr::select(
 
 
 motiNUR <- regulations.df_tracks %>%
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(track == "Nur") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3202,7 +3206,7 @@ motiNUR <- regulations.df_tracks %>%
 coord_cartesian(xlim = c(0.5, 5.5))
 
 motiHRC <- regulations.df_tracks %>%
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(track == "HRC") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3220,7 +3224,7 @@ motiHRC <- regulations.df_tracks %>%
 coord_cartesian(xlim = c(0.5, 5.5))
 
 motiBA <- regulations.df_tracks %>% 
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(track == "BA") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3233,11 +3237,12 @@ motiBA <- regulations.df_tracks %>%
   ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
 coord_cartesian(xlim = c(0.5, 5.5))
 
 motiIT <- regulations.df_tracks %>% 
- tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
+ tidyr::gather(key = Variable, value = Value, PA_amotivation_02_T1:ncol(.)) %>%
   filter(track == "IT") %>% 
  ggplot(aes(x = Value, y = Variable, group = Variable)) +
   ggridges::geom_density_ridges2(aes(fill = Variable), stat = "binline", binwidth = 1, scale = 0.95) +
@@ -3250,6 +3255,7 @@ motiIT <- regulations.df_tracks %>%
   ggridges::theme_ridges(grid = FALSE) +
   theme(axis.title.x = element_text(hjust = 0.5),
         axis.title.y = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
         axis.text=element_text(size=10)) +
 coord_cartesian(xlim = c(0.5, 5.5))
 
@@ -3260,7 +3266,7 @@ motiNUR + motiHRC + motiBA + motiIT + plot_layout(nrow = 1)
 
 ```
 
-```{r pa-determinants-motivation}
+```{r pa-determinants-motivation, fig.cap = "Motivational regulations with means and CIs. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
   intervention,
@@ -4158,7 +4164,9 @@ plot1 + plot2
 
 ## PA psychosocial mediators
 
-```{r densityplot-intention-oexp-pbc-se-opp-norms}
+The sample had generally a high intention for physical activity, as well as positive outcome expectations, perceived behavioural control, self-efficacy and opportunities. Norms were distributed more flatly. Differences between girls and boys were most pronounced in perceived behavioral control, where girls indicated lower values than boys. As visual inspection indicates, this effect is not very large.
+
+```{r densityplot-intention-oexp-pbc-se-opp-norms, fig.cap = "Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               intervention,
@@ -4745,7 +4753,7 @@ meansplot_df %>%
 
 We see that, for example, `r ((middleprobs(0.35, 0.65) / 706) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
 
-CIBER (not included for now)
+<!-- CIBER (not included for now) -->
 
 ```{r, eval = FALSE}
 #p_install("userfriendlyscience")

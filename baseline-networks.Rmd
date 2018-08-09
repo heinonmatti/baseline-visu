@@ -12,9 +12,15 @@ Clicking the "Code"-buttons on the right shows code for each chunk.
 
 # Agreement and frequency dependent BCTs with motivation and MVPA
 
-## Combined BCT chunks
+## Combined BCT chunks {.tabset}
 
-This network is featured in the manuscript. 
+The following network depicts a mixed graphical model, with the following variables:
+
+- Two measures of physical activity. `MVPA accelerometer` is the mean accelerometer-measured Moderate-to-Vigorous Physical Activity (MVPA) during a day in the measurement period, `MVPA questionnaire` is a survey item which asked "on how many days the previous week were you active for at least 30 minutes so, that you were out of breath". 
+
+- One Behaviour Change Technique usage node (BCT usage is the mean of all techniques participants reported having used).
+
+- Four motivation types (Intrinsic and Identified, which are facets of "autonomous regulation" according to the self-determination theory, looked normal so used as continuous. Introjected and Extrinsic - facets of "controlled regulation" - were heavily skewed, so they were dichotomised: if "at least partly" or more true, a participant gets 1, otherwise 0.
 
 ```{r}
 
@@ -55,10 +61,10 @@ labs <- names(bctdf_mgm)
 
 # mgm wants full data, see package missForest for imputation methods
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c(rep("g", 5), "c", "c")
 mgm_variable_levels <- c(rep("1", 5), "2", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -114,11 +120,14 @@ load("./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
 
 mgm::plotRes(object = BCT_mgm_noAmotivation_stability, 
         quantiles = c(.05, .95), 
-        cex.label = 1.25, 
+        cex.label = 0.5,
         lwd.qtl = 2.5, 
-        cex.mean = .5)
+        cex.mean = .5,
+        labels = names(bctdf_mgm))
 
 ```
+
+The bootstrap stability plot above shows the proportion of re-samples, which contain a non-zero link between two edges (for a tutorial, see [this link](http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/) -- or, if it's down, this [archived page](https://web.archive.org/web/20180809113839/http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/)). For example, when we draw observations from the current sample with replacement a 100 times, 99% of these times a non-zero link between questionnaire-measured MVPA and intrinsic motivation is estimated.
 
 ## Correlation network and mixed graphical model compared
 
@@ -191,6 +200,17 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             node.width = 1.65,
             theme = "colorblind")
 
+# Make a sequence of numers, to be used as a pie chart in nodes, to depict mean:
+piefill <- bctdf_mgm %>% 
+  dplyr::summarise_all(funs(mean)) %>% 
+  dplyr::mutate('MVPA survey' = `MVPA survey` / 7,
+                'MVPA accelerom.' = `MVPA accelerom.` / mean(df$weartimeAccelerometer_T1, na.rm = TRUE),
+                'Intrinsic' = `Intrinsic` / 5,
+                'Identified' = `Identified` / 5,
+                'Introjected' = `Introjected` / 1, # already a proportion
+                'Extrinsic' = `Extrinsic` / 1,
+                'BCT usage' = `BCT usage` / 6) 
+
 corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), graph = "cor",
               color = node_colors,
               labels = names(bctdf_mgm),
@@ -224,7 +244,9 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), 
               layout = averagedLayout,
               graph = "cor",
-              color = node_colors,
+              pie = piefill,
+              pieBorder = 1,
+              nodeColor = node_colors,
               labels = names(bctdf_mgm),
               # label.cex = 1,
               label.scale = FALSE,
@@ -233,6 +255,7 @@ corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm),
               title = "B)")
 ```
 
+The "last motivation type", i.e. the fifth, is Amotivation (dichotomised due to skew). A node for that is added in the network below:
 
 ```{r}
 
@@ -262,10 +285,10 @@ labs <- names(bctdf_mgm)
 
 # mgm wants full data, see package missForest for imputation methods
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c(rep("g", 5), "c", "c", "c")
 mgm_variable_levels <- c(rep("1", 5), "2", "2", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -316,6 +339,83 @@ mgm::plotRes(object = BCT_mgm_withAmotivation_stability,
         cex.mean = .5)
 
 ```
+
+Theory-wise, Amotivation should be negatively correlated with everything but Extrinsic and Introjected. Given that BCT usage is 19 items, there are probably a lot of ways there can be a positive correlation, although that would be unexpected. But the positive relation with MVPA questionnaire would mean, that people who report having done physical activity on more days last week, would also say they don't see any point in doing physical activity (another example item: I think exercising is a waste of time).  One explanation would be some form of [conditioning on a collider](https://web.archive.org/web/20180807095037/http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/).
+
+One option would be, that (as the model drops incomplete observations), there is some selection effects based on motivation types and/or BCT usage. To check for this, we estimate a Gaussian Graphical Model, which assumes normally distributed data but uses all observations.
+
+```{r selection-collider-check-ggm}
+bctdf_ggm <- df %>% dplyr::select(
+  'agr-BCTs' = PA_agrbct_T1,
+  'frq-BCTs' = PA_frqbct_T1,
+  'MVPA questionnaire' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'Intrinsic' = PA_intrinsic_T1,
+  'Identified' = PA_identified_T1,
+  'Introjected' = PA_introjected_T1,
+  'Extrinsic' = PA_extrinsic_T1,
+  'Amotivation' = PA_amotivation_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'BCT usage' = mean(c(`agr-BCTs`, `frq-BCTs`), na.rm = TRUE),
+  # 'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
+  'Extrinsic' = ifelse(`Extrinsic` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'Amotivation' = ifelse(`Amotivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
+  'Introjected' = ifelse(`Introjected` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+  dplyr::select('MVPA questionnaire', 'MVPA accelerometer', 'BCT usage', everything(), -contains("-BCTs")) %>% 
+  mutate_all(as.numeric)
+
+bctdf_ggm$`BCT usage`[is.nan(bctdf_ggm$`BCT usage`)] <- NA
+
+# Network for all participants
+S.total_ggm <- bctdf_ggm
+nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="EBICglasso")
+
+labs_ggm <- colnames(S.total_ggm)
+
+# Create means for filling nodes
+# piefill_ggm <- S.total_ggm %>% 
+#   dplyr::select(-contains("MVPA"), -contains("motivation")) %>% data.frame %>% 
+#   dplyr::summarise_all(funs(mean(., na.rm = TRUE) /6))
+# 
+# piefill_ggm$`MVPA accelerometer` <- median(S.total_ggm$`MVPA accelerometer`, na.rm = TRUE) / (60 * 24)
+# piefill_ggm$`MVPA questionnaire` <- median(S.total_ggm$`MVPA questionnaire`, na.rm = TRUE) / 7
+# piefill_ggm$autonomous <- median(S.total_ggm$`autonomous motivation`, na.rm = TRUE) / 5
+# piefill_ggm$controlled <- median(S.total_ggm$`controlled motivation`, na.rm = TRUE) / 5
+#   
+# piefill_ggm <- piefill_ggm %>% 
+#   dplyr::select("MVPA questionnaire", "MVPA accelerometer", autonomous, controlled, everything())
+
+# Plot network
+
+BCT_ggm <- plot(nwBCT_ggm, 
+                layout = "spring", 
+                repulsion = 0.99, # To nudge the network from originally bad visual state
+                label.scale = FALSE, 
+                title = "GGM: PA, BCTs & motivation", 
+                label.cex = 0.75,
+                # pie = piefill_ggm,
+                color = "skyblue",
+                pieBorder = 1)
+
+
+qgraph::flow(BCT_ggm, "MVPA accelerometer", theme = "colorblind", vsize = 8)
+qgraph::flow(BCT_ggm, "MVPA questionnaire", theme = "colorblind", vsize = 8)
+
+```
+
+From the network above, we see that the positive connection between amotivation and questionnaire-measured MVPA has almost completely disappered. Bootstrapping to inspect stability shows, that the connection is likely to be zero (see 13th edge from the bottom; "MVPA questionnaire--Amotivation"). 
+
+```{r stability}
+
+# collider_boot <- bootnet(nwBCT_ggm, nBoots = 2500)
+# save(collider_boot, file = "./Rdata_files/collider_boot.Rdata")
+load("./Rdata_files/collider_boot.Rdata")
+plot(collider_boot, plot = "interval", split0 = TRUE, order = "sample", labels = TRUE)
+
+```
+
+The bootstrap stability plot above (for a tutorial, see [this link](http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/) -- or, if it's down, this [archived page](https://web.archive.org/web/20180809113839/http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/)) shows, that when we draw observations from the sample with replacement 2500 times, the connection between amotivation and questionnaire-measured MVPA was estimated as non-zero only about 30% of time.
 
 ## Individual BCT items
 
@@ -403,10 +503,10 @@ labs <- names(bctdf_mgm)
 
 # mgm wants full data, see package missForest for imputation methods
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c("g", "g", rep("c", 15), "g")
 mgm_variable_levels <- c("1", "1", rep("2", 15), "1")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -589,7 +689,7 @@ bootnet::corStability(bootnet_centrality_stability_allBctsMotiSurveyPA)
 
 ```
 
-## Visually compare ggm and mgm
+<!-- ## Visually compare ggm and mgm -->
 
 <!-- TODO -->
 
@@ -657,6 +757,35 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "pcor",
 ## Correlation matrix visualised
 
 ```{r allBctsMotiSurveyPA-corrmatrix, results = "asis"}
+
+bivariate_BCTs <- df %>% dplyr::select(
+  'goal setting' = PA_agrbct_01_T1,
+  'implementation plan' = PA_agrbct_02_T1,
+  'plan by other' = PA_agrbct_03_T1,
+  'reminder of plan' = PA_agrbct_04_T1,
+  'subgoals' = PA_agrbct_05_T1,
+  'new PA options' = PA_agrbct_06_T1,
+  'barrier identification' = PA_agrbct_07_T1,
+  'coping planning' = PA_agrbct_08_T1,
+  'PA identity' = PA_agrbct_09_T1,
+  'PA life values' = PA_agrbct_10_T1,
+  'positive consequences' = PA_frqbct_01_T1,
+  'log on paper' = PA_frqbct_02_T1,
+  'smartphone' = PA_frqbct_03_T1,
+  'mnemonic cues' = PA_frqbct_04_T1,
+  'goal contrast' = PA_frqbct_05_T1,
+  'relevance of PA' = PA_frqbct_06_T1,
+  'changes at home' = PA_frqbct_07_T1,
+  'social support' = PA_frqbct_08_T1,
+  'failure contemplated' = PA_frqbct_09_T1,
+  'PA accelerometer' = mvpaAccelerometer_T1,
+  'PA self-report' = padaysLastweek_T1,
+  'autonomous' = PA_autonomous_T1,
+  'controlled' = PA_controlled_T1) %>%
+ rowwise() %>% 
+  dplyr::select(`PA accelerometer`, `PA self-report`, autonomous, controlled, everything()) %>% 
+  mutate_all(as.numeric)
+
 # Create a covariance matrix of the data
 covMatrix <- bctdf_ggm %>% cov(use = "pairwise.complete.obs")
 
@@ -766,10 +895,10 @@ bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- 
 labs <- names(bctdf_mgm)
 
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c("g", "g", rep("c", 1), "g", "c")
 mgm_variable_levels <- c("1", "1", rep("2", 1), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -814,7 +943,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 ```
 
-Adding the second (I have thought about which reasons to do PA are important to me personally)
+Adding the second (I have thought about which reasons to do PA are important to me personally):
 
 ```{r cognitiveBCTs2}
 bctdf_mgm <- df %>% dplyr::select(
@@ -882,10 +1011,10 @@ bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- 
 labs <- names(bctdf_mgm)
 
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c("g", "g", rep("c", 2), "g", "c")
 mgm_variable_levels <- c("1", "1", rep("2", 2), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -929,7 +1058,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 ```
 
-Adding the third (I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life)
+Adding the third (I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life):
 
 ```{r cognitiveBCTs3}
 bctdf_mgm <- df %>% dplyr::select(
@@ -997,10 +1126,10 @@ bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- 
 labs <- names(bctdf_mgm)
 
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c("g", "g", rep("c", 3), "g", "c")
 mgm_variable_levels <- c("1", "1", rep("2", 3), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -1044,7 +1173,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 ```
 
-Adding the fourth (I have thought about how PA fits my identity (self concept))
+Adding the fourth (I have thought about how PA fits my identity (self concept)):
 
 ```{r cognitiveBCTs4}
 bctdf_mgm <- df %>% dplyr::select(
@@ -1112,10 +1241,10 @@ bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- 
 labs <- names(bctdf_mgm)
 
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c("g", "g", rep("c", 4), "g", "c")
 mgm_variable_levels <- c("1", "1", rep("2", 4), "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -1159,7 +1288,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 ```
 
-Removing motivation items makes the negative connection between positive consequences and MVPA questionnaire disappear (see following plot). One explanation would be [conditioning on a collider](https://web.archive.org/web/20180807095037/http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/): if both physical activity and thinking about its positive consequences lead to autonomous motivation, this creates a spurious negative link between the two antecedents.
+Next: Removing motivation items makes the negative connection between positive consequences and MVPA questionnaire disappear (see following plot). One explanation would be [conditioning on a collider](https://web.archive.org/web/20180807095037/http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/): if both physical activity and thinking about its positive consequences lead to autonomous motivation, this creates a spurious negative link between the two antecedents.
 
 ```{r cognitiveBCTs_collider1}
 bctdf_mgm <- df %>% dplyr::select(
@@ -1228,10 +1357,10 @@ bctdf_mgm <- df %>% dplyr::select(
 labs <- names(bctdf_mgm)
 
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c("g", "g", rep("c", 4))
 mgm_variable_levels <- c("1", "1", rep("2", 4))
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -1338,10 +1467,10 @@ bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- 
 labs <- names(bctdf_mgm)
 
 bctdf_mgm <- bctdf_mgm %>% na.omit(.)
-bctdf_mgm %>% names()
+# bctdf_mgm %>% names()
 mgm_variable_types <- c("g", "g", "c")
 mgm_variable_levels <- c("1", "1", "2")
-data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
 
 mgm_obj <- mgm::mgm(data = bctdf_mgm,
   type = mgm_variable_types,
@@ -1380,8 +1509,6 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.scale = FALSE)
 
 ```
-
-
 
 # Exercise types
 
@@ -1444,7 +1571,8 @@ exerciseTypes_ising <- plot(
 
 ```
 
-Same network, but estimated with mgm
+Same network, but estimated with mgm:
+
 ```{r exercisetypes-mgm}
 
 exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
@@ -1527,6 +1655,8 @@ exerciseTypes_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 ```
 
+Below, we average the layout and plot these networks side-by-side for comparison.
+
 ```{r exercisetypes-comparison}
 avglayout <- averageLayout(exerciseTypes_mgm, exerciseTypes_ising)
 
@@ -1559,7 +1689,9 @@ exerciseTypes_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 ```
 
-```{r exercisetypes-mgm-CV, fig.cap = "Model selection with cross-validation"}
+Graph below includes the moderate-to-vigorous physical activity measures, and shows a mixed graphical model with model selection done by cross-validation.
+
+```{r exercisetypes-mgm-CV}
 
 exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
   dplyr::select(contains(".1")) %>% 
@@ -1641,24 +1773,12 @@ exerciseTypes_mgm_withMeasures <- qgraph::qgraph(mgm_obj_CV$pairwise$wadj,
             label.scale = FALSE,
             label.color = c(rep("black", 15)))
 
-exerciseTypes_mgm_withMeasures <- qgraph::qgraph(mgm_obj_CV$pairwise$wadj, 
-            layout = "spring",
-            repulsion = 0.99, # To nudge the network from originally bad visual state
-            title = "Mixed graphical model: Types of reported physical activity and their relations to measured MVPA",
-            edge.color = ifelse(mgm_obj_CV$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_CV$pairwise$edgecolor),
-            pie = pie_errors,
-            pieColor = viridis::viridis(3, begin = 0.4, end = 0.95)[2],
-            color = node_colors,
-            labels = names(exerciseTypes_df_fullobs),
-            label.cex = 0.75,
-            label.scale = FALSE,
-            label.color = c(rep("black", 15)))
-
 
 ```
 
+The next graph is identical, except that model selection is done by the Extended Bayesian Information Criterion (EBIC).
 
-```{r exercisetypes-mgm-EBIC, fig.cap = "Model selection with EBIC"}
+```{r exercisetypes-mgm-EBIC}
 
 exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
   dplyr::select(contains(".1")) %>% 
@@ -1741,8 +1861,6 @@ exerciseTypes_mgm_withMeasures2 <- qgraph::qgraph(mgm_obj_EBIC$pairwise$wadj,
             label.scale = FALSE,
             label.color = c(rep("black", 15)))
 
-cor_auto(exerciseTypes_df)
-
 # exerciseTypes_mgm_withMeasures_cor <- qgraph::qgraph(cor_auto(exerciseTypes_df), 
 #             layout = "spring",
 #             repulsion = 0.99, # To nudge the network from originally bad visual state
@@ -1755,16 +1873,10 @@ cor_auto(exerciseTypes_df)
 #             label.cex = 0.75,
 #             label.scale = FALSE)
 
-cor_auto(exerciseTypes_df) %>% data.frame() %>% 
-  dplyr::mutate(variable = names(exerciseTypes_df)) %>% 
-  dplyr::mutate_at(vars(PA.accelerometer, PA.self.report), funs(round(., 3))) %>% 
-  dplyr::select(variable, PA.accelerometer, PA.self.report) %>% 
-  dplyr::mutate(diff = PA.accelerometer - PA.self.report) %>% 
-  dplyr::arrange(desc(abs(diff))) %>% 
-  dplyr::filter(variable != "PA accelerometer", variable != "PA self report") %>% 
-  DT::datatable(caption = "Bivariate correlations between PA measures and self-reported activity types")
 
 ```
+
+To compare the two previous graphs, we again average the layout and plot them next to each other.
 
 ```{r exercisetypes-comparison2}
 avglayout <- averageLayout(exerciseTypes_mgm_withMeasures, exerciseTypes_mgm_withMeasures2)
@@ -1796,7 +1908,6 @@ qgraph::qgraph(mgm_obj_EBIC$pairwise$wadj,
             label.color = c(rep("black", 15)))
 
 
-
 ```
 
 # Chunked BCTs, PA, motivation 
@@ -1806,6 +1917,59 @@ This section shows the correlations structure between BCTs (lumped into chunks b
 Note: This is only to demonstrate data exploration, as many assumptions (such as multivariate normality, homogeneity, multilevel structure) are not accounted for.   
 
 ## Bivariate correlations
+
+Table below shows, how correlations between exercise types differ between the accelerometer and self-reported MVPA measure.
+
+```{r exercisetypes-bivariate}
+
+exerciseTypes_df <- lmi %>% select(Kys0051.1:Kys0064.1) %>% 
+  dplyr::select(contains(".1")) %>% 
+  dplyr::mutate_all(funs(replace_na(., 0)))
+# exerciseTypes_df$track <- df$track
+# exerciseTypes_df$girl <- df$girl
+exerciseTypes_df$`PA accelerometer` <- df$mvpaAccelerometer_T1
+exerciseTypes_df$`PA self-report` <- df$padaysLastweek_T1
+
+names(exerciseTypes_df) <- c("Team ball games", 
+                             "Other ball games",
+                             "Gym training",
+                             "Combat sports",
+                             "Fitness classes",
+                             "Home workout",
+                             "Cycling",
+                             "Swimming",
+                             "Walking",
+                             "Running",
+                             "Skiing",
+                             "Roller skating",
+                             "Horseback riding",
+                             "Other",
+                             "PA accelerometer",
+                             "PA self-report"
+                             )
+
+# Roller skating has only 8 observations; leave out
+exerciseTypes_df <- exerciseTypes_df %>% dplyr::select(-`Roller skating`)
+
+# Variable types are muddled, change all to numeric
+exerciseTypes_df <- as.data.frame(purrr::map(exerciseTypes_df, `class<-`, c("numeric"))) 
+
+# Change data frame to type tbl to allow for spaces
+exerciseTypes_df <- as.tbl(exerciseTypes_df)
+
+# Take all names, replace the dots with space
+names(exerciseTypes_df) <- stringr::str_replace_all(names(exerciseTypes_df), pattern = "\\.", replacement = " ")
+
+cor_auto(exerciseTypes_df) %>% data.frame() %>% 
+  dplyr::mutate(variable = names(exerciseTypes_df)) %>% 
+  dplyr::mutate_at(vars(PA.accelerometer, PA.self.report), funs(round(., 3))) %>% 
+  dplyr::select(variable, PA.accelerometer, PA.self.report) %>% 
+  dplyr::mutate(diff = PA.accelerometer - PA.self.report) %>% 
+  dplyr::arrange(desc(abs(diff))) %>% 
+  dplyr::filter(variable != "PA accelerometer", variable != "PA self report") %>% 
+  DT::datatable(caption = "Bivariate correlations between PA measures and self-reported activity types")
+
+```
 
 ```{r bivariate-correlations, results = "asis"}
 
@@ -1859,7 +2023,7 @@ corMatrix_BCTs <- bivariate_BCTs %>% cor(use = "pairwise.complete.obs", method =
 
 as.data.frame(as.table(corMatrix_BCTs)) %>% 
   dplyr::filter(Var1 == "PA accelerometer" | Var1 == "PA self report") %>% 
-  dplyr::mutate("Spearman correlation" = Freq) %>% 
+  dplyr::mutate("Spearman correlation" = Freq %>% round(., 3) %>% format(., nsmall = 3)) %>% 
   dplyr::select(-Freq) %>% 
   dplyr::filter(`Spearman correlation` != 1) %>% 
   dplyr::arrange(desc(`Spearman correlation`)) %>% 
@@ -2087,7 +2251,7 @@ bctdf_pa_mgm_fullobs <- bctdf_pa_mgm %>% na.omit()
 
 mgm_pa_variable_types <- c("c", "g", rep("c", 10))
 mgm_pa_variable_levels <- c("8", "1", rep("2", 10))
-data.frame(mgm_pa_variable_types, mgm_pa_variable_levels, names(bctdf_pa_mgm_fullobs))
+# data.frame(mgm_pa_variable_types, mgm_pa_variable_levels, names(bctdf_pa_mgm_fullobs))
 
 mgm_obj <- mgm::mgm(data = bctdf_pa_mgm_fullobs,
   type = mgm_pa_variable_types,
@@ -2271,10 +2435,10 @@ bctdf_pa_combinedAgreementBcts <- df %>% dplyr::select(
 
 # mgm wants full data, see package missForest for imputation
 bctdf_pa_combinedAgreementBcts <- bctdf_pa_combinedAgreementBcts %>% na.omit()
-bctdf_pa_combinedAgreementBcts %>% names()
+# bctdf_pa_combinedAgreementBcts %>% names()
 mgm_pa_variable_types <- c("g", "g", rep("c", 7))
 mgm_pa_variable_levels <- c("1", "1", rep("2", 7))
-data.frame(mgm_pa_variable_types, mgm_pa_variable_levels, names(bctdf_pa_combinedAgreementBcts))
+# data.frame(mgm_pa_variable_types, mgm_pa_variable_levels, names(bctdf_pa_combinedAgreementBcts))
 
 mgm_obj <- mgm::mgm(data = bctdf_pa_combinedAgreementBcts,
   type = mgm_pa_variable_types,
@@ -2548,8 +2712,9 @@ load("./Rdata_files/nct_results.Rdata")
 ```
 
 ```{r combinedAgreementBcts-heterogeneity-nct}
+
 print("These are the sizes of educational tracks:")
-top5Bcts_tracks_df %>% dplyr::group_by(track) %>% summarise(n = n()) %>% 
+combinedAgreementBcts_tracks_df %>% dplyr::group_by(track) %>% summarise(n = n()) %>% 
   papaja::apa_table()
 
 print("Similarity")
@@ -2558,9 +2723,9 @@ cat("Correlation between Nur and IT edge strengths:", cor(qgraph::centrality(net
 cat("Correlation between Nur and IT networks:", cor(network_Nur$graph[lower.tri(network_Nur$graph)], network_IT$graph[lower.tri(network_Nur$graph)], method="spearman"))
 
 print("Difference")
-cat("P-value for the test of identical network structure:", nct_results_top5Bcts$nwinv.pval)
-cat("P-value for the test of identical connectivity in networks:", nct_results_top5Bcts$glstrinv.pval)
-nct_results_top5Bcts$einv.pvals %>% 
+cat("P-value for the test of identical network structure:", nct_results$nwinv.pval)
+cat("P-value for the test of identical connectivity in networks:", nct_results$glstrinv.pval)
+nct_results$einv.pvals %>% 
   papaja::apa_table(caption = "p-values on difference test in edges between Nur and IT")
 
 cat("Number of edges, which appear different (p<0.05):", sum(nct_results$einv.pvals$"p-value" < 0.05))
