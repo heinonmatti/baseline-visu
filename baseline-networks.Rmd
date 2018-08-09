@@ -131,7 +131,7 @@ The bootstrap stability plot above shows the proportion of re-samples, which con
 
 ## Correlation network and mixed graphical model compared
 
-```{r network-dataprep, message = FALSE, include = FALSE, warning = FALSE, echo = FALSE}
+```{r network-dataprep, message = FALSE, warning = FALSE, echo = FALSE}
 
 bctdf_mgm <- df %>% dplyr::select(
   'agr-BCTs' = PA_agrbct_T1,

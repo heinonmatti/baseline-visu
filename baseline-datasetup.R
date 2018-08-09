@@ -22,7 +22,6 @@ if (length(instpacks)>0) install.packages(instpacks)
 
 if (!require(papaja)) pacman::p_install_gh("crsh/papaja")
 if (!require(mgm)) pacman::p_install_gh("jmbh/mgm")
-if (!require(ggridges)) pacman::p_install_gh("clauswilke/ggridges")
 if (!require(brmstools)) pacman::p_install_gh("mvuorre/brmstools")
 if (!require(NetworkComparisonTest)) pacman::p_install_gh("sachaepskamp/NetworkComparisonTest")
 if (!require(ggstatsplot)) pacman::p_install_gh("IndrajeetPatil/ggstatsplot")
@@ -32,6 +31,8 @@ if (!require(patchwork)) pacman::p_install_gh("thomasp85/patchwork") # so that p
 #pacman::p_install(c("rstanarm", "brms", "mlmRev"))
 
 pacman::p_load(knitr, tidyverse)
+pacman::p_install_gh("clauswilke/ggridges")
+library(ggridges)
 
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = TRUE,

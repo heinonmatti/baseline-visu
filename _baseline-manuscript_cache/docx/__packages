@@ -1,8 +1,13 @@
 base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
 pacman
 papaja
 mgm
-ggridges
 ggplot2
 Rcpp
 brms
@@ -20,6 +25,8 @@ dplyr
 stringr
 forcats
 bindrcpp
+ggridges
+bootnet
 corrgram
 haven
 Matrix
@@ -35,7 +42,6 @@ qgraph
 bookdown
 viridisLite
 viridis
-bootnet
 rstanarm
 mlmRev
 broom

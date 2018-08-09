@@ -527,6 +527,34 @@ ci_uncorrected %>%
 
 ```
 
+# Gender means, with CIs taking school and class into account
+
+```{r}
+ci_table_boys <- ci_boys %>% dplyr::transmute("Mean boys" = mean %>% round(., 1) %>% format(., nsmall = 1),
+                                              "CI95 boys" = paste0( 
+                                                            ciLo %>% round(., 1) %>% format(., nsmall = 1), " -",
+                                                            ciHi %>% round(., 1) %>% format(., nsmall = 1)))
+
+ci_table_girls <- ci_girls %>% dplyr::transmute("Mean girls" = mean %>% round(., 1) %>% format(., nsmall = 1),
+                                                "CI95 girls" = paste0( 
+                                                               ciLo %>% round(., 1) %>% format(., nsmall = 1), " -",
+                                                               ciHi %>% round(., 1) %>% format(., nsmall = 1)))
+
+genderCIs_table <- cbind(Variable = ci_boys$diamondlabels, ci_table_boys, ci_table_girls) %>% 
+  dplyr::filter(Variable != "") 
+
+
+genderCIs_table %>% 
+  DT::datatable()
+```
+
+```{r}
+# df %>% group_by(girl) %>% summarise(mean = mean(mvpaAccelerometer_T1, na.rm = TRUE))
+# data.frame(ci_table_boys, ci_boys$diamondlabels)
+# data.frame(ci_table_girls, ci_boys$diamondlabels)
+```
+
+
 # Compare different estimates for means and CIs visually 
 
 This section contains diamond plots comparing different estimates for means and CIs.
@@ -872,6 +900,7 @@ load("./Rdata_files/ci_control.Rdata")
 load("./Rdata_files/ci_intervention.Rdata")
 load("./Rdata_files/ci_girls.Rdata")
 load("./Rdata_files/ci_boys.Rdata")
+
 ```
 
 <!-- ### Gender and intervention group CIs with sandwich estimator -->
@@ -1218,13 +1247,13 @@ outtable_track <- df %>%
                                                " (", round(sd(SB_outcomeExpectations_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             "SB self-efficacy & perceived behavioural control" = paste0(round(mean(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), 
                                                                         " (", round(sd(SB_selfEfficacyPBC_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily MVPA minutes" = paste0(round(mean(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
+            "Mean daily MVPA hours" = paste0(round(mean(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                " (", round(sd(mvpaAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily minutes spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
+            "Mean daily hours spent sitting or lying down" = paste0(round(mean(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                                       " (", round(sd(sitLieAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             "Mean daily breaks in sitting" = paste0(round(mean(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                     " (", round(sd(sitBreaksAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
-            "Mean daily accelerometer weartime" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
+            "Mean daily accelerometer weartime hours" = paste0(round(mean(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1),
                                                     " (", round(sd(weartimeAccelerometer_T1, na.rm = TRUE), 1) %>% format(., nsmall = 1), ")"),
             n = n()) %>% 
   dplyr::filter(complete.cases(.)) %>% 
@@ -1440,8 +1469,12 @@ outtable_intervention <- outtable_intervention %>% tidyr::gather(Variable, val, 
 names(outtable_intervention) <- c("Variable", "Control", "Intervention")
 
 ## In the last table, have a column for total before transposing
-outtable_girl <- bind_rows(outtable_girl, outtable_total)
-outtable_girl <- outtable_girl %>% tidyr::gather(Variable, val, 2:ncol(.)) %>% tidyr::spread(girl, val)
+outtable_girl <- bind_rows(outtable_total, outtable_girl)
+outtable_girl <- outtable_girl %>% 
+  tidyr::gather(Variable, val, 2:ncol(.)) %>% 
+  tidyr::spread(girl, val) %>% 
+  dplyr::select(Variable, boy, girl, "Full sample")
+
 names(outtable_girl) <- c("Variable", "Boy", "Girl", "Full sample")
 
 # Are all variables the same? They should be, for the table to work!
