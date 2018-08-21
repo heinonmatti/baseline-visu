@@ -10,6 +10,8 @@ To start data analysis, we run a data compilation file to enable compiling the d
 
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
+
+# summarytools::view(summarytools::dfSummary(df)) # To create a codebook 
 ```
 
 *Note on using package brms*

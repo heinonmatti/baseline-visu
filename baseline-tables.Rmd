@@ -4,6 +4,8 @@ title: "Tables and estimators"
 
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
+
+# summarytools::view(summarytools::dfSummary(df)) # To create a codebook
 ```
 
 Description of the R environment can be found by opening the code chunk below.
