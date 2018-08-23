@@ -2,7 +2,6 @@ base
 pacman
 papaja
 mgm
-ggridges
 ggplot2
 Rcpp
 brms
@@ -19,6 +18,7 @@ purrr
 dplyr
 stringr
 forcats
+ggridges
 bindrcpp
 corrgram
 haven
