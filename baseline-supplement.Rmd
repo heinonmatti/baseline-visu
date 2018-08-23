@@ -1,6 +1,10 @@
 ---
-title: "Baseline analysis supplement"
+title: "Descriptive plots"
 ---
+
+# Introduction 
+
+This section visualises distributions of variables, and describes the scales involved.
 
 ```{r htmlTemp3, echo=FALSE, eval=FALSE, include = FALSE}
 codejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/codefolding.js")
@@ -72,8 +76,6 @@ document.write(\'<div class="btn-group pull-right" style="position: absolute; to
 
 readr::write_lines(htmlhead, path = "/mnt/Data/autoentrepreneur/header.html")
 ```
-
-Welcome to the LMI baseline supplement! This supplement will walk you through the analyses and provides additional graphs.
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
 

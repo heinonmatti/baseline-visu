@@ -6,17 +6,17 @@ output:
 #  bookdown::html_document2:
 #    includes:
 #      in_header: header.html
-    toc: yes
+    toc: TRUE
     toc_depth: 4
-    toc_float: yes
-    collapsed: no
-    theme: readable
+    toc_float: TRUE
+#    collapsed: FALSE # doesn't work..?
+    theme: readable # was "readable" before
     highlight: tango
     df_print: paged
     paged_print: true
     code_folding: hide
     lib_dir: site_libs
-    self_contained: no
+#    self_contained: FALSE
 navbar:
   title: Visualising baseline characteristics
   left:
@@ -32,5 +32,7 @@ navbar:
     href: baseline-networks.html
   - text: Data setup code
     href: https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R
-  - text: Codebook (concise)
+  - text: Codebook
     href: Codebook-concise.html 
+#  - text: Codebook (detailed)
+#    href: Codebook-concise.html 

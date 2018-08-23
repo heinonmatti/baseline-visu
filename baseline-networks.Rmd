@@ -2,6 +2,10 @@
 title: "Network analyses"
 ---
 
+# Introduction 
+
+This section describes network analyses and displays correlation structures in the data.
+
 ```{r htmlTemp3, echo=FALSE, eval=FALSE, INCLUDE = FALSE}
 codejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/codefolding.js")
 collapsejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/collapse.js")

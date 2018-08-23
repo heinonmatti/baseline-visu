@@ -31,11 +31,11 @@ if (!require(patchwork)) pacman::p_install_gh("thomasp85/patchwork") # so that p
 #pacman::p_install(c("rstanarm", "brms", "mlmRev"))
 
 pacman::p_load(knitr, tidyverse)
-pacman::p_install_gh("clauswilke/ggridges")
+# pacman::p_install_gh("clauswilke/ggridges")
 library(ggridges)
 
 knitr::opts_chunk$set(echo = TRUE, 
-                      warning = TRUE,
+                      warning = FALSE,
                       error = TRUE,
                       cache = TRUE, 
                       collapse = TRUE,
@@ -69,8 +69,9 @@ lmi <- haven::read_sav("data/LMI_data_korjattu_syntaksilla_nimetpoistettu - skan
 # pkgs <- paste('package:', pkgs, sep = "")
 # lapply(pkgs, detach, character.only = TRUE, unload = TRUE)
 
-# What seems to work is create a file .Renviron in the project root, which contains
-# 
+# What seems to work is create a file .Renviron in the project root, which contains e.g. R_MAX_NUM_DLLS = 300.
+# But better to have all code written as package::function() instead of function(), 
+# and not calling most with library(package) at all.
 
 ## Package sm modifications
 

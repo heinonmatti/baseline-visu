@@ -2,6 +2,10 @@
 title: "Tables and estimators"
 ---
 
+# Introduction
+
+This section describes how confidence intervals were estimated, as well as presenting numeric tables of characteristics of all variables involved.
+
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
 
