@@ -28,11 +28,11 @@ navbar:
     href: baseline-tables.html
   - text: Descriptive plots
     href: baseline-supplement.html
-  - text: Networks and correlations
+  - text: Networks & correlations
     href: baseline-networks.html
-  - text: Data setup code
-    href: https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R
-  - text: Codebook
-    href: Codebook-concise.html 
+#  - text: Data setup code
+#    href: https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R
+#  - text: Codebook
+#    href: Codebook-concise.html 
 #  - text: Codebook (detailed)
 #    href: Codebook-concise.html 
