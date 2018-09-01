@@ -7,6 +7,8 @@ title: "Descriptive plots"
 This section visualises distributions of variables, and describes the scales involved.
 
 ```{r htmlTemp3, echo=FALSE, eval=FALSE, include = FALSE}
+# This chunk was an attempt at html_document2 with code folding... Turned out to be a bit much.
+
 codejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/codefolding.js")
 collapsejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/collapse.js")
 transitionjs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/transition.js")

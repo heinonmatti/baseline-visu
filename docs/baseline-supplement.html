@@ -5348,8 +5348,8 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
   group,
   school,
   girl,
-<span class="st">&#39;Frequency-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1,
-<span class="st">&#39;Agreement-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1)  <span class="op">%&gt;%</span>
+<span class="st">&#39;Frequency-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1,
+<span class="st">&#39;Agreement-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -5365,14 +5365,15 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                       <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">guide =</span> <span class="st">&quot;legend&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_T1&#39; not found
 
 plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
   group,
   school,
   girl,
-<span class="st">&#39;Frequency-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1,
-<span class="st">&#39;Agreement-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1) <span class="op">%&gt;%</span>
+<span class="st">&#39;Frequency-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1,
+<span class="st">&#39;Agreement-</span><span class="ch">\n</span><span class="st">related BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -5388,10 +5389,11 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                       <span class="dt">name =</span> <span class="st">&quot;&quot;</span>, <span class="dt">guide =</span> <span class="st">&quot;legend&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>)
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_T1&#39; not found
 
 plot1 <span class="op">+</span><span class="st"> </span>plot2
-## Picking joint bandwidth of 0.319
-## Picking joint bandwidth of 0.318</code></pre></div>
+## Picking joint bandwidth of 0.315
+## Picking joint bandwidth of 0.305</code></pre></div>
 <p><img src="baseline-supplement_files/figure-html/bct-sumscore-density-plot-1.png" width="2100" /></p>
 </div>
 <div id="sm-kernel-density-plots-for-means" class="section level3">
@@ -5413,14 +5415,15 @@ densplot &lt;-<span class="st"> </span>df
 
 ## Girls vs. boys
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_frqbct_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_frequencyDependentBCT_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_T1&#39; not found
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 
 <span class="co"># Make plot</span>
-sm.PA_frqbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_frqbct_T1), 
+sm.PA_frequencyDependentBCT_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_frequencyDependentBCT_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>girl), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>,
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -5429,20 +5432,22 @@ sm.PA_frqbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span cl
                                                <span class="dt">bandcol =</span> <span class="st">&#39;LightGray&#39;</span>, 
                                                <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),
                                                <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span>))
-## 
-## Test of equal densities:  p-value =  0.22
+## Error in x[group.fac == level.i, ]: incorrect number of dimensions
 <span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="kw">levels</span>(dens<span class="op">$</span>girl), <span class="dt">col =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)], <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>), <span class="dt">lwd =</span> (<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)))
+## Error in as.graphicsAnnot(legend): argument &quot;legend&quot; is missing, with no default
 <span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="st">&quot;Density&quot;</span>, <span class="dt">line =</span> <span class="fl">0.5</span>)
+## Error in mtext(side = 2, &quot;Density&quot;, line = 0.5): plot.new has not been called yet
 
 ## Intervention vs. control
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_frqbct_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_frequencyDependentBCT_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_T1&#39; not found
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 <span class="co"># Make plot</span>
-sm.PA_frqbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_frqbct_T1), 
+sm.PA_frequencyDependentBCT_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_frequencyDependentBCT_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>intervention), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>, 
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -5451,15 +5456,14 @@ sm.PA_frqbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span cl
                                                <span class="dt">bandcol =</span> <span class="st">&#39;LightGray&#39;</span>, 
                                                <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),
                                                <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span>))
-## 
-## Test of equal densities:  p-value =  0.35
+## Error in x[group.fac == level.i, ]: incorrect number of dimensions
 <span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="kw">levels</span>(dens<span class="op">$</span>intervention), <span class="dt">col =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)], <span class="dt">lty=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>), <span class="dt">lwd=</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)))
+## Error in strwidth(legend, units = &quot;user&quot;, cex = cex, font = text.font): plot.new has not been called yet
 
 <span class="co"># Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r</span>
 <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)) 
 <span class="kw">plot</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">axes =</span> <span class="ot">FALSE</span>) <span class="co"># Fake plot for x-axis label</span>
 <span class="kw">text</span>(<span class="dt">x =</span> <span class="fl">1.02</span>, <span class="dt">y =</span> <span class="fl">1.3</span>, <span class="dt">labels =</span> <span class="st">&quot;Frequency-based BCT sumscore mean&quot;</span>, <span class="dt">pos =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="baseline-supplement_files/figure-html/sm-frqbct-1.png" width="2100" /></p>
 </div>
 <div id="agreement-measured-bcts" class="section level4">
 <h4>Agreement-measured BCTs</h4>
@@ -5478,14 +5482,15 @@ densplot &lt;-<span class="st"> </span>df
 
 ## Girls vs. boys
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_agrbct_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_agreementDependentBCT_T1, girl) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
+## Error in .f(.x[[i]], ...): object &#39;PA_agreementDependentBCT_T1&#39; not found
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 
 <span class="co"># Make plot</span>
-sm.PA_agrbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_agrbct_T1), 
+sm.PA_agreementDependentBCT_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_agreementDependentBCT_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>girl), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>,
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -5494,20 +5499,22 @@ sm.PA_agrbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span cl
                                                <span class="dt">bandcol =</span> <span class="st">&#39;LightGray&#39;</span>, 
                                                <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),
                                                <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span>))
-## 
-## Test of equal densities:  p-value =  0.23
+## Error in x[group.fac == level.i, ]: incorrect number of dimensions
 <span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="kw">levels</span>(dens<span class="op">$</span>girl), <span class="dt">col =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)], <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>), <span class="dt">lwd =</span> (<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)))
+## Error in as.graphicsAnnot(legend): argument &quot;legend&quot; is missing, with no default
 <span class="kw">mtext</span>(<span class="dt">side =</span> <span class="dv">2</span>, <span class="st">&quot;Density&quot;</span>, <span class="dt">line =</span> <span class="fl">0.5</span>)
+## Error in mtext(side = 2, &quot;Density&quot;, line = 0.5): plot.new has not been called yet
 
 ## Intervention vs. control
 <span class="co"># Choose only the variables needed and drop NA</span>
-dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_agrbct_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
+dens &lt;-<span class="st"> </span>densplot <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(PA_agreementDependentBCT_T1, intervention) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">complete.cases</span>(.))
+## Error in .f(.x[[i]], ...): object &#39;PA_agreementDependentBCT_T1&#39; not found
 
 <span class="co"># Set random number generator for reproducibility of bootstrap test of equal densities</span>
 <span class="kw">set.seed</span>(<span class="dv">10</span>)
 <span class="co"># Make plot</span>
-sm.PA_agrbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_agrbct_T1), 
+sm.PA_agreementDependentBCT_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">sm.density.compare2</span>(<span class="kw">as.numeric</span>(dens<span class="op">$</span>PA_agreementDependentBCT_T1), 
                                                <span class="kw">as.factor</span>(dens<span class="op">$</span>intervention), 
                                                <span class="dt">model =</span> <span class="st">&quot;equal&quot;</span>, 
                                                <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>,
@@ -5516,13 +5523,12 @@ sm.PA_agrbct_T1_<span class="dv">2</span> &lt;-<span class="st"> </span><span cl
                                                <span class="dt">bandcol =</span> <span class="st">&#39;LightGray&#39;</span>, 
                                                <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),
                                                <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">6</span>))
-## 
-## Test of equal densities:  p-value =  0
+## Error in x[group.fac == level.i, ]: incorrect number of dimensions
 <span class="kw">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="kw">levels</span>(dens<span class="op">$</span>intervention), <span class="dt">col =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">4</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>)], <span class="dt">lty=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>), <span class="dt">lwd=</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)))
+## Error in strwidth(legend, units = &quot;user&quot;, cex = cex, font = text.font): plot.new has not been called yet
 <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)) 
 <span class="kw">plot</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">frame.plot =</span> <span class="ot">FALSE</span>, <span class="dt">axes =</span> <span class="ot">FALSE</span>) <span class="co"># Fake plot for x-axis label</span>
 <span class="kw">text</span>(<span class="dt">x =</span> <span class="fl">1.02</span>, <span class="dt">y =</span> <span class="fl">1.3</span>, <span class="dt">labels =</span> <span class="st">&quot;Agreement-based BCT sumscore mean&quot;</span>, <span class="dt">pos =</span> <span class="dv">1</span>) <span class="co"># Create x-axis label. See https://stackoverflow.com/questions/11198767/how-to-annotate-across-or-between-plots-in-multi-plot-panels-in-r</span></code></pre></div>
-<p><img src="baseline-supplement_files/figure-html/sm-agrbct-1.png" width="2100" /></p>
 </div>
 </div>
 <div id="histograms-for-individual-items" class="section level3">
@@ -5551,15 +5557,15 @@ bctGirls &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cl
   group,
   school,
   girl,
-<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frqbct_04_T1,
-<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_04_T1,
+<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5579,21 +5585,22 @@ bctGirls &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cl
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_01_T1&#39; not found
 
 bctBoys &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
   group,
   school,
   girl,
-<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frqbct_04_T1,
-<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_04_T1,
+<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5613,21 +5620,22 @@ bctBoys &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cla
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_01_T1&#39; not found
 
 bctInt &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
   group,
   school,
   girl,
-<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frqbct_04_T1,
-<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_04_T1,
+<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5646,21 +5654,22 @@ bctInt &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span clas
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_01_T1&#39; not found
 
 bctCont &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
   group,
   school,
   girl,
-<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frqbct_04_T1,
-<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+<span class="st">&#39;Reminded self of positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+<span class="st">&#39;Has logged PA on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+<span class="st">&#39;Has monitored PA on smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="st">&#39;Uses mnemonic cues&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_04_T1,
+<span class="st">&#39;Has compared actual with goal&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+<span class="st">&#39;Has thought of relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+<span class="st">&#39;Has made changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+<span class="st">&#39;Has sought social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+<span class="st">&#39;Has evaluated why goal not reached&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5679,9 +5688,10 @@ bctCont &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cla
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_frequencyDependentBCT_01_T1&#39; not found
 
-bctBoys <span class="op">+</span><span class="st"> </span>bctGirls <span class="op">+</span><span class="st"> </span>bctInt <span class="op">+</span><span class="st"> </span>bctCont <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>) </code></pre></div>
-<p><img src="baseline-supplement_files/figure-html/histogram-frqbcts-1.png" width="2100" /></p>
+bctBoys <span class="op">+</span><span class="st"> </span>bctGirls <span class="op">+</span><span class="st"> </span>bctInt <span class="op">+</span><span class="st"> </span>bctCont <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>) 
+## Error in eval(expr, envir, enclos): object &#39;bctBoys&#39; not found</code></pre></div>
 </div>
 <div id="agreement-measured-bcts-1" class="section level4">
 <h4>Agreement-measured BCTs</h4>
@@ -5707,16 +5717,16 @@ bctGirls &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cl
   group,
   school,
   girl,
-  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5736,22 +5746,23 @@ bctGirls &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cl
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_agreementDependentBCT_01_T1&#39; not found
 
 bctBoys &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
   group,
   school,
   girl,
-  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5771,22 +5782,23 @@ bctBoys &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cla
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_agreementDependentBCT_01_T1&#39; not found
 
 bctInt &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
   group,
   school,
   girl,
-  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5805,22 +5817,23 @@ bctInt &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span clas
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_agreementDependentBCT_01_T1&#39; not found
 
 bctCont &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
   group,
   school,
   girl,
-  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;Has set goals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;Has made plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;Plan made by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;Has reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;Has cut goals to subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;Has tried new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;Has thought of barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;Has planned for barriers&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;Has thought of PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;Has fitted PA to life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">Variable =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(Variable, <span class="dt">.x =</span> Value, <span class="dt">.desc =</span> <span class="ot">FALSE</span>, 
                                                 <span class="dt">fun =</span> mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5839,9 +5852,10 @@ bctCont &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cla
         <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">6.5</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_agreementDependentBCT_01_T1&#39; not found
 
-bctBoys <span class="op">+</span><span class="st"> </span>bctGirls <span class="op">+</span><span class="st"> </span>bctInt <span class="op">+</span><span class="st"> </span>bctCont <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>) </code></pre></div>
-<p><img src="baseline-supplement_files/figure-html/histogram-agrbcts-1.png" width="2100" /></p>
+bctBoys <span class="op">+</span><span class="st"> </span>bctGirls <span class="op">+</span><span class="st"> </span>bctInt <span class="op">+</span><span class="st"> </span>bctCont <span class="op">+</span><span class="st"> </span><span class="kw">plot_layout</span>(<span class="dt">nrow =</span> <span class="dv">1</span>) 
+## Error in eval(expr, envir, enclos): object &#39;bctBoys&#39; not found</code></pre></div>
 </div>
 </div>
 </div>
@@ -5854,11 +5868,11 @@ bctBoys <span class="op">+</span><span class="st"> </span>bctGirls <span class="
                               girl,
                               <span class="st">&#39;PA intention&#39;</span> =<span class="st"> </span>PA_intention_T1,
                               <span class="st">&#39;PA outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1,
-                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_pbc_T1,
+                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_perceivedBehaviouralControl_T1,
                               <span class="st">&#39;PA self efficacy&#39;</span> =<span class="st"> </span>PA_selfefficacy_T1,
                               <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1,
-                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1,
-                              <span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_inorm_T1)  <span class="op">%&gt;%</span>
+                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1,
+                              <span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_injunctiveNorm_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.), <span class="dt">factor_key =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -5877,35 +5891,38 @@ bctBoys <span class="op">+</span><span class="st"> </span>bctGirls <span class="
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>, <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>)
+## Error in .f(.x[[i]], ...): object &#39;PA_perceivedBehaviouralControl_T1&#39; not found
 
 target =<span class="st"> </span><span class="kw">c</span>(
 <span class="st">&quot;PA_intention_T1&quot;</span>,
 <span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>,
-<span class="st">&quot;PA_pbc_T1&quot;</span>,
+<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>,
 <span class="st">&quot;PA_selfefficacy_T1&quot;</span>,
 <span class="st">&quot;PA_opportunities_T1&quot;</span>,
-<span class="st">&quot;PA_dnorm_T1&quot;</span>,
-<span class="st">&quot;PA_inorm_T1&quot;</span>)
+<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>,
+<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>)
 
 PA_ci_girls &lt;-<span class="st"> </span>ci_girls <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_girls&#39; not found
 
 PA_ci_girls &lt;-<span class="st"> </span>PA_ci_girls[<span class="kw">match</span>(target, PA_ci_girls<span class="op">$</span>diamondlabels), ]
 
 PA_ci_boys &lt;-<span class="st"> </span>ci_boys <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_boys&#39; not found
 
 PA_ci_boys &lt;-<span class="st"> </span>PA_ci_boys[<span class="kw">match</span>(target, PA_ci_boys<span class="op">$</span>diamondlabels), ]
 
@@ -5921,11 +5938,11 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                               girl,
                               <span class="st">&#39;PA intention&#39;</span> =<span class="st"> </span>PA_intention_T1,
                               <span class="st">&#39;PA outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1,
-                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_pbc_T1,
+                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_perceivedBehaviouralControl_T1,
                               <span class="st">&#39;PA self efficacy&#39;</span> =<span class="st"> </span>PA_selfefficacy_T1,
                               <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1,
-                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1,
-                              <span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_inorm_T1)  <span class="op">%&gt;%</span>
+                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1,
+                              <span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_injunctiveNorm_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.), <span class="dt">factor_key =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -5944,26 +5961,29 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>, <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>)
+## Error in .f(.x[[i]], ...): object &#39;PA_perceivedBehaviouralControl_T1&#39; not found
 
 PA_ci_intervention &lt;-<span class="st"> </span>ci_intervention <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_intervention&#39; not found
 
 PA_ci_intervention &lt;-<span class="st"> </span>PA_ci_intervention[<span class="kw">match</span>(target, PA_ci_intervention<span class="op">$</span>diamondlabels), ]
 
 PA_ci_control &lt;-<span class="st"> </span>ci_control <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_control&#39; not found
 
 PA_ci_control &lt;-<span class="st"> </span>PA_ci_control[<span class="kw">match</span>(target, PA_ci_control<span class="op">$</span>diamondlabels), ]
 
@@ -5974,8 +5994,8 @@ plot2 &lt;-<span class="st"> </span>plot2 <span class="op">+</span><span class="
               <span class="dt">alpha=</span>.<span class="dv">6</span>, <span class="dt">fixedSize =</span> <span class="fl">0.15</span>, <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(target) <span class="op">+</span><span class="st"> </span>.<span class="dv">2</span>))
 
 plot1 <span class="op">+</span><span class="st"> </span>plot2
-## Picking joint bandwidth of 0.355
-## Picking joint bandwidth of 0.359</code></pre></div>
+## Picking joint bandwidth of 0.315
+## Picking joint bandwidth of 0.305</code></pre></div>
 <p><img src="baseline-supplement_files/figure-html/bct-determinants-nofill-1.png" width="2100" /></p>
 </div>
 <div id="pa-psychosocial-mediators" class="section level2">
@@ -5989,10 +6009,10 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                               girl,
                               <span class="st">&#39;PA intention&#39;</span> =<span class="st"> </span>PA_intention_T1,
                               <span class="st">&#39;PA outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1,
-                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_pbc_T1,
+                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_perceivedBehaviouralControl_T1,
                               <span class="st">&#39;PA self efficacy&#39;</span> =<span class="st"> </span>PA_selfefficacy_T1,
                               <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1,
-                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1)  <span class="op">%&gt;%</span>
+                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.), <span class="dt">factor_key =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -6011,32 +6031,35 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_colour_cyclical</span>(<span class="dt">values =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>, <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_perceivedBehaviouralControl_T1&#39; not found
 
 target =<span class="st"> </span><span class="kw">c</span>(
 <span class="st">&quot;PA_intention_T1&quot;</span>,
 <span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>,
-<span class="st">&quot;PA_pbc_T1&quot;</span>,
+<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>,
 <span class="st">&quot;PA_selfefficacy_T1&quot;</span>,
 <span class="st">&quot;PA_opportunities_T1&quot;</span>,
-<span class="st">&quot;PA_dnorm_T1&quot;</span>)
+<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>)
 
 PA_ci_girls &lt;-<span class="st"> </span>ci_girls <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_girls&#39; not found
 
 PA_ci_girls &lt;-<span class="st"> </span>PA_ci_girls[<span class="kw">match</span>(target, PA_ci_girls<span class="op">$</span>diamondlabels), ]
 
 PA_ci_boys &lt;-<span class="st"> </span>ci_boys <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_boys&#39; not found
 
 PA_ci_boys &lt;-<span class="st"> </span>PA_ci_boys[<span class="kw">match</span>(target, PA_ci_boys<span class="op">$</span>diamondlabels), ]
 
@@ -6052,10 +6075,10 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                               girl,
                               <span class="st">&#39;PA intention&#39;</span> =<span class="st"> </span>PA_intention_T1,
                               <span class="st">&#39;PA outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1,
-                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_pbc_T1,
+                              <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_perceivedBehaviouralControl_T1,
                               <span class="st">&#39;PA self efficacy&#39;</span> =<span class="st"> </span>PA_selfefficacy_T1,
                               <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1,
-                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1)  <span class="op">%&gt;%</span>
+                              <span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.), <span class="dt">factor_key =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -6073,24 +6096,27 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">scale_colour_cyclical</span>(<span class="dt">values =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>ggridges<span class="op">::</span><span class="kw">theme_ridges</span>(<span class="dt">grid =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;bottom&quot;</span>, <span class="dt">axis.text=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">10</span>))
+## Error in .f(.x[[i]], ...): object &#39;PA_perceivedBehaviouralControl_T1&#39; not found
 
 PA_ci_intervention &lt;-<span class="st"> </span>ci_intervention <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_intervention&#39; not found
 
 PA_ci_intervention &lt;-<span class="st"> </span>PA_ci_intervention[<span class="kw">match</span>(target, PA_ci_intervention<span class="op">$</span>diamondlabels), ]
 
 PA_ci_control &lt;-<span class="st"> </span>ci_control <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_control&#39; not found
 
 PA_ci_control &lt;-<span class="st"> </span>PA_ci_control[<span class="kw">match</span>(target, PA_ci_control<span class="op">$</span>diamondlabels), ]
 
@@ -6101,23 +6127,21 @@ plot2 &lt;-<span class="st"> </span>plot2 <span class="op">+</span><span class="
               <span class="dt">alpha=</span>.<span class="dv">6</span>, <span class="dt">fixedSize =</span> <span class="fl">0.15</span>, <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(target) <span class="op">+</span><span class="st"> </span>.<span class="dv">2</span>))
 
 plot1 <span class="op">+</span><span class="st"> </span>plot2 
-## Picking joint bandwidth of 0.327
-## Picking joint bandwidth of 0.332</code></pre></div>
+## Picking joint bandwidth of 0.315
+## Picking joint bandwidth of 0.305</code></pre></div>
 <div class="figure">
-<img src="baseline-supplement_files/figure-html/densityplot-intention-oexp-pbc-se-opp-norms-1.png" alt="Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology." width="2100" />
+<img src="baseline-supplement_files/figure-html/densityplot-intention-oexp-perceivedBehaviouralControl-se-opp-norms-1.png" alt="Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology." width="2100" />
 <p class="caption">
 Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Test that the legend is right; descriptive norms are smaller for girls</span>
-df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_dnorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;girl&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean) <span class="op">&lt;</span><span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_dnorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;boy&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean)
-##      mean
-## [1,] TRUE
+df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_descriptiveNorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;girl&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean) <span class="op">&lt;</span><span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_descriptiveNorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;boy&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean)
+## Error in summarise_impl(.data, dots): Evaluation error: object &#39;PA_descriptiveNorm_T1&#39; not found.
 
-df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(intervention) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_dnorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(intervention <span class="op">==</span><span class="st"> &quot;1&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean) <span class="op">&lt;</span><span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(intervention) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_dnorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(intervention <span class="op">==</span><span class="st"> &quot;0&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean)
-##      mean
-## [1,] TRUE</code></pre></div>
+df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(intervention) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_descriptiveNorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(intervention <span class="op">==</span><span class="st"> &quot;1&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean) <span class="op">&lt;</span><span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(intervention) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(PA_descriptiveNorm_T1, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(intervention <span class="op">==</span><span class="st"> &quot;0&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(mean)
+## Error in summarise_impl(.data, dots): Evaluation error: object &#39;PA_descriptiveNorm_T1&#39; not found.</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
@@ -6127,11 +6151,11 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 <span class="st">&#39;PA action and</span><span class="ch">\n</span><span class="st">coping planning&#39;</span> =<span class="st"> </span>PA_actCop_T1,
 <span class="st">&#39;PA intention&#39;</span> =<span class="st"> </span>PA_intention_T1,
 <span class="st">&#39;PA outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1,
-<span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_pbc_T1,
+<span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_perceivedBehaviouralControl_T1,
 <span class="st">&#39;PA self efficacy&#39;</span> =<span class="st"> </span>PA_selfefficacy_T1,
 <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1,
-<span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1,
-<span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_inorm_T1)  <span class="op">%&gt;%</span>
+<span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1,
+<span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_injunctiveNorm_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.), <span class="dt">factor_key =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -6178,6 +6202,7 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">theme_apa</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
+## Error in .f(.x[[i]], ...): object &#39;PA_perceivedBehaviouralControl_T1&#39; not found
 
 plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
@@ -6187,11 +6212,11 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 <span class="st">&#39;PA action and</span><span class="ch">\n</span><span class="st">coping planning&#39;</span> =<span class="st"> </span>PA_actCop_T1,
 <span class="st">&#39;PA intention&#39;</span> =<span class="st"> </span>PA_intention_T1,
 <span class="st">&#39;PA outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1,
-<span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_pbc_T1,
+<span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>PA_perceivedBehaviouralControl_T1,
 <span class="st">&#39;PA self efficacy&#39;</span> =<span class="st"> </span>PA_selfefficacy_T1,
 <span class="st">&#39;PA perceived</span><span class="ch">\n</span><span class="st">opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1,
-<span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1,
-<span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_inorm_T1) <span class="op">%&gt;%</span>
+<span class="st">&#39;PA descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1,
+<span class="st">&#39;PA injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>PA_injunctiveNorm_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.), <span class="dt">factor_key =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -6238,25 +6263,27 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">theme_apa</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
+## Error in .f(.x[[i]], ...): object &#39;PA_perceivedBehaviouralControl_T1&#39; not found
 
 target =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;PA_actCop_T1&quot;</span>,
 <span class="st">&quot;PA_intention_T1&quot;</span>,
 <span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>,
-<span class="st">&quot;PA_pbc_T1&quot;</span>,
+<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>,
 <span class="st">&quot;PA_selfefficacy_T1&quot;</span>,
 <span class="st">&quot;PA_opportunities_T1&quot;</span>,
-<span class="st">&quot;PA_dnorm_T1&quot;</span>,
-<span class="st">&quot;PA_inorm_T1&quot;</span>)
+<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>,
+<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>)
 
 PA_ci_girls &lt;-<span class="st"> </span>ci_girls <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(diamondlabels <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(scales_T1) <span class="op">&amp;</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_actCop_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_girls&#39; not found
 
 PA_ci_girls &lt;-<span class="st"> </span>PA_ci_girls[<span class="kw">match</span>(target, PA_ci_girls<span class="op">$</span>diamondlabels), ]
 
@@ -6264,11 +6291,12 @@ PA_ci_boys &lt;-<span class="st"> </span>ci_boys <span class="op">%&gt;%</span><
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_actCop_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_boys&#39; not found
 
 PA_ci_boys &lt;-<span class="st"> </span>PA_ci_boys[<span class="kw">match</span>(target, PA_ci_boys<span class="op">$</span>diamondlabels), ]
 
@@ -6282,11 +6310,12 @@ PA_ci_intervention &lt;-<span class="st"> </span>ci_intervention <span class="op
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_actCop_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_intervention&#39; not found
 
 PA_ci_intervention &lt;-<span class="st"> </span>PA_ci_intervention[<span class="kw">match</span>(target, PA_ci_intervention<span class="op">$</span>diamondlabels), ]
 
@@ -6294,11 +6323,12 @@ PA_ci_control &lt;-<span class="st"> </span>ci_control <span class="op">%&gt;%</
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_actCop_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_intention_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_outcomeExpectations_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_pbc_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_perceivedBehaviouralControl_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_selfefficacy_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
 <span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_opportunities_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_dnorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
-<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_inorm_T1&quot;</span>, diamondlabels))
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_descriptiveNorm_T1&quot;</span>, diamondlabels) <span class="op">|</span><span class="st"> </span>
+<span class="st">                                     </span><span class="kw">grepl</span>(<span class="st">&quot;PA_injunctiveNorm_T1&quot;</span>, diamondlabels))
+## Error in eval(lhs, parent, parent): object &#39;ci_control&#39; not found
 
 PA_ci_control &lt;-<span class="st"> </span>PA_ci_control[<span class="kw">match</span>(target, PA_ci_control<span class="op">$</span>diamondlabels), ]
 
@@ -6309,8 +6339,8 @@ plot2 &lt;-<span class="st"> </span>plot2 <span class="op">+</span><span class="
               <span class="dt">alpha=</span>.<span class="dv">95</span>, <span class="dt">fixedSize =</span> <span class="fl">0.15</span>, <span class="dt">otherAxisCol =</span> (<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(target) <span class="op">+</span><span class="st"> </span>.<span class="dv">2</span>))
 
 plot1 <span class="op">+</span><span class="st"> </span>plot2
-## Picking joint bandwidth of 0.337
-## Picking joint bandwidth of 0.341</code></pre></div>
+## Picking joint bandwidth of 0.315
+## Picking joint bandwidth of 0.305</code></pre></div>
 <p><img src="baseline-supplement_files/figure-html/bct-determinants-showdata-1.png" width="2100" /></p>
 </div>
 <div id="sb-determinants" class="section level2">
@@ -6325,9 +6355,9 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
   girl,
 <span class="st">&#39;SB intention&#39;</span> =<span class="st"> </span>SB_intention_T1,
 <span class="st">&#39;SB outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>SB_outcomeExpectations_T1,
-<span class="st">&#39;SB self-efficacy</span><span class="ch">\n</span><span class="st">and perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>SB_selfEfficacyPBC_T1,
-<span class="st">&#39;SB descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_dnorm_T1,
-<span class="st">&#39;SB injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_inorm_T1)  <span class="op">%&gt;%</span>
+<span class="st">&#39;SB self-efficacy</span><span class="ch">\n</span><span class="st">and perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>SB_selfEfficacyperceivedBehaviouralControl_T1,
+<span class="st">&#39;SB descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_descriptiveNorm_T1,
+<span class="st">&#39;SB injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_injunctiveNorm_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -6374,6 +6404,7 @@ plot1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">theme_apa</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
+## Error in .f(.x[[i]], ...): object &#39;SB_selfEfficacyperceivedBehaviouralControl_T1&#39; not found
 
 plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(id,
   intervention,
@@ -6382,9 +6413,9 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
   girl,
 <span class="st">&#39;SB intention&#39;</span> =<span class="st"> </span>SB_intention_T1,
 <span class="st">&#39;SB outcome</span><span class="ch">\n</span><span class="st">expectations&#39;</span> =<span class="st"> </span>SB_outcomeExpectations_T1,
-<span class="st">&#39;SB self-efficacy</span><span class="ch">\n</span><span class="st">and perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>SB_selfEfficacyPBC_T1,
-<span class="st">&#39;SB descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_dnorm_T1,
-<span class="st">&#39;SB injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_inorm_T1)  <span class="op">%&gt;%</span>
+<span class="st">&#39;SB self-efficacy</span><span class="ch">\n</span><span class="st">and perceived</span><span class="ch">\n</span><span class="st">behavioural control&#39;</span> =<span class="st"> </span>SB_selfEfficacyperceivedBehaviouralControl_T1,
+<span class="st">&#39;SB descriptive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_descriptiveNorm_T1,
+<span class="st">&#39;SB injunctive</span><span class="ch">\n</span><span class="st">norm&#39;</span> =<span class="st"> </span>SB_injunctiveNorm_T1)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="co"># dplyr::select(noquote(order(colnames(.)))) %&gt;% # Orders columns alphabetically</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw">gather</span>(<span class="dt">key =</span> Variable, <span class="dt">value =</span> Value, <span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Variable)) <span class="op">+</span>
@@ -6431,10 +6462,11 @@ plot2 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
                                   <span class="dt">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
 <span class="st">  </span>papaja<span class="op">::</span><span class="kw">theme_apa</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)
+## Error in .f(.x[[i]], ...): object &#39;SB_selfEfficacyperceivedBehaviouralControl_T1&#39; not found
 
 plot1 <span class="op">+</span><span class="st"> </span>plot2
-## Picking joint bandwidth of 0.311
-## Picking joint bandwidth of 0.317</code></pre></div>
+## Picking joint bandwidth of 0.315
+## Picking joint bandwidth of 0.305</code></pre></div>
 <p><img src="baseline-supplement_files/figure-html/sb-determinants-1.png" width="2100" /></p>
 </div>
 </div>
@@ -6587,7 +6619,7 @@ d_num &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(d_num)
 userfriendlyscience<span class="op">::</span><span class="kw">CIBER</span>(<span class="dt">data =</span> d_num,
       <span class="dt">determinants =</span> <span class="kw">c</span>(
         <span class="st">&quot;actCop_T1&quot;</span>,
-        <span class="st">&quot;agrbct_T1&quot;</span>,
+        <span class="st">&quot;agreementDependentBCT_T1&quot;</span>,
         <span class="st">&quot;amotivation_T1&quot;</span>,
         <span class="st">&quot;autonomous_T1&quot;</span>,
         <span class="st">&quot;big5_agreeableness_T1.1&quot;</span>,
@@ -6596,14 +6628,14 @@ userfriendlyscience<span class="op">::</span><span class="kw">CIBER</span>(<span
         <span class="st">&quot;big5_neuroticism_T1.1&quot;</span>,
         <span class="st">&quot;big5_openness_T1.1&quot;</span>,
         <span class="st">&quot;controlled_T1&quot;</span>,
-        <span class="st">&quot;dnorm_T1&quot;</span>,
-        <span class="st">&quot;frqbct_T1&quot;</span>,
+        <span class="st">&quot;descriptiveNorm_T1&quot;</span>,
+        <span class="st">&quot;frequencyDependentBCT_T1&quot;</span>,
         <span class="st">&quot;goal_T1&quot;</span>,
-        <span class="st">&quot;inorm_T1&quot;</span>,
+        <span class="st">&quot;injunctiveNorm_T1&quot;</span>,
         <span class="st">&quot;intention_T1&quot;</span>,
         <span class="st">&quot;outcomeExpectations_T1&quot;</span>,
         <span class="st">&quot;opportunities_T1&quot;</span>,
-        <span class="st">&quot;pbc_T1&quot;</span>,
+        <span class="st">&quot;perceivedBehaviouralControl_T1&quot;</span>,
         <span class="st">&quot;selfefficacy_T1&quot;</span>),
       <span class="dt">targets =</span> <span class="kw">c</span>(<span class="st">&quot;paT1&quot;</span>, <span class="st">&quot;fatpct_T1&quot;</span>),
       <span class="dt">conf.level =</span> <span class="kw">list</span>(<span class="dt">means =</span> <span class="fl">0.9999</span>,
@@ -6613,16 +6645,16 @@ userfriendlyscience<span class="op">::</span><span class="kw">CIBER</span>(<span
 userfriendlyscience<span class="op">::</span><span class="kw">CIBER</span>(<span class="dt">data =</span> d_num,
       <span class="dt">determinants =</span> <span class="kw">c</span>(
         <span class="st">&quot;actCop_T1&quot;</span>,
-        <span class="st">&quot;agrbct_T1&quot;</span>,
-        <span class="st">&quot;frqbct_T1&quot;</span>,
+        <span class="st">&quot;agreementDependentBCT_T1&quot;</span>,
+        <span class="st">&quot;frequencyDependentBCT_T1&quot;</span>,
         <span class="st">&quot;amotivation_T1&quot;</span>,
         <span class="st">&quot;autonomous_T1&quot;</span>,
         <span class="st">&quot;controlled_T1&quot;</span>,
-        <span class="st">&quot;dnorm_T1&quot;</span>,
+        <span class="st">&quot;descriptiveNorm_T1&quot;</span>,
         <span class="st">&quot;intention_T1&quot;</span>,
         <span class="st">&quot;outcomeExpectations_T1&quot;</span>,
         <span class="st">&quot;opportunities_T1&quot;</span>,
-        <span class="st">&quot;sePbc_T1&quot;</span>),
+        <span class="st">&quot;seperceivedBehaviouralControl_T1&quot;</span>),
       <span class="dt">targets =</span> <span class="kw">c</span>(<span class="st">&quot;paT1&quot;</span>, <span class="st">&quot;fatpct_T1&quot;</span>),
       <span class="dt">conf.level =</span> <span class="kw">list</span>(<span class="dt">means =</span> <span class="fl">0.9999</span>,
                         <span class="dt">associations =</span> <span class="fl">0.99</span>)
@@ -6633,25 +6665,25 @@ userfriendlyscience<span class="op">::</span><span class="kw">CIBER</span>(<span
 
 userfriendlyscience<span class="op">::</span><span class="kw">CIBER</span>(<span class="dt">data =</span> d_num,
   <span class="dt">determinants =</span> <span class="kw">c</span>(
-  <span class="st">&quot;agrbct_01_T1&quot;</span>,
-  <span class="st">&quot;agrbct_02_T1&quot;</span>,
-  <span class="st">&quot;agrbct_03_T1&quot;</span>,
-  <span class="st">&quot;agrbct_04_T1&quot;</span>,
-  <span class="st">&quot;agrbct_05_T1&quot;</span>,
-  <span class="st">&quot;agrbct_06_T1&quot;</span>,
-  <span class="st">&quot;agrbct_07_T1&quot;</span>,
-  <span class="st">&quot;agrbct_08_T1&quot;</span>,
-  <span class="st">&quot;agrbct_09_T1&quot;</span>,
-  <span class="st">&quot;agrbct_10_T1&quot;</span>,
-  <span class="st">&quot;frqbct_01_T1&quot;</span>,
-  <span class="st">&quot;frqbct_02_T1&quot;</span>,
-  <span class="st">&quot;frqbct_03_T1&quot;</span>,
-  <span class="st">&quot;frqbct_04_T1&quot;</span>,
-  <span class="st">&quot;frqbct_05_T1&quot;</span>,
-  <span class="st">&quot;frqbct_06_T1&quot;</span>,
-  <span class="st">&quot;frqbct_07_T1&quot;</span>,
-  <span class="st">&quot;frqbct_08_T1&quot;</span>,
-  <span class="st">&quot;frqbct_09_T1&quot;</span>),
+  <span class="st">&quot;agreementDependentBCT_01_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_02_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_03_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_04_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_05_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_06_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_07_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_08_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_09_T1&quot;</span>,
+  <span class="st">&quot;agreementDependentBCT_10_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_01_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_02_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_03_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_04_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_05_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_06_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_07_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_08_T1&quot;</span>,
+  <span class="st">&quot;frequencyDependentBCT_09_T1&quot;</span>),
    <span class="dt">targets =</span> <span class="kw">c</span>(<span class="st">&quot;MVPA&quot;</span>, <span class="st">&quot;SB&quot;</span>),
   <span class="dt">leftAnchors =</span> <span class="kw">rep</span>(<span class="st">&quot;&quot;</span>, <span class="dv">19</span>),
   <span class="dt">rightAnchors =</span> <span class="kw">rep</span>(<span class="st">&quot;&quot;</span>, <span class="dv">19</span>))
@@ -6677,9 +6709,9 @@ userfriendlyscience<span class="op">::</span><span class="kw">CIBER</span>(<span
   <span class="st">&quot;intention_02_T1&quot;</span>,
   <span class="st">&quot;selfefficacy_01_T1&quot;</span>,
   <span class="st">&quot;selfefficacy_02_T1&quot;</span>,
-  <span class="st">&quot;pbc_01_T1&quot;</span>,
-  <span class="st">&quot;pbc_02_T1&quot;</span>,
-  <span class="st">&quot;pbc_03_T1&quot;</span>,
+  <span class="st">&quot;perceivedBehaviouralControl_01_T1&quot;</span>,
+  <span class="st">&quot;perceivedBehaviouralControl_02_T1&quot;</span>,
+  <span class="st">&quot;perceivedBehaviouralControl_03_T1&quot;</span>,
   <span class="st">&quot;norm_01_T1&quot;</span>,
   <span class="st">&quot;norm_02_T1&quot;</span>,
   <span class="st">&quot;outcomeExpectations_01_T1&quot;</span>,

@@ -7,6 +7,8 @@ title: "Network analyses"
 This section describes network analyses and displays correlation structures in the data. Here, physical activity (PA) is used interchangeably with moderate-to-vigorous physical activity (MVPA); all measures of activity relate to MVPA.
 
 ```{r htmlTemp3, echo=FALSE, eval=FALSE, INCLUDE = FALSE}
+# This chunk was an attempt at html_document2 with code folding... Turned out to be a bit much.
+
 codejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/codefolding.js")
 collapsejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/collapse.js")
 transitionjs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/transition.js")

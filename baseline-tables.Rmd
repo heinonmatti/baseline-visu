@@ -504,7 +504,7 @@ vardatatable_sandwich %>%
 
 ### Credible interval for model including school & group
 
-```{r table-parameters-bayes, include = FALSE}
+```{r table-parameters-bayes}
 
 names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
 
@@ -588,7 +588,7 @@ load("./Rdata_files/ci_bayes.Rdata")
 
 ### Credible interval for model including school, group & track
 
-```{r table-parameters-bayes, include = FALSE}
+```{r table-parameters-bayes_containing_edutrack}
 
 names <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff")) %>% names(.)
 
@@ -1083,7 +1083,7 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ],
                                    xlab = NULL) +
   userfriendlyscience::diamondPlot(ci_bayes_big[i, ], 
                                    returnLayerOnly = TRUE,
-                                   color = viridis::viridis(5)[5], 
+                                   color = "red", 
                                    alpha = 0, 
                                    yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
                                    fixedSize = 0.10, 
@@ -1092,7 +1092,7 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ],
                                    size = 1.05) +
   userfriendlyscience::diamondPlot(ci_bayes_containing_edutrack_big[i, ], 
                                    returnLayerOnly = TRUE,
-                                   color = "red", 
+                                   color = viridis::viridis(5)[5], 
                                    alpha = 0, 
                                    yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
                                    fixedSize = 0.15, 
@@ -1170,13 +1170,13 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 6), ],
                                    fixedSize = 0.3, 
                                    xlab = NULL) +
   geom_point(aes(x = ci_bayes_small$ciLo[i:(i + 6)], y = 1:7),
-             color = viridis::viridis(5)[5]) +
+             color = "red") +
   geom_point(aes(x = ci_bayes_small$ciHi[i:(i + 6)], y = 1:7),
-             color = viridis::viridis(5)[5]) +
+             color = "red") +
   geom_point(aes(x = ci_bayes_containing_edutrack_small$ciLo[i:(i + 6)], y = 1:7),
-             color = "red") +
+             color = viridis::viridis(5)[5]) +
   geom_point(aes(x = ci_bayes_containing_edutrack_small$ciHi[i:(i + 6)], y = 1:7),
-             color = "red") +
+             color = viridis::viridis(5)[5]) +
   # userfriendlyscience::diamondPlot(ci_bayes_small[i:(i + 6), ], 
   #                                  returnLayerOnly = TRUE,
   #                                  color = viridis::viridis(5)[5], 

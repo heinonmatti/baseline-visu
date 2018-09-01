@@ -368,7 +368,7 @@ div.tocify {
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>This section describes network analyses and displays correlation structures in the data.</p>
+<p>This section describes network analyses and displays correlation structures in the data. Here, physical activity (PA) is used interchangeably with moderate-to-vigorous physical activity (MVPA); all measures of activity relate to MVPA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;baseline-datasetup.R&quot;</span>)</code></pre></div>
 <p>Clicking the “Code”-buttons on the right shows code for each chunk.</p>
 </div>
@@ -384,8 +384,8 @@ div.tocify {
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bctdf_mgm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
-  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1,
-  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1,
+  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1,
+  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;Intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -440,7 +440,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.840","3":"0.294","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.947","3":"0.102","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"BCT usage","2":"0.759","3":"0.423","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Intrinsic","2":"0.632","3":"0.600","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Identified","2":"0.638","3":"0.592","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"Introjected","2":"NA","3":"NA","4":"0.704","5":"0.163","6":"0.646","_rn_":"6"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.893","5":"0.000","6":"0.893","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.840","3":"0.293","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.947","3":"0.101","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"BCT usage","2":"0.759","3":"0.423","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Intrinsic","2":"0.632","3":"0.600","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Identified","2":"0.638","3":"0.592","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"Introjected","2":"NA","3":"NA","4":"0.700","5":"0.151","6":"0.647","_rn_":"6"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.893","5":"0.000","6":"0.893","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -498,7 +498,7 @@ mgm<span class="op">::</span><span class="kw">plotRes</span>(<span class="dt">ob
 <pre><code>## Note that the sign of parameter estimates is stored separately; see ?mgm</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA survey","2":"0.840","3":"0.294","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerom.","2":"0.947","3":"0.101","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"Intrinsic","2":"0.632","3":"0.600","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Identified","2":"0.638","3":"0.592","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Introjected","2":"NA","3":"NA","4":"0.711","5":"0.184","6":"0.646","_rn_":"5"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.895","5":"0.014","6":"0.894","_rn_":"6"},{"1":"BCT usage","2":"0.759","3":"0.423","4":"NA","5":"NA","6":"NA","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA survey","2":"0.841","3":"0.292","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerom.","2":"0.947","3":"0.103","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"Intrinsic","2":"0.632","3":"0.600","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Identified","2":"0.638","3":"0.592","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Introjected","2":"NA","3":"NA","4":"0.704","5":"0.163","6":"0.646","_rn_":"5"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.895","5":"0.014","6":"0.894","_rn_":"6"},{"1":"BCT usage","2":"0.759","3":"0.423","4":"NA","5":"NA","6":"NA","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <p><img src="baseline-networks_files/figure-html/network-dataprep-1.png" width="2100" /><img src="baseline-networks_files/figure-html/network-dataprep-2.png" width="2100" /></p>
@@ -514,8 +514,8 @@ mgm<span class="op">::</span><span class="kw">plotRes</span>(<span class="dt">ob
 <p>The “last motivation type”, i.e. the fifth, is Amotivation (dichotomised due to skew). A node for that is added in the network below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bctdf_mgm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
-  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1,
-  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1,
+  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1,
+  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;Intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -602,8 +602,8 @@ mgm<span class="op">::</span><span class="kw">plotRes</span>(<span class="dt">ob
 <p>Theory-wise, Amotivation should be negatively correlated with everything but Extrinsic and Introjected. Given that BCT usage is 19 items, there are probably a lot of ways there can be a positive correlation, although that would be unexpected. But the positive relation with MVPA questionnaire would mean, that people who report having done physical activity on more days last week, would also say they don’t see any point in doing physical activity (another example item: I think exercising is a waste of time). One explanation would be some form of <a href="https://web.archive.org/web/20180807095037/http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/">conditioning on a collider</a>.</p>
 <p>One option would be, that (as the model drops incomplete observations), there is some selection effects based on motivation types and/or BCT usage. To check for this, we estimate a Gaussian Graphical Model, which assumes normally distributed data but uses all observations.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bctdf_ggm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
-  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1,
-  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1,
+  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1,
+  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;Intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -654,7 +654,7 @@ BCT_ggm &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_ggm,
                 <span class="dt">layout =</span> <span class="st">&quot;spring&quot;</span>, 
                 <span class="dt">repulsion =</span> <span class="fl">0.99</span>, <span class="co"># To nudge the network from originally bad visual state</span>
                 <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, 
-                <span class="dt">title =</span> <span class="st">&quot;GGM: PA, BCTs &amp; motivation&quot;</span>, 
+                <span class="dt">title =</span> <span class="st">&quot;GGM: MVPA, BCTs &amp; motivation&quot;</span>, 
                 <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
                 <span class="co"># pie = piefill_ggm,</span>
                 <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
@@ -684,25 +684,25 @@ qgraph<span class="op">::</span><span class="kw">flow</span>(BCT_ggm, <span clas
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1, # Issues with clarity of item wording </span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -818,25 +818,25 @@ bctdf_ggm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span c
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,</span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1,</span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -892,7 +892,7 @@ BCT_ggm &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_ggm,
                 <span class="dt">layout =</span> <span class="st">&quot;spring&quot;</span>, 
                 <span class="dt">repulsion =</span> <span class="fl">0.99</span>, <span class="co"># To nudge the network from originally bad visual state</span>
                 <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, 
-                <span class="dt">title =</span> <span class="st">&quot;GGM: PA, BCTs &amp; motivation&quot;</span>, 
+                <span class="dt">title =</span> <span class="st">&quot;GGM: MVPA, BCTs &amp; motivation&quot;</span>, 
                 <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
                 <span class="dt">pie =</span> piefill_ggm,
                 <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
@@ -1090,14 +1090,14 @@ layout_mgm_ggm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><sp
 
 <span class="kw">layout</span>(<span class="kw">t</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))
 
-<span class="kw">plot</span>(nwBCT_ggm, <span class="dt">layout =</span> layout_mgm_ggm, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;GGM: PA, BCTs &amp; motivation&quot;</span>, <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
+<span class="kw">plot</span>(nwBCT_ggm, <span class="dt">layout =</span> layout_mgm_ggm, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;GGM: MVPA, BCTs &amp; motivation&quot;</span>, <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
      <span class="dt">pie =</span> piefill_ggm,
      <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>,
      <span class="dt">pieBorder =</span> <span class="dv">1</span>)
 
 qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj<span class="op">$</span>pairwise<span class="op">$</span>wadj,
             <span class="dt">layout =</span> layout_mgm_ggm,
-            <span class="dt">title =</span> <span class="st">&quot;MGM: PA, BCTs &amp; motivation&quot;</span>,
+            <span class="dt">title =</span> <span class="st">&quot;MGM: MVPA, BCTs &amp; motivation&quot;</span>,
             <span class="dt">edge.color =</span> <span class="kw">ifelse</span>(mgm_obj<span class="op">$</span>pairwise<span class="op">$</span>edgecolor <span class="op">==</span><span class="st"> &quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>, mgm_obj<span class="op">$</span>pairwise<span class="op">$</span>edgecolor),
             <span class="dt">pie =</span> pie_errors,
             <span class="dt">pieColor =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">6</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="dv">6</span>],
@@ -1148,25 +1148,25 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
 <h2>Correlation matrix visualised</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bivariate_BCTs &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-  <span class="st">&#39;mnemonic cues&#39;</span> =<span class="st"> </span>PA_frqbct_04_T1,
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+  <span class="st">&#39;mnemonic cues&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_04_T1,
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;PA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;PA self-report&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;autonomous&#39;</span> =<span class="st"> </span>PA_autonomous_T1,
@@ -1760,25 +1760,25 @@ corMatrix_BCTs &lt;-<span class="st"> </span>bivariate_BCTs <span class="op">%&g
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1, # Issues with clarity of item wording </span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -1878,25 +1878,25 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1, # Issues with clarity of item wording </span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -1995,25 +1995,25 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1, # Issues with clarity of item wording </span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -2112,25 +2112,25 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1, # Issues with clarity of item wording </span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -2229,25 +2229,25 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1, # Issues with clarity of item wording </span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -2343,25 +2343,25 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
 <span class="co">#  group,</span>
 <span class="co">#  school,</span>
 <span class="co">#  girl,</span>
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1, # Issues with clarity of item wording </span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;MVPA questionnaire&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -2863,11 +2863,6 @@ qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj_EBIC<span
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
             <span class="dt">label.color =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="dv">15</span>)))</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/exercisetypes-comparison2-1.png" width="2100" /></p>
-</div>
-<div id="chunked-bcts-pa-motivation" class="section level1">
-<h1>Chunked BCTs, PA, motivation</h1>
-<p>This section shows the correlations structure between BCTs (lumped into chunks based on whether they relate to frequency or agreement), motivational regulations and PA (self-reported PA the previous week and accelerometer-measured PA the following week).</p>
-<p>Note: This is only to demonstrate data exploration, as many assumptions (such as multivariate normality, homogeneity, multilevel structure) are not accounted for.</p>
 <div id="bivariate-correlations" class="section level2">
 <h2>Bivariate correlations</h2>
 <p>Table below shows, how correlations between exercise types differ between the accelerometer and self-reported MVPA measure.</p>
@@ -2921,27 +2916,33 @@ exerciseTypes_df &lt;-<span class="st"> </span><span class="kw">as.tbl</span>(ex
 ## Variables detected as ordinal: Team ball games; Other ball games; Gym training; Combat sports; Fitness classes; Home workout; Cycling; Swimming; Walking; Running; Skiing; Horseback riding; Other</code></pre></div>
 <div id="htmlwidget-1a429099f11df70973af" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1a429099f11df70973af">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between PA measures and self-reported activity types<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["Skiing","Other ball games","Gym training","Home workout","Combat sports","Fitness classes","Running","Cycling","Team ball games","Walking","Swimming","Other","Horseback riding"],[-0.066,0.008,0.145,-0.041,0.067,0.1,0.126,0.169,0.39,-0.05,0.157,0.178,0.132],[0.187,0.2,0.32,0.106,0.175,0.191,0.217,0.081,0.304,-0.128,0.097,0.166,0.121],[-0.253,-0.192,-0.175,-0.147,-0.108,-0.091,-0.091,0.088,0.086,0.078,0.06,0.012,0.011]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>variable<\/th>\n      <th>PA.accelerometer<\/th>\n      <th>PA.self.report<\/th>\n      <th>diff<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="chunked-bcts-pa-motivation" class="section level1">
+<h1>Chunked BCTs, PA, motivation</h1>
+<p>This section shows the correlations structure between BCTs (lumped into chunks based on whether they relate to frequency or agreement), motivational regulations and MVPA (self-reported MVPA the previous week and accelerometer-measured MVPA the following week).</p>
+<p>Note: This is only to demonstrate data exploration, as many assumptions (such as multivariate normality, homogeneity, multilevel structure) are not accounted for.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bivariate_BCTs &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-  <span class="st">&#39;mnemonic cues&#39;</span> =<span class="st"> </span>PA_frqbct_04_T1,
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+  <span class="st">&#39;mnemonic cues&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_04_T1,
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
   <span class="st">&#39;PA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;PA self-report&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;autonomous&#39;</span> =<span class="st"> </span>PA_autonomous_T1,
@@ -3614,8 +3615,8 @@ corMatrix_BCTs &lt;-<span class="st"> </span>bivariate_BCTs <span class="op">%&g
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">Spearman correlation</span><span class="st">`</span> <span class="op">!=</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="st">`</span><span class="dt">Spearman correlation</span><span class="st">`</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Bivariate correlations between BCTs, motivation and PA. Sorted by strength.&quot;</span>)</code></pre></div>
-<div id="htmlwidget-edbb1907994e935a8664" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-edbb1907994e935a8664">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between BCTs, motivation and PA. Sorted by strength.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],["PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer"],["PA accelerometer","PA self-report","autonomous","goal setting","new PA options","PA life values","social support","plan by other","goal contrast","subgoals","relevance of PA","implementation plan","failure contemplated","PA identity","positive consequences","changes at home","barrier identification","log on paper","reminder of plan","mnemonic cues","coping planning","smartphone","controlled"],[" 1.000"," 0.282"," 0.256"," 0.200"," 0.188"," 0.169"," 0.152"," 0.144"," 0.143"," 0.140"," 0.133"," 0.129"," 0.128"," 0.126"," 0.124"," 0.117"," 0.090"," 0.089"," 0.086"," 0.084"," 0.069"," 0.038","-0.027"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Var1<\/th>\n      <th>Var2<\/th>\n      <th>Spearman correlation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-a48ad77f7ae4464b79e1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a48ad77f7ae4464b79e1">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between BCTs, motivation and PA. Sorted by strength.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],["PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer"],["PA accelerometer","PA self-report","autonomous","goal setting","new PA options","PA life values","social support","plan by other","goal contrast","subgoals","relevance of PA","implementation plan","failure contemplated","PA identity","positive consequences","changes at home","barrier identification","log on paper","reminder of plan","mnemonic cues","coping planning","smartphone","controlled"],[" 1.000"," 0.282"," 0.256"," 0.200"," 0.188"," 0.169"," 0.152"," 0.144"," 0.143"," 0.140"," 0.133"," 0.129"," 0.128"," 0.126"," 0.124"," 0.117"," 0.090"," 0.089"," 0.086"," 0.084"," 0.069"," 0.038","-0.027"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Var1<\/th>\n      <th>Var2<\/th>\n      <th>Spearman correlation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>Highest bivariate (Spearman) correlations with self-reported PA:</p>
 <ol style="list-style-type: decimal">
 <li>I have tried out new ways for me to be physically active.</li>
@@ -3629,12 +3630,11 @@ corMatrix_BCTs &lt;-<span class="st"> </span>bivariate_BCTs <span class="op">%&g
 <li>I have monitored my PA by marking the PA occasions on an exercise log on paper.</li>
 <li>I have a way by which I remind myself of my PA plan, e.g. I write it down in the calendar.</li>
 </ol>
-</div>
 <div id="prepare-data-and-show-correlation-structure" class="section level2">
 <h2>Prepare data and show correlation structure</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bctdf_chunks &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
-  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1,
-  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1,
+  <span class="st">&#39;agr-BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1,
+  <span class="st">&#39;frq-BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1,
   <span class="st">&#39;Accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;Self-report&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
@@ -3870,16 +3870,16 @@ bctdf_pa_mgm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><spa
 <span class="co">#  school,</span>
   <span class="st">&#39;PA selfrep&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;PA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">goal setting</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
@@ -4377,16 +4377,16 @@ bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_ce
 bctdf_pa_combinedAgreementBcts &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
   <span class="st">&#39;PA selfrep&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;PA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">goal setting</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
@@ -4469,16 +4469,16 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
 combinedAgreementBcts_ggm_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
   <span class="st">&#39;PA selfrep&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="st">&#39;PA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;has plan&#39;</span> =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">implementation plan</span><span class="st">`</span>, <span class="st">`</span><span class="dt">plan by other</span><span class="st">`</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
@@ -4681,16 +4681,16 @@ combinedAgreementBcts_tracks_df &lt;-<span class="st"> </span>df <span class="op
   <span class="st">&#39;PA selfrep&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
   <span class="co"># &#39;PA accelerometer&#39; = mvpaAccelerometer_T1,</span>
   <span class="st">&#39;Autonomous&#39;</span> =<span class="st"> </span>PA_autonomous_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="co"># &#39;plan by other&#39; = PA_agrbct_03_T1,</span>
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="co"># &#39;new PA options&#39; = PA_agrbct_06_T1,</span>
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="co"># &#39;plan by other&#39; = PA_agreementDependentBCT_03_T1,</span>
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="co"># &#39;new PA options&#39; = PA_agreementDependentBCT_06_T1,</span>
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;barriers identified or planned for&#39;</span> =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">c</span>(<span class="st">`</span><span class="dt">coping planning</span><span class="st">`</span>, <span class="st">`</span><span class="dt">barrier identification</span><span class="st">`</span>), <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), 
@@ -4880,25 +4880,25 @@ bctdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
   group,
   school,
   girl,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-  <span class="st">&#39;mnemonic cues&#39;</span> =<span class="st"> </span>PA_frqbct_04_T1,
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+  <span class="st">&#39;mnemonic cues&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_04_T1,
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">goal setting</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
   <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">implementation plan</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
@@ -5131,25 +5131,25 @@ bctdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
   group,
   school,
   girl,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,</span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1,</span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">goal setting</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
   <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">implementation plan</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> `</span><span class="dt">plan by other</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
@@ -5399,25 +5399,25 @@ bctdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
   girl,
   <span class="st">&#39;Autonomous&#39;</span> =<span class="st"> </span>PA_autonomous_T1,
   <span class="st">&#39;Controlled&#39;</span> =<span class="st"> </span>PA_controlled_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,</span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1,</span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>( 
   <span class="co">#&#39;has plan&#39; = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),</span>
@@ -5633,25 +5633,25 @@ bctdf_PA &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cl
   <span class="st">&#39;MVPA&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
   <span class="st">&#39;Autonomous&#39;</span> =<span class="st"> </span>PA_autonomous_T1,
   <span class="st">&#39;Controlled&#39;</span> =<span class="st"> </span>PA_controlled_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,</span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1,</span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>( 
   <span class="co">#&#39;has plan&#39; = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),</span>
@@ -5764,11 +5764,11 @@ qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT_PA2
 top5Bcts_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
   <span class="dt">MVPA =</span> padaysLastweek_T1,
   <span class="dt">Autonomous =</span> PA_autonomous_T1, 
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1) <span class="op">%&gt;%</span><span class="st"> </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;MVPA&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">MVPA</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>),
   <span class="st">&#39;Autonomous&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Autonomous</span><span class="st">`</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">1</span>),
@@ -5934,11 +5934,11 @@ top5Bcts_tracks_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</spa
   track,
   <span class="dt">PA =</span> padaysLastweek_T1,
   <span class="dt">Autonomous =</span> PA_autonomous_T1, 
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1) <span class="op">%&gt;%</span><span class="st"> </span>
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">mutate</span>(
   <span class="st">&#39;PA&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">PA</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>),
   <span class="st">&#39;Autonomous&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">Autonomous</span><span class="st">`</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">1</span>),
@@ -6283,25 +6283,25 @@ bctdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
   <span class="st">&#39;Integrated&#39;</span> =<span class="st"> </span>PA_integrated_T1,
   <span class="st">&#39;Introjected&#39;</span> =<span class="st"> </span>PA_introjected_T1,
   <span class="st">&#39;Extrinsic&#39;</span> =<span class="st"> </span>PA_extrinsic_T1,
-  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agrbct_01_T1,
-  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agrbct_02_T1,
-  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agrbct_03_T1,
-  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agrbct_04_T1,
-  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agrbct_05_T1,
-  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agrbct_06_T1,
-  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agrbct_07_T1,
-  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agrbct_08_T1,
-  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agrbct_09_T1,
-  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agrbct_10_T1,
-  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frqbct_01_T1,
-  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frqbct_02_T1,
-  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frqbct_03_T1,
-<span class="co">#  &#39;mnemonic cues&#39; = PA_frqbct_04_T1,</span>
-  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frqbct_05_T1,
-  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frqbct_06_T1,
-  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frqbct_07_T1,
-  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frqbct_08_T1,
-  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frqbct_09_T1) <span class="op">%&gt;%</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1,</span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplated&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>( 
   <span class="co">#&#39;has plan&#39; = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),</span>
@@ -7069,11 +7069,11 @@ Estimates for Extrinsic regulation
 <h1>PA determinants: unregularised correlations visualised</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Network without motivation variables</span>
 data &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&#39;PA&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1, <span class="st">&#39;SB&#39;</span> =<span class="st"> </span>sitLieAccelerometer_T1,
-<span class="st">&#39;fat%&#39;</span> =<span class="st"> </span>fatpct_T1,<span class="st">&#39;action planning&#39;</span> =<span class="st"> </span>PA_actionplan_T1, <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_copingplan_T1, <span class="st">&#39;frequency-related BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1, <span class="st">&#39;agreement-related BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1, <span class="st">&#39;amotivation&#39;</span> =<span class="st"> </span>PA_amotivation_T1, <span class="st">&#39;autonomous motivation&#39;</span> =<span class="st"> </span>PA_autonomous_T1, <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> </span>PA_controlled_T1, <span class="st">&#39;descriptive norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1, <span class="st">&#39;injunctive norm&#39;</span> =<span class="st"> </span>PA_inorm_T1, <span class="st">&#39;intention&#39;</span> =<span class="st"> </span>PA_intention_T1, <span class="st">&#39;outcome expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1, <span class="st">&#39;self-efficacy / PBC&#39;</span> =<span class="st"> </span>PA_selfEfficacyPBC_T1, <span class="st">&#39;perceived opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">&#39;fat%&#39;</span> =<span class="st"> </span>fatpct_T1,<span class="st">&#39;action planning&#39;</span> =<span class="st"> </span>PA_actionplan_T1, <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_copingplan_T1, <span class="st">&#39;frequency-related BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1, <span class="st">&#39;agreement-related BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1, <span class="st">&#39;amotivation&#39;</span> =<span class="st"> </span>PA_amotivation_T1, <span class="st">&#39;autonomous motivation&#39;</span> =<span class="st"> </span>PA_autonomous_T1, <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> </span>PA_controlled_T1, <span class="st">&#39;descriptive norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1, <span class="st">&#39;injunctive norm&#39;</span> =<span class="st"> </span>PA_injunctiveNorm_T1, <span class="st">&#39;intention&#39;</span> =<span class="st"> </span>PA_intention_T1, <span class="st">&#39;outcome expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1, <span class="st">&#39;self-efficacy / perceivedBehaviouralControl&#39;</span> =<span class="st"> </span>PA_selfEfficacyperceivedBehaviouralControl_T1, <span class="st">&#39;perceived opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate_all</span>(as.numeric)
 
 names &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&#39;PA&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1, <span class="st">&#39;SB&#39;</span> =<span class="st"> </span>sitLieAccelerometer_T1,
-<span class="st">&#39;fat%&#39;</span> =<span class="st"> </span>fatpct_T1,<span class="st">&#39;action planning&#39;</span> =<span class="st"> </span>PA_actionplan_T1, <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_copingplan_T1, <span class="st">&#39;frequency-related BCTs&#39;</span> =<span class="st"> </span>PA_frqbct_T1, <span class="st">&#39;agreement-related BCTs&#39;</span> =<span class="st"> </span>PA_agrbct_T1, <span class="st">&#39;amotivation&#39;</span> =<span class="st"> </span>PA_amotivation_T1, <span class="st">&#39;autonomous motivation&#39;</span> =<span class="st"> </span>PA_autonomous_T1, <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> </span>PA_controlled_T1, <span class="st">&#39;descriptive norm&#39;</span> =<span class="st"> </span>PA_dnorm_T1, <span class="st">&#39;injunctive norm&#39;</span> =<span class="st"> </span>PA_inorm_T1, <span class="st">&#39;intention&#39;</span> =<span class="st"> </span>PA_intention_T1, <span class="st">&#39;outcome expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1, <span class="st">&#39;self-efficacy / PBC&#39;</span> =<span class="st"> </span>PA_selfEfficacyPBC_T1, <span class="st">&#39;perceived opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1) <span class="op">%&gt;%</span><span class="st"> </span>names
+<span class="st">&#39;fat%&#39;</span> =<span class="st"> </span>fatpct_T1,<span class="st">&#39;action planning&#39;</span> =<span class="st"> </span>PA_actionplan_T1, <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_copingplan_T1, <span class="st">&#39;frequency-related BCTs&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1, <span class="st">&#39;agreement-related BCTs&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_T1, <span class="st">&#39;amotivation&#39;</span> =<span class="st"> </span>PA_amotivation_T1, <span class="st">&#39;autonomous motivation&#39;</span> =<span class="st"> </span>PA_autonomous_T1, <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> </span>PA_controlled_T1, <span class="st">&#39;descriptive norm&#39;</span> =<span class="st"> </span>PA_descriptiveNorm_T1, <span class="st">&#39;injunctive norm&#39;</span> =<span class="st"> </span>PA_injunctiveNorm_T1, <span class="st">&#39;intention&#39;</span> =<span class="st"> </span>PA_intention_T1, <span class="st">&#39;outcome expectations&#39;</span> =<span class="st"> </span>PA_outcomeExpectations_T1, <span class="st">&#39;self-efficacy / perceivedBehaviouralControl&#39;</span> =<span class="st"> </span>PA_selfEfficacyperceivedBehaviouralControl_T1, <span class="st">&#39;perceived opportunities&#39;</span> =<span class="st"> </span>PA_opportunities_T1) <span class="op">%&gt;%</span><span class="st"> </span>names
 
 <span class="co"># Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/</span>
 
@@ -7097,7 +7097,7 @@ nodeColors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="
                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">7</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="dv">1</span>)[<span class="dv">5</span>], <span class="dv">3</span>), <span class="co"># Motivations</span>
                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">7</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="dv">1</span>)[<span class="dv">6</span>], <span class="dv">2</span>), <span class="co"># norms</span>
                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">7</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="dv">1</span>)[<span class="dv">7</span>], <span class="dv">1</span>), <span class="co"># intention</span>
-                <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">7</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="dv">1</span>)[<span class="dv">6</span>], <span class="dv">3</span>)) <span class="co"># OE, SE/PBC, Opportunities</span>
+                <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">7</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="dv">1</span>)[<span class="dv">6</span>], <span class="dv">3</span>)) <span class="co"># OE, SE/perceivedBehaviouralControl, Opportunities</span>
 
 
 <span class="kw">qgraph</span>(<span class="kw">cor_auto</span>(data), <span class="dt">layout =</span> <span class="st">&quot;spring&quot;</span>, <span class="dt">labels =</span> <span class="ot">TRUE</span>, 
@@ -7257,17 +7257,17 @@ data &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class=
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(
     <span class="st">&quot;MVPA accelerometer&quot;</span> =<span class="st"> </span>mvpaAccelerometer_T1, 
     <span class="st">&quot;planning&quot;</span> =<span class="st"> </span>PA_actCop_T1, 
-    <span class="st">&quot;BCT&quot;</span> =<span class="st"> </span>PA_frqbct_T1, 
+    <span class="st">&quot;BCT&quot;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1, 
     <span class="st">&quot;amotivation&quot;</span> =<span class="st"> </span>PA_amotivation_T1, 
     <span class="st">&quot;autonomous&quot;</span> =<span class="st"> </span>PA_autonomous_T1, 
     <span class="st">&quot;controlled&quot;</span> =<span class="st"> </span>PA_controlled_T1, 
-    <span class="st">&quot;descriptive norm&quot;</span> =<span class="st"> </span>PA_dnorm_T1, 
+    <span class="st">&quot;descriptive norm&quot;</span> =<span class="st"> </span>PA_descriptiveNorm_T1, 
     <span class="st">&quot;fat pct&quot;</span> =<span class="st"> </span>fatpct_T1, 
-    <span class="st">&quot;injunctive norm&quot;</span> =<span class="st"> </span>PA_inorm_T1, 
+    <span class="st">&quot;injunctive norm&quot;</span> =<span class="st"> </span>PA_injunctiveNorm_T1, 
     <span class="st">&quot;intention&quot;</span> =<span class="st"> </span>PA_intention_T1, 
     <span class="st">&quot;outcome expectations&quot;</span> =<span class="st"> </span>PA_outcomeExpectations_T1, 
     <span class="st">&quot;opportunities&quot;</span> =<span class="st"> </span>PA_opportunities_T1, 
-    <span class="st">&quot;self-efficacy PBC&quot;</span> =<span class="st"> </span>PA_selfEfficacyPBC_T1) <span class="op">%&gt;%</span><span class="st"> </span>
+    <span class="st">&quot;self-efficacy perceivedBehaviouralControl&quot;</span> =<span class="st"> </span>PA_selfEfficacyperceivedBehaviouralControl_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate_all</span>(<span class="kw">funs</span>(<span class="kw">as.numeric</span>(.))) 
 
 covMatrix &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">cov</span>(<span class="dt">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>)
@@ -7284,21 +7284,21 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 ## 
 ## 
 ## 
-##                        MVPA accelerometer   planning   BCT     amotivation   autonomous   controlled   descriptive norm   fat pct   injunctive norm   intention   outcome expectations   opportunities   self-efficacy PBC 
-## ---------------------  -------------------  ---------  ------  ------------  -----------  -----------  -----------------  --------  ----------------  ----------  ---------------------  --------------  ------------------
-## MVPA accelerometer     1.00                 0.02       0.06    -0.09         0.13         -0.02        0.00               -0.02     0.01              0.02        -0.07                  -0.06           0.01              
-## planning               0.19                 1.00       0.24    0.04          0.27         0.00         0.01               -0.03     0.04              0.24        -0.03                  0.11            0.05              
-## BCT                    0.17                 0.48       1.00    0.10          0.25         0.12         0.02               0.04      -0.01             0.06        0.05                   -0.01           -0.11             
-## amotivation            -0.18                -0.25      -0.09   1.00          -0.20        0.28         0.03               -0.09     -0.03             -0.25       0.02                   -0.14           0.03              
-## autonomous             0.26                 0.62       0.51    -0.37         1.00         0.13         0.08               -0.18     -0.05             0.27        0.25                   0.06            0.10              
-## controlled             -0.01                0.09       0.23    0.26          0.13         1.00         -0.03              0.12      0.15              0.00        0.15                   -0.09           -0.14             
-## descriptive norm       0.09                 0.33       0.22    -0.18         0.37         0.04         1.00               -0.05     0.38              0.15        0.03                   0.14            0.05              
-## fat pct                -0.07                -0.12      -0.03   0.03          -0.17        0.12         -0.09              1.00      0.02              0.04        0.12                   0.02            -0.06             
-## injunctive norm        0.06                 0.23       0.15    -0.11         0.23         0.15         0.47               0.00      1.00              0.04        0.07                   0.05            0.06              
-## intention              0.20                 0.57       0.37    -0.43         0.63         0.02         0.40               -0.08     0.26              1.00        -0.01                  -0.02           0.11              
-## outcome expectations   0.02                 0.25       0.26    -0.09         0.39         0.22         0.21               0.07      0.21              0.24        1.00                   0.08            0.02              
-## opportunities          0.05                 0.33       0.14    -0.31         0.35         -0.11        0.33               -0.06     0.22              0.33        0.20                   1.00            0.28              
-## self-efficacy PBC      0.08                 0.28       0.07    -0.22         0.32         -0.15        0.27               -0.12     0.20              0.33        0.14                   0.42            1.00
+##                                             MVPA accelerometer   planning   BCT     amotivation   autonomous   controlled   descriptive norm   fat pct   injunctive norm   intention   outcome expectations   opportunities   self-efficacy perceivedBehaviouralControl 
+## ------------------------------------------  -------------------  ---------  ------  ------------  -----------  -----------  -----------------  --------  ----------------  ----------  ---------------------  --------------  ------------------------------------------
+## MVPA accelerometer                          1.00                 0.02       0.06    -0.09         0.13         -0.02        0.00               -0.02     0.01              0.02        -0.07                  -0.06           0.01                                      
+## planning                                    0.19                 1.00       0.24    0.04          0.27         0.00         0.01               -0.03     0.04              0.24        -0.03                  0.11            0.05                                      
+## BCT                                         0.17                 0.48       1.00    0.10          0.25         0.12         0.02               0.04      -0.01             0.06        0.05                   -0.01           -0.11                                     
+## amotivation                                 -0.18                -0.25      -0.09   1.00          -0.20        0.28         0.03               -0.09     -0.03             -0.25       0.02                   -0.14           0.03                                      
+## autonomous                                  0.26                 0.62       0.51    -0.37         1.00         0.13         0.08               -0.18     -0.05             0.27        0.25                   0.06            0.10                                      
+## controlled                                  -0.01                0.09       0.23    0.26          0.13         1.00         -0.03              0.12      0.15              0.00        0.15                   -0.09           -0.14                                     
+## descriptive norm                            0.09                 0.33       0.22    -0.18         0.37         0.04         1.00               -0.05     0.38              0.15        0.03                   0.14            0.05                                      
+## fat pct                                     -0.07                -0.12      -0.03   0.03          -0.17        0.12         -0.09              1.00      0.02              0.04        0.12                   0.02            -0.06                                     
+## injunctive norm                             0.06                 0.23       0.15    -0.11         0.23         0.15         0.47               0.00      1.00              0.04        0.07                   0.05            0.06                                      
+## intention                                   0.20                 0.57       0.37    -0.43         0.63         0.02         0.40               -0.08     0.26              1.00        -0.01                  -0.02           0.11                                      
+## outcome expectations                        0.02                 0.25       0.26    -0.09         0.39         0.22         0.21               0.07      0.21              0.24        1.00                   0.08            0.02                                      
+## opportunities                               0.05                 0.33       0.14    -0.31         0.35         -0.11        0.33               -0.06     0.22              0.33        0.20                   1.00            0.28                                      
+## self-efficacy perceivedBehaviouralControl   0.08                 0.28       0.07    -0.22         0.32         -0.15        0.27               -0.12     0.20              0.33        0.14                   0.42            1.00
 
 <span class="co"># Plot the matrix as a correlogram</span>
 matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </span>corrgram<span class="op">::</span><span class="kw">corrgram</span>(
@@ -7384,17 +7384,17 @@ data &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class=
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(
     <span class="st">&quot;MVPA accelerometer&quot;</span> =<span class="st"> </span>mvpaAccelerometer_T1, 
     <span class="st">&quot;planning&quot;</span> =<span class="st"> </span>PA_actCop_T1, 
-    <span class="st">&quot;BCT&quot;</span> =<span class="st"> </span>PA_frqbct_T1, 
+    <span class="st">&quot;BCT&quot;</span> =<span class="st"> </span>PA_frequencyDependentBCT_T1, 
     <span class="st">&quot;amotivation&quot;</span> =<span class="st"> </span>PA_amotivation_T1, 
     <span class="st">&quot;autonomous&quot;</span> =<span class="st"> </span>PA_autonomous_T1, 
     <span class="st">&quot;controlled&quot;</span> =<span class="st"> </span>PA_controlled_T1, 
-    <span class="st">&quot;descriptive norm&quot;</span> =<span class="st"> </span>PA_dnorm_T1, 
+    <span class="st">&quot;descriptive norm&quot;</span> =<span class="st"> </span>PA_descriptiveNorm_T1, 
     <span class="st">&quot;fat pct&quot;</span> =<span class="st"> </span>fatpct_T1, 
-    <span class="st">&quot;injunctive norm&quot;</span> =<span class="st"> </span>PA_inorm_T1, 
+    <span class="st">&quot;injunctive norm&quot;</span> =<span class="st"> </span>PA_injunctiveNorm_T1, 
     <span class="st">&quot;intention&quot;</span> =<span class="st"> </span>PA_intention_T1, 
     <span class="st">&quot;outcome expectations&quot;</span> =<span class="st"> </span>PA_outcomeExpectations_T1, 
     <span class="st">&quot;opportunities&quot;</span> =<span class="st"> </span>PA_opportunities_T1, 
-    <span class="st">&quot;self-efficacy PBC&quot;</span> =<span class="st"> </span>PA_selfEfficacyPBC_T1) <span class="op">%&gt;%</span><span class="st"> </span>
+    <span class="st">&quot;self-efficacy perceivedBehaviouralControl&quot;</span> =<span class="st"> </span>PA_selfEfficacyperceivedBehaviouralControl_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate_all</span>(<span class="kw">funs</span>(<span class="kw">as.numeric</span>(.))) 
 
 piefill_determinantggm2 &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_all</span>(<span class="kw">funs</span>(<span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">/</span><span class="st"> </span><span class="kw">max</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)))
@@ -7541,8 +7541,8 @@ bootnet<span class="op">::</span><span class="kw">corStability</span>(bootnet_ce
 <div id="pa-network-without-bcts-and-sdt" class="section level3">
 <h3>PA network without BCTs and SDT</h3>
 </div>
-<div id="pa-network-without-bcts-and-sdt-intention-pa-fat" class="section level3">
-<h3>PA network without BCTs and SDT, intention, PA, fat%</h3>
+<div id="pa-network-without-bcts-and-sdt-intention-mvpa-fat" class="section level3">
+<h3>PA network without BCTs and SDT, intention, MVPA, fat%</h3>
 </div>
 </div>
 <div id="robustness-test" class="section level2">
@@ -7568,12 +7568,12 @@ bootnet<span class="op">::</span><span class="kw">corStability</span>(boot2)
 </div>
 <div id="robustness-test-1" class="section level2">
 <h2>Robustness test</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dt">BCT =</span> agrbct_T1,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dt">BCT =</span> agreementDependentBCT_T1,
     <span class="dt">AUT =</span> autonomous_T1,
     <span class="dt">Intn =</span> intention_T1,
-    <span class="dt">PBC =</span> pbc_T1,
+    <span class="dt">perceivedBehaviouralControl =</span> perceivedBehaviouralControl_T1,
     <span class="dt">outcomeExpectations =</span> outcomeExpectations_T1,
-    <span class="dt">DNorm =</span> norm_T1)
+    <span class="dt">descriptiveNorm =</span> norm_T1)
 
 Network &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(data, <span class="dt">default =</span> <span class="st">&quot;EBICglasso&quot;</span>)
 
@@ -8342,7 +8342,7 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
   <span class="dt">upper.panel =</span> corrgram<span class="op">::</span>panel.pie,
   <span class="dt">outer.labels =</span> <span class="kw">list</span>(<span class="dt">bottom =</span> <span class="kw">list</span>(<span class="dt">labels =</span> labs, <span class="dt">cex =</span> <span class="fl">0.75</span>, <span class="dt">srt =</span> <span class="dv">30</span>),
                       <span class="dt">left =</span> <span class="kw">list</span>(<span class="dt">labels =</span> labs, <span class="dt">cex =</span> <span class="fl">0.75</span>, <span class="dt">srt =</span> <span class="dv">30</span>)),
-  <span class="dt">main =</span> <span class="st">&quot;Bivariate (upper diagonal) and partial (lower diagonal)</span><span class="ch">\n</span><span class="st">correlations of BCTs, motivation and self-reported PA&quot;</span>)</code></pre></div>
+  <span class="dt">main =</span> <span class="st">&quot;Bivariate (upper diagonal) and partial (lower diagonal)</span><span class="ch">\n</span><span class="st">correlations of BCTs, motivation and self-reported MVPA&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/motivation-corrmatrix-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corMatrix_motivations &lt;-<span class="st"> </span>regulations.df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">cor</span>(<span class="dt">use =</span> <span class="st">&quot;pairwise.complete.obs&quot;</span>, <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>)
@@ -8357,9 +8357,9 @@ corMatrix_motivations <span class="op">%&gt;%</span>
                 <span class="st">`</span><span class="dt">MVPA accelerometer (% weartime)</span><span class="st">`</span> =<span class="st"> </span>mvpaAccelerometer_percentageWeartime_T1, 
                 <span class="st">`</span><span class="dt">Accelerometer wear time</span><span class="st">`</span> =<span class="st"> </span>weartimeAccelerometer_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="st">`</span><span class="dt">MVPA accelerometer</span><span class="st">`</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Bivariate correlations between motivation and PA. Sorted by correlation strength with MVPA accelerometer.&quot;</span>)</code></pre></div>
-<div id="htmlwidget-2d58d751d6299e092321" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2d58d751d6299e092321">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between motivation and PA. Sorted by correlation strength with MVPA accelerometer.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","PA_integrated_03_T1","padaysLastweek_T1","Autonomous_sumscore","PA_identified_03_T1","PA_integrated_01_T1","PA_integrated_02_T1","PA_intrinsic_02_T1","PA_intrinsic_01_T1","PA_intrinsic_03_T1","PA_identified_02_T1","weartimeAccelerometer_T1","PA_identified_01_T1","PA_introjected_01_T1","PA_introjected_02_T1","Controlled_sumscore","PA_extrinsic_02_T1","PA_extrinsic_01_T1","PA_extrinsic_03_T1","PA_amotivation_03_T1","PA_amotivation_04_T1","PA_amotivation_02_T1","PA_amotivation_01_T1"],[1,0.970773398599969,0.313754390191987,0.281789380779315,0.256026602566267,0.244649227045418,0.236209331113247,0.223786604335526,0.220243419800706,0.212329897524675,0.199086180085469,0.155155243487421,0.142243857554656,0.136570460489674,0.0199540100393442,0.0160492876707439,-0.0269252374823787,-0.056541354188813,-0.0834691754347562,-0.0871318710938797,-0.14563986360256,-0.150621820645068,-0.206852795126613,-0.221551407689828],[0.281789380779315,0.293538602180207,0.448114072969901,1,0.458334534779223,0.426499466432745,0.382239938566911,0.372416922244264,0.387806239766034,0.359629178435929,0.421145362988844,0.304279649355291,-0.0355509774128267,0.277554365701712,0.0766178132943774,0.13049133714851,0.0457982336481229,-0.027209684664043,-0.0932687833564905,-0.0634487099740452,-0.139507307905678,-0.106474733245353,-0.144931914571863,-0.15572969803233],[0.970773398599969,1,0.316987590960134,0.293538602180207,0.260480107459692,0.243741347890772,0.240378358411285,0.222609525928328,0.218142803473165,0.2149496309855,0.20417769595343,0.164175775608621,-0.0735815575761734,0.151318026628136,0.0273007999419819,0.0411191591397696,-0.0183208764930441,-0.0668272308995753,-0.0904838988927067,-0.0907706140124841,-0.155545015684464,-0.154706395762823,-0.208901419196182,-0.228926208592574],[0.142243857554656,-0.0735815575761734,0.0035591132938351,-0.0355509774128267,0.00457538956253804,0.024419015383377,0.014843858180319,0.017731818243259,0.0186397357929845,0.00738756609882643,-0.0117249180224181,-0.0115821396088741,1,-0.049900416780124,0.00281401900870005,-0.0650451508613295,-0.017703422629516,0.0345008276534779,0.0249955872639916,0.00183199836123443,0.0319937438511478,0.0288017314768304,-0.00419135223475679,0.0313615547491536]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>MVPA accelerometer<\/th>\n      <th>MVPA self report<\/th>\n      <th>MVPA accelerometer (% weartime)<\/th>\n      <th>Accelerometer wear time<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Bivariate correlations between motivation and MVPA. Sorted by correlation strength with MVPA accelerometer.&quot;</span>)</code></pre></div>
+<div id="htmlwidget-ca758125c300a31a8f2b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ca758125c300a31a8f2b">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between motivation and MVPA. Sorted by correlation strength with MVPA accelerometer.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","PA_integrated_03_T1","padaysLastweek_T1","Autonomous_sumscore","PA_identified_03_T1","PA_integrated_01_T1","PA_integrated_02_T1","PA_intrinsic_02_T1","PA_intrinsic_01_T1","PA_intrinsic_03_T1","PA_identified_02_T1","weartimeAccelerometer_T1","PA_identified_01_T1","PA_introjected_01_T1","PA_introjected_02_T1","Controlled_sumscore","PA_extrinsic_02_T1","PA_extrinsic_01_T1","PA_extrinsic_03_T1","PA_amotivation_03_T1","PA_amotivation_04_T1","PA_amotivation_02_T1","PA_amotivation_01_T1"],[1,0.970773398599969,0.313754390191987,0.281789380779315,0.256026602566267,0.244649227045418,0.236209331113247,0.223786604335526,0.220243419800706,0.212329897524675,0.199086180085469,0.155155243487421,0.142243857554656,0.136570460489674,0.0199540100393442,0.0160492876707439,-0.0269252374823787,-0.056541354188813,-0.0834691754347562,-0.0871318710938797,-0.14563986360256,-0.150621820645068,-0.206852795126613,-0.221551407689828],[0.281789380779315,0.293538602180207,0.448114072969901,1,0.458334534779223,0.426499466432745,0.382239938566911,0.372416922244264,0.387806239766034,0.359629178435929,0.421145362988844,0.304279649355291,-0.0355509774128267,0.277554365701712,0.0766178132943774,0.13049133714851,0.0457982336481229,-0.027209684664043,-0.0932687833564905,-0.0634487099740452,-0.139507307905678,-0.106474733245353,-0.144931914571863,-0.15572969803233],[0.970773398599969,1,0.316987590960134,0.293538602180207,0.260480107459692,0.243741347890772,0.240378358411285,0.222609525928328,0.218142803473165,0.2149496309855,0.20417769595343,0.164175775608621,-0.0735815575761734,0.151318026628136,0.0273007999419819,0.0411191591397696,-0.0183208764930441,-0.0668272308995753,-0.0904838988927067,-0.0907706140124841,-0.155545015684464,-0.154706395762823,-0.208901419196182,-0.228926208592574],[0.142243857554656,-0.0735815575761734,0.0035591132938351,-0.0355509774128267,0.00457538956253804,0.024419015383377,0.014843858180319,0.017731818243259,0.0186397357929845,0.00738756609882643,-0.0117249180224181,-0.0115821396088741,1,-0.049900416780124,0.00281401900870005,-0.0650451508613295,-0.017703422629516,0.0345008276534779,0.0249955872639916,0.00183199836123443,0.0319937438511478,0.0288017314768304,-0.00419135223475679,0.0313615547491536]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>MVPA accelerometer<\/th>\n      <th>MVPA self report<\/th>\n      <th>MVPA accelerometer (% weartime)<\/th>\n      <th>Accelerometer wear time<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corMatrix_motivations <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">as.data.frame</span>(.) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -8368,8 +8368,8 @@ corMatrix_motivations <span class="op">%&gt;%</span>
                    <span class="st">&quot;Accelerometer minus accelerometer-as-%-weartime&quot;</span> =<span class="st"> </span>mvpaAccelerometer_T1 <span class="op">-</span><span class="st"> </span>mvpaAccelerometer_percentageWeartime_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="st">`</span><span class="dt">Accelerometer minus self-report</span><span class="st">`</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Differences in correlations among the measures&quot;</span>)</code></pre></div>
-<div id="htmlwidget-73da8219ac10f1b74cb7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-73da8219ac10f1b74cb7">{"x":{"filter":"none","caption":"<caption>Differences in correlations among the measures<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","weartimeAccelerometer_T1","PA_extrinsic_01_T1","PA_amotivation_03_T1","PA_extrinsic_03_T1","PA_extrinsic_02_T1","PA_amotivation_04_T1","PA_introjected_01_T1","PA_amotivation_02_T1","PA_amotivation_01_T1","Controlled_sumscore","PA_introjected_02_T1","PA_integrated_03_T1","PA_identified_01_T1","PA_integrated_01_T1","PA_intrinsic_01_T1","PA_integrated_02_T1","PA_identified_02_T1","PA_intrinsic_02_T1","PA_identified_03_T1","Autonomous_sumscore","PA_intrinsic_03_T1","padaysLastweek_T1"],[0.718210619220685,0.677234796419762,0.177794834967483,0.00979960792173437,-0.00613255569688179,-0.0236831611198345,-0.02933166952477,-0.0441470873997151,-0.0566638032550332,-0.06192088055475,-0.0658217096574975,-0.0727234711305016,-0.114442049477766,-0.134359682777914,-0.140983905212037,-0.146030607453664,-0.147299280911254,-0.148630317908738,-0.14912440586787,-0.167562819965328,-0.181850239387327,-0.202307932212956,-0.222059182903375,-0.718210619220685],[0.0292266014000305,-0.0292266014000305,0.21582541513083,0.00701472345795057,0.00990515208190471,0.00363874291860435,0.0102858767107624,0.00408457511775509,-0.00734678990263778,0.00204862406956888,0.00737480090274617,-0.00860436098933464,-0.0250698714690258,-0.00323320076814709,-0.0147475661384615,-0.00416902729803834,-0.00261973346082428,0.00117707840719822,-0.00902053212120046,0.00210061632754127,0.000907879154646601,-0.00445350489342478,-0.00509151586796044,-0.0117492214008924]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>Accelerometer minus self-report<\/th>\n      <th>Accelerometer minus accelerometer-as-%-weartime<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-e4902561bbed98c9067e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e4902561bbed98c9067e">{"x":{"filter":"none","caption":"<caption>Differences in correlations among the measures<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","weartimeAccelerometer_T1","PA_extrinsic_01_T1","PA_amotivation_03_T1","PA_extrinsic_03_T1","PA_extrinsic_02_T1","PA_amotivation_04_T1","PA_introjected_01_T1","PA_amotivation_02_T1","PA_amotivation_01_T1","Controlled_sumscore","PA_introjected_02_T1","PA_integrated_03_T1","PA_identified_01_T1","PA_integrated_01_T1","PA_intrinsic_01_T1","PA_integrated_02_T1","PA_identified_02_T1","PA_intrinsic_02_T1","PA_identified_03_T1","Autonomous_sumscore","PA_intrinsic_03_T1","padaysLastweek_T1"],[0.718210619220685,0.677234796419762,0.177794834967483,0.00979960792173437,-0.00613255569688179,-0.0236831611198345,-0.02933166952477,-0.0441470873997151,-0.0566638032550332,-0.06192088055475,-0.0658217096574975,-0.0727234711305016,-0.114442049477766,-0.134359682777914,-0.140983905212037,-0.146030607453664,-0.147299280911254,-0.148630317908738,-0.14912440586787,-0.167562819965328,-0.181850239387327,-0.202307932212956,-0.222059182903375,-0.718210619220685],[0.0292266014000305,-0.0292266014000305,0.21582541513083,0.00701472345795057,0.00990515208190471,0.00363874291860435,0.0102858767107624,0.00408457511775509,-0.00734678990263778,0.00204862406956888,0.00737480090274617,-0.00860436098933464,-0.0250698714690258,-0.00323320076814709,-0.0147475661384615,-0.00416902729803834,-0.00261973346082428,0.00117707840719822,-0.00902053212120046,0.00210061632754127,0.000907879154646601,-0.00445350489342478,-0.00509151586796044,-0.0117492214008924]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>Accelerometer minus self-report<\/th>\n      <th>Accelerometer minus accelerometer-as-%-weartime<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="motivational-regulations-network" class="section level2">
 <h2>Motivational regulations network</h2>
