@@ -4,7 +4,7 @@ title: "Network analyses"
 
 # Introduction 
 
-This section describes network analyses and displays correlation structures in the data.
+This section describes network analyses and displays correlation structures in the data. Here, physical activity (PA) is used interchangeably with moderate-to-vigorous physical activity (MVPA); all measures of activity relate to MVPA.
 
 ```{r htmlTemp3, echo=FALSE, eval=FALSE, INCLUDE = FALSE}
 codejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/codefolding.js")
@@ -101,8 +101,8 @@ The following network depicts a mixed graphical model, with the following variab
 ```{r}
 
 bctdf_mgm <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
+  'agr-BCTs' = PA_agreementDependentBCT_T1,
+  'frq-BCTs' = PA_frequencyDependentBCT_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'Intrinsic' = PA_intrinsic_T1,
@@ -210,8 +210,8 @@ The bootstrap stability plot above shows the proportion of re-samples, which con
 ```{r network-dataprep, message = FALSE, warning = FALSE, echo = FALSE}
 
 bctdf_mgm <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
+  'agr-BCTs' = PA_agreementDependentBCT_T1,
+  'frq-BCTs' = PA_frequencyDependentBCT_T1,
   'MVPA survey' = padaysLastweek_T1,
   'MVPA accelerom.' = mvpaAccelerometer_T1,
   'Intrinsic' = PA_intrinsic_T1,
@@ -336,8 +336,8 @@ The "last motivation type", i.e. the fifth, is Amotivation (dichotomised due to 
 ```{r}
 
 bctdf_mgm <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
+  'agr-BCTs' = PA_agreementDependentBCT_T1,
+  'frq-BCTs' = PA_frequencyDependentBCT_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'Intrinsic' = PA_intrinsic_T1,
@@ -422,8 +422,8 @@ One option would be, that (as the model drops incomplete observations), there is
 
 ```{r selection-collider-check-ggm}
 bctdf_ggm <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
+  'agr-BCTs' = PA_agreementDependentBCT_T1,
+  'frq-BCTs' = PA_frequencyDependentBCT_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'Intrinsic' = PA_intrinsic_T1,
@@ -468,7 +468,7 @@ BCT_ggm <- plot(nwBCT_ggm,
                 layout = "spring", 
                 repulsion = 0.99, # To nudge the network from originally bad visual state
                 label.scale = FALSE, 
-                title = "GGM: PA, BCTs & motivation", 
+                title = "GGM: MVPA, BCTs & motivation", 
                 label.cex = 0.75,
                 # pie = piefill_ggm,
                 color = "skyblue",
@@ -504,25 +504,25 @@ bctdf_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -643,25 +643,25 @@ bctdf_ggm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -711,7 +711,7 @@ BCT_ggm <- plot(nwBCT_ggm,
                 layout = "spring", 
                 repulsion = 0.99, # To nudge the network from originally bad visual state
                 label.scale = FALSE, 
-                title = "GGM: PA, BCTs & motivation", 
+                title = "GGM: MVPA, BCTs & motivation", 
                 label.cex = 0.75,
                 pie = piefill_ggm,
                 color = "skyblue",
@@ -775,14 +775,14 @@ layout_mgm_ggm <- qgraph::averageLayout(BCT_ggm, BCT_mgm)
 
 layout(t(1:2))
 
-plot(nwBCT_ggm, layout = layout_mgm_ggm, label.scale = FALSE, title = "GGM: PA, BCTs & motivation", label.cex = 0.75,
+plot(nwBCT_ggm, layout = layout_mgm_ggm, label.scale = FALSE, title = "GGM: MVPA, BCTs & motivation", label.cex = 0.75,
      pie = piefill_ggm,
      color = "skyblue",
      pieBorder = 1)
 
 qgraph::qgraph(mgm_obj$pairwise$wadj,
             layout = layout_mgm_ggm,
-            title = "MGM: PA, BCTs & motivation",
+            title = "MGM: MVPA, BCTs & motivation",
             edge.color = ifelse(mgm_obj$pairwise$edgecolor == "darkgreen", "blue", mgm_obj$pairwise$edgecolor),
             pie = pie_errors,
             pieColor = viridis::viridis(6, begin = 0.3, end = 0.8)[6],
@@ -835,25 +835,25 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "pcor",
 ```{r allBctsMotiSurveyPA-corrmatrix, results = "asis"}
 
 bivariate_BCTs <- df %>% dplyr::select(
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
   'PA self-report' = padaysLastweek_T1,
   'autonomous' = PA_autonomous_T1,
@@ -912,25 +912,25 @@ bctdf_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1028,25 +1028,25 @@ bctdf_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1143,25 +1143,25 @@ bctdf_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1258,25 +1258,25 @@ bctdf_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1373,25 +1373,25 @@ bctdf_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1484,25 +1484,25 @@ bctdf_mgm <- df %>% dplyr::select(
 #  group,
 #  school,
 #  girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplation' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1986,12 +1986,6 @@ qgraph::qgraph(mgm_obj_EBIC$pairwise$wadj,
 
 ```
 
-# Chunked BCTs, PA, motivation 
-
-This section shows the correlations structure between BCTs (lumped into chunks based on whether they relate to frequency or agreement), motivational regulations and PA (self-reported PA the previous week and accelerometer-measured PA the following week).
-
-Note: This is only to demonstrate data exploration, as many assumptions (such as multivariate normality, homogeneity, multilevel structure) are not accounted for.   
-
 ## Bivariate correlations
 
 Table below shows, how correlations between exercise types differ between the accelerometer and self-reported MVPA measure.
@@ -2047,28 +2041,34 @@ cor_auto(exerciseTypes_df) %>% data.frame() %>%
 
 ```
 
+# Chunked BCTs, PA, motivation 
+
+This section shows the correlations structure between BCTs (lumped into chunks based on whether they relate to frequency or agreement), motivational regulations and MVPA (self-reported MVPA the previous week and accelerometer-measured MVPA the following week).
+
+Note: This is only to demonstrate data exploration, as many assumptions (such as multivariate normality, homogeneity, multilevel structure) are not accounted for.   
+
 ```{r bivariate-correlations, results = "asis"}
 
 bivariate_BCTs <- df %>% dplyr::select(
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
   'PA self-report' = padaysLastweek_T1,
   'autonomous' = PA_autonomous_T1,
@@ -2124,8 +2124,8 @@ Highest bivariate (Spearman) correlations with self-reported PA:
 
 ```{r chunked-dataprep-corr, results = "asis"}
 bctdf_chunks <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
+  'agr-BCTs' = PA_agreementDependentBCT_T1,
+  'frq-BCTs' = PA_frequencyDependentBCT_T1,
   'Accelerometer' = mvpaAccelerometer_T1,
   'Self-report' = padaysLastweek_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -2261,16 +2261,16 @@ bctdf_pa_mgm <- df %>% dplyr::select(
 #  school,
   'PA selfrep' = padaysLastweek_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
@@ -2469,16 +2469,16 @@ bootnet::corStability(bootnet_centrality_stability_individualAgreementBcts)
 bctdf_pa_combinedAgreementBcts <- df %>% dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
@@ -2563,16 +2563,16 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 combinedAgreementBcts_ggm_df <- df %>% dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
   'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
@@ -2710,16 +2710,16 @@ combinedAgreementBcts_tracks_df <- df %>%
   'PA selfrep' = padaysLastweek_T1,
   # 'PA accelerometer' = mvpaAccelerometer_T1,
   'Autonomous' = PA_autonomous_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  # 'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  # 'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  # 'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  # 'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
   'barriers identified or planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE), 
@@ -2823,25 +2823,25 @@ bctdf <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
   'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
@@ -2949,25 +2949,25 @@ bctdf <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
   'implementation plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
@@ -3077,25 +3077,25 @@ bctdf <- df %>% dplyr::select(id,
   girl,
   'Autonomous' = PA_autonomous_T1,
   'Controlled' = PA_controlled_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
   rowwise() %>% 
   mutate( 
   #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
@@ -3301,25 +3301,25 @@ bctdf_PA <- df %>% dplyr::select(id,
   'MVPA' = mvpaAccelerometer_T1,
   'Autonomous' = PA_autonomous_T1,
   'Controlled' = PA_controlled_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
   rowwise() %>% 
   mutate( 
   #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
@@ -3472,11 +3472,11 @@ When a person has tried out a new PA way to be physically active, they have almo
 top5Bcts_df <- df %>% dplyr::select(
   MVPA = padaysLastweek_T1,
   Autonomous = PA_autonomous_T1, 
-  'goal contrast' = PA_frqbct_05_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'subgoals' = PA_agrbct_05_T1) %>% 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1) %>% 
  mutate(
   'MVPA' = ifelse(`MVPA` == 0, 0, 1),
   'Autonomous' = ifelse(`Autonomous` < 3, 0, 1),
@@ -3560,11 +3560,11 @@ top5Bcts_tracks_df <- df %>% dplyr::select(
   track,
   PA = padaysLastweek_T1,
   Autonomous = PA_autonomous_T1, 
-  'new PA options' = PA_agrbct_06_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'subgoals' = PA_agrbct_05_T1) %>% 
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1) %>% 
  mutate(
   'PA' = ifelse(`PA` == 0, 0, 1),
   'Autonomous' = ifelse(`Autonomous` < 3, 0, 1),
@@ -3680,25 +3680,25 @@ bctdf <- df %>% dplyr::select(id,
   'Integrated' = PA_integrated_T1,
   'Introjected' = PA_introjected_T1,
   'Extrinsic' = PA_extrinsic_T1,
-  'goal setting' = PA_agrbct_01_T1,
-  'implementation plan' = PA_agrbct_02_T1,
-  'plan by other' = PA_agrbct_03_T1,
-  'reminder of plan' = PA_agrbct_04_T1,
-  'subgoals' = PA_agrbct_05_T1,
-  'new PA options' = PA_agrbct_06_T1,
-  'barrier identification' = PA_agrbct_07_T1,
-  'coping planning' = PA_agrbct_08_T1,
-  'PA identity' = PA_agrbct_09_T1,
-  'PA life values' = PA_agrbct_10_T1,
-  'positive consequences' = PA_frqbct_01_T1,
-  'log on paper' = PA_frqbct_02_T1,
-  'smartphone' = PA_frqbct_03_T1,
-#  'mnemonic cues' = PA_frqbct_04_T1,
-  'goal contrast' = PA_frqbct_05_T1,
-  'relevance of PA' = PA_frqbct_06_T1,
-  'changes at home' = PA_frqbct_07_T1,
-  'social support' = PA_frqbct_08_T1,
-  'failure contemplated' = PA_frqbct_09_T1) %>%
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
   rowwise() %>% 
   mutate( 
   #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
@@ -3742,11 +3742,11 @@ summary(m) %>% broom::tidy() %>% dplyr::arrange(desc(estimate)) %>% papaja::apa_
 ```{r pa-determinants-correlations-raw}
 # Network without motivation variables
 data <- df %>% dplyr::select('PA' = mvpaAccelerometer_T1, 'SB' = sitLieAccelerometer_T1,
-'fat%' = fatpct_T1,'action planning' = PA_actionplan_T1, 'coping planning' = PA_copingplan_T1, 'frequency-related BCTs' = PA_frqbct_T1, 'agreement-related BCTs' = PA_agrbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'self-efficacy / PBC' = PA_selfEfficacyPBC_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
+'fat%' = fatpct_T1,'action planning' = PA_actionplan_T1, 'coping planning' = PA_copingplan_T1, 'frequency-related BCTs' = PA_frequencyDependentBCT_T1, 'agreement-related BCTs' = PA_agreementDependentBCT_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_descriptiveNorm_T1, 'injunctive norm' = PA_injunctiveNorm_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'self-efficacy / perceivedBehaviouralControl' = PA_selfEfficacyperceivedBehaviouralControl_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
   mutate_all(as.numeric)
 
 names <- df %>% dplyr::select('PA' = mvpaAccelerometer_T1, 'SB' = sitLieAccelerometer_T1,
-'fat%' = fatpct_T1,'action planning' = PA_actionplan_T1, 'coping planning' = PA_copingplan_T1, 'frequency-related BCTs' = PA_frqbct_T1, 'agreement-related BCTs' = PA_agrbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'self-efficacy / PBC' = PA_selfEfficacyPBC_T1, 'perceived opportunities' = PA_opportunities_T1) %>% names
+'fat%' = fatpct_T1,'action planning' = PA_actionplan_T1, 'coping planning' = PA_copingplan_T1, 'frequency-related BCTs' = PA_frequencyDependentBCT_T1, 'agreement-related BCTs' = PA_agreementDependentBCT_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_descriptiveNorm_T1, 'injunctive norm' = PA_injunctiveNorm_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'self-efficacy / perceivedBehaviouralControl' = PA_selfEfficacyperceivedBehaviouralControl_T1, 'perceived opportunities' = PA_opportunities_T1) %>% names
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
@@ -3770,7 +3770,7 @@ nodeColors <- c(rep(viridis::viridis(7, begin = 0.3, end = 1)[1], 2), # PA, SB
                 rep(viridis::viridis(7, begin = 0.3, end = 1)[5], 3), # Motivations
                 rep(viridis::viridis(7, begin = 0.3, end = 1)[6], 2), # norms
                 rep(viridis::viridis(7, begin = 0.3, end = 1)[7], 1), # intention
-                rep(viridis::viridis(7, begin = 0.3, end = 1)[6], 3)) # OE, SE/PBC, Opportunities
+                rep(viridis::viridis(7, begin = 0.3, end = 1)[6], 3)) # OE, SE/perceivedBehaviouralControl, Opportunities
 
 
 qgraph(cor_auto(data), layout = "spring", labels = TRUE, 
@@ -4123,17 +4123,17 @@ data <- df %>%
   dplyr::select(
     "MVPA accelerometer" = mvpaAccelerometer_T1, 
     "planning" = PA_actCop_T1, 
-    "BCT" = PA_frqbct_T1, 
+    "BCT" = PA_frequencyDependentBCT_T1, 
     "amotivation" = PA_amotivation_T1, 
     "autonomous" = PA_autonomous_T1, 
     "controlled" = PA_controlled_T1, 
-    "descriptive norm" = PA_dnorm_T1, 
+    "descriptive norm" = PA_descriptiveNorm_T1, 
     "fat pct" = fatpct_T1, 
-    "injunctive norm" = PA_inorm_T1, 
+    "injunctive norm" = PA_injunctiveNorm_T1, 
     "intention" = PA_intention_T1, 
     "outcome expectations" = PA_outcomeExpectations_T1, 
     "opportunities" = PA_opportunities_T1, 
-    "self-efficacy PBC" = PA_selfEfficacyPBC_T1) %>% 
+    "self-efficacy perceivedBehaviouralControl" = PA_selfEfficacyperceivedBehaviouralControl_T1) %>% 
   mutate_all(funs(as.numeric(.))) 
 
 covMatrix <- data %>% cov(use = "pairwise.complete.obs")
@@ -4225,17 +4225,17 @@ data <- df %>%
   dplyr::select(
     "MVPA accelerometer" = mvpaAccelerometer_T1, 
     "planning" = PA_actCop_T1, 
-    "BCT" = PA_frqbct_T1, 
+    "BCT" = PA_frequencyDependentBCT_T1, 
     "amotivation" = PA_amotivation_T1, 
     "autonomous" = PA_autonomous_T1, 
     "controlled" = PA_controlled_T1, 
-    "descriptive norm" = PA_dnorm_T1, 
+    "descriptive norm" = PA_descriptiveNorm_T1, 
     "fat pct" = fatpct_T1, 
-    "injunctive norm" = PA_inorm_T1, 
+    "injunctive norm" = PA_injunctiveNorm_T1, 
     "intention" = PA_intention_T1, 
     "outcome expectations" = PA_outcomeExpectations_T1, 
     "opportunities" = PA_opportunities_T1, 
-    "self-efficacy PBC" = PA_selfEfficacyPBC_T1) %>% 
+    "self-efficacy perceivedBehaviouralControl" = PA_selfEfficacyperceivedBehaviouralControl_T1) %>% 
   mutate_all(funs(as.numeric(.))) 
 
 piefill_determinantggm2 <- data %>% mutate_all(funs(mean(., na.rm = TRUE) / max(., na.rm = TRUE)))
@@ -4300,7 +4300,7 @@ bootnet::corStability(bootnet_centrality_stability_determinants)
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
-data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, actCop = PA_actcop_T1, BCT = PA_frqbct_T1, amot = PA_amotivation_T1, auton = PA_autonomous_T1, cont = PA_controlled_T1, dnorm = PA_dnorm_T1, fatpct = fatpct_T1, inorm = PA_inorm_T1, intent = PA_intention_T1, outcomeExpectations = PA_outcomeExpectations_T1, opp = PA_opportunities_T1, sePbc = PA_selfEfficacyPBC_T1) %>% data.frame() %>% 
+data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, actCop = PA_actcop_T1, BCT = PA_frequencyDependentBCT_T1, amot = PA_amotivation_T1, auton = PA_autonomous_T1, cont = PA_controlled_T1, descriptiveNorm = PA_descriptiveNorm_T1, fatpct = fatpct_T1, injunctiveNorm = PA_injunctiveNorm_T1, intent = PA_intention_T1, outcomeExpectations = PA_outcomeExpectations_T1, opp = PA_opportunities_T1, seperceivedBehaviouralControl = PA_selfEfficacyperceivedBehaviouralControl_T1) %>% data.frame() %>% 
   dplyr::select(-auton, -cont, -amot)
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
@@ -4334,7 +4334,7 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
-data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frqbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / PBC' = PA_selfEfficacyPBC_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
+data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frequencyDependentBCT_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_descriptiveNorm_T1, 'injunctive norm' = PA_injunctiveNorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / perceivedBehaviouralControl' = PA_selfEfficacyperceivedBehaviouralControl_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
             dplyr::select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`) %>% 
   data.frame
 
@@ -4387,11 +4387,11 @@ plot(nwBoys, label.scale = FALSE, title = "Boys", label.cex = 0.75,
      pieBorder = 1)
 ```
 
-### PA network without BCTs and SDT, intention, PA, fat%
+### PA network without BCTs and SDT, intention, MVPA, fat%
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
-data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frqbct_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_dnorm_T1, 'injunctive norm' = PA_inorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / PBC' = PA_selfEfficacyPBC_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
+data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping planning' = PA_actcop_T1, 'Frequency-related BCTs' = PA_frequencyDependentBCT_T1, 'amotivation' = PA_amotivation_T1, 'autonomous motivation' = PA_autonomous_T1, 'controlled motivation' = PA_controlled_T1, 'descriptive norm' = PA_descriptiveNorm_T1, 'injunctive norm' = PA_injunctiveNorm_T1, "fat pct" = fatpct_T1, 'intention' = PA_intention_T1, 'outcome expectations' = PA_outcomeExpectations_T1, 'Self-efficacy / perceivedBehaviouralControl' = PA_selfEfficacyperceivedBehaviouralControl_T1, 'perceived opportunities' = PA_opportunities_T1) %>% 
             dplyr::select(-`autonomous motivation`, -`controlled motivation`, -`amotivation`, -`Frequency-related BCTs`, -PA, -`intention`, -`fat pct`) %>% 
   data.frame
 
@@ -4479,7 +4479,7 @@ plot(boot1, "closeness")
 ```{r, include = FALSE, eval = FALSE}
 
 # here goes your data; call it "data"
-data <- df %>% dplyr::select(paT1, girl, actcop_T1, frqbct_T1, amotivation_T1, autonomous_T1, controlled_T1, dnorm_T1, fatpct_T1, inorm_T1, intention_T1, outcomeExpectations_T1, opportunities_T1, sePbc_T1) 
+data <- df %>% dplyr::select(paT1, girl, actcop_T1, frequencyDependentBCT_T1, amotivation_T1, autonomous_T1, controlled_T1, descriptiveNorm_T1, fatpct_T1, injunctiveNorm_T1, intention_T1, outcomeExpectations_T1, opportunities_T1, seperceivedBehaviouralControl_T1) 
 
 ### Split data into girls and boys
 data1 <- data %>% filter(girl == "girl") %>% dplyr::select(-girl) %>% as.data.frame
@@ -4514,12 +4514,12 @@ sum(nct_results$einv.pvals$"p-value" < 0.05)  # how many edges are different
 
 ## Robustness test 
 ```{r, eval = FALSE}
-data <- data %>% dplyr::select(BCT = agrbct_T1,
+data <- data %>% dplyr::select(BCT = agreementDependentBCT_T1,
     AUT = autonomous_T1,
     Intn = intention_T1,
-    PBC = pbc_T1,
+    perceivedBehaviouralControl = perceivedBehaviouralControl_T1,
     outcomeExpectations = outcomeExpectations_T1,
-    DNorm = norm_T1)
+    descriptiveNorm = norm_T1)
 
 Network <- bootnet::estimateNetwork(data, default = "EBICglasso")
 
@@ -4604,7 +4604,7 @@ matrix_corLower_parcorUpper %>% corrgram::corrgram(
   upper.panel = corrgram::panel.pie,
   outer.labels = list(bottom = list(labels = labs, cex = 0.75, srt = 30),
                       left = list(labels = labs, cex = 0.75, srt = 30)),
-  main = "Bivariate (upper diagonal) and partial (lower diagonal)\ncorrelations of BCTs, motivation and self-reported PA")
+  main = "Bivariate (upper diagonal) and partial (lower diagonal)\ncorrelations of BCTs, motivation and self-reported MVPA")
 
 corMatrix_motivations <- regulations.df %>% cor(use = "pairwise.complete.obs", method = "spearman")
 
@@ -4618,7 +4618,7 @@ corMatrix_motivations %>%
                 `MVPA accelerometer (% weartime)` = mvpaAccelerometer_percentageWeartime_T1, 
                 `Accelerometer wear time` = weartimeAccelerometer_T1) %>%
   dplyr::arrange(desc(`MVPA accelerometer`)) %>% 
-  DT::datatable(caption = "Bivariate correlations between motivation and PA. Sorted by correlation strength with MVPA accelerometer.")
+  DT::datatable(caption = "Bivariate correlations between motivation and MVPA. Sorted by correlation strength with MVPA accelerometer.")
 
 corMatrix_motivations %>%
   as.data.frame(.) %>% 
@@ -4771,4 +4771,5 @@ itemGroups <- c(rep("Amotivation", 4),
 plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
 
 ```
+
 

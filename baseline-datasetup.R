@@ -256,26 +256,26 @@ d <- lmi %>% dplyr::select(id = ID,
                            # PA_actCop_03_T3 = Kys0117.3,
                            # PA_actCop_04_T1 = Kys0118.1,
                            # PA_actCop_04_T3 = Kys0118.3,
-                           PA_agrbct_01_T1 = Kys0128.1,
-                           PA_agrbct_01_T3 = Kys0128.3,
-                           PA_agrbct_02_T1 = Kys0129.1,
-                           PA_agrbct_02_T3 = Kys0129.3,
-                           PA_agrbct_03_T1 = Kys0130.1,
-                           PA_agrbct_03_T3 = Kys0130.3,
-                           PA_agrbct_04_T1 = Kys0131.1,
-                           PA_agrbct_04_T3 = Kys0131.3,
-                           PA_agrbct_05_T1 = Kys0132.1,
-                           PA_agrbct_05_T3 = Kys0132.3,
-                           PA_agrbct_06_T1 = Kys0133.1,
-                           PA_agrbct_06_T3 = Kys0133.3,
-                           PA_agrbct_07_T1 = Kys0134.1,
-                           PA_agrbct_07_T3 = Kys0134.3,
-                           PA_agrbct_08_T1 = Kys0135.1,
-                           PA_agrbct_08_T3 = Kys0135.3,
-                           PA_agrbct_09_T1 = Kys0136.1,
-                           PA_agrbct_09_T3 = Kys0136.3,
-                           PA_agrbct_10_T1 = Kys0137.1,
-                           PA_agrbct_10_T3 = Kys0137.3,
+                           PA_agreementDependentBCT_01_T1 = Kys0128.1,
+                           PA_agreementDependentBCT_01_T3 = Kys0128.3,
+                           PA_agreementDependentBCT_02_T1 = Kys0129.1,
+                           PA_agreementDependentBCT_02_T3 = Kys0129.3,
+                           PA_agreementDependentBCT_03_T1 = Kys0130.1,
+                           PA_agreementDependentBCT_03_T3 = Kys0130.3,
+                           PA_agreementDependentBCT_04_T1 = Kys0131.1,
+                           PA_agreementDependentBCT_04_T3 = Kys0131.3,
+                           PA_agreementDependentBCT_05_T1 = Kys0132.1,
+                           PA_agreementDependentBCT_05_T3 = Kys0132.3,
+                           PA_agreementDependentBCT_06_T1 = Kys0133.1,
+                           PA_agreementDependentBCT_06_T3 = Kys0133.3,
+                           PA_agreementDependentBCT_07_T1 = Kys0134.1,
+                           PA_agreementDependentBCT_07_T3 = Kys0134.3,
+                           PA_agreementDependentBCT_08_T1 = Kys0135.1,
+                           PA_agreementDependentBCT_08_T3 = Kys0135.3,
+                           PA_agreementDependentBCT_09_T1 = Kys0136.1,
+                           PA_agreementDependentBCT_09_T3 = Kys0136.3,
+                           PA_agreementDependentBCT_10_T1 = Kys0137.1,
+                           PA_agreementDependentBCT_10_T3 = Kys0137.3,
                            PA_amotivation_01_T1 = Kys0082.1,
                            PA_amotivation_01_T3 = Kys0082.3,
                            PA_amotivation_02_T1 = Kys0086.1,
@@ -292,34 +292,34 @@ d <- lmi %>% dplyr::select(id = ID,
                            # PA_actCop_07_T3 = Kys0121.3,
                            # PA_actCop_08_T1 = Kys0122.1,
                            # PA_actCop_08_T3 = Kys0122.3,
-                           PA_dnorm_02_T1 = Kys0107.1,
-                           PA_dnormparents_02_T3 = Kys0107.3,
-                           PA_dnorm_01_T1 = Kys0106.1,
-                           PA_dnorm_01_T3 = Kys0106.3,
+                           PA_descriptiveNorm_02_T1 = Kys0107.1,
+                           PA_descriptiveNormparents_02_T3 = Kys0107.3,
+                           PA_descriptiveNorm_01_T1 = Kys0106.1,
+                           PA_descriptiveNorm_01_T3 = Kys0106.3,
                            PA_controlled_01_T1 = Kys0080.1,
                            PA_controlled_01_T3 = Kys0080.3,
                            PA_controlled_02_T1 = Kys0081.1,
                            PA_controlled_02_T3 = Kys0081.3,
                            PA_controlled_03_T1 = Kys0083.1,
                            PA_controlled_03_T3 = Kys0083.3,
-                           PA_frqbct_01_T1 = Kys0138.1,
-                           PA_frqbct_01_T3 = Kys0138.3,
-                           PA_frqbct_02_T1 = Kys0139.1,
-                           PA_frqbct_02_T3 = Kys0139.3,
-                           PA_frqbct_03_T1 = Kys0140.1,
-                           PA_frqbct_03_T3 = Kys0140.3,
-                           PA_frqbct_04_T1 = Kys0141.1,
-                           PA_frqbct_04_T3 = Kys0141.3,
-                           PA_frqbct_05_T1 = Kys0142.1,
-                           PA_frqbct_05_T3 = Kys0142.3,
-                           PA_frqbct_06_T1 = Kys0143.1,
-                           PA_frqbct_06_T3 = Kys0143.3,
-                           PA_frqbct_07_T1 = Kys0144.1,
-                           PA_frqbct_07_T3 = Kys0144.3,
-                           PA_frqbct_08_T1 = Kys0145.1,
-                           PA_frqbct_08_T3 = Kys0145.3,
-                           PA_frqbct_09_T1 = Kys0146.1,
-                           PA_frqbct_09_T3 = Kys0146.3,
+                           PA_frequencyDependentBCT_01_T1 = Kys0138.1,
+                           PA_frequencyDependentBCT_01_T3 = Kys0138.3,
+                           PA_frequencyDependentBCT_02_T1 = Kys0139.1,
+                           PA_frequencyDependentBCT_02_T3 = Kys0139.3,
+                           PA_frequencyDependentBCT_03_T1 = Kys0140.1,
+                           PA_frequencyDependentBCT_03_T3 = Kys0140.3,
+                           PA_frequencyDependentBCT_04_T1 = Kys0141.1,
+                           PA_frequencyDependentBCT_04_T3 = Kys0141.3,
+                           PA_frequencyDependentBCT_05_T1 = Kys0142.1,
+                           PA_frequencyDependentBCT_05_T3 = Kys0142.3,
+                           PA_frequencyDependentBCT_06_T1 = Kys0143.1,
+                           PA_frequencyDependentBCT_06_T3 = Kys0143.3,
+                           PA_frequencyDependentBCT_07_T1 = Kys0144.1,
+                           PA_frequencyDependentBCT_07_T3 = Kys0144.3,
+                           PA_frequencyDependentBCT_08_T1 = Kys0145.1,
+                           PA_frequencyDependentBCT_08_T3 = Kys0145.3,
+                           PA_frequencyDependentBCT_09_T1 = Kys0146.1,
+                           PA_frequencyDependentBCT_09_T3 = Kys0146.3,
                            PA_goal_01_T1 = Kys0147.1,
                            PA_goal_01_T3 = Kys0147.3,
                            PA_autonomous_01_T1 = Kys0087.1,
@@ -328,8 +328,8 @@ d <- lmi %>% dplyr::select(id = ID,
                            PA_autonomous_02_T3 = Kys0088.3,
                            PA_autonomous_03_T1 = Kys0090.1,
                            PA_autonomous_03_T3 = Kys0090.3,
-                           PA_inorm_01_T1 = Kys0108.1,
-                           PA_inorm_01_T3 = Kys0108.3,
+                           PA_injunctiveNorm_01_T1 = Kys0108.1,
+                           PA_injunctiveNorm_01_T3 = Kys0108.3,
                            PA_autonomous_04_T1 = Kys0089.1,
                            PA_autonomous_04_T3 = Kys0089.3,
                            PA_autonomous_05_T1 = Kys0092.1,
@@ -390,12 +390,12 @@ d <- lmi %>% dplyr::select(id = ID,
                            PA_opportunitiesReverseCoded_06_T3 = Kys0103.3,
                            PA_opportunitiesReverseCoded_08_T1 = Kys0105.1,
                            # No answers or not asked T3: PA_opportunitiesReverseCoded_08_T3 = Kys0105.3,
-                           PA_pbc_01_T1 = Kys0125.1,
-                           PA_pbc_01_T3 = Kys0125.3,
-                           PA_pbc_03_T1 = Kys0127.1,
-                           PA_pbc_03_T3 = Kys0127.3,
-                           PA_pbcReverseCoded_02_T1 = Kys0126.1,
-                           PA_pbcReverseCoded_02_T3 = Kys0126.3,
+                           PA_perceivedBehaviouralControl_01_T1 = Kys0125.1,
+                           PA_perceivedBehaviouralControl_01_T3 = Kys0125.3,
+                           PA_perceivedBehaviouralControl_03_T1 = Kys0127.1,
+                           PA_perceivedBehaviouralControl_03_T3 = Kys0127.3,
+                           PA_perceivedBehaviouralControlReverseCoded_02_T1 = Kys0126.1,
+                           PA_perceivedBehaviouralControlReverseCoded_02_T3 = Kys0126.3,
                            PA_selfefficacy_01_T1 = Kys0123.1,
                            PA_selfefficacy_01_T3 = Kys0123.3,
                            PA_selfefficacyReverseCoded_02_T1 = Kys0124.1,
@@ -410,14 +410,14 @@ d <- lmi %>% dplyr::select(id = ID,
                            pahrsUsually_T3 = Kys0049.3,
                            paminLastweek_T1 = Kys0047.1,
                            paminLastweek_T3 = Kys0047.3,
-                           SB_dnorm_01_T1 = Kys0178.1,
-                           SB_dnorm_01_T3 = Kys0178.3,
-                           SB_dnorm_02_T1 = Kys0179.1,
-                           SB_dnorm_02_T3 = Kys0179.3,
-                           SB_inorm_01_T1 = Kys0180.1,
-                           SB_inorm_01_T3 = Kys0180.3,
-                           SB_inorm_02_T1 = Kys0181.1,
-                           SB_inorm_02_T3 = Kys0181.3,
+                           SB_descriptiveNorm_01_T1 = Kys0178.1,
+                           SB_descriptiveNorm_01_T3 = Kys0178.3,
+                           SB_descriptiveNorm_02_T1 = Kys0179.1,
+                           SB_descriptiveNorm_02_T3 = Kys0179.3,
+                           SB_injunctiveNorm_01_T1 = Kys0180.1,
+                           SB_injunctiveNorm_01_T3 = Kys0180.3,
+                           SB_injunctiveNorm_02_T1 = Kys0181.1,
+                           SB_injunctiveNorm_02_T3 = Kys0181.3,
                            SB_intention_01_T1 = Kys0187.1,
                            SB_intention_01_T3 = Kys0187.3,
                            SB_intention_02_T1 = Kys0188.1,
@@ -440,16 +440,16 @@ d <- lmi %>% dplyr::select(id = ID,
                            SB_outcomeExpectations_06_T3 = Kys0176.3,
                            SB_outcomeExpectationsNegative_07_T1 = Kys0177.1,
                            SB_outcomeExpectationsNegative_07_T3 = Kys0177.3,
-                           SB_selfEfficacyPBC_01_T1 = Kys0182.1,
-                           SB_selfEfficacyPBC_01_T3 = Kys0182.3,
-                           SB_selfEfficacyPBC_02_T1 = Kys0183.1,
-                           SB_selfEfficacyPBC_02_T3 = Kys0183.3,
-                           SB_selfEfficacyPBC_03_T1 = Kys0184.1,
-                           SB_selfEfficacyPBC_03_T3 = Kys0184.3,
-                           SB_selfEfficacyPBC_04_T1 = Kys0185.1,
-                           SB_selfEfficacyPBC_04_T3 = Kys0185.3,
-                           SB_selfEfficacyPBC_05_T1 = Kys0186.1,
-                           SB_selfEfficacyPBC_05_T3 = Kys0186.3,
+                           SB_selfEfficacyperceivedBehaviouralControl_01_T1 = Kys0182.1,
+                           SB_selfEfficacyperceivedBehaviouralControl_01_T3 = Kys0182.3,
+                           SB_selfEfficacyperceivedBehaviouralControl_02_T1 = Kys0183.1,
+                           SB_selfEfficacyperceivedBehaviouralControl_02_T3 = Kys0183.3,
+                           SB_selfEfficacyperceivedBehaviouralControl_03_T1 = Kys0184.1,
+                           SB_selfEfficacyperceivedBehaviouralControl_03_T3 = Kys0184.3,
+                           SB_selfEfficacyperceivedBehaviouralControl_04_T1 = Kys0185.1,
+                           SB_selfEfficacyperceivedBehaviouralControl_04_T3 = Kys0185.3,
+                           SB_selfEfficacyperceivedBehaviouralControl_05_T1 = Kys0186.1,
+                           SB_selfEfficacyperceivedBehaviouralControl_05_T3 = Kys0186.3,
                            sitLieAccelerometer_T1 = MaIsT1_ka,
                            sitLieAccelerometer_T3 = MaIsT3_ka,
                            symptom_neckShoulderPain_T1 = Kys0031.1,
@@ -595,6 +595,34 @@ d <- bind_cols(d, track)
 dT1 <- d %>% dplyr::select(contains("T1", ignore.case = FALSE))
 dT3 <- d %>% dplyr::select(contains("T3", ignore.case = FALSE))
 
+# TEMPORARILY EXTRACTED MAKESCALES FROM https://raw.githubusercontent.com/Matherion/userfriendlyscience/master/R/makeScales.R
+
+makeScales_NEW <- function(dat, scales, append=TRUE) {
+  resDat <- dat[, FALSE];
+  for (currentScale in 1:length(scales)) {
+    if (length(unlist(scales[currentScale])) > 1) {
+      resDat[[names(scales[currentScale])]] <-
+        rowMeans(dat[, unlist(scales[currentScale])], na.rm=TRUE);
+      resDat[[names(scales[currentScale])]] <-
+        ifelse(is.nan(resDat[[names(scales[currentScale])]]),
+               NA,
+               resDat[[names(scales[currentScale])]]);
+      attributes(resDat[[names(scales[currentScale])]])$scale_item_names <-
+        unname(unlist(scales[currentScale]));
+    }
+    else if (length(unlist(scales[currentScale])) == 1) {
+      resDat[[names(scales[currentScale])]] <- dat[[unlist(scales[currentScale])]];
+      attributes(resDat[[names(scales[currentScale])]])$scale_item_names <-
+        unname(unlist(scales[currentScale]));
+    }
+  }
+  if (append) {
+    return(cbind(dat, resDat));
+  } else {
+    return(resDat);
+  }
+}
+
 # Create T1 scales
 
 scales_T1 <- list(big5agreeableness_T1 = grep('big5agreeableness', names(dT1), value = TRUE),
@@ -603,31 +631,31 @@ scales_T1 <- list(big5agreeableness_T1 = grep('big5agreeableness', names(dT1), v
                   big5neuroticism_T1 = grep('big5neuroticism', names(dT1), value = TRUE),
                   big5openness_T1 = grep('big5openness', names(dT1), value = TRUE),
                   # PA_actCop_T1 = grep('PA_actCop', names(dT1), value = TRUE), # Action and coping planning are separate in data
-                  PA_agrbct_T1 = grep('PA_agrbct', names(dT1), value = TRUE),
+                  PA_agreementDependentBCT_T1 = grep('PA_agreementDependentBCT', names(dT1), value = TRUE),
                   PA_amotivation_T1 = grep('PA_amotivation', names(dT1), value = TRUE),
                   PA_autonomous_T1 = grep('PA_autonomous', names(dT1), value = TRUE),
                   PA_controlled_T1 = grep('PA_controlled', names(dT1), value = TRUE),
-                  PA_dnorm_T1 = grep('PA_dnorm', names(dT1), value = TRUE),
-                  PA_frqbct_T1 = grep('PA_frqbct', names(dT1), value = TRUE),
+                  PA_descriptiveNorm_T1 = grep('PA_descriptiveNorm', names(dT1), value = TRUE),
+                  PA_frequencyDependentBCT_T1 = grep('PA_frequencyDependentBCT', names(dT1), value = TRUE),
                   PA_goal_T1 = grep('PA_goal', names(dT1), value = TRUE),
-                  PA_inorm_T1 = grep('PA_inorm', names(dT1), value = TRUE),
+                  PA_injunctiveNorm_T1 = grep('PA_injunctiveNorm', names(dT1), value = TRUE),
                   PA_intention_T1 = grep('PA_intention', names(dT1), value = TRUE),
                   PA_outcomeExpectations_T1 = grep('PA_outcomeExpectations', names(dT1), value = TRUE),
                   PA_opportunities_T1 = grep('PA_opportunities', names(dT1), value = TRUE),
-                  PA_pbc_T1 = grep('PA_pbc', names(dT1), value = TRUE),
+                  PA_perceivedBehaviouralControl_T1 = grep('PA_perceivedBehaviouralControl', names(dT1), value = TRUE),
                   PA_selfefficacy_T1 = grep('PA_selfefficacy', names(dT1), value = TRUE),
-                  SB_dnorm_T1 = grep('SB_dnorm', names(dT1), value = TRUE),
-                  SB_inorm_T1 = grep('SB_inorm', names(dT1), value = TRUE),
+                  SB_descriptiveNorm_T1 = grep('SB_descriptiveNorm', names(dT1), value = TRUE),
+                  SB_injunctiveNorm_T1 = grep('SB_injunctiveNorm', names(dT1), value = TRUE),
                   SB_intention_T1 = grep('SB_intention', names(dT1), value = TRUE),
                   SB_outcomeExpectations_T1 = grep('SB_outcomeExpectations', names(dT1), value = TRUE),
-                  SB_selfEfficacyPBC_T1 = grep('SB_selfEfficacyPBC', names(dT1), value = TRUE),
+                  SB_selfEfficacyperceivedBehaviouralControl_T1 = grep('SB_selfEfficacyperceivedBehaviouralControl', names(dT1), value = TRUE),
                   symptom_T1 = grep('symptom', names(dT1), value = TRUE),
                   PA_actionplan_T1 = grep('actionPlanning', names(dT1), value = TRUE),
                   PA_copingplan_T1 = grep('copingPlanning', names(dT1), value = TRUE)
 )
 
 # Append the aggregate variables to the data frame
-newdf <- userfriendlyscience::makeScales(dT1, scales_T1)
+newdf <- makeScales_NEW(dT1, scales_T1)
 
 # Create T3 scales
 
@@ -637,42 +665,42 @@ scales_T3 <- list(big5agreeableness_T3 = grep('big5agreeableness', names(dT3), v
                   big5neuroticism_T3 = grep('big5neuroticism', names(dT3), value = TRUE),
                   big5openness_T3 = grep('big5openness', names(dT3), value = TRUE),
                   # PA_actCop_T3 = grep('PA_actCop', names(dT3), value = TRUE), # Action and coping planning are separate in data
-                  PA_agrbct_T3 = grep('PA_agrbct', names(dT3), value = TRUE),
+                  PA_agreementDependentBCT_T3 = grep('PA_agreementDependentBCT', names(dT3), value = TRUE),
                   PA_amotivation_T3 = grep('PA_amotivation', names(dT3), value = TRUE),
                   PA_autonomous_T3 = grep('PA_autonomous', names(dT3), value = TRUE),
                   PA_controlled_T3 = grep('PA_controlled', names(dT3), value = TRUE),
-                  PA_dnorm_T3 = grep('PA_dnorm', names(dT3), value = TRUE),
-                  PA_frqbct_T3 = grep('PA_frqbct', names(dT3), value = TRUE),
+                  PA_descriptiveNorm_T3 = grep('PA_descriptiveNorm', names(dT3), value = TRUE),
+                  PA_frequencyDependentBCT_T3 = grep('PA_frequencyDependentBCT', names(dT3), value = TRUE),
                   PA_goal_T3 = grep('PA_goal', names(dT3), value = TRUE),
-                  PA_inorm_T3 = grep('PA_inorm', names(dT3), value = TRUE),
+                  PA_injunctiveNorm_T3 = grep('PA_injunctiveNorm', names(dT3), value = TRUE),
                   PA_intention_T3 = grep('PA_intention', names(dT3), value = TRUE),
                   PA_outcomeExpectations_T3 = grep('PA_outcomeExpectations', names(dT3), value = TRUE),
                   PA_opportunities_T3 = grep('PA_opportunities', names(dT3), value = TRUE),
-                  PA_pbc_T3 = grep('PA_pbc', names(dT3), value = TRUE),
+                  PA_perceivedBehaviouralControl_T3 = grep('PA_perceivedBehaviouralControl', names(dT3), value = TRUE),
                   PA_selfefficacy_T3 = grep('PA_selfefficacy', names(dT3), value = TRUE),
-                  SB_dnorm_T3 = grep('SB_dnorm', names(dT3), value = TRUE),
-                  SB_inorm_T3 = grep('SB_inorm', names(dT3), value = TRUE),
+                  SB_descriptiveNorm_T3 = grep('SB_descriptiveNorm', names(dT3), value = TRUE),
+                  SB_injunctiveNorm_T3 = grep('SB_injunctiveNorm', names(dT3), value = TRUE),
                   SB_intention_T3 = grep('SB_intention', names(dT3), value = TRUE),
                   SB_outcomeExpectations_T3 = grep('SB_outcomeExpectations', names(dT3), value = TRUE),
-                  SB_selfEfficacyPBC_T3 = grep('SB_selfEfficacyPBC', names(dT3), value = TRUE),
+                  SB_selfEfficacyperceivedBehaviouralControl_T3 = grep('SB_selfEfficacyperceivedBehaviouralControl', names(dT3), value = TRUE),
                   symptom_T3 = grep('symptom', names(dT3), value = TRUE),
                   PA_actionplan_T3 = grep('actionPlanning', names(dT3), value = TRUE),
                   PA_copingplan_T3 = grep('copingPlanning', names(dT3), value = TRUE)
 )
 
 # Append the aggregate variables to the data frame
-newdf2 <- userfriendlyscience::makeScales(dT3, scales_T3)
+newdf2 <- makeScales_NEW(dT3, scales_T3)
 
 # Take the demographic variables from d, combine with the variables with T1 or T3 in the name. 
 df <- cbind(d[ , c("id", "intervention", "group", "school", "girl", "track")], newdf[, ], newdf2[, ])
 
 # Create composite of self-efficacy and perceived behavioural control
 df <- df %>% rowwise %>%
-  mutate(PA_selfEfficacyPBC_T1 = mean(c(PA_pbc_T1, PA_selfefficacy_T1), na.rm = T),
-         PA_selfEfficacyPBC_T3 = mean(c(PA_pbc_T3, PA_selfefficacy_T3), na.rm = T))
+  mutate(PA_selfEfficacyperceivedBehaviouralControl_T1 = mean(c(PA_perceivedBehaviouralControl_T1, PA_selfefficacy_T1), na.rm = T),
+         PA_selfEfficacyperceivedBehaviouralControl_T3 = mean(c(PA_perceivedBehaviouralControl_T3, PA_selfefficacy_T3), na.rm = T))
 ## Fix the "NaN"s
-df$PA_selfEfficacyPBC_T1[is.nan(df$PA_selfEfficacyPBC_T1)] <- NA
-df$PA_selfEfficacyPBC_T3[is.nan(df$PA_selfEfficacyPBC_T3)] <- NA
+df$PA_selfEfficacyperceivedBehaviouralControl_T1[is.nan(df$PA_selfEfficacyperceivedBehaviouralControl_T1)] <- NA
+df$PA_selfEfficacyperceivedBehaviouralControl_T3[is.nan(df$PA_selfEfficacyperceivedBehaviouralControl_T3)] <- NA
 
 # Create composite of action planning and coping planning
 df <- df %>% rowwise %>%

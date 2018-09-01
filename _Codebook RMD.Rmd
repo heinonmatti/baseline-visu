@@ -8,6 +8,8 @@ output: html_document
 ```{r codebook, echo = FALSE, include = FALSE}
 load("./data/df.Rdata")
 
+p_load_current_gh("rubenarslan/codebook")
+
 codebook::codebook(df)
 
 ```

@@ -3597,8 +3597,8 @@ plot1 <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Frequency-\nrelated BCTs' = PA_frqbct_T1,
-'Agreement-\nrelated BCTs' = PA_agrbct_T1)  %>%
+'Frequency-\nrelated BCTs' = PA_frequencyDependentBCT_T1,
+'Agreement-\nrelated BCTs' = PA_agreementDependentBCT_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot2::ggplot(aes(y = Variable)) +
@@ -3620,8 +3620,8 @@ plot2 <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Frequency-\nrelated BCTs' = PA_frqbct_T1,
-'Agreement-\nrelated BCTs' = PA_agrbct_T1) %>%
+'Frequency-\nrelated BCTs' = PA_frequencyDependentBCT_T1,
+'Agreement-\nrelated BCTs' = PA_agreementDependentBCT_T1) %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot2::ggplot(aes(y = Variable)) +
@@ -3648,7 +3648,7 @@ plot1 + plot2
 
 #### Frequency-measured BCTs
 
-```{r sm-frqbct}
+```{r sm-frequencyDependentBCT}
 
 # Create data frame
 densplot <- df
@@ -3664,14 +3664,14 @@ par(mai = c(0.3, 0.3, 0.1, 0.0))
 
 ## Girls vs. boys
 # Choose only the variables needed and drop NA
-dens <- densplot %>% dplyr::select(PA_frqbct_T1, girl) %>% 
+dens <- densplot %>% dplyr::select(PA_frequencyDependentBCT_T1, girl) %>% 
   dplyr::filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
 
 # Make plot
-sm.PA_frqbct_T1_2 <- sm.density.compare2(as.numeric(dens$PA_frqbct_T1), 
+sm.PA_frequencyDependentBCT_T1_2 <- sm.density.compare2(as.numeric(dens$PA_frequencyDependentBCT_T1), 
                                                as.factor(dens$girl), 
                                                model = "equal",
                                                xlab = "", ylab = "",
@@ -3685,13 +3685,13 @@ mtext(side = 2, "Density", line = 0.5)
 
 ## Intervention vs. control
 # Choose only the variables needed and drop NA
-dens <- densplot %>% dplyr::select(PA_frqbct_T1, intervention) %>% 
+dens <- densplot %>% dplyr::select(PA_frequencyDependentBCT_T1, intervention) %>% 
   dplyr::filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
 # Make plot
-sm.PA_frqbct_T1_2 <- sm.density.compare2(as.numeric(dens$PA_frqbct_T1), 
+sm.PA_frequencyDependentBCT_T1_2 <- sm.density.compare2(as.numeric(dens$PA_frequencyDependentBCT_T1), 
                                                as.factor(dens$intervention), 
                                                model = "equal", 
                                                xlab = "", ylab = "",
@@ -3710,7 +3710,7 @@ text(x = 1.02, y = 1.3, labels = "Frequency-based BCT sumscore mean", pos = 1)
 
 #### Agreement-measured BCTs
 
-```{r sm-agrbct}
+```{r sm-agreementDependentBCT}
 
 # Create data frame
 densplot <- df
@@ -3726,14 +3726,14 @@ par(mai = c(0.3, 0.3, 0.1, 0.0))
 
 ## Girls vs. boys
 # Choose only the variables needed and drop NA
-dens <- densplot %>% dplyr::select(PA_agrbct_T1, girl) %>% 
+dens <- densplot %>% dplyr::select(PA_agreementDependentBCT_T1, girl) %>% 
   dplyr::filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
 
 # Make plot
-sm.PA_agrbct_T1_2 <- sm.density.compare2(as.numeric(dens$PA_agrbct_T1), 
+sm.PA_agreementDependentBCT_T1_2 <- sm.density.compare2(as.numeric(dens$PA_agreementDependentBCT_T1), 
                                                as.factor(dens$girl), 
                                                model = "equal",
                                                xlab = "", ylab = "",
@@ -3747,13 +3747,13 @@ mtext(side = 2, "Density", line = 0.5)
 
 ## Intervention vs. control
 # Choose only the variables needed and drop NA
-dens <- densplot %>% dplyr::select(PA_agrbct_T1, intervention) %>% 
+dens <- densplot %>% dplyr::select(PA_agreementDependentBCT_T1, intervention) %>% 
   dplyr::filter(complete.cases(.))
 
 # Set random number generator for reproducibility of bootstrap test of equal densities
 set.seed(10)
 # Make plot
-sm.PA_agrbct_T1_2 <- sm.density.compare2(as.numeric(dens$PA_agrbct_T1), 
+sm.PA_agreementDependentBCT_T1_2 <- sm.density.compare2(as.numeric(dens$PA_agreementDependentBCT_T1), 
                                                as.factor(dens$intervention), 
                                                model = "equal", 
                                                xlab = "", ylab = "",
@@ -3797,7 +3797,7 @@ Items are as follows:
 8. I have asked my friends or family for support to reach my PA goals.
 9. If I haven't reached my PA goal, I have evaluated, what went wrong.
 
-```{r histogram-frqbcts}
+```{r histogram-frequencyDependentBCTs}
 genderInterventionColors <- viridis::viridis(11, end = 0.8)
 
 bctGirls <- df %>% dplyr::select(id,
@@ -3805,15 +3805,15 @@ bctGirls <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -3839,15 +3839,15 @@ bctBoys <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -3873,15 +3873,15 @@ bctInt <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -3906,15 +3906,15 @@ bctCont <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -3961,23 +3961,23 @@ Items are as follows:
 10. I have attempted to find ways to exercise so, that it won't obstruct but instead helps actualise my other life values.
 
 
-```{r histogram-agrbcts}
+```{r histogram-agreementDependentBCTs}
 
 bctGirls <- df %>% dplyr::select(id,
   intervention,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -4003,16 +4003,16 @@ bctBoys <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -4038,16 +4038,16 @@ bctInt <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -4072,16 +4072,16 @@ bctCont <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -4115,11 +4115,11 @@ plot1 <- df %>% dplyr::select(id,
                               girl,
                               'PA intention' = PA_intention_T1,
                               'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-                              'PA perceived\nbehavioural control' = PA_pbc_T1,
+                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
                               'PA self efficacy' = PA_selfefficacy_T1,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
-                              'PA descriptive\nnorm' = PA_dnorm_T1,
-                              'PA injunctive\nnorm' = PA_inorm_T1)  %>%
+                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
+                              'PA injunctive\nnorm' = PA_injunctiveNorm_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4142,31 +4142,31 @@ plot1 <- df %>% dplyr::select(id,
 target = c(
 "PA_intention_T1",
 "PA_outcomeExpectations_T1",
-"PA_pbc_T1",
+"PA_perceivedBehaviouralControl_T1",
 "PA_selfefficacy_T1",
 "PA_opportunities_T1",
-"PA_dnorm_T1",
-"PA_inorm_T1")
+"PA_descriptiveNorm_T1",
+"PA_injunctiveNorm_T1")
 
 PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
 
 PA_ci_boys <- ci_boys %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
 
@@ -4182,11 +4182,11 @@ plot2 <- df %>% dplyr::select(id,
                               girl,
                               'PA intention' = PA_intention_T1,
                               'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-                              'PA perceived\nbehavioural control' = PA_pbc_T1,
+                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
                               'PA self efficacy' = PA_selfefficacy_T1,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
-                              'PA descriptive\nnorm' = PA_dnorm_T1,
-                              'PA injunctive\nnorm' = PA_inorm_T1)  %>%
+                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
+                              'PA injunctive\nnorm' = PA_injunctiveNorm_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4209,22 +4209,22 @@ plot2 <- df %>% dplyr::select(id,
 PA_ci_intervention <- ci_intervention %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
 
 PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
 
@@ -4241,7 +4241,7 @@ plot1 + plot2
 
 The sample had generally a high intention for physical activity, as well as positive outcome expectations, perceived behavioural control, self-efficacy and opportunities. Norms were distributed more flatly. Differences between girls and boys were most pronounced in perceived behavioral control, where girls indicated lower values than boys. As visual inspection indicates, this effect is not very large.
 
-```{r densityplot-intention-oexp-pbc-se-opp-norms, fig.cap = "Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+```{r densityplot-intention-oexp-perceivedBehaviouralControl-se-opp-norms, fig.cap = "Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 plot1 <- df %>% dplyr::select(id,
                               intervention,
@@ -4250,10 +4250,10 @@ plot1 <- df %>% dplyr::select(id,
                               girl,
                               'PA intention' = PA_intention_T1,
                               'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-                              'PA perceived\nbehavioural control' = PA_pbc_T1,
+                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
                               'PA self efficacy' = PA_selfefficacy_T1,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
-                              'PA descriptive\nnorm' = PA_dnorm_T1)  %>%
+                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4276,28 +4276,28 @@ plot1 <- df %>% dplyr::select(id,
 target = c(
 "PA_intention_T1",
 "PA_outcomeExpectations_T1",
-"PA_pbc_T1",
+"PA_perceivedBehaviouralControl_T1",
 "PA_selfefficacy_T1",
 "PA_opportunities_T1",
-"PA_dnorm_T1")
+"PA_descriptiveNorm_T1")
 
 PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
 
 PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
 
 PA_ci_boys <- ci_boys %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
 
 PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
 
@@ -4313,10 +4313,10 @@ plot2 <- df %>% dplyr::select(id,
                               girl,
                               'PA intention' = PA_intention_T1,
                               'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-                              'PA perceived\nbehavioural control' = PA_pbc_T1,
+                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
                               'PA self efficacy' = PA_selfefficacy_T1,
                               'PA perceived\nopportunities' = PA_opportunities_T1,
-                              'PA descriptive\nnorm' = PA_dnorm_T1)  %>%
+                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4338,20 +4338,20 @@ plot2 <- df %>% dplyr::select(id,
 PA_ci_intervention <- ci_intervention %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
 
 PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
 
 PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
 
 PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
 
@@ -4364,9 +4364,9 @@ plot2 <- plot2 +
 plot1 + plot2 
 
 # Test that the legend is right; descriptive norms are smaller for girls
-df %>% group_by(girl) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "girl") %>% dplyr::select(mean) < df %>% group_by(girl) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "boy") %>% dplyr::select(mean)
+df %>% group_by(girl) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "girl") %>% dplyr::select(mean) < df %>% group_by(girl) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "boy") %>% dplyr::select(mean)
 
-df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "1") %>% dplyr::select(mean) < df %>% group_by(intervention) %>% summarise(mean = mean(PA_dnorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "0") %>% dplyr::select(mean)
+df %>% group_by(intervention) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "1") %>% dplyr::select(mean) < df %>% group_by(intervention) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "0") %>% dplyr::select(mean)
 ```
 
 ```{r bct-determinants-showdata}
@@ -4379,11 +4379,11 @@ plot1 <- df %>% dplyr::select(id,
 'PA action and\ncoping planning' = PA_actCop_T1,
 'PA intention' = PA_intention_T1,
 'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-'PA perceived\nbehavioural control' = PA_pbc_T1,
+'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
 'PA self efficacy' = PA_selfefficacy_T1,
 'PA perceived\nopportunities' = PA_opportunities_T1,
-'PA descriptive\nnorm' = PA_dnorm_T1,
-'PA injunctive\nnorm' = PA_inorm_T1)  %>%
+'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
+'PA injunctive\nnorm' = PA_injunctiveNorm_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4439,11 +4439,11 @@ plot2 <- df %>% dplyr::select(id,
 'PA action and\ncoping planning' = PA_actCop_T1,
 'PA intention' = PA_intention_T1,
 'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-'PA perceived\nbehavioural control' = PA_pbc_T1,
+'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
 'PA self efficacy' = PA_selfefficacy_T1,
 'PA perceived\nopportunities' = PA_opportunities_T1,
-'PA descriptive\nnorm' = PA_dnorm_T1,
-'PA injunctive\nnorm' = PA_inorm_T1) %>%
+'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
+'PA injunctive\nnorm' = PA_injunctiveNorm_T1) %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4494,21 +4494,21 @@ plot2 <- df %>% dplyr::select(id,
 target = c("PA_actCop_T1",
 "PA_intention_T1",
 "PA_outcomeExpectations_T1",
-"PA_pbc_T1",
+"PA_perceivedBehaviouralControl_T1",
 "PA_selfefficacy_T1",
 "PA_opportunities_T1",
-"PA_dnorm_T1",
-"PA_inorm_T1")
+"PA_descriptiveNorm_T1",
+"PA_injunctiveNorm_T1")
 
 PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
 
@@ -4516,11 +4516,11 @@ PA_ci_boys <- ci_boys %>% dplyr::filter(diamondlabels %in% names(scales_T1) &
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
 
@@ -4534,11 +4534,11 @@ PA_ci_intervention <- ci_intervention %>% dplyr::filter(diamondlabels %in% names
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
 
@@ -4546,11 +4546,11 @@ PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1
                                      grepl("PA_actCop_T1", diamondlabels) | 
                                      grepl("PA_intention_T1", diamondlabels) | 
                                      grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_pbc_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
                                      grepl("PA_selfefficacy_T1", diamondlabels) | 
                                      grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_dnorm_T1", diamondlabels) | 
-                                     grepl("PA_inorm_T1", diamondlabels))
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
 
 PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
 
@@ -4576,9 +4576,9 @@ plot1 <- df %>% dplyr::select(id,
   girl,
 'SB intention' = SB_intention_T1,
 'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
-'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyPBC_T1,
-'SB descriptive\nnorm' = SB_dnorm_T1,
-'SB injunctive\nnorm' = SB_inorm_T1)  %>%
+'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyperceivedBehaviouralControl_T1,
+'SB descriptive\nnorm' = SB_descriptiveNorm_T1,
+'SB injunctive\nnorm' = SB_injunctiveNorm_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4633,9 +4633,9 @@ plot2 <- df %>% dplyr::select(id,
   girl,
 'SB intention' = SB_intention_T1,
 'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
-'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyPBC_T1,
-'SB descriptive\nnorm' = SB_dnorm_T1,
-'SB injunctive\nnorm' = SB_inorm_T1)  %>%
+'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyperceivedBehaviouralControl_T1,
+'SB descriptive\nnorm' = SB_descriptiveNorm_T1,
+'SB injunctive\nnorm' = SB_injunctiveNorm_T1)  %>%
   # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
   ggplot2::ggplot(aes(y = Variable)) +
@@ -4842,7 +4842,7 @@ d_num <- as.data.frame(d_num)
 userfriendlyscience::CIBER(data = d_num,
       determinants = c(
         "actCop_T1",
-        "agrbct_T1",
+        "agreementDependentBCT_T1",
         "amotivation_T1",
         "autonomous_T1",
         "big5_agreeableness_T1.1",
@@ -4851,14 +4851,14 @@ userfriendlyscience::CIBER(data = d_num,
         "big5_neuroticism_T1.1",
         "big5_openness_T1.1",
         "controlled_T1",
-        "dnorm_T1",
-        "frqbct_T1",
+        "descriptiveNorm_T1",
+        "frequencyDependentBCT_T1",
         "goal_T1",
-        "inorm_T1",
+        "injunctiveNorm_T1",
         "intention_T1",
         "outcomeExpectations_T1",
         "opportunities_T1",
-        "pbc_T1",
+        "perceivedBehaviouralControl_T1",
         "selfefficacy_T1"),
       targets = c("paT1", "fatpct_T1"),
       conf.level = list(means = 0.9999,
@@ -4868,16 +4868,16 @@ userfriendlyscience::CIBER(data = d_num,
 userfriendlyscience::CIBER(data = d_num,
       determinants = c(
         "actCop_T1",
-        "agrbct_T1",
-        "frqbct_T1",
+        "agreementDependentBCT_T1",
+        "frequencyDependentBCT_T1",
         "amotivation_T1",
         "autonomous_T1",
         "controlled_T1",
-        "dnorm_T1",
+        "descriptiveNorm_T1",
         "intention_T1",
         "outcomeExpectations_T1",
         "opportunities_T1",
-        "sePbc_T1"),
+        "seperceivedBehaviouralControl_T1"),
       targets = c("paT1", "fatpct_T1"),
       conf.level = list(means = 0.9999,
                         associations = 0.99)
@@ -4888,25 +4888,25 @@ userfriendlyscience::CIBER(data = d_num,
 
 userfriendlyscience::CIBER(data = d_num,
   determinants = c(
-  "agrbct_01_T1",
-  "agrbct_02_T1",
-  "agrbct_03_T1",
-  "agrbct_04_T1",
-  "agrbct_05_T1",
-  "agrbct_06_T1",
-  "agrbct_07_T1",
-  "agrbct_08_T1",
-  "agrbct_09_T1",
-  "agrbct_10_T1",
-  "frqbct_01_T1",
-  "frqbct_02_T1",
-  "frqbct_03_T1",
-  "frqbct_04_T1",
-  "frqbct_05_T1",
-  "frqbct_06_T1",
-  "frqbct_07_T1",
-  "frqbct_08_T1",
-  "frqbct_09_T1"),
+  "agreementDependentBCT_01_T1",
+  "agreementDependentBCT_02_T1",
+  "agreementDependentBCT_03_T1",
+  "agreementDependentBCT_04_T1",
+  "agreementDependentBCT_05_T1",
+  "agreementDependentBCT_06_T1",
+  "agreementDependentBCT_07_T1",
+  "agreementDependentBCT_08_T1",
+  "agreementDependentBCT_09_T1",
+  "agreementDependentBCT_10_T1",
+  "frequencyDependentBCT_01_T1",
+  "frequencyDependentBCT_02_T1",
+  "frequencyDependentBCT_03_T1",
+  "frequencyDependentBCT_04_T1",
+  "frequencyDependentBCT_05_T1",
+  "frequencyDependentBCT_06_T1",
+  "frequencyDependentBCT_07_T1",
+  "frequencyDependentBCT_08_T1",
+  "frequencyDependentBCT_09_T1"),
    targets = c("MVPA", "SB"),
   leftAnchors = rep("", 19),
   rightAnchors = rep("", 19))
@@ -4932,9 +4932,9 @@ userfriendlyscience::CIBER(data = d_num,
   "intention_02_T1",
   "selfefficacy_01_T1",
   "selfefficacy_02_T1",
-  "pbc_01_T1",
-  "pbc_02_T1",
-  "pbc_03_T1",
+  "perceivedBehaviouralControl_01_T1",
+  "perceivedBehaviouralControl_02_T1",
+  "perceivedBehaviouralControl_03_T1",
   "norm_01_T1",
   "norm_02_T1",
   "outcomeExpectations_01_T1",

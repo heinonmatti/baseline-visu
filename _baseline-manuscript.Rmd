@@ -454,9 +454,9 @@ Similar plots for all primary outcome variables can be found in the supplement. 
 
 ### Behaviour change technique usage
 
-There were no clear differences between frequency-dependent BCTs between genders and intervention allocation, as shown in Figure \@ref(fig:histogram-frqbcts). 
+There were no clear differences between frequency-dependent BCTs between genders and intervention allocation, as shown in Figure \@ref(fig:histogram-frequencyDependentBCTs). 
 
-```{r histogram-frqbcts, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges`, showing self-reported use of frequency-dependent BCTs (1 = Not once ... 6 = Daily)."}
+```{r histogram-frequencyDependentBCTs, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges`, showing self-reported use of frequency-dependent BCTs (1 = Not once ... 6 = Daily)."}
 
 genderInterventionColors <- viridis::viridis(11, end = 0.8)
 
@@ -465,15 +465,15 @@ bctGirls <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -499,15 +499,15 @@ bctBoys <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -533,15 +533,15 @@ bctInt <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -567,15 +567,15 @@ bctCont <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-'Reminded self of positive consequences' = PA_frqbct_01_T1,
-'Has logged PA on paper' = PA_frqbct_02_T1,
-'Has monitored PA on smartphone' = PA_frqbct_03_T1,
-'Uses mnemonic cues' = PA_frqbct_04_T1,
-'Has compared actual with goal' = PA_frqbct_05_T1,
-'Has thought of relevance of PA' = PA_frqbct_06_T1,
-'Has made changes at home' = PA_frqbct_07_T1,
-'Has sought social support' = PA_frqbct_08_T1,
-'Has evaluated why goal not reached' = PA_frqbct_09_T1) %>%
+'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
+'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
+'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
+'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
+'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
+'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has sought social support' = PA_frequencyDependentBCT_08_T1,
+'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -599,27 +599,27 @@ bctCont <- df %>% dplyr::select(id,
 bctBoys + bctGirls + bctInt + bctCont + plot_layout(nrow = 1) 
 ```
 
-Inspecting Figure \@ref(fig:histogram-frqbcts) allows us to realise that the most frequent response is 1, indicating non-use of that BCT. In fact, a large number of BCTs seem to indicate a composite distribution, where one population reports never using the BCT, and another is seems normally distributed around the middle of the scale.
+Inspecting Figure \@ref(fig:histogram-frequencyDependentBCTs) allows us to realise that the most frequent response is 1, indicating non-use of that BCT. In fact, a large number of BCTs seem to indicate a composite distribution, where one population reports never using the BCT, and another is seems normally distributed around the middle of the scale.
 
-The same can be seen when observing agreement-dependent BCTs, as presented in Figure \@ref(fig:histogram-agrbcts).
+The same can be seen when observing agreement-dependent BCTs, as presented in Figure \@ref(fig:histogram-agreementDependentBCTs).
 
-```{r histogram-agrbcts, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges`, showing self-reported use of agreement-dependent BCTs (1 = Not at all true ... 6 = Completely true)."}
+```{r histogram-agreementDependentBCTs, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges`, showing self-reported use of agreement-dependent BCTs (1 = Not at all true ... 6 = Completely true)."}
 
 bctGirls <- df %>% dplyr::select(id,
   intervention,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -645,16 +645,16 @@ bctBoys <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -680,16 +680,16 @@ bctInt <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -715,16 +715,16 @@ bctCont <- df %>% dplyr::select(id,
   group,
   school,
   girl,
-  'Has set goals' = PA_agrbct_01_T1,
-  'Has made plan' = PA_agrbct_02_T1,
-  'Plan made by other' = PA_agrbct_03_T1,
-  'Has reminder of plan' = PA_agrbct_04_T1,
-  'Has cut goals to subgoals' = PA_agrbct_05_T1,
-  'Has tried new PA options' = PA_agrbct_06_T1,
-  'Has thought of barriers' = PA_agrbct_07_T1,
-  'Has planned for barriers' = PA_agrbct_08_T1,
-  'Has thought of PA identity' = PA_agrbct_09_T1,
-  'Has fitted PA to life values' = PA_agrbct_10_T1) %>%
+  'Has set goals' = PA_agreementDependentBCT_01_T1,
+  'Has made plan' = PA_agreementDependentBCT_02_T1,
+  'Plan made by other' = PA_agreementDependentBCT_03_T1,
+  'Has reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'Has cut goals to subgoals' = PA_agreementDependentBCT_05_T1,
+  'Has tried new PA options' = PA_agreementDependentBCT_06_T1,
+  'Has thought of barriers' = PA_agreementDependentBCT_07_T1,
+  'Has planned for barriers' = PA_agreementDependentBCT_08_T1,
+  'Has thought of PA identity' = PA_agreementDependentBCT_09_T1,
+  'Has fitted PA to life values' = PA_agreementDependentBCT_10_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
   dplyr::mutate(Variable = forcats::fct_reorder(Variable, .x = Value, .desc = FALSE, 
                                                 fun = mean, na.rm = TRUE)) %>% 
@@ -755,8 +755,8 @@ We can observe from figure \@ref(fig:network-plot), that after conditioning on B
 ```{r network-dataprep, message = FALSE, include = FALSE, warning = FALSE, echo = FALSE}
 
 bctdf_mgm <- df %>% dplyr::select(
-  'agr-BCTs' = PA_agrbct_T1,
-  'frq-BCTs' = PA_frqbct_T1,
+  'agr-BCTs' = PA_agreementDependentBCT_T1,
+  'frq-BCTs' = PA_frequencyDependentBCT_T1,
   'MVPA survey' = padaysLastweek_T1,
   'MVPA accelerom.' = mvpaAccelerometer_T1,
   'Intrinsic' = PA_intrinsic_T1,
