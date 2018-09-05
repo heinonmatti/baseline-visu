@@ -5304,4 +5304,530 @@ sympBA <- df %>% dplyr::select(id,
 
 ```
 
+# Perception of one's classroom
+
+The following questions started with the item stem:
+
+**In this group of students, I feel like...**
+
+## ... I'm supported
+
+```{r group-support-plot, fig.cap = "In this group of students, I feel like I'm supported. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              GroupQuestion = groupSupportsMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA boy' = "Boy", 'BA girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(3, 4),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              GroupQuestion = groupSupportsMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA 0' = "Control", 'BA 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(4, 3),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = 0.06,
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 + plot2
+
+
+```
+
+## ... I'm listened to
+
+```{r group-listen-plot, fig.cap = "In this group of students, I feel like I'm listened to. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              GroupQuestion = groupListensToMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA boy' = "Boy", 'BA girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(3, 4),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              GroupQuestion = groupListensToMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA 0' = "Control", 'BA 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(4, 3),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = 0.06,
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 + plot2
+
+
+```
+
+## ... I'm understood
+
+```{r group-understand-plot, fig.cap = "In this group of students, I feel like I'm understood. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              GroupQuestion = groupUnderstandsMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA boy' = "Boy", 'BA girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(3, 4),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              GroupQuestion = groupUnderstandsMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA 0' = "Control", 'BA 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(4, 3),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = 0.06,
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 + plot2
+
+
+```
+
+## ... I'm valued
+
+```{r group-value-plot, fig.cap = "In this group of students, I feel like I'm valued. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              GroupQuestion = groupValuesMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA boy' = "Boy", 'BA girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(3, 4),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              GroupQuestion = groupValuesMe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA 0' = "Control", 'BA 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(4, 3),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = 0.06,
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 + plot2
+
+
+```
+
+## ... I'm safe
+
+```{r group-safe-plot, fig.cap = "In this group of students, I feel like I'm safe. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+
+plot1 <- df %>% dplyr::select(id,
+                              track = track,
+                              girl,
+                              GroupQuestion = groupFeelsSafe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA boy' = "Boy", 'BA girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(3, 4),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(3, 1)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+# Draw plot with intervention and control densities
+
+plot2 <- df %>% dplyr::select(id,
+                              track = track,
+                              intervention,
+                              GroupQuestion = groupFeelsSafe_T1)  %>%
+  dplyr::filter(!is.na(track), track != "Other") %>% # Drop category "Other"
+  dplyr::mutate(track = factor(track, levels = c("IT", "BA", "HRC", "Nur")),
+                track = recode_factor(track, "IT" = "IT", "BA" = "BA", 
+                                      "HRC" = "HRC", "Nur" = "Nur")) %>% 
+  ggplot2::ggplot(aes(y = track)) +
+  ggridges::geom_density_ridges2(aes(x = GroupQuestion, colour = "black", 
+                                    fill = paste(track, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention),
+                                  scale = .75, alpha = 0.6, size = 0.25,
+                                  position = position_raincloud(width = 0.05, height = 0.15),
+                                  from = 1, to = 5,
+                                  jittered_points = TRUE,
+                                  point_size = 1) +
+  labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.1, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                                labels = c('BA 0' = "Control", 'BA 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", 
+                                guide = guide_legend(override.aes = list(alpha = 1, 
+                                                                         point_shape = c(4, 3),
+                                                                         point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  # ggplot2::scale_fill_manual(values = c("#A0FFA0", "#A0A0FF")) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(4, 3),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = 0.06,
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 + plot2
+
+
+```
+
 

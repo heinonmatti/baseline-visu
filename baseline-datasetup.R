@@ -560,6 +560,20 @@ identical(as.numeric(8 - lmi$Kys0100.1), as.numeric(d$PA_opportunitiesReverseCod
 # Group variable has empty missings
 d <- d %>% dplyr::mutate(group = ifelse(group == "", NA, group))
 
+# PA goal and injunctive norm (single items) were part of a scale, but was removed for codebook to work. 
+# Duplicating the variable name here to make the dependencies work.
+d <- d %>% dplyr::mutate(PA_goal_T1 = PA_goal_01_T1,
+                         PA_goal_T3 = PA_goal_01_T3,
+                         PA_injunctiveNorm_T1 = PA_injunctiveNorm_01_T1,
+                         PA_injunctiveNorm_T3 = PA_injunctiveNorm_01_T3)
+
+# This item (how often one has considered what went wrong, when not reaching goals) has option 7: I have reached my goals.
+d <- d %>% dplyr::mutate(PA_frequencyDependentBCT_09_withOption7_T1 = PA_frequencyDependentBCT_09_T1,
+                         PA_frequencyDependentBCT_09_T1 = ifelse(PA_frequencyDependentBCT_09_T1 == 7, NA, PA_frequencyDependentBCT_09_T1),
+                         PA_frequencyDependentBCT_09_withOption7_T3 = PA_frequencyDependentBCT_09_T3,
+                         PA_frequencyDependentBCT_09_T3 = ifelse(PA_frequencyDependentBCT_09_T3 == 7, NA, PA_frequencyDependentBCT_09_T3))
+  
+  
 # Fix intervention and gender variables
 d <- d %>% dplyr::mutate(intervention = ifelse(intervention == 1, 1, 0),
                          intervention = factor(intervention),
@@ -637,8 +651,8 @@ scales_T1 <- list(big5agreeableness_T1 = grep('big5agreeableness', names(dT1), v
                   PA_controlled_T1 = grep('PA_controlled', names(dT1), value = TRUE),
                   PA_descriptiveNorm_T1 = grep('PA_descriptiveNorm', names(dT1), value = TRUE),
                   PA_frequencyDependentBCT_T1 = grep('PA_frequencyDependentBCT', names(dT1), value = TRUE),
-                  PA_goal_T1 = grep('PA_goal', names(dT1), value = TRUE),
-                  PA_injunctiveNorm_T1 = grep('PA_injunctiveNorm', names(dT1), value = TRUE),
+                  # PA_goal_T1 = grep('PA_goal', names(dT1), value = TRUE),
+                  # PA_injunctiveNorm_T1 = grep('PA_injunctiveNorm', names(dT1), value = TRUE),
                   PA_intention_T1 = grep('PA_intention', names(dT1), value = TRUE),
                   PA_outcomeExpectations_T1 = grep('PA_outcomeExpectations', names(dT1), value = TRUE),
                   PA_opportunities_T1 = grep('PA_opportunities', names(dT1), value = TRUE),
@@ -671,8 +685,8 @@ scales_T3 <- list(big5agreeableness_T3 = grep('big5agreeableness', names(dT3), v
                   PA_controlled_T3 = grep('PA_controlled', names(dT3), value = TRUE),
                   PA_descriptiveNorm_T3 = grep('PA_descriptiveNorm', names(dT3), value = TRUE),
                   PA_frequencyDependentBCT_T3 = grep('PA_frequencyDependentBCT', names(dT3), value = TRUE),
-                  PA_goal_T3 = grep('PA_goal', names(dT3), value = TRUE),
-                  PA_injunctiveNorm_T3 = grep('PA_injunctiveNorm', names(dT3), value = TRUE),
+                  # PA_goal_T3 = grep('PA_goal', names(dT3), value = TRUE),
+                  # PA_injunctiveNorm_T3 = grep('PA_injunctiveNorm', names(dT3), value = TRUE),
                   PA_intention_T3 = grep('PA_intention', names(dT3), value = TRUE),
                   PA_outcomeExpectations_T3 = grep('PA_outcomeExpectations', names(dT3), value = TRUE),
                   PA_opportunities_T3 = grep('PA_opportunities', names(dT3), value = TRUE),
