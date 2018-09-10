@@ -9,7 +9,8 @@ This section describes how confidence intervals were estimated, as well as prese
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
 
-# summarytools::view(summarytools::dfSummary(df)) # To create a codebook
+summarytools::view(summarytools::dfSummary(df), file = "./codebook_concise.html")
+
 ```
 
 Description of the R environment can be found by opening the code chunk below.
@@ -62,7 +63,7 @@ nonmissings <- NA
 # ICC_School[i] <- sjstats::icc(m)[2]
 # nonmissings[i] <- length(m@resp$y)
 # }
-# 
+#
 # vardatatable <- data_frame(
 #   Variable = stringr::str_sub(names(mean), end = -4), #remove "_T1" from names
 #   "Mean" = round(mean, 1) %>% format(., nsmall = 1),
@@ -73,7 +74,7 @@ nonmissings <- NA
 #   dplyr::arrange(Variable) %>%
 #   dplyr::filter(Variable != "") %>% #remove first row, which is empty
 #   as.data.frame()
-# 
+#
 # ci_total <- data_frame(
 #   "ciLo" = ci_low,
 #   "mean" = mean,
@@ -81,10 +82,10 @@ nonmissings <- NA
 #   "diamondlabels" = names(mean)) %>%
 #   dplyr::filter(diamondlabels != "") %>% #remove first row, which is empty
 #   as.data.frame()
-# 
+#
 # # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
 # timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
-# 
+#
 # for (variableToChange in timeVariables) {
 # originalMean <- vardatatable[vardatatable$Variable == variableToChange, "Mean"] %>% as.numeric()
 # newMean <- paste0(floor(originalMean/60), "h ", round(originalMean, 0) %% 60, "min")
@@ -96,7 +97,7 @@ nonmissings <- NA
 #                 floor(originalCIH/60), "h ", round(originalCIH, 0) %% 60, "min")
 # vardatatable[vardatatable$Variable == variableToChange, "CI95"] <- newCI
 # }
-# 
+#
 # save(vardatatable, file = "./Rdata_files/vardatatable.Rdata")
 # save(ci_total, file = "./Rdata_files/ci_total.Rdata")
 load("./Rdata_files/vardatatable.Rdata")
@@ -500,7 +501,7 @@ vardatatable_sandwich %>%
 
 ```
 
-## Calculating (Bayesian) credibility interval {tabset}
+## Calculating (Bayesian) credibility interval {.tabset}
 
 ### Credible interval for model including school & group
 
@@ -684,7 +685,7 @@ Here we demonstrate how, in the case of sedentary behaviour, using brms default 
 
 Based on the information criterion (WAIC), models do not seem to differ with regards their out-of-sample prediction ability.
 
-```{r}
+```{r WAIC}
 
 # # Model with school and class: 
 # m_sitLieAccelerometer_T1 <- brms::brm(sitLieAccelerometer_T1 ~ 1 + (1|school) + (1|group), data = df,
@@ -734,25 +735,30 @@ brms::fixef(m_sitLieWithTrack)
 # WAIC_m_sitLieWithTrack <- brms::WAIC(m_sitLieWithTrack)
 
 # save(WAIC_m_sitLieAccelerometer_T1, file = "./Rdata_files/WAIC_m_sitLieAccelerometer_T1.Rdata")
-load("./Rdata_files/WAIC_m_sitLieAccelerometer_T1.Rdata")
 # save(WAIC_m_priorFromFeasibility, file = "./Rdata_files/WAIC_m_priorFromFeasibility.Rdata")
-load("./Rdata_files/WAIC_m_priorFromFeasibility.Rdata")
 # save(WAIC_m_sitLieWithTrack, file = "./Rdata_files/WAIC_m_sitLieWithTrack.Rdata")
+
+load("./Rdata_files/WAIC_m_sitLieAccelerometer_T1.Rdata")
+load("./Rdata_files/WAIC_m_priorFromFeasibility.Rdata")
 load("./Rdata_files/WAIC_m_sitLieWithTrack.Rdata")
 
 
 print("Comparison based on WAIC:")
 brms::compare_ic(WAIC_m_sitLieAccelerometer_T1, WAIC_m_priorFromFeasibility, WAIC_m_sitLieWithTrack)
 
+```
+
+```{r LOO}
 # loo_m_sitLieAccelerometer_T1 <- brms::loo(m_sitLieAccelerometer_T1)
 # loo_m_priorFromFeasibility <- brms::loo(m_priorFromFeasibility)
 # loo_m_sitLieWithTrack <- brms::loo(m_sitLieWithTrack)
 
 # save(loo_m_sitLieAccelerometer_T1, file = "./Rdata_files/loo_m_sitLieAccelerometer_T1.Rdata")
-load("./Rdata_files/loo_m_sitLieAccelerometer_T1.Rdata")
 # save(loo_m_priorFromFeasibility, file = "./Rdata_files/loo_m_priorFromFeasibility.Rdata")
-load("./Rdata_files/loo_m_priorFromFeasibility.Rdata")
 # save(loo_m_sitLieWithTrack, file = "./Rdata_files/loo_m_sitLieWithTrack.Rdata")
+
+load("./Rdata_files/loo_m_sitLieAccelerometer_T1.Rdata")
+load("./Rdata_files/loo_m_priorFromFeasibility.Rdata")
 load("./Rdata_files/loo_m_sitLieWithTrack.Rdata")
 
 print("Comparison based on leave-one-out (LOO) cross validation:")

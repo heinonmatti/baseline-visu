@@ -84,9 +84,9 @@ Clicking the "Code"-buttons on the right shows code for each chunk.
 To start data analysis, we run a data compilation file to enable compiling the document. This file can be found under the tab "Data setup code" on top of the screen.
 
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
+
 source("baseline-datasetup.R")
 
-# summarytools::view(summarytools::dfSummary(df)) # To create a codebook 
 ```
 
 *Note on using package brms*
@@ -432,20 +432,20 @@ averageDayActivityPlot_intervention
 
 d <- d %>% dplyr::mutate(
                          mvpaAccelerometer_T1 = mvpaAccelerometer_T1 / 60, 
-                         mvpaAccelerometer_T3 = mvpaAccelerometer_T3 / 60,
+                         # mvpaAccelerometer_T3 = mvpaAccelerometer_T3 / 60,
                          weartimeAccelerometer_T1 = weartimeAccelerometer_T1 / 60,
-                         weartimeAccelerometer_T3 = weartimeAccelerometer_T3 / 60,
-                         sitLieAccelerometer_T1 = sitLieAccelerometer_T1 / 60,
-                         sitLieAccelerometer_T3 = sitLieAccelerometer_T3 / 60
+                         # weartimeAccelerometer_T3 = weartimeAccelerometer_T3 / 60,
+                         sitLieAccelerometer_T1 = sitLieAccelerometer_T1 / 60
+                         # sitLieAccelerometer_T3 = sitLieAccelerometer_T3 / 60
                          )
 
 df <- df %>% dplyr::mutate(
                          mvpaAccelerometer_T1 = mvpaAccelerometer_T1 / 60, 
-                         mvpaAccelerometer_T3 = mvpaAccelerometer_T3 / 60,
+                         # mvpaAccelerometer_T3 = mvpaAccelerometer_T3 / 60,
                          weartimeAccelerometer_T1 = weartimeAccelerometer_T1 / 60,
-                         weartimeAccelerometer_T3 = weartimeAccelerometer_T3 / 60,
-                         sitLieAccelerometer_T1 = sitLieAccelerometer_T1 / 60,
-                         sitLieAccelerometer_T3 = sitLieAccelerometer_T3 / 60
+                         # weartimeAccelerometer_T3 = weartimeAccelerometer_T3 / 60,
+                         sitLieAccelerometer_T1 = sitLieAccelerometer_T1 / 60
+                         # sitLieAccelerometer_T3 = sitLieAccelerometer_T3 / 60
                          )
 ```
 
@@ -456,7 +456,28 @@ df <- df %>% dplyr::mutate(
 
 ```{r mvpa-accelerometer-selfreport-scatterplot}
 
-lmi %>% ggplot2::ggplot(aes(x = LiikuntaT1_ka, y = Kys0045.1)) + geom_point() + geom_smooth(method = "loess") +
+ggstatsplot::ggscatterstats(
+  data = na.omit(dplyr::select(df, mvpaAccelerometer_T1, padaysLastweek_T1)),
+  x = mvpaAccelerometer_T1,
+  y = padaysLastweek_T1,
+  type = "robust",                               # type of test that needs to be run
+  results.subtitle = FALSE,
+  xlab = "Accelerometer-measured MVPA (following week)",              # label for x axis
+  ylab = "Self-reported days of >30min MVPA (previous week)",              # label for y axis 
+  line.color = "black",                     # changing regression line colour line
+  title = "",       # title text for the plot
+  # caption = expression(                          # caption text for the plot
+  #  paste(italic("Note"), ": this is a demo")
+  #  ),
+  marginal.type = "histogram",                     # type of marginal distribution to be displayed
+  xfill = "blue",                                # colour fill for x-axis marginal distribution 
+  yfill = "red",                                 # colour fill for y-axis marginal distribution
+  centrality.para = "median",                          # which type of intercept line is to be displayed  
+  width.jitter = 0,                            # amount of horizontal jitter for data points
+  height.jitter = 0                            # amount of vertical jitter for data points
+) 
+
+df %>% ggplot2::ggplot(aes(x = mvpaAccelerometer_T1, y = padaysLastweek_T1)) + geom_point() + geom_smooth(method = "loess") +
   # geom_vline(xintercept = 120, col = "red") +
   labs(x = "accelerometer-measured MVPA, following week", y = "self-reported days of 30+ min MVPA, last week")
 
@@ -2183,7 +2204,7 @@ plot1 <- df %>% dplyr::select(id,
                                     fill = paste(trackSchool, girl)),
                                   scale = 1,
                                   alpha = 0.6, size = 0.25,
-                                  from = 0, to = 450,
+                                  from = 0, # to = 450,
                                   jittered_points=TRUE, point_shape=21,
                                   point_fill="black") +
   labs(x = "",
@@ -2200,6 +2221,7 @@ plot1 <- df %>% dplyr::select(id,
 
 plot1
 
+# save(plot1, file = "C:/LocalData/hema/git-projects/baseline-visu/docs/baseline-supplement_files/figure-html/nordpaq_dysfunctional_item-accelerometer-plot-1.png")
 ```
 
 ### Density plot by track

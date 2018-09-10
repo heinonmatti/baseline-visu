@@ -1,9 +1,0 @@
----
-title: "Codebook (simple)"
----
-
-```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
-source("baseline-datasetup.R")
-
-summarytools::view(summarytools::dfSummary(df)) # To create a codebook 
-```
