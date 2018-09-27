@@ -39,6 +39,7 @@ library(ggridges)
 
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = FALSE,
+                      message = FALSE,
                       error = TRUE,
                       cache = TRUE, 
                       collapse = TRUE,
@@ -723,11 +724,11 @@ d <- d %>% dplyr::mutate(PA_goal_T1 = PA_goal_01_T1,
                          PA_injunctiveNorm_T4 = PA_injunctiveNorm_01_T4)
 
 # This item (how often one has considered what went wrong, when not reaching goals) has option 7: I have reached my goals.
-d <- d %>% dplyr::mutate(PA_frequencyDependentBCT_09_withOption7_T1 = PA_frequencyDependentBCT_09_T1,
+d <- d %>% dplyr::mutate(haveReachedMyActivityGoal = ifelse(PA_frequencyDependentBCT_09_T1 == 7, 1, 0),
                          PA_frequencyDependentBCT_09_T1 = ifelse(PA_frequencyDependentBCT_09_T1 == 7, NA, PA_frequencyDependentBCT_09_T1),
-                         PA_frequencyDependentBCT_09_withOption7_T3 = PA_frequencyDependentBCT_09_T3,
+                         haveReachedMyActivityGoal = ifelse(PA_frequencyDependentBCT_09_T1 == 7, 1, 0),
                          PA_frequencyDependentBCT_09_T3 = ifelse(PA_frequencyDependentBCT_09_T3 == 7, NA, PA_frequencyDependentBCT_09_T3),
-                         PA_frequencyDependentBCT_09_withOption7_T4 = PA_frequencyDependentBCT_09_T4,
+                         haveReachedMyActivityGoal = ifelse(PA_frequencyDependentBCT_09_T1 == 7, 1, 0),
                          PA_frequencyDependentBCT_09_T4 = ifelse(PA_frequencyDependentBCT_09_T4 == 7, NA, PA_frequencyDependentBCT_09_T4))
   
   
@@ -1014,6 +1015,9 @@ df[, paste0(stringr::str_sub(t1_vars, end = -4), "_diffT4T1")] <- df[, t4_vars] 
 
 # Create a combination of track and school variables
 df <- df %>% dplyr::mutate(trackSchool = paste0(track, school)) 
+
+save(df, file = "./data/df_T1-T4.Rdata")
+haven::write_sav(df, path = "./data/df_T1-T4.sav")
 
 # Remove change scores and other time points from the baseline data frame
 df <- df %>% dplyr::select(-contains("_diffT3T1"), -contains("_diffT4T1"), -contains("_T3"), -contains("_T4"))

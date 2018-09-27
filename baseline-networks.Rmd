@@ -2,8 +2,6 @@
 title: "Network analyses"
 ---
 
-# Introduction 
-
 This section describes network analyses and displays correlation structures in the data. Here, physical activity (PA) is used interchangeably with moderate-to-vigorous physical activity (MVPA); all measures of activity relate to MVPA.
 
 ```{r htmlTemp3, echo=FALSE, eval=FALSE, INCLUDE = FALSE}
@@ -87,10 +85,337 @@ source("baseline-datasetup.R")
 ```
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
+$~$
+$~$
+<a id="network"></a>
 
-# Agreement and frequency dependent BCTs with motivation and MVPA
+# Network featured in manuscript {.tabset}
 
-## Combined BCT chunks {.tabset}
+## Network
+
+All BCTs are shown here separately; exceptions: mnemonic cues which seems quite unclear a question, as well as and failure contemplation, which only concerns those who have not reached their goals (for which an option on the scale was given, making it differ from the other BCTs).
+
+```{r}
+bctdf_mgm_T1 <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'MVPA survey' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1, 'integrated' = PA_integrated_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+#  'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
+  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
+  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+#  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
+  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  'social support' = ifelse(`social support` == 1, 0, 1),
+  'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic, integrated), na.rm = T),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+#  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
+  dplyr::select(-`log on paper`, -`smartphone`, 
+                # -`plan by other`, -`implementation plan`, 
+                -identified, -intrinsic, -integrated,
+         -`failure contemplation` # only concerns those who haven't reached goals
+         # -`barrier identification`, -`coping planning`, # closely related
+           ) %>% 
+#  dplyr::select(-controlled) %>% # Not really gaussian at all 
+  dplyr::select('MVPA survey', 'MVPA accelerometer', everything())
+
+bctdf_mgm_T1$`autonomous motivation`[is.nan(bctdf_mgm_T1$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm_T1)
+
+# mgm wants full data, see package missForest for imputation methods
+bctdf_mgm_T1 <- bctdf_mgm_T1 %>% na.omit(.)
+# bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 17), "g")
+mgm_variable_levels <- c("1", "1", rep("2", 17), "1")
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj_T1 <- mgm::mgm(data = bctdf_mgm_T1,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "EBIC",
+  # lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+# Node pies:
+pies_T1 <- bctdf_mgm_T1 %>% 
+  dplyr::summarise_all(~mean(., na.rm = TRUE)) # results in a series of means, which is ok for dichotomous vars
+pies_T1[1] <- pies_T1[1] / 7
+pies_T1[2] <- pies_T1[2] / max(bctdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
+pies_T1[20] <- pies_T1[20] / 5
+
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 15), # 11x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)  
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 1), # 1x Color 2 for BCTs
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+            pie = pies_T1,
+            # pieColor = pie_colors_T1,
+            pieColor = node_colors,
+            labels = names(bctdf_mgm_T1),
+            pieBorder = 1,
+            label.cex = 0.75,
+            cut = 0,
+            edge.labels = TRUE,
+            label.scale = FALSE)
+
+BCT_mgm_T1_circle <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
+            layout = "circle",
+            title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+            pie = pies_T1,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm_T1),
+            label.cex = 0.75,
+            cut = 0,
+            label.scale = FALSE)
+
+
+```
+
+## Bootstrap stability
+
+Omitted for now, due to technical problems. 
+
+```{r}
+
+# all_BCTs_mgm_stability <- mgm::resample(object = mgm_obj_T1 %>% na.omit(.), data = bctdf_mgm, nB = 100)
+# # save(all_BCTs_mgm_stability, file = "./Rdata_files/all_BCTs_mgm_stability.Rdata")
+# load("./Rdata_files/all_BCTs_mgm_stability.Rdata")
+# 
+# mgm::plotRes(object = all_BCTs_mgm_stability, 
+#         quantiles = c(.05, .95), 
+#         cex.label = 0.5,
+#         lwd.qtl = 2.5, 
+#         cex.mean = .5,
+#        labels = names(bctdf_mgm))
+
+# Error in data[, ind_cat[i]] : subscript out of bounds
+
+```
+
+
+## Edge weights matrix
+
+```{r edgeWeights, results = 'asis'}
+
+edgeweights <- mgm_obj_T1$pairwise$wadj %>% round(., 3)
+colnames(edgeweights) <- labs
+rownames(edgeweights) <- labs
+
+edgeweights
+
+```
+
+
+
+## Other estimation methods (mgm CV, GGM)
+
+This section estimates models with different methods: mgm with cross-validation, the standard Gaussian Graphical Model (GGM), and unregularised GGM. The distributions violate normality assumptions of the GGM. 
+
+```{r}
+#### CV model selection for mgm 
+
+mgm_obj_T1_CV <- mgm::mgm(data = bctdf_mgm_T1,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "CV",
+  lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+# Node pies:
+pies_T1 <- bctdf_mgm_T1 %>% 
+  dplyr::summarise_all(~mean(., na.rm = TRUE)) # results in a series of means, which is ok for dichotomous vars
+pies_T1[1] <- pies_T1[1] / 7
+pies_T1[2] <- pies_T1[2] / max(bctdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
+pies_T1[20] <- pies_T1[20] / 5
+
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 15), # 11x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)  
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 1), # 1x Color 2 for BCTs
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm_T1_CV <- qgraph::qgraph(mgm_obj_T1_CV$pairwise$wadj, 
+            layout = BCT_mgm_T1$layout,
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+            pie = pies_T1,
+            # pieColor = pie_colors_T1,
+            pieColor = node_colors,
+            labels = names(bctdf_mgm_T1),
+            pieBorder = 1,
+            label.cex = 0.75,
+            cut = 0,
+            label.scale = FALSE,
+            title = "MGM with cross-validation")
+
+#### GGM
+
+bctdf_ggm_T1 <- df %>% dplyr::select(
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'coping planning' = PA_agreementDependentBCT_08_T1,
+  'PA identity' = PA_agreementDependentBCT_09_T1,
+  'PA life values' = PA_agreementDependentBCT_10_T1,
+  'positive consequences' = PA_frequencyDependentBCT_01_T1,
+  'log on paper' = PA_frequencyDependentBCT_02_T1,
+  'smartphone' = PA_frequencyDependentBCT_03_T1,
+#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal contrast' = PA_frequencyDependentBCT_05_T1,
+  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
+  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'MVPA survey' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1, 'integrated' = PA_integrated_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ mutate(
+  # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
+  # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
+  # 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
+  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
+  'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
+  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
+  # 'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
+  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'social support' = ifelse(`social support` == 1, 0, 1),
+  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic, integrated), na.rm = T),
+  'controlled motivation' = `controlled motivation` * 1) %>% 
+  dplyr::select(-`log on paper`, -`smartphone`, 
+                -identified, -intrinsic, -integrated,
+         -`failure contemplation` # only concerns those who haven't reached goals
+           ) %>% 
+  dplyr::select('MVPA survey', 'MVPA accelerometer', everything()) %>% 
+  mutate_all(as.numeric)
+
+nwBCT_ggm <- bootnet::estimateNetwork(bctdf_ggm_T1, default="EBICglasso")
+
+BCT_ggm <- plot(nwBCT_ggm, 
+                layout = BCT_mgm_T1$layout, 
+                label.scale = FALSE, 
+                title = "GGM: MVPA, BCTs & motivation", 
+                label.cex = 0.75,
+                # pie = piefill_ggm,
+                color = node_colors,
+                pieBorder = 1)
+
+modSelect_0 <- qgraph::ggmModSelect(qgraph::cor_auto(bctdf_ggm_T1), n = nrow(bctdf_ggm_T1), gamma = 0)
+
+g3 <- qgraph::qgraph(modSelect_0$graph, 
+                     layout = BCT_mgm_T1$layout, 
+                     label.scale = FALSE,
+                     label.cex = 0.75,
+                     labels = labs,
+                     theme = "colorblind",
+                     title = "ggmModSelect (gamma = 0)", 
+                     color = node_colors, 
+                     cut = 0)
+
+modSelect_0.5 <- qgraph::ggmModSelect(qgraph::cor_auto(bctdf_ggm_T1), n = nrow(bctdf_ggm_T1), gamma = 0.5)
+
+g4 <- qgraph::qgraph(modSelect_0.5$graph, 
+                     layout = BCT_mgm_T1$layout, 
+                     label.scale = FALSE,
+                     label.cex = 0.75,
+                     labels = labs,
+                     theme = "colorblind", 
+                     title = "ggmModSelect (gamma = 0.5)",
+                     color = node_colors, 
+                     cut = 0)
+```
+
+
+##  Centrality
+
+```{r}
+qgraph::centralityPlot(
+  list(
+    # mgm_EBIC = BCT_mgm_T1,
+    # mgm_CV = mgm_obj_T1_CV,
+       ggm = BCT_ggm,
+       ggmModSelect_0 = g3,
+       ggmModSelect_0.5 = g4
+       ),
+  include = c("Strength","ExpectedInfluence"),
+               orderBy = "ExpectedInfluence")
+
+
+```
+
+
+# Combined BCT chunks
 
 The following network depicts a mixed graphical model, with the following variables:
 
@@ -207,7 +532,7 @@ mgm::plotRes(object = BCT_mgm_noAmotivation_stability,
 
 The bootstrap stability plot above shows the proportion of re-samples, which contain a non-zero link between two edges (for a tutorial, see [this link](http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/) -- or, if it's down, this [archived page](https://web.archive.org/web/20180809113839/http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/)). For example, when we draw observations from the current sample with replacement a 100 times, 99% of these times a non-zero link between questionnaire-measured MVPA and intrinsic motivation is estimated.
 
-## Correlation network and mixed graphical model compared
+# Correlation network and mixed graphical model compared
 
 ```{r network-dataprep, message = FALSE, warning = FALSE, echo = FALSE}
 
@@ -276,7 +601,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.cex = 1.5,
             label.scale = FALSE,
             node.width = 1.65,
-            theme = "colorblind")
+            DoNotPlot = TRUE)
 
 # Make a sequence of numers, to be used as a pie chart in nodes, to depict mean:
 piefill <- bctdf_mgm %>% 
@@ -296,11 +621,12 @@ corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), graph = "cor",
               label.scale = FALSE,
               node.width = 1.65,
               edge.labels = TRUE, 
-              title = "bivariate correlation network")
+              title = "bivariate correlation network",
+              DoNotPlot = TRUE)
 
 ```
 
-```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "A) Mixed graphical model with LASSO regularisation and model selection by cross-validation, B) Bivariate correlation network", echo = FALSE}
+```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "A) Mixed graphical model with LASSO regularisation and model selection by cross-validation. Pie indicates node predictability. B) Bivariate correlation network. Pie indicates node mean as % of theoretical maximum (for MVPA accelerometer, mean as % average weartime)."}
 
 averagedLayout <- qgraph::averageLayout(BCT_mgm, corgraph)
 
@@ -316,7 +642,7 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             # label.cex = 1,
             label.scale = FALSE,
             # node.width = 1,
-            theme = "colorblind",
+            edge.labels = TRUE,
             title = "A)")
 
 corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), 
@@ -495,7 +821,7 @@ plot(collider_boot, plot = "interval", split0 = TRUE, order = "sample", labels =
 
 The bootstrap stability plot above (for a tutorial, see [this link](http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/) -- or, if it's down, this [archived page](https://web.archive.org/web/20180809113839/http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/)) shows, that when we draw observations from the sample with replacement 2500 times, the connection between amotivation and questionnaire-measured MVPA was estimated as non-zero only about 30% of time.
 
-## Individual BCT items
+# Combining some BCT items
 
 This section presents a Mixed Graphical Model (MGM) and a Gaussian Graphical Model (GGM). In the MGM, we opted to dichotomise the BCTs in order to increase interpretability while not violating model assumptions. Results do not differ very much. Some nodes were still combined, to reduce estimation burden.
 

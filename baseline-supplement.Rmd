@@ -249,12 +249,15 @@ df_randeff_plot_brms_autonomous %>% ggplot2::ggplot(aes(x = group, y = PA_autono
    
 
 ```
+$~$
+$~$
+<a id="stackedGraph"></a>
 
-# Average day's activity as proportions {.tabset}
+# Average day's activity as proportions {.tabset} 
 
 These plots show the average proportions of daily activity by gender and intervention. Note, that they hide the variability in these values.
 
-## Stacking raw values
+## Stacking raw values 
 
 ```{r average-day-activity-plot}
 
@@ -942,6 +945,9 @@ MVPAgirl_df <- df %>% group_by(girl) %>% dplyr::select(girl, mvpaAccelerometer_T
 userfriendlyscience::meanDiff(df$girl, df$mvpaAccelerometer_T1)
 
 ```
+$~$
+$~$
+<a id="smPlot"></a>
 
 ### Density plot by intervention and gender
 
@@ -1227,6 +1233,9 @@ plot1 <- df %>% dplyr::select(id,
 plot1
 
 ```
+$~$
+$~$
+<a id="raincloudPlot"></a>
 
 ### Density plot by track
 
@@ -3795,7 +3804,9 @@ text(x = 1.02, y = 1.3, labels = "Agreement-based BCT sumscore mean", pos = 1) #
 ```
 
 ### Histograms for individual items
-
+$~$
+$~$
+<a id="freqHistogram"></a>
 #### Frequency-measured BCTs
 
 These questions were asked with the lead "Have you done the following during the last three weeks?". 
@@ -4809,7 +4820,7 @@ sum(df$mvpaAccelerometer_T1 >= quantile(df$mvpaAccelerometer_T1, probs = c(prob1
 middle_df <- NA
   
 for(i in 1:100) {
-middle_df[i] <- middleprobs(0.5 - i/2/100, 0.5 + i/2/100) / 706   
+middle_df[i] <- middleprobs(0.5 - i/2/100, 0.5 + i/2/100) / 895  
 }
 
 meansplot_df <- data.frame(middle_band_width_perc = 1:100, perc_of_participants_included = middle_df)
@@ -4850,7 +4861,7 @@ meansplot_df %>%
 #   theme_light()
 ```
 
-We see that, for example, `r ((middleprobs(0.35, 0.65) / 706) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
+We see that, for example, `r ((middleprobs(0.35, 0.65) / 895) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
 
 <!-- CIBER (not included for now) -->
 

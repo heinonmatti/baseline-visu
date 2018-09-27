@@ -366,16 +366,491 @@ div.tocify {
 </div>
 
 
-<div id="introduction" class="section level1">
-<h1>Introduction</h1>
 <p>This section describes network analyses and displays correlation structures in the data. Here, physical activity (PA) is used interchangeably with moderate-to-vigorous physical activity (MVPA); all measures of activity relate to MVPA.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&quot;baseline-datasetup.R&quot;</span>)</code></pre></div>
-<p>Clicking the “Code”-buttons on the right shows code for each chunk.</p>
+<p>Clicking the “Code”-buttons on the right shows code for each chunk. <span class="math inline">\(~\)</span> <span class="math inline">\(~\)</span> <a id="network"></a></p>
+<div id="network-featured-in-manuscript" class="section level1 tabset">
+<h1>Network featured in manuscript</h1>
+<div id="network" class="section level2">
+<h2>Network</h2>
+<p>All BCTs are shown here separately; exceptions: mnemonic cues which seems quite unclear a question, as well as and failure contemplation, which only concerns those who have not reached their goals (for which an option on the scale was given, making it differ from the other BCTs).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bctdf_mgm_T1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
+<span class="co">#  id,</span>
+<span class="co">#  intervention,</span>
+<span class="co">#  group,</span>
+<span class="co">#  school,</span>
+<span class="co">#  girl,</span>
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
+  <span class="st">&#39;MVPA survey&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
+  <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
+  <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
+  <span class="st">&#39;identified&#39;</span> =<span class="st"> </span>PA_identified_T1, <span class="st">&#39;integrated&#39;</span> =<span class="st"> </span>PA_integrated_T1,
+  <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> </span>PA_controlled_T1) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">mutate</span>(
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">goal setting</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+<span class="co">#  &#39;has plan&#39; = ifelse(`implementation plan` == 1 &amp; `plan by other` == 1, 0, 1),</span>
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">implementation plan</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">plan by other</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">reminder of plan</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">subgoals</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">new PA options</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">barrier identification</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">coping planning</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="co"># &#39;barriers identified or planned for&#39; = ifelse(`coping planning` == 1 &amp; `barrier identification` == 1, 0, 1),</span>
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">PA identity</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">PA life values</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="co"># &#39;identity, life values&#39; = ifelse(`PA identity` == 1 &amp; `PA life values` == 1, 0, 1),</span>
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">positive consequences</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;monitoring PA&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">log on paper</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> `</span><span class="dt">smartphone</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+<span class="co">#  &#39;mnemonic cues&#39; = ifelse(`mnemonic cues` == 1, 0, 1),</span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">goal contrast</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">relevance of PA</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">changes at home</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">social support</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">failure contemplation</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="st">&#39;autonomous motivation&#39;</span> =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">c</span>(identified, intrinsic, integrated), <span class="dt">na.rm =</span> T),
+<span class="co">#  &#39;girl&#39; = ifelse(girl == &quot;girl&quot;, 1, 0),</span>
+  <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">controlled motivation</span><span class="st">`</span> <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># If &quot;at least partly&quot; or more true, input 1. Normality otherwise a problem. </span>
+<span class="co">#  &#39;intervention&#39; = ifelse(intervention == &quot;1&quot;, 1, 0)) %&gt;% </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span><span class="st">`</span><span class="dt">log on paper</span><span class="st">`</span>, <span class="op">-</span><span class="st">`</span><span class="dt">smartphone</span><span class="st">`</span>, 
+                <span class="co"># -`plan by other`, -`implementation plan`, </span>
+                <span class="op">-</span>identified, <span class="op">-</span>intrinsic, <span class="op">-</span>integrated,
+         <span class="op">-</span><span class="st">`</span><span class="dt">failure contemplation</span><span class="st">`</span> <span class="co"># only concerns those who haven&#39;t reached goals</span>
+         <span class="co"># -`barrier identification`, -`coping planning`, # closely related</span>
+           ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="co">#  dplyr::select(-controlled) %&gt;% # Not really gaussian at all </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&#39;MVPA survey&#39;</span>, <span class="st">&#39;MVPA accelerometer&#39;</span>, <span class="kw">everything</span>())
+
+bctdf_mgm_T1<span class="op">$</span><span class="st">`</span><span class="dt">autonomous motivation</span><span class="st">`</span>[<span class="kw">is.nan</span>(bctdf_mgm_T1<span class="op">$</span><span class="st">`</span><span class="dt">autonomous motivation</span><span class="st">`</span>)] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+labs &lt;-<span class="st"> </span><span class="kw">names</span>(bctdf_mgm_T1)
+
+<span class="co"># mgm wants full data, see package missForest for imputation methods</span>
+bctdf_mgm_T1 &lt;-<span class="st"> </span>bctdf_mgm_T1 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>(.)
+<span class="co"># bctdf_mgm %&gt;% names()</span>
+mgm_variable_types &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;g&quot;</span>, <span class="st">&quot;g&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;c&quot;</span>, <span class="dv">17</span>), <span class="st">&quot;g&quot;</span>)
+mgm_variable_levels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;2&quot;</span>, <span class="dv">17</span>), <span class="st">&quot;1&quot;</span>)
+<span class="co"># data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))</span>
+
+mgm_obj_T1 &lt;-<span class="st"> </span>mgm<span class="op">::</span><span class="kw">mgm</span>(<span class="dt">data =</span> bctdf_mgm_T1,
+  <span class="dt">type =</span> mgm_variable_types,
+  <span class="dt">level =</span> mgm_variable_levels,
+  <span class="dt">lambdaSel =</span> <span class="st">&quot;EBIC&quot;</span>,
+  <span class="co"># lambdaFolds = 10,</span>
+  <span class="dt">pbar =</span> <span class="ot">FALSE</span>, 
+  <span class="dt">binarySign =</span> <span class="ot">TRUE</span>)
+## Note that the sign of parameter estimates is stored separately; see ?mgm
+
+<span class="co"># Node pies:</span>
+pies_T1 &lt;-<span class="st"> </span>bctdf_mgm_T1 <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise_all</span>(<span class="op">~</span><span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="co"># results in a series of means, which is ok for dichotomous vars</span>
+pies_T1[<span class="dv">1</span>] &lt;-<span class="st"> </span>pies_T1[<span class="dv">1</span>] <span class="op">/</span><span class="st"> </span><span class="dv">7</span>
+pies_T1[<span class="dv">2</span>] &lt;-<span class="st"> </span>pies_T1[<span class="dv">2</span>] <span class="op">/</span><span class="st"> </span><span class="kw">max</span>(bctdf_mgm_T1<span class="op">$</span><span class="st">`</span><span class="dt">MVPA accelerometer</span><span class="st">`</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+pies_T1[<span class="dv">20</span>] &lt;-<span class="st"> </span>pies_T1[<span class="dv">20</span>] <span class="op">/</span><span class="st"> </span><span class="dv">5</span>
+
+
+node_colors &lt;-<span class="st"> </span><span class="kw">c</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">1</span>], <span class="co"># Color 1 for MVPA (questionnaire)</span>
+                 viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">1</span>], <span class="co"># Color 1 for MVPA (accelerometer)</span>
+                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>], <span class="dv">15</span>), <span class="co"># 11x Color 2 for BCTs</span>
+                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">3</span>], <span class="dv">1</span>), <span class="co"># Color 3 for motivation (controlled)  </span>
+                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>], <span class="dv">1</span>), <span class="co"># 1x Color 2 for BCTs</span>
+                 viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">3</span>]) <span class="co"># Color 3 for motivation (autonomous) </span>
+
+BCT_mgm_T1 &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>wadj, 
+            <span class="dt">layout =</span> <span class="st">&quot;spring&quot;</span>,
+            <span class="dt">repulsion =</span> <span class="fl">0.99</span>, <span class="co"># To nudge the network from originally bad visual state</span>
+            <span class="dt">edge.color =</span> <span class="kw">ifelse</span>(mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>edgecolor <span class="op">==</span><span class="st"> &quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>, mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>edgecolor),
+            <span class="dt">pie =</span> pies_T1,
+            <span class="co"># pieColor = pie_colors_T1,</span>
+            <span class="dt">pieColor =</span> node_colors,
+            <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_mgm_T1),
+            <span class="dt">pieBorder =</span> <span class="dv">1</span>,
+            <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
+            <span class="dt">cut =</span> <span class="dv">0</span>,
+            <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>,
+            <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-1.png" width="2100" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+BCT_mgm_T1_circle &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>wadj, 
+            <span class="dt">layout =</span> <span class="st">&quot;circle&quot;</span>,
+            <span class="dt">title =</span> <span class="st">&quot;Mixed graphical model: PA, BCTs &amp; motivation&quot;</span>,
+            <span class="dt">edge.color =</span> <span class="kw">ifelse</span>(mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>edgecolor <span class="op">==</span><span class="st"> &quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>, mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>edgecolor),
+            <span class="dt">pie =</span> pies_T1,
+            <span class="dt">pieColor =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">5</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="fl">0.8</span>)[<span class="dv">5</span>],
+            <span class="dt">color =</span> node_colors,
+            <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_mgm_T1),
+            <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
+            <span class="dt">cut =</span> <span class="dv">0</span>,
+            <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-2.png" width="2100" /></p>
 </div>
-<div id="agreement-and-frequency-dependent-bcts-with-motivation-and-mvpa" class="section level1">
-<h1>Agreement and frequency dependent BCTs with motivation and MVPA</h1>
-<div id="combined-bct-chunks" class="section level2 tabset">
-<h2>Combined BCT chunks</h2>
+<div id="bootstrap-stability" class="section level2">
+<h2>Bootstrap stability</h2>
+<p>Omitted for now, due to technical problems.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="co"># all_BCTs_mgm_stability &lt;- mgm::resample(object = mgm_obj_T1 %&gt;% na.omit(.), data = bctdf_mgm, nB = 100)</span>
+<span class="co"># # save(all_BCTs_mgm_stability, file = &quot;./Rdata_files/all_BCTs_mgm_stability.Rdata&quot;)</span>
+<span class="co"># load(&quot;./Rdata_files/all_BCTs_mgm_stability.Rdata&quot;)</span>
+<span class="co"># </span>
+<span class="co"># mgm::plotRes(object = all_BCTs_mgm_stability, </span>
+<span class="co">#         quantiles = c(.05, .95), </span>
+<span class="co">#         cex.label = 0.5,</span>
+<span class="co">#         lwd.qtl = 2.5, </span>
+<span class="co">#         cex.mean = .5,</span>
+<span class="co">#        labels = names(bctdf_mgm))</span>
+
+<span class="co"># Error in data[, ind_cat[i]] : subscript out of bounds</span></code></pre></div>
+</div>
+<div id="edge-weights-matrix" class="section level2">
+<h2>Edge weights matrix</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+edgeweights &lt;-<span class="st"> </span>mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>wadj <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(., <span class="dv">3</span>)
+<span class="kw">colnames</span>(edgeweights) &lt;-<span class="st"> </span>labs
+<span class="kw">rownames</span>(edgeweights) &lt;-<span class="st"> </span>labs
+
+edgeweights
+##                        MVPA survey MVPA accelerometer goal setting
+## MVPA survey                  0.000              0.126        0.000
+## MVPA accelerometer           0.126              0.000        0.000
+## goal setting                 0.000              0.000        0.000
+## implementation plan          0.000              0.000        1.308
+## plan by other                0.168              0.000        0.000
+## reminder of plan             0.000              0.000        0.171
+## subgoals                     0.000              0.000        0.000
+## new PA options               0.136              0.000        0.222
+## barrier identification       0.000              0.000        0.000
+## coping planning              0.000              0.000        0.394
+## PA identity                  0.000              0.000        0.000
+## PA life values               0.000              0.000        0.000
+## positive consequences        0.000              0.000        0.000
+## goal contrast                0.000              0.000        0.000
+## relevance of PA              0.000              0.000        0.000
+## changes at home              0.000              0.000        0.000
+## social support               0.000              0.000        0.244
+## controlled motivation        0.000              0.000        0.000
+## monitoring PA                0.000              0.000        0.000
+## autonomous motivation        0.314              0.074        0.198
+##                        implementation plan plan by other reminder of plan
+## MVPA survey                          0.000         0.168            0.000
+## MVPA accelerometer                   0.000         0.000            0.000
+## goal setting                         1.308         0.000            0.171
+## implementation plan                  0.000         0.481            0.206
+## plan by other                        0.481         0.000            0.511
+## reminder of plan                     0.206         0.511            0.000
+## subgoals                             0.436         0.395            0.699
+## new PA options                       0.000         0.000            0.255
+## barrier identification               0.000         0.000            0.360
+## coping planning                      0.000         0.000            0.215
+## PA identity                          0.000         0.000            0.000
+## PA life values                       0.000         0.000            0.000
+## positive consequences                0.000         0.000            0.000
+## goal contrast                        0.277         0.000            0.243
+## relevance of PA                      0.000         0.000            0.000
+## changes at home                      0.000         0.000            0.000
+## social support                       0.000         0.000            0.000
+## controlled motivation                0.000         0.000            0.000
+## monitoring PA                        0.000         0.088            0.452
+## autonomous motivation                0.224         0.000            0.000
+##                        subgoals new PA options barrier identification
+## MVPA survey               0.000          0.136                  0.000
+## MVPA accelerometer        0.000          0.000                  0.000
+## goal setting              0.000          0.222                  0.000
+## implementation plan       0.436          0.000                  0.000
+## plan by other             0.395          0.000                  0.000
+## reminder of plan          0.699          0.255                  0.360
+## subgoals                  0.000          0.379                  0.000
+## new PA options            0.379          0.000                  0.199
+## barrier identification    0.000          0.199                  0.000
+## coping planning           0.495          0.000                  1.096
+## PA identity               0.228          0.230                  0.383
+## PA life values            0.284          0.264                  0.276
+## positive consequences     0.000          0.000                  0.000
+## goal contrast             0.131          0.098                  0.000
+## relevance of PA           0.000          0.000                  0.000
+## changes at home           0.000          0.216                  0.000
+## social support            0.000          0.000                  0.000
+## controlled motivation     0.000          0.000                  0.000
+## monitoring PA             0.062          0.090                  0.000
+## autonomous motivation     0.000          0.128                  0.000
+##                        coping planning PA identity PA life values
+## MVPA survey                      0.000       0.000          0.000
+## MVPA accelerometer               0.000       0.000          0.000
+## goal setting                     0.394       0.000          0.000
+## implementation plan              0.000       0.000          0.000
+## plan by other                    0.000       0.000          0.000
+## reminder of plan                 0.215       0.000          0.000
+## subgoals                         0.495       0.228          0.284
+## new PA options                   0.000       0.230          0.264
+## barrier identification           1.096       0.383          0.276
+## coping planning                  0.000       0.493          0.435
+## PA identity                      0.493       0.000          0.826
+## PA life values                   0.435       0.826          0.000
+## positive consequences            0.000       0.196          0.175
+## goal contrast                    0.000       0.000          0.155
+## relevance of PA                  0.000       0.314          0.204
+## changes at home                  0.000       0.000          0.000
+## social support                   0.000       0.000          0.000
+## controlled motivation            0.000       0.000          0.000
+## monitoring PA                    0.000       0.000          0.000
+## autonomous motivation            0.000       0.000          0.091
+##                        positive consequences goal contrast relevance of PA
+## MVPA survey                            0.000         0.000           0.000
+## MVPA accelerometer                     0.000         0.000           0.000
+## goal setting                           0.000         0.000           0.000
+## implementation plan                    0.000         0.277           0.000
+## plan by other                          0.000         0.000           0.000
+## reminder of plan                       0.000         0.243           0.000
+## subgoals                               0.000         0.131           0.000
+## new PA options                         0.000         0.098           0.000
+## barrier identification                 0.000         0.000           0.000
+## coping planning                        0.000         0.000           0.000
+## PA identity                            0.196         0.000           0.314
+## PA life values                         0.175         0.155           0.204
+## positive consequences                  0.000         0.000           0.906
+## goal contrast                          0.000         0.000           0.866
+## relevance of PA                        0.906         0.866           0.000
+## changes at home                        0.000         0.310           0.340
+## social support                         0.000         0.244           0.370
+## controlled motivation                  0.000         0.000           0.000
+## monitoring PA                          0.000         0.452           0.000
+## autonomous motivation                  0.000         0.071           0.271
+##                        changes at home social support
+## MVPA survey                      0.000          0.000
+## MVPA accelerometer               0.000          0.000
+## goal setting                     0.000          0.244
+## implementation plan              0.000          0.000
+## plan by other                    0.000          0.000
+## reminder of plan                 0.000          0.000
+## subgoals                         0.000          0.000
+## new PA options                   0.216          0.000
+## barrier identification           0.000          0.000
+## coping planning                  0.000          0.000
+## PA identity                      0.000          0.000
+## PA life values                   0.000          0.000
+## positive consequences            0.000          0.000
+## goal contrast                    0.310          0.244
+## relevance of PA                  0.340          0.370
+## changes at home                  0.000          0.593
+## social support                   0.593          0.000
+## controlled motivation            0.000          0.000
+## monitoring PA                    0.348          0.000
+## autonomous motivation            0.000          0.000
+##                        controlled motivation monitoring PA
+## MVPA survey                                0         0.000
+## MVPA accelerometer                         0         0.000
+## goal setting                               0         0.000
+## implementation plan                        0         0.000
+## plan by other                              0         0.088
+## reminder of plan                           0         0.452
+## subgoals                                   0         0.062
+## new PA options                             0         0.090
+## barrier identification                     0         0.000
+## coping planning                            0         0.000
+## PA identity                                0         0.000
+## PA life values                             0         0.000
+## positive consequences                      0         0.000
+## goal contrast                              0         0.452
+## relevance of PA                            0         0.000
+## changes at home                            0         0.348
+## social support                             0         0.000
+## controlled motivation                      0         0.000
+## monitoring PA                              0         0.000
+## autonomous motivation                      0         0.000
+##                        autonomous motivation
+## MVPA survey                            0.314
+## MVPA accelerometer                     0.074
+## goal setting                           0.198
+## implementation plan                    0.224
+## plan by other                          0.000
+## reminder of plan                       0.000
+## subgoals                               0.000
+## new PA options                         0.128
+## barrier identification                 0.000
+## coping planning                        0.000
+## PA identity                            0.000
+## PA life values                         0.091
+## positive consequences                  0.000
+## goal contrast                          0.071
+## relevance of PA                        0.271
+## changes at home                        0.000
+## social support                         0.000
+## controlled motivation                  0.000
+## monitoring PA                          0.000
+## autonomous motivation                  0.000</code></pre></div>
+</div>
+<div id="other-estimation-methods-mgm-cv-ggm" class="section level2">
+<h2>Other estimation methods (mgm CV, GGM)</h2>
+<p>This section estimates models with different methods: mgm with cross-validation, the standard Gaussian Graphical Model (GGM), and unregularised GGM. The distributions violate normality assumptions of the GGM.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### CV model selection for mgm 
+
+mgm_obj_T1_CV &lt;-<span class="st"> </span>mgm<span class="op">::</span><span class="kw">mgm</span>(<span class="dt">data =</span> bctdf_mgm_T1,
+  <span class="dt">type =</span> mgm_variable_types,
+  <span class="dt">level =</span> mgm_variable_levels,
+  <span class="dt">lambdaSel =</span> <span class="st">&quot;CV&quot;</span>,
+  <span class="dt">lambdaFolds =</span> <span class="dv">10</span>,
+  <span class="dt">pbar =</span> <span class="ot">FALSE</span>, 
+  <span class="dt">binarySign =</span> <span class="ot">TRUE</span>)
+## Note that the sign of parameter estimates is stored separately; see ?mgm
+
+<span class="co"># Node pies:</span>
+pies_T1 &lt;-<span class="st"> </span>bctdf_mgm_T1 <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarise_all</span>(<span class="op">~</span><span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="co"># results in a series of means, which is ok for dichotomous vars</span>
+pies_T1[<span class="dv">1</span>] &lt;-<span class="st"> </span>pies_T1[<span class="dv">1</span>] <span class="op">/</span><span class="st"> </span><span class="dv">7</span>
+pies_T1[<span class="dv">2</span>] &lt;-<span class="st"> </span>pies_T1[<span class="dv">2</span>] <span class="op">/</span><span class="st"> </span><span class="kw">max</span>(bctdf_mgm_T1<span class="op">$</span><span class="st">`</span><span class="dt">MVPA accelerometer</span><span class="st">`</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+pies_T1[<span class="dv">20</span>] &lt;-<span class="st"> </span>pies_T1[<span class="dv">20</span>] <span class="op">/</span><span class="st"> </span><span class="dv">5</span>
+
+
+node_colors &lt;-<span class="st"> </span><span class="kw">c</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">1</span>], <span class="co"># Color 1 for MVPA (questionnaire)</span>
+                 viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">1</span>], <span class="co"># Color 1 for MVPA (accelerometer)</span>
+                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>], <span class="dv">15</span>), <span class="co"># 11x Color 2 for BCTs</span>
+                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">3</span>], <span class="dv">1</span>), <span class="co"># Color 3 for motivation (controlled)  </span>
+                 <span class="kw">rep</span>(viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>], <span class="dv">1</span>), <span class="co"># 1x Color 2 for BCTs</span>
+                 viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">3</span>, <span class="dt">begin =</span> <span class="fl">0.4</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">3</span>]) <span class="co"># Color 3 for motivation (autonomous) </span>
+
+BCT_mgm_T1_CV &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj_T1_CV<span class="op">$</span>pairwise<span class="op">$</span>wadj, 
+            <span class="dt">layout =</span> BCT_mgm_T1<span class="op">$</span>layout,
+            <span class="dt">repulsion =</span> <span class="fl">0.99</span>, <span class="co"># To nudge the network from originally bad visual state</span>
+            <span class="dt">edge.color =</span> <span class="kw">ifelse</span>(mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>edgecolor <span class="op">==</span><span class="st"> &quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>, mgm_obj_T1<span class="op">$</span>pairwise<span class="op">$</span>edgecolor),
+            <span class="dt">pie =</span> pies_T1,
+            <span class="co"># pieColor = pie_colors_T1,</span>
+            <span class="dt">pieColor =</span> node_colors,
+            <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_mgm_T1),
+            <span class="dt">pieBorder =</span> <span class="dv">1</span>,
+            <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
+            <span class="dt">cut =</span> <span class="dv">0</span>,
+            <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
+            <span class="dt">title =</span> <span class="st">&quot;MGM with cross-validation&quot;</span>)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-4-1.png" width="2100" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+#### GGM
+
+bctdf_ggm_T1 &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
+  <span class="st">&#39;goal setting&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_01_T1,
+  <span class="st">&#39;implementation plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_02_T1,
+  <span class="st">&#39;plan by other&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_03_T1,
+  <span class="st">&#39;reminder of plan&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_04_T1,
+  <span class="st">&#39;subgoals&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_05_T1,
+  <span class="st">&#39;new PA options&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_06_T1,
+  <span class="st">&#39;barrier identification&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_07_T1,
+  <span class="st">&#39;coping planning&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_08_T1,
+  <span class="st">&#39;PA identity&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_09_T1,
+  <span class="st">&#39;PA life values&#39;</span> =<span class="st"> </span>PA_agreementDependentBCT_10_T1,
+  <span class="st">&#39;positive consequences&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_01_T1,
+  <span class="st">&#39;log on paper&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_02_T1,
+  <span class="st">&#39;smartphone&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_03_T1,
+<span class="co">#  &#39;mnemonic cues&#39; = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording </span>
+  <span class="st">&#39;goal contrast&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_05_T1,
+  <span class="st">&#39;relevance of PA&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_06_T1,
+  <span class="st">&#39;changes at home&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_07_T1,
+  <span class="st">&#39;social support&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_08_T1,
+  <span class="st">&#39;failure contemplation&#39;</span> =<span class="st"> </span>PA_frequencyDependentBCT_09_T1,
+  <span class="st">&#39;MVPA survey&#39;</span> =<span class="st"> </span>padaysLastweek_T1,
+  <span class="st">&#39;MVPA accelerometer&#39;</span> =<span class="st"> </span>mvpaAccelerometer_T1,
+  <span class="st">&#39;intrinsic&#39;</span> =<span class="st"> </span>PA_intrinsic_T1,
+  <span class="st">&#39;identified&#39;</span> =<span class="st"> </span>PA_identified_T1, <span class="st">&#39;integrated&#39;</span> =<span class="st"> </span>PA_integrated_T1,
+  <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> </span>PA_controlled_T1) <span class="op">%&gt;%</span>
+<span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span><span class="kw">mutate</span>(
+  <span class="co"># &#39;goal setting&#39; = ifelse(`goal setting` == 1, 0, 1),</span>
+  <span class="co"># &#39;implementation plan&#39; = ifelse(`implementation plan` == 1, 0, 1),</span>
+  <span class="co"># &#39;plan by other&#39; = ifelse(`plan by other` == 1, 0, 1),</span>
+  <span class="co"># &#39;reminder of plan&#39; = ifelse(`reminder of plan` == 1, 0, 1),</span>
+  <span class="co"># &#39;subgoals&#39; = ifelse(`subgoals` == 1, 0, 1),</span>
+  <span class="co"># &#39;new PA options&#39; = ifelse(`new PA options` == 1, 0, 1),</span>
+  <span class="co"># &#39;barrier identification&#39; = ifelse(`barrier identification` == 1, 0, 1),</span>
+  <span class="co"># &#39;coping planning&#39; = ifelse(`coping planning` == 1, 0, 1),</span>
+  <span class="co"># &#39;PA identity&#39; = ifelse(`PA identity` == 1, 0, 1),</span>
+  <span class="co"># &#39;PA life values&#39; = ifelse(`PA life values` == 1, 0, 1),</span>
+  <span class="co"># &#39;positive consequences&#39; = ifelse(`positive consequences` == 1, 0, 1),</span>
+  <span class="st">&#39;monitoring PA&#39;</span> =<span class="st"> </span><span class="kw">ifelse</span>(<span class="st">`</span><span class="dt">log on paper</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> `</span><span class="dt">smartphone</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
+  <span class="co"># &#39;goal contrast&#39; = ifelse(`goal contrast` == 1, 0, 1),</span>
+  <span class="co"># &#39;relevance of PA&#39; = ifelse(`relevance of PA` == 1, 0, 1),</span>
+  <span class="co"># &#39;changes at home&#39; = ifelse(`changes at home` == 1, 0, 1),</span>
+  <span class="co"># &#39;social support&#39; = ifelse(`social support` == 1, 0, 1),</span>
+  <span class="co"># &#39;failure contemplation&#39; = ifelse(`failure contemplation` == 1, 0, 1),</span>
+  <span class="st">&#39;autonomous motivation&#39;</span> =<span class="st"> </span><span class="kw">mean</span>(<span class="kw">c</span>(identified, intrinsic, integrated), <span class="dt">na.rm =</span> T),
+  <span class="st">&#39;controlled motivation&#39;</span> =<span class="st"> `</span><span class="dt">controlled motivation</span><span class="st">`</span> <span class="op">*</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span><span class="st">`</span><span class="dt">log on paper</span><span class="st">`</span>, <span class="op">-</span><span class="st">`</span><span class="dt">smartphone</span><span class="st">`</span>, 
+                <span class="op">-</span>identified, <span class="op">-</span>intrinsic, <span class="op">-</span>integrated,
+         <span class="op">-</span><span class="st">`</span><span class="dt">failure contemplation</span><span class="st">`</span> <span class="co"># only concerns those who haven&#39;t reached goals</span>
+           ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&#39;MVPA survey&#39;</span>, <span class="st">&#39;MVPA accelerometer&#39;</span>, <span class="kw">everything</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_all</span>(as.numeric)
+
+nwBCT_ggm &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(bctdf_ggm_T1, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
+
+BCT_ggm &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_ggm, 
+                <span class="dt">layout =</span> BCT_mgm_T1<span class="op">$</span>layout, 
+                <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, 
+                <span class="dt">title =</span> <span class="st">&quot;GGM: MVPA, BCTs &amp; motivation&quot;</span>, 
+                <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
+                <span class="co"># pie = piefill_ggm,</span>
+                <span class="dt">color =</span> node_colors,
+                <span class="dt">pieBorder =</span> <span class="dv">1</span>)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-4-2.png" width="2100" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+modSelect_<span class="dv">0</span> &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">ggmModSelect</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_ggm_T1), <span class="dt">n =</span> <span class="kw">nrow</span>(bctdf_ggm_T1), <span class="dt">gamma =</span> <span class="dv">0</span>)
+
+g3 &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(modSelect_<span class="dv">0</span><span class="op">$</span>graph, 
+                     <span class="dt">layout =</span> BCT_mgm_T1<span class="op">$</span>layout, 
+                     <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
+                     <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
+                     <span class="dt">labels =</span> labs,
+                     <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>,
+                     <span class="dt">title =</span> <span class="st">&quot;ggmModSelect (gamma = 0)&quot;</span>, 
+                     <span class="dt">color =</span> node_colors, 
+                     <span class="dt">cut =</span> <span class="dv">0</span>)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-4-3.png" width="2100" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+modSelect_<span class="fl">0.5</span> &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">ggmModSelect</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_ggm_T1), <span class="dt">n =</span> <span class="kw">nrow</span>(bctdf_ggm_T1), <span class="dt">gamma =</span> <span class="fl">0.5</span>)
+
+g4 &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(modSelect_<span class="fl">0.5</span><span class="op">$</span>graph, 
+                     <span class="dt">layout =</span> BCT_mgm_T1<span class="op">$</span>layout, 
+                     <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
+                     <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
+                     <span class="dt">labels =</span> labs,
+                     <span class="dt">theme =</span> <span class="st">&quot;colorblind&quot;</span>, 
+                     <span class="dt">title =</span> <span class="st">&quot;ggmModSelect (gamma = 0.5)&quot;</span>,
+                     <span class="dt">color =</span> node_colors, 
+                     <span class="dt">cut =</span> <span class="dv">0</span>)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-4-4.png" width="2100" /></p>
+</div>
+<div id="centrality" class="section level2">
+<h2>Centrality</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(
+  <span class="kw">list</span>(
+    <span class="co"># mgm_EBIC = BCT_mgm_T1,</span>
+    <span class="co"># mgm_CV = mgm_obj_T1_CV,</span>
+       <span class="dt">ggm =</span> BCT_ggm,
+       <span class="dt">ggmModSelect_0 =</span> g3,
+       <span class="dt">ggmModSelect_0.5 =</span> g4
+       ),
+  <span class="dt">include =</span> <span class="kw">c</span>(<span class="st">&quot;Strength&quot;</span>,<span class="st">&quot;ExpectedInfluence&quot;</span>),
+               <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-5-1.png" width="2100" /></p>
+</div>
+</div>
+<div id="combined-bct-chunks" class="section level1">
+<h1>Combined BCT chunks</h1>
 <p>The following network depicts a mixed graphical model, with the following variables:</p>
 <ul>
 <li><p>Two measures of physical activity. <code>MVPA accelerometer</code> is the mean accelerometer-measured Moderate-to-Vigorous Physical Activity (MVPA) during a day in the measurement period, <code>MVPA questionnaire</code> is a survey item which asked “on how many days the previous week were you active for at least 30 minutes so, that you were out of breath”.</p></li>
@@ -440,7 +915,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.849","3":"0.278","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.960","3":"0.078","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"BCT usage","2":"0.764","3":"0.416","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Intrinsic","2":"0.627","3":"0.607","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Identified","2":"0.630","3":"0.602","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"Introjected","2":"NA","3":"NA","4":"0.71","5":"0.183","6":"0.645","_rn_":"6"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.90","5":"0.011","6":"0.899","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.849","3":"0.278","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.960","3":"0.078","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"BCT usage","2":"0.766","3":"0.413","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Intrinsic","2":"0.626","3":"0.607","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Identified","2":"0.631","3":"0.602","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"Introjected","2":"NA","3":"NA","4":"0.7","5":"0.157","6":"0.644","_rn_":"6"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.9","5":"0.011","6":"0.899","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -468,7 +943,7 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
             <span class="dt">label.cex =</span> <span class="fl">0.8</span>,
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
             <span class="dt">node.width =</span> <span class="fl">1.65</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-1.png" width="2100" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-6-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># adjacency_noAmotivation &lt;- mgm_obj$pairwise$wadj</span>
 <span class="co"># save(adjacency_noAmotivation, file = &quot;./Rdata_files/adjacency_noAmotivation.Rdata&quot;)</span>
@@ -490,24 +965,52 @@ mgm<span class="op">::</span><span class="kw">plotRes</span>(<span class="dt">ob
         <span class="dt">lwd.qtl =</span> <span class="fl">2.5</span>, 
         <span class="dt">cex.mean =</span> .<span class="dv">5</span>,
         <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_mgm))</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-1-2.png" width="2100" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-6-2.png" width="2100" /></p>
 <p>The bootstrap stability plot above shows the proportion of re-samples, which contain a non-zero link between two edges (for a tutorial, see <a href="http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/">this link</a> – or, if it’s down, this <a href="https://web.archive.org/web/20180809113839/http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/">archived page</a>). For example, when we draw observations from the current sample with replacement a 100 times, 99% of these times a non-zero link between questionnaire-measured MVPA and intrinsic motivation is estimated.</p>
 </div>
-<div id="correlation-network-and-mixed-graphical-model-compared" class="section level2">
-<h2>Correlation network and mixed graphical model compared</h2>
+<div id="correlation-network-and-mixed-graphical-model-compared" class="section level1">
+<h1>Correlation network and mixed graphical model compared</h1>
 <pre><code>## Note that the sign of parameter estimates is stored separately; see ?mgm</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA survey","2":"0.849","3":"0.278","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerom.","2":"0.960","3":"0.078","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"Intrinsic","2":"0.627","3":"0.607","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Identified","2":"0.630","3":"0.603","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Introjected","2":"NA","3":"NA","4":"0.71","5":"0.183","6":"0.645","_rn_":"5"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.90","5":"0.011","6":"0.899","_rn_":"6"},{"1":"BCT usage","2":"0.764","3":"0.416","4":"NA","5":"NA","6":"NA","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA survey","2":"0.849","3":"0.278","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerom.","2":"0.960","3":"0.077","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"Intrinsic","2":"0.627","3":"0.607","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Identified","2":"0.631","3":"0.602","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Introjected","2":"NA","3":"NA","4":"0.702","5":"0.160","6":"0.645","_rn_":"5"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.900","5":"0.011","6":"0.899","_rn_":"6"},{"1":"BCT usage","2":"0.766","3":"0.413","4":"NA","5":"NA","6":"NA","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
-<p><img src="baseline-networks_files/figure-html/network-dataprep-1.png" width="2100" /><img src="baseline-networks_files/figure-html/network-dataprep-2.png" width="2100" /></p>
-<pre><code>## Variables detected as ordinal: Introjected; Extrinsic</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+averagedLayout &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">averageLayout</span>(BCT_mgm, corgraph)
+
+<span class="kw">layout</span>(<span class="kw">t</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))
+
+BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj<span class="op">$</span>pairwise<span class="op">$</span>wadj, 
+            <span class="dt">layout =</span> averagedLayout,
+            <span class="dt">edge.color =</span> <span class="kw">ifelse</span>(mgm_obj<span class="op">$</span>pairwise<span class="op">$</span>edgecolor <span class="op">==</span><span class="st"> &quot;darkgreen&quot;</span>, <span class="st">&quot;blue&quot;</span>, mgm_obj<span class="op">$</span>pairwise<span class="op">$</span>edgecolor),
+            <span class="dt">pie =</span> pie_errors,
+            <span class="dt">pieColor =</span> viridis<span class="op">::</span><span class="kw">viridis</span>(<span class="dv">5</span>, <span class="dt">begin =</span> <span class="fl">0.3</span>, <span class="dt">end =</span> <span class="fl">0.99</span>)[<span class="dv">2</span>],
+            <span class="dt">color =</span> node_colors,
+            <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_mgm),
+            <span class="co"># label.cex = 1,</span>
+            <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
+            <span class="co"># node.width = 1,</span>
+            <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>,
+            <span class="dt">title =</span> <span class="st">&quot;A)&quot;</span>)
+
+corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_mgm), 
+              <span class="dt">layout =</span> averagedLayout,
+              <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>,
+              <span class="dt">pie =</span> piefill,
+              <span class="dt">pieBorder =</span> <span class="dv">1</span>,
+              <span class="dt">nodeColor =</span> node_colors,
+              <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_mgm),
+              <span class="co"># label.cex = 1,</span>
+              <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
+              <span class="co"># node.width = 1,</span>
+              <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
+              <span class="dt">title =</span> <span class="st">&quot;B)&quot;</span>)</code></pre></div>
 <div class="figure">
-<img src="baseline-networks_files/figure-html/network-plot-1.png" alt="A) Mixed graphical model with LASSO regularisation and model selection by cross-validation, B) Bivariate correlation network" width="3600" />
+<img src="baseline-networks_files/figure-html/network-plot-1.png" alt="A) Mixed graphical model with LASSO regularisation and model selection by cross-validation. Pie indicates node predictability. B) Bivariate correlation network. Pie indicates node mean as % of theoretical maximum (for MVPA accelerometer, mean as % average weartime)." width="3600" />
 <p class="caption">
 <ol style="list-style-type: upper-alpha">
-<li>Mixed graphical model with LASSO regularisation and model selection by cross-validation, B) Bivariate correlation network
+<li>Mixed graphical model with LASSO regularisation and model selection by cross-validation. Pie indicates node predictability. B) Bivariate correlation network. Pie indicates node mean as % of theoretical maximum (for MVPA accelerometer, mean as % average weartime).
 </p>
 </div></li>
 </ol>
@@ -559,7 +1062,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.849","3":"0.279","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.959","3":"0.080","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"BCT usage","2":"0.760","3":"0.422","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Intrinsic","2":"0.622","3":"0.613","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Identified","2":"0.626","3":"0.607","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"Introjected","2":"NA","3":"NA","4":"0.708","5":"0.179","6":"0.644","_rn_":"6"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.913","5":"0.146","6":"0.898","_rn_":"7"},{"1":"Amotivation","2":"NA","3":"NA","4":"0.907","5":"0.012","6":"0.906","_rn_":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.850","3":"0.276","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.959","3":"0.079","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"BCT usage","2":"0.761","3":"0.421","4":"NA","5":"NA","6":"NA","_rn_":"3"},{"1":"Intrinsic","2":"0.621","3":"0.614","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"Identified","2":"0.628","3":"0.606","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"Introjected","2":"NA","3":"NA","4":"0.702","5":"0.160","6":"0.645","_rn_":"6"},{"1":"Extrinsic","2":"NA","3":"NA","4":"0.912","5":"0.135","6":"0.898","_rn_":"7"},{"1":"Amotivation","2":"NA","3":"NA","4":"0.907","5":"0.012","6":"0.906","_rn_":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -587,7 +1090,7 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
             <span class="dt">label.cex =</span> <span class="fl">0.8</span>,
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
             <span class="dt">node.width =</span> <span class="fl">1.65</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-2-1.png" width="2100" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-7-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># BCT_mgm_withAmotivation_stability &lt;- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)</span>
 <span class="co"># save(BCT_mgm_withAmotivation_stability, file = &quot;./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata&quot;)</span>
@@ -598,7 +1101,7 @@ mgm<span class="op">::</span><span class="kw">plotRes</span>(<span class="dt">ob
         <span class="dt">cex.label =</span> <span class="fl">1.25</span>, 
         <span class="dt">lwd.qtl =</span> <span class="fl">2.5</span>, 
         <span class="dt">cex.mean =</span> .<span class="dv">5</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-2-2.png" width="2100" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-7-2.png" width="2100" /></p>
 <p>Theory-wise, Amotivation should be negatively correlated with everything but Extrinsic and Introjected. Given that BCT usage is 19 items, there are probably a lot of ways there can be a positive correlation, although that would be unexpected. But the positive relation with MVPA questionnaire would mean, that people who report having done physical activity on more days last week, would also say they don’t see any point in doing physical activity (another example item: I think exercising is a waste of time). One explanation would be some form of <a href="https://web.archive.org/web/20180807095037/http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/">conditioning on a collider</a>.</p>
 <p>One option would be, that (as the model drops incomplete observations), there is some selection effects based on motivation types and/or BCT usage. To check for this, we estimate a Gaussian Graphical Model, which assumes normally distributed data but uses all observations.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bctdf_ggm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
@@ -626,12 +1129,6 @@ bctdf_ggm<span class="op">$</span><span class="st">`</span><span class="dt">BCT 
 <span class="co"># Network for all participants</span>
 S.total_ggm &lt;-<span class="st"> </span>bctdf_ggm
 nwBCT_ggm &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total_ggm, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: Introjected; Extrinsic; Amotivation
 
 labs_ggm &lt;-<span class="st"> </span><span class="kw">colnames</span>(S.total_ggm)
 
@@ -675,8 +1172,8 @@ qgraph<span class="op">::</span><span class="kw">flow</span>(BCT_ggm, <span clas
 <p><img src="baseline-networks_files/figure-html/stability-1.png" width="2100" /></p>
 <p>The bootstrap stability plot above (for a tutorial, see <a href="http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/">this link</a> – or, if it’s down, this <a href="https://web.archive.org/web/20180809113839/http://psych-networks.com/bootstrapping-edges-after-regularization-clarifications-tutorial/">archived page</a>) shows, that when we draw observations from the sample with replacement 2500 times, the connection between amotivation and questionnaire-measured MVPA was estimated as non-zero only about 30% of time.</p>
 </div>
-<div id="individual-bct-items" class="section level2">
-<h2>Individual BCT items</h2>
+<div id="combining-some-bct-items" class="section level1">
+<h1>Combining some BCT items</h1>
 <p>This section presents a Mixed Graphical Model (MGM) and a Gaussian Graphical Model (GGM). In the MGM, we opted to dichotomise the BCTs in order to increase interpretability while not violating model assumptions. Results do not differ very much. Some nodes were still combined, to reduce estimation burden.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bctdf_mgm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(
 <span class="co">#  id,</span>
@@ -775,7 +1272,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.847","3":"0.282","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.906","5":"0.563","6":"0.785","_rn_":"3"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.889","5":"0.617","6":"0.710","_rn_":"4"},{"1":"plan by other","2":"NA","3":"NA","4":"0.790","5":"0.558","6":"0.525","_rn_":"5"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.841","5":"0.648","6":"0.548","_rn_":"6"},{"1":"subgoals","2":"NA","3":"NA","4":"0.859","5":"0.635","6":"0.614","_rn_":"7"},{"1":"new PA options","2":"NA","3":"NA","4":"0.844","5":"0.422","6":"0.730","_rn_":"8"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.903","5":"0.267","6":"0.868","_rn_":"9"},{"1":"goal contrast","2":"NA","3":"NA","4":"0.819","5":"0.614","6":"0.531","_rn_":"10"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.881","5":"0.467","6":"0.777","_rn_":"11"},{"1":"changes at home","2":"NA","3":"NA","4":"0.752","5":"0.452","6":"0.547","_rn_":"12"},{"1":"social support","2":"NA","3":"NA","4":"0.761","5":"0.496","6":"0.526","_rn_":"13"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"14"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.890","5":"0.461","6":"0.796","_rn_":"15"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.924","5":"0.442","6":"0.864","_rn_":"16"},{"1":"monitoring PA","2":"NA","3":"NA","4":"0.744","5":"0.432","6":"0.549","_rn_":"17"},{"1":"autonomous motivation","2":"0.786","3":"0.381","4":"NA","5":"NA","6":"NA","_rn_":"18"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.847","3":"0.282","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.961","3":"0.075","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.906","5":"0.563","6":"0.785","_rn_":"3"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.890","5":"0.621","6":"0.710","_rn_":"4"},{"1":"plan by other","2":"NA","3":"NA","4":"0.785","5":"0.549","6":"0.523","_rn_":"5"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.842","5":"0.651","6":"0.547","_rn_":"6"},{"1":"subgoals","2":"NA","3":"NA","4":"0.861","5":"0.641","6":"0.613","_rn_":"7"},{"1":"new PA options","2":"NA","3":"NA","4":"0.844","5":"0.422","6":"0.730","_rn_":"8"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.901","5":"0.250","6":"0.868","_rn_":"9"},{"1":"goal contrast","2":"NA","3":"NA","4":"0.820","5":"0.617","6":"0.530","_rn_":"10"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.881","5":"0.467","6":"0.777","_rn_":"11"},{"1":"changes at home","2":"NA","3":"NA","4":"0.752","5":"0.452","6":"0.547","_rn_":"12"},{"1":"social support","2":"NA","3":"NA","4":"0.761","5":"0.496","6":"0.526","_rn_":"13"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"14"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.890","5":"0.461","6":"0.796","_rn_":"15"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.924","5":"0.442","6":"0.864","_rn_":"16"},{"1":"monitoring PA","2":"NA","3":"NA","4":"0.744","5":"0.432","6":"0.549","_rn_":"17"},{"1":"autonomous motivation","2":"0.785","3":"0.382","4":"NA","5":"NA","6":"NA","_rn_":"18"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -864,12 +1361,6 @@ bctdf_ggm &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span c
 <span class="co"># Network for all participants</span>
 S.total_ggm &lt;-<span class="st"> </span>bctdf_ggm
 nwBCT_ggm &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total_ggm, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; positive consequences; goal contrast; relevance of PA; changes at home; social support
 
 labs_ggm &lt;-<span class="st"> </span><span class="kw">colnames</span>(S.total_ggm)
 
@@ -910,8 +1401,7 @@ qgraph<span class="op">::</span><span class="kw">flow</span>(BCT_ggm, <span clas
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 allBctsMotiSurveyPA &lt;-<span class="st"> </span>nwBCT_ggm
 
-allBctsMotiSurveyPA_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(allBctsMotiSurveyPA)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+allBctsMotiSurveyPA_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(allBctsMotiSurveyPA)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(allBctsMotiSurveyPA)<span class="op">$</span>InDegree <span class="op">%&gt;%</span><span class="st"> </span>
@@ -1042,8 +1532,7 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(allBctsMotiSu
 
 <span class="kw">plot</span>(bootnet_stability_allBctsMotiSurveyPA, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
 <p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-2.png" width="2100" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_allBctsMotiSurveyPA, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_allBctsMotiSurveyPA, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/allBctsMotiSurveyPA-ggm-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_allBctsMotiSurveyPA &lt;- bootnet::bootnet(allBctsMotiSurveyPA, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
@@ -1106,7 +1595,6 @@ qgraph<span class="op">::</span><span class="kw">qgraph</span>(mgm_obj<span clas
             <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
             <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
 </div>
-</div>
 <div id="correlation-and-partial-correlation-networks-visualised" class="section level2">
 <h2>Correlation and partial correlation networks visualised</h2>
 <p>As we can see, the bivariate correlation network is uninterpretable due to high number of edges.</p>
@@ -1123,8 +1611,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
        <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
        <span class="dt">pie =</span> piefill_ggm,
        <span class="dt">pieBorder =</span> <span class="dv">1</span>,
-       <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>)
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; positive consequences; goal contrast; relevance of PA; changes at home; social support</code></pre></div>
+       <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/pa-bct-moti-compare-correlation-partialcorrelation-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 
@@ -1140,8 +1627,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
        <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
        <span class="dt">pie =</span> piefill_ggm,
        <span class="dt">pieBorder =</span> <span class="dv">1</span>,
-       <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>)
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; positive consequences; goal contrast; relevance of PA; changes at home; social support</code></pre></div>
+       <span class="dt">color =</span> <span class="st">&quot;skyblue&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/pa-bct-moti-compare-correlation-partialcorrelation-2.png" width="2100" /></p>
 </div>
 <div id="correlation-matrix-visualised" class="section level2">
@@ -1839,7 +2325,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.871","3":"0.241","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA life values","2":"NA","3":"NA","4":"0.842","5":"0.173","6":"0.809","_rn_":"3"},{"1":"autonomous motivation","2":"0.843","3":"0.289","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.870","3":"0.242","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA life values","2":"NA","3":"NA","4":"0.842","5":"0.173","6":"0.809","_rn_":"3"},{"1":"autonomous motivation","2":"0.843","3":"0.289","4":"NA","5":"NA","6":"NA","_rn_":"4"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -1957,7 +2443,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.870","3":"0.242","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA life values","2":"NA","3":"NA","4":"0.858","5":"0.256","6":"0.809","_rn_":"3"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.843","5":"0.299","6":"0.776","_rn_":"4"},{"1":"autonomous motivation","2":"0.816","3":"0.333","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.871","3":"0.241","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.961","3":"0.075","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA life values","2":"NA","3":"NA","4":"0.858","5":"0.256","6":"0.809","_rn_":"3"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.844","5":"0.305","6":"0.776","_rn_":"4"},{"1":"autonomous motivation","2":"0.816","3":"0.333","4":"NA","5":"NA","6":"NA","_rn_":"5"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -2074,7 +2560,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.867","3":"0.248","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA life values","2":"NA","3":"NA","4":"0.866","5":"0.298","6":"0.809","_rn_":"3"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.901","5":"0.250","6":"0.868","_rn_":"4"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.867","5":"0.406","6":"0.776","_rn_":"5"},{"1":"autonomous motivation","2":"0.812","3":"0.340","4":"NA","5":"NA","6":"NA","_rn_":"6"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.867","3":"0.248","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA life values","2":"NA","3":"NA","4":"0.867","5":"0.304","6":"0.809","_rn_":"3"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.900","5":"0.241","6":"0.868","_rn_":"4"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.867","5":"0.406","6":"0.776","_rn_":"5"},{"1":"autonomous motivation","2":"0.812","3":"0.340","4":"NA","5":"NA","6":"NA","_rn_":"6"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"7"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -2191,7 +2677,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.865","3":"0.251","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA identity","2":"NA","3":"NA","4":"0.908","5":"0.481","6":"0.823","_rn_":"3"},{"1":"PA life values","2":"NA","3":"NA","4":"0.907","5":"0.512","6":"0.809","_rn_":"4"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.900","5":"0.241","6":"0.868","_rn_":"5"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.874","5":"0.437","6":"0.776","_rn_":"6"},{"1":"autonomous motivation","2":"0.812","3":"0.339","4":"NA","5":"NA","6":"NA","_rn_":"7"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.865","3":"0.251","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"MVPA accelerometer","2":"0.962","3":"0.074","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"PA identity","2":"NA","3":"NA","4":"0.908","5":"0.481","6":"0.823","_rn_":"3"},{"1":"PA life values","2":"NA","3":"NA","4":"0.914","5":"0.548","6":"0.810","_rn_":"4"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.899","5":"0.233","6":"0.868","_rn_":"5"},{"1":"relevance of PA","2":"NA","3":"NA","4":"0.873","5":"0.431","6":"0.777","_rn_":"6"},{"1":"autonomous motivation","2":"0.812","3":"0.339","4":"NA","5":"NA","6":"NA","_rn_":"7"},{"1":"controlled motivation","2":"NA","3":"NA","4":"0.883","5":"0.000","6":"0.883","_rn_":"8"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -2422,7 +2908,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.904","3":"0.182","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"autonomous motivation","2":"0.864","3":"0.254","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.866","5":"0","6":"0.866","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"MVPA questionnaire","2":"0.904","3":"0.182","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"autonomous motivation","2":"0.864","3":"0.254","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"positive consequences","2":"NA","3":"NA","4":"0.871","5":"0.035","6":"0.866","_rn_":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -2497,9 +2983,6 @@ exerciseTypes_df &lt;-<span class="st"> </span><span class="kw">as.tbl</span>(ex
 <span class="kw">names</span>(exerciseTypes_df) &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_replace_all</span>(<span class="kw">names</span>(exerciseTypes_df), <span class="dt">pattern =</span> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="dt">replacement =</span> <span class="st">&quot; &quot;</span>)
 
 exerciseTypes_network &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(exerciseTypes_df, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -3617,8 +4100,8 @@ corMatrix_BCTs &lt;-<span class="st"> </span>bivariate_BCTs <span class="op">%&g
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">Spearman correlation</span><span class="st">`</span> <span class="op">!=</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="st">`</span><span class="dt">Spearman correlation</span><span class="st">`</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Bivariate correlations between BCTs, motivation and PA. Sorted by strength.&quot;</span>)</code></pre></div>
-<div id="htmlwidget-c6df187ac61a6c9a0512" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c6df187ac61a6c9a0512">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between BCTs, motivation and PA. Sorted by strength.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],["PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer"],["PA accelerometer","PA self-report","autonomous","plan by other","new PA options","goal setting","goal contrast","relevance of PA","social support","subgoals","PA life values","positive consequences","PA identity","failure contemplated","implementation plan","log on paper","changes at home","mnemonic cues","reminder of plan","smartphone","barrier identification","coping planning","controlled"],[" 1.000"," 0.254"," 0.232"," 0.156"," 0.148"," 0.143"," 0.141"," 0.137"," 0.132"," 0.124"," 0.120"," 0.116"," 0.108"," 0.099"," 0.097"," 0.096"," 0.096"," 0.082"," 0.078"," 0.053"," 0.052"," 0.045","-0.003"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Var1<\/th>\n      <th>Var2<\/th>\n      <th>Spearman correlation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-22122979b8a9c74ce1d3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-22122979b8a9c74ce1d3">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between BCTs, motivation and PA. Sorted by strength.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],["PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer","PA accelerometer"],["PA accelerometer","PA self-report","autonomous","plan by other","new PA options","goal setting","goal contrast","relevance of PA","social support","subgoals","PA life values","positive consequences","PA identity","failure contemplated","implementation plan","log on paper","changes at home","mnemonic cues","reminder of plan","smartphone","barrier identification","coping planning","controlled"],[" 1.000"," 0.254"," 0.232"," 0.156"," 0.148"," 0.143"," 0.141"," 0.137"," 0.132"," 0.124"," 0.120"," 0.116"," 0.108"," 0.099"," 0.097"," 0.096"," 0.096"," 0.082"," 0.078"," 0.053"," 0.052"," 0.045","-0.003"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Var1<\/th>\n      <th>Var2<\/th>\n      <th>Spearman correlation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>Highest bivariate (Spearman) correlations with self-reported PA:</p>
 <ol style="list-style-type: decimal">
 <li>I have tried out new ways for me to be physically active.</li>
@@ -3700,9 +4183,9 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 <td align="left">0.59</td>
 <td align="left">-0.03</td>
 <td align="left">0.13</td>
-<td align="left">0.20</td>
-<td align="left">0.11</td>
-<td align="left">0.06</td>
+<td align="left">0.19</td>
+<td align="left">0.12</td>
+<td align="left">0.07</td>
 <td align="left">0.01</td>
 </tr>
 <tr class="even">
@@ -3710,10 +4193,10 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 <td align="left">0.73</td>
 <td align="left">1.00</td>
 <td align="left">0.05</td>
-<td align="left">0.09</td>
-<td align="left">-0.03</td>
-<td align="left">0.08</td>
-<td align="left">0.06</td>
+<td align="left">0.10</td>
+<td align="left">-0.02</td>
+<td align="left">0.07</td>
+<td align="left">0.05</td>
 <td align="left">0.08</td>
 </tr>
 <tr class="odd">
@@ -3745,14 +4228,14 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 <td align="left">0.21</td>
 <td align="left">0.42</td>
 <td align="left">1.00</td>
-<td align="left">0.59</td>
-<td align="left">0.03</td>
+<td align="left">0.58</td>
+<td align="left">0.02</td>
 <td align="left">-0.13</td>
 </tr>
 <tr class="even">
 <td>identified</td>
 <td align="left">0.55</td>
-<td align="left">0.47</td>
+<td align="left">0.46</td>
 <td align="left">0.16</td>
 <td align="left">0.38</td>
 <td align="left">0.74</td>
@@ -3763,7 +4246,7 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 <tr class="odd">
 <td>introjected</td>
 <td align="left">0.30</td>
-<td align="left">0.29</td>
+<td align="left">0.28</td>
 <td align="left">0.06</td>
 <td align="left">0.12</td>
 <td align="left">0.24</td>
@@ -3795,11 +4278,6 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 </div>
 <div id="estimate-and-plot-networks" class="section level2">
 <h2>Estimate and plot networks</h2>
-<pre><code>## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor</code></pre>
 <p><img src="baseline-networks_files/figure-html/chunked-networks-1.png" width="2100" /><img src="baseline-networks_files/figure-html/chunked-networks-2.png" width="2100" /><img src="baseline-networks_files/figure-html/chunked-networks-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Average the layout according to three previous plots, and plot each according to the layout</span>
@@ -3846,8 +4324,7 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(nwBCT_ch
 
 <span class="kw">plot</span>(bootnet_stability_output, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
 <p><img src="baseline-networks_files/figure-html/chunked-stability-1.png" width="2100" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_output, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_output, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/chunked-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_output &lt;- bootnet::bootnet(nwBCT_chunks, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
@@ -4159,7 +4636,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"NA","3":"NA","4":"0.265","5":"0.071","6":"0.209","_rn_":"1"},{"1":"PA accelerometer","2":"0.955","3":"0.086","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.907","5":"0.575","6":"0.781","_rn_":"3"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.887","5":"0.614","6":"0.707","_rn_":"4"},{"1":"plan by other","2":"NA","3":"NA","4":"0.786","5":"0.550","6":"0.524","_rn_":"5"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.844","5":"0.657","6":"0.545","_rn_":"6"},{"1":"subgoals","2":"NA","3":"NA","4":"0.856","5":"0.627","6":"0.614","_rn_":"7"},{"1":"new PA options","2":"NA","3":"NA","4":"0.835","5":"0.394","6":"0.728","_rn_":"8"},{"1":"barrier identification","2":"NA","3":"NA","4":"0.902","5":"0.630","6":"0.735","_rn_":"9"},{"1":"coping planning","2":"NA","3":"NA","4":"0.920","5":"0.684","6":"0.747","_rn_":"10"},{"1":"PA identity","2":"NA","3":"NA","4":"0.914","5":"0.516","6":"0.822","_rn_":"11"},{"1":"PA life values","2":"NA","3":"NA","4":"0.910","5":"0.527","6":"0.810","_rn_":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"NA","3":"NA","4":"0.265","5":"0.071","6":"0.209","_rn_":"1"},{"1":"PA accelerometer","2":"0.956","3":"0.084","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.907","5":"0.575","6":"0.781","_rn_":"3"},{"1":"implementation plan","2":"NA","3":"NA","4":"0.887","5":"0.614","6":"0.707","_rn_":"4"},{"1":"plan by other","2":"NA","3":"NA","4":"0.787","5":"0.552","6":"0.525","_rn_":"5"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.845","5":"0.659","6":"0.545","_rn_":"6"},{"1":"subgoals","2":"NA","3":"NA","4":"0.856","5":"0.627","6":"0.614","_rn_":"7"},{"1":"new PA options","2":"NA","3":"NA","4":"0.834","5":"0.390","6":"0.728","_rn_":"8"},{"1":"barrier identification","2":"NA","3":"NA","4":"0.902","5":"0.630","6":"0.735","_rn_":"9"},{"1":"coping planning","2":"NA","3":"NA","4":"0.919","5":"0.680","6":"0.747","_rn_":"10"},{"1":"PA identity","2":"NA","3":"NA","4":"0.914","5":"0.516","6":"0.822","_rn_":"11"},{"1":"PA life values","2":"NA","3":"NA","4":"0.910","5":"0.527","6":"0.810","_rn_":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -4194,12 +4671,6 @@ BCT_mgm &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span clas
 <span class="co"># Estimate a network</span>
 
 individualAgreementBCTs &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(bctdf_pa_mgm, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values
 
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(individualAgreementBCTs, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
        <span class="dt">title =</span> <span class="st">&quot;partial correlation network, with LASSO regularisation and EBIC model selection&quot;</span>)</code></pre></div>
@@ -4208,15 +4679,13 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(individu
 corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_pa_mgm), <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_pa_mgm),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
-       <span class="dt">title =</span> <span class="st">&quot;bivariate correlation network&quot;</span>)
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
+       <span class="dt">title =</span> <span class="st">&quot;bivariate correlation network&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(bctdf_pa_mgm), <span class="dt">graph =</span> <span class="st">&quot;pcor&quot;</span>,
        <span class="dt">labels =</span> <span class="kw">names</span>(bctdf_pa_mgm),
        <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, 
-       <span class="dt">title =</span> <span class="st">&quot;partial correlation network&quot;</span>)
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
+       <span class="dt">title =</span> <span class="st">&quot;partial correlation network&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Average the layout and plot all according to that</span>
@@ -4231,8 +4700,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
        <span class="dt">maximum =</span> <span class="kw">max</span>(<span class="kw">c</span>(bootnetgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum,
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
-       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
+       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># To help with visual comparison, that last argument takes the maximum edge of the three </span>
@@ -4247,8 +4715,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
        <span class="dt">maximum =</span> <span class="kw">max</span>(<span class="kw">c</span>(bootnetgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum,
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
-       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values</code></pre></div>
+       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-ggm-5.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(individualAgreementBCTs, 
@@ -4263,14 +4730,12 @@ bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(individu
 <div id="centrality-and-stability-1" class="section level3">
 <h3>Centrality and stability</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-combinedAgreementBcts_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+combinedAgreementBcts_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph, 
                <span class="dt">include =</span> <span class="kw">c</span>(<span class="st">&quot;Strength&quot;</span>, <span class="st">&quot;ExpectedInfluence&quot;</span>),
-               <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+               <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree
@@ -4329,8 +4794,7 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 
 <span class="kw">plot</span>(bootnet_stability_individualAgreementBcts, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-3.png" width="2100" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_individualAgreementBcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_individualAgreementBcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/individualAgreementBCTs-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_individualAgreementBcts &lt;- bootnet::bootnet(individualAgreementBCTs, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
@@ -4436,7 +4900,7 @@ pred_obj &lt;-<span class="st"> </span><span class="kw">predict</span>(<span cla
 pred_obj<span class="op">$</span>errors</code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"0.905","3":"0.18","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"PA accelerometer","2":"0.964","3":"0.07","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.897","5":"0.528","6":"0.782","_rn_":"3"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.840","5":"0.647","6":"0.547","_rn_":"4"},{"1":"subgoals","2":"NA","3":"NA","4":"0.860","5":"0.638","6":"0.613","_rn_":"5"},{"1":"new PA options","2":"NA","3":"NA","4":"0.828","5":"0.369","6":"0.727","_rn_":"6"},{"1":"has plan","2":"NA","3":"NA","4":"0.886","5":"0.567","6":"0.737","_rn_":"7"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.883","5":"0.432","6":"0.794","_rn_":"8"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.919","5":"0.405","6":"0.864","_rn_":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Variable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["RMSE"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["CC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["nCC"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["CCmarg"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"PA selfrep","2":"0.905","3":"0.179","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"PA accelerometer","2":"0.964","3":"0.070","4":"NA","5":"NA","6":"NA","_rn_":"2"},{"1":"goal setting","2":"NA","3":"NA","4":"0.896","5":"0.523","6":"0.782","_rn_":"3"},{"1":"reminder of plan","2":"NA","3":"NA","4":"0.841","5":"0.649","6":"0.547","_rn_":"4"},{"1":"subgoals","2":"NA","3":"NA","4":"0.860","5":"0.638","6":"0.613","_rn_":"5"},{"1":"new PA options","2":"NA","3":"NA","4":"0.828","5":"0.369","6":"0.727","_rn_":"6"},{"1":"has plan","2":"NA","3":"NA","4":"0.883","5":"0.554","6":"0.738","_rn_":"7"},{"1":"barriers identified or planned for","2":"NA","3":"NA","4":"0.888","5":"0.459","6":"0.793","_rn_":"8"},{"1":"identity, life values","2":"NA","3":"NA","4":"0.919","5":"0.405","6":"0.864","_rn_":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[15],"max":[15]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
@@ -4501,17 +4965,7 @@ combinedAgreementBcts_ggm_df &lt;-<span class="st"> </span>df <span class="op">%
 <span class="co"># piefill_ggm$intervention &lt;- mean(S.total_ggm$intervention, na.rm = TRUE)</span>
 <span class="co"># </span>
 <span class="co"># piefill_ggm &lt;- piefill_ggm %&gt;% dplyr::select(MVPA, girl, intervention, everything())</span></code></pre></div>
-<pre><code>## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-1.png" width="2100" /></p>
-<pre><code>## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-2.png" width="2100" /></p>
-<pre><code>## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre>
-<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-3.png" width="2100" /></p>
+<p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-1.png" width="2100" /><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-2.png" width="2100" /><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 
 <span class="co"># Average the layout of three previous plots, and plot each according to that</span>
@@ -4526,8 +4980,7 @@ corgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cla
        <span class="dt">maximum =</span> <span class="kw">max</span>(<span class="kw">c</span>(bootnetgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum,
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
-       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
-## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre></div>
+       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm2-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># To help with visual comparison, that last argument takes the maximum edge of the three </span>
@@ -4542,8 +4995,7 @@ pcorgraph &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span cl
        <span class="dt">maximum =</span> <span class="kw">max</span>(<span class="kw">c</span>(bootnetgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum,
                      pcorgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum, 
                      corgraph<span class="op">$</span>graph<span class="op">$</span>Graph<span class="op">$</span>maximum)),
-       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)
-## Variables detected as ordinal: goal setting; reminder of plan; subgoals; new PA options</code></pre></div>
+       <span class="dt">label.scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm2-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(combinedAgreementBcts_network, 
@@ -4562,14 +5014,12 @@ qgraph<span class="op">::</span><span class="kw">flow</span>(bootnetgraph, <span
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-ggm2-5.png" width="2100" /></p>
 <div id="centrality-and-stability-2" class="section level3">
 <h3>Centrality and stability</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">combinedAgreementBcts_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">combinedAgreementBcts_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph, 
                <span class="dt">include =</span> <span class="kw">c</span>(<span class="st">&quot;Strength&quot;</span>, <span class="st">&quot;ExpectedInfluence&quot;</span>),
-               <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+               <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree
@@ -4631,8 +5081,7 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 
 <span class="kw">plot</span>(bootnet_stability_combinedAgreementBcts, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-3.png" width="2100" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_combinedAgreementBcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_combinedAgreementBcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_combinedAgreementBcts &lt;- bootnet::bootnet(combinedAgreementBcts_network, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
@@ -4732,33 +5181,9 @@ heterogeneity_IT &lt;-<span class="st"> </span>combinedAgreementBcts_tracks_df <
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>track)
 
 network_Nur &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_Nur, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; reminder of plan; subgoals
 network_HRC &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_HRC, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; reminder of plan; subgoals
 network_BA &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_BA, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; reminder of plan; subgoals
 network_IT &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_IT, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; reminder of plan; subgoals
 
 graph_Nur &lt;-<span class="st"> </span><span class="kw">plot</span>(network_Nur, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;Practical nurse&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/combinedAgreementBcts-heterogeneity-1.png" width="2100" /></p>
@@ -4925,9 +5350,6 @@ bctdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 S.boys &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;boy&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">`</span><span class="dt">goal setting</span><span class="st">`</span><span class="op">:</span><span class="kw">ncol</span>(bctdf)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>(.) 
 S.girls &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;girl&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">`</span><span class="dt">goal setting</span><span class="st">`</span><span class="op">:</span><span class="kw">ncol</span>(bctdf)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>(.)
 nwBoys &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.boys, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -4970,9 +5392,6 @@ nwBoys &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span clas
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|=================================================================|</span><span class="st"> </span><span class="dv">100</span>%
 nwGirls &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.girls, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -5053,9 +5472,6 @@ Layout &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 S.total &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(bctdf))
 nwBCT &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -5113,9 +5529,6 @@ piefill &lt;-<span class="st"> </span>S.total <span class="op">%&gt;%</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># Estimate ising network without regularisation</span>
 nwBCT_nonreg &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total, <span class="dt">default=</span><span class="st">&quot;IsingSampler&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingSampler::EstimateIsing for network computation
-## &#39;method&#39; set to &#39;ll&#39;
 ## 20 iterations: deviation 0.4458221
 
 <span class="kw">plot</span>(nwBCT_nonreg, <span class="dt">layout =</span> <span class="st">&quot;spring&quot;</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">&quot;Non-regularised Ising model&quot;</span>, <span class="dt">label.cex =</span> <span class="fl">0.75</span>,
@@ -5177,9 +5590,6 @@ bctdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 
 S.total &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(bctdf))
 nwBCT &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -5239,8 +5649,7 @@ piefill &lt;-<span class="st"> </span>S.total <span class="op">%&gt;%</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 onlyCombinedBctsIsing &lt;-<span class="st"> </span>nwBCT_ggm
 
-onlyCombinedBctsIsing_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(onlyCombinedBctsIsing)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+onlyCombinedBctsIsing_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(onlyCombinedBctsIsing)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(onlyCombinedBctsIsing)<span class="op">$</span>InDegree
@@ -5335,8 +5744,7 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(onlyCombinedB
 
 <span class="kw">plot</span>(bootnet_stability_onlyCombinedBctsIsing, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
 <p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-2.png" width="2100" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_onlyCombinedBctsIsing, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_onlyCombinedBctsIsing, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/onlyCombinedBctsIsing-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_onlyCombinedBctsIsing &lt;- bootnet::bootnet(onlyCombinedBctsIsing, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
@@ -5431,12 +5839,6 @@ bctdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class
 
 S.total &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">`</span><span class="dt">Autonomous</span><span class="st">`</span><span class="op">:</span><span class="kw">ncol</span>(bctdf))
 nwBCT &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values; positive consequences; goal contrast; relevance of PA; changes at home; social support; failure contemplated
 
 <span class="co"># Plot correlations (minmax crowds the diagonal as it plots the minimum and maximum values for each variable).</span>
 labs &lt;-<span class="st"> </span><span class="kw">colnames</span>(S.total)
@@ -5480,12 +5882,6 @@ bctdf2 &lt;-<span class="st"> </span>bctdf <span class="op">%&gt;%</span><span c
 
 S.total2 &lt;-<span class="st"> </span>bctdf2 <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">`</span><span class="dt">Autonomous</span><span class="st">`</span><span class="op">:</span><span class="kw">ncol</span>(bctdf2))
 nwBCT2 &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total2, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: plan by other; reminder of plan; subgoals; new PA options; PA identity; PA life values; positive consequences; goal contrast; relevance of PA; changes at home; social support; failure contemplated
 
 <span class="co"># Create means for filling nodes</span>
 piefill2 &lt;-<span class="st"> </span>S.total2 <span class="op">%&gt;%</span>
@@ -5509,14 +5905,12 @@ piefill2 &lt;-<span class="st"> </span>piefill2 <span class="op">%&gt;%</span><s
 <p>Robustness test</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="st">&quot;Original items:&quot;</span>)
 ## [1] &quot;Original items:&quot;
-qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/bct-robustness-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">print</span>(<span class="st">&quot;Combined items:&quot;</span>)
 ## [1] &quot;Combined items:&quot;
-qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT2)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT2)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/bct-robustness-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># BCTboot1 &lt;- bootnet::bootnet(nwBCT, nBoots = 2500)</span>
@@ -5665,12 +6059,6 @@ bctdf_PA &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span cl
 
 S.total_PA &lt;-<span class="st"> </span>bctdf_PA <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">`</span><span class="dt">MVPA</span><span class="st">`</span><span class="op">:</span><span class="kw">ncol</span>(bctdf_PA))
 nwBCT_PA &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total_PA, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: goal setting; implementation plan; plan by other; reminder of plan; subgoals; new PA options; barrier identification; coping planning; PA identity; PA life values; positive consequences; goal contrast; relevance of PA; changes at home; social support; failure contemplated
 
 labs &lt;-<span class="st"> </span><span class="kw">colnames</span>(S.total_PA)
 
@@ -5702,12 +6090,6 @@ bctdf_PA2 &lt;-<span class="st"> </span>bctdf_PA <span class="op">%&gt;%</span><
 
 S.total_PA2 &lt;-<span class="st"> </span>bctdf_PA2 <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(MVPA<span class="op">:</span><span class="kw">ncol</span>(bctdf_PA2))
 nwBCT_PA2 &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.total_PA2, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
-## Variables detected as ordinal: plan.by.other; reminder.of.plan; subgoals; new.PA.options; PA.identity; PA.life.values; positive.consequences; goal.contrast; relevance.of.PA; changes.at.home; social.support; failure.contemplated
 
 <span class="co"># Create means for filling nodes</span>
 piefill_PA2 &lt;-<span class="st"> </span>S.total_PA2 <span class="op">%&gt;%</span><span class="st"> </span>
@@ -5736,12 +6118,11 @@ piefill_PA2 &lt;-<span class="st"> </span>piefill_PA2 <span class="op">%&gt;%</s
 
 <span class="kw">load</span>(<span class="st">&quot;./Rdata_files/BCTbootPA.Rdata&quot;</span>)
 
-qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT_PA2)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-3-1.png" width="2100" /></p>
+qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(nwBCT_PA2)</code></pre></div>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw">plot</span>(BCTbootPA, <span class="dt">labels =</span> <span class="ot">FALSE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
-<p><img src="baseline-networks_files/figure-html/unnamed-chunk-3-2.png" width="2100" /></p>
+<p><img src="baseline-networks_files/figure-html/unnamed-chunk-8-2.png" width="2100" /></p>
 </div>
 </div>
 </div>
@@ -5784,9 +6165,6 @@ allMeans &lt;-<span class="st"> </span>top5Bcts_df <span class="op">%&gt;%</span
 <span class="st">  </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(<span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) 
 
 network_all &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(top5Bcts_df, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -5807,8 +6185,7 @@ network_all &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span
 
 graph_cor &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(top5Bcts_df), <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, 
                   <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, <span class="dt">labels =</span> <span class="kw">names</span>(top5Bcts_df),
-                  <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Bivariate correlations&quot;</span>)
-## Variables detected as ordinal: MVPA; Autonomous; goal contrast; implementation plan; plan by other; goal setting; subgoals</code></pre></div>
+                  <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Bivariate correlations&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graph_Ising &lt;-<span class="st"> </span><span class="kw">plot</span>(network_all, <span class="dt">layout=</span><span class="st">&quot;spring&quot;</span>, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Ising model&quot;</span>)</code></pre></div>
@@ -5823,7 +6200,6 @@ L &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw"
 graph_cor &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">qgraph</span>(qgraph<span class="op">::</span><span class="kw">cor_auto</span>(top5Bcts_df), <span class="dt">graph =</span> <span class="st">&quot;cor&quot;</span>, <span class="dt">layout=</span>L, <span class="dt">cut=</span><span class="dv">0</span>, 
                   <span class="dt">label.scale =</span> <span class="ot">FALSE</span>, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, <span class="dt">labels =</span> <span class="kw">names</span>(top5Bcts_df), <span class="dt">label.cex =</span> <span class="fl">0.8</span>,
                   <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Bivariate correlations&quot;</span>)
-## Variables detected as ordinal: MVPA; Autonomous; goal contrast; implementation plan; plan by other; goal setting; subgoals
 graph_Ising &lt;-<span class="st"> </span><span class="kw">plot</span>(network_all, <span class="dt">layout=</span>L, <span class="dt">cut=</span><span class="dv">0</span>, <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
                   <span class="dt">pie =</span> allMeans, <span class="dt">pieBorder =</span> <span class="dv">1</span>, <span class="dt">title =</span> <span class="st">&quot;Ising model&quot;</span>, <span class="dt">label.cex =</span> <span class="fl">0.8</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-3.png" width="2100" /></p>
@@ -5839,8 +6215,7 @@ qgraph<span class="op">::</span><span class="kw">flow</span>(graph_Ising,
              <span class="dt">label.color =</span> <span class="kw">c</span>(<span class="st">&quot;white&quot;</span>, <span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="dv">6</span>)))</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/ising-demo-pa-autmot-top5bcts-4.png" width="2100" /></p>
 <p>Centrality and stability:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Ising_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(graph_Ising)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Ising_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(graph_Ising)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/top5Bcts-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(graph_Ising)<span class="op">$</span>InDegree
@@ -5888,8 +6263,7 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(graph_Ising)<
 
 <span class="kw">plot</span>(bootnet_stability_top5Bcts, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
 <p><img src="baseline-networks_files/figure-html/top5Bcts-stability-2.png" width="2100" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_top5Bcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_top5Bcts, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/top5Bcts-stability-3.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_top5Bcts &lt;- bootnet::bootnet(network_all, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
@@ -5979,9 +6353,6 @@ ITMeans &lt;-<span class="st"> </span>heterogeneity_IT <span class="op">%&gt;%</
 <span class="st">  </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(<span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) 
 
 network_Nur &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_Nur, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -6000,9 +6371,6 @@ network_Nur &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|=================================================================|</span><span class="st"> </span><span class="dv">100</span>%
 network_HRC &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_HRC, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -6021,9 +6389,6 @@ network_HRC &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|=================================================================|</span><span class="st"> </span><span class="dv">100</span>%
 network_BA &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_BA, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -6042,9 +6407,6 @@ network_BA &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|=================================================================|</span><span class="st"> </span><span class="dv">100</span>%
 network_IT &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(heterogeneity_IT, <span class="dt">default=</span><span class="st">&quot;IsingFit&quot;</span>)
-## Estimating Network. Using package::function:
-##   - IsingFit::IsingFit for network computation
-##     - Using glmnet::glmnet
 ## 
   <span class="op">|</span><span class="st">                                                                       </span>
 <span class="st">  </span><span class="er">|</span><span class="st">                                                                 </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
@@ -7155,11 +7517,6 @@ sympdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span clas
 S.all &lt;-<span class="st"> </span>sympdf <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dv">6</span><span class="op">:</span><span class="kw">ncol</span>(sympdf)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>(.) 
 
 nwAll &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.all, <span class="dt">default=</span><span class="st">&quot;mgm&quot;</span>)
-## Estimating Network. Using package::function:
-##   - mgm::mgm for network computation
-##     - Using glmnet::glmnet
-## &#39;type&#39; argument not assigned. Setting type to &#39;c&#39; for all binary variables and &#39;g&#39; for all other variables.
-## &#39;level&#39; argument not assigned. Setting level to 1 for all Gaussian/Poisson variables and number of unique values for all categorical variables
 
 allmeans &lt;-<span class="st"> </span>sympdf <span class="op">%&gt;%</span><span class="st">  </span>
 <span class="st">  </span><span class="kw">summarise_at</span>(<span class="kw">vars</span>(<span class="dv">6</span><span class="op">:</span><span class="dv">16</span>),
@@ -7208,17 +7565,7 @@ sympdf &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span clas
 S.boys &lt;-<span class="st"> </span>sympdf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;boy&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&quot;Neck and shoulder pain&quot;</span><span class="op">:</span><span class="kw">ncol</span>(sympdf)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>(.) 
 S.girls &lt;-<span class="st"> </span>sympdf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(girl <span class="op">==</span><span class="st"> &quot;girl&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="st">&quot;Neck and shoulder pain&quot;</span><span class="op">:</span><span class="kw">ncol</span>(sympdf)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>(.)
 nwBoys &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.boys, <span class="dt">default=</span><span class="st">&quot;mgm&quot;</span>)
-## Estimating Network. Using package::function:
-##   - mgm::mgm for network computation
-##     - Using glmnet::glmnet
-## &#39;type&#39; argument not assigned. Setting type to &#39;c&#39; for all binary variables and &#39;g&#39; for all other variables.
-## &#39;level&#39; argument not assigned. Setting level to 1 for all Gaussian/Poisson variables and number of unique values for all categorical variables
 nwGirls &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(S.girls, <span class="dt">default=</span><span class="st">&quot;mgm&quot;</span>)
-## Estimating Network. Using package::function:
-##   - mgm::mgm for network computation
-##     - Using glmnet::glmnet
-## &#39;type&#39; argument not assigned. Setting type to &#39;c&#39; for all binary variables and &#39;g&#39; for all other variables.
-## &#39;level&#39; argument not assigned. Setting level to 1 for all Gaussian/Poisson variables and number of unique values for all categorical variables
 
 girlmeans &lt;-<span class="st"> </span>sympdf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(girl) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">summarise_at</span>(<span class="kw">vars</span>(<span class="st">&quot;Neck and shoulder pain&quot;</span><span class="op">:</span><span class="st">&quot;SB&quot;</span>),
@@ -7289,13 +7636,13 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 ## 
 ##                                             MVPA accelerometer   planning   BCT     amotivation   autonomous   controlled   descriptive norm   fat pct   injunctive norm   intention   outcome expectations   opportunities   self-efficacy perceivedBehaviouralControl 
 ## ------------------------------------------  -------------------  ---------  ------  ------------  -----------  -----------  -----------------  --------  ----------------  ----------  ---------------------  --------------  ------------------------------------------
-## MVPA accelerometer                          1.00                 0.02       0.06    -0.10         0.11         0.02         -0.03              -0.07     -0.01             -0.01       -0.09                  -0.03           0.05                                      
-## planning                                    0.17                 1.00       0.24    0.04          0.27         0.00         0.01               -0.03     0.04              0.24        -0.03                  0.12            0.05                                      
-## BCT                                         0.16                 0.48       1.00    0.10          0.26         0.13         0.03               0.06      -0.01             0.06        0.01                   -0.02           -0.12                                     
-## amotivation                                 -0.15                -0.25      -0.08   1.00          -0.15        0.29         0.03               -0.07     -0.01             -0.24       -0.14                  -0.12           0.05                                      
+## MVPA accelerometer                          1.00                 0.02       0.06    -0.10         0.11         0.02         -0.03              -0.07     -0.01             0.00        -0.09                  -0.03           0.05                                      
+## planning                                    0.17                 1.00       0.23    0.04          0.27         0.00         0.01               -0.03     0.04              0.25        -0.02                  0.12            0.05                                      
+## BCT                                         0.16                 0.47       1.00    0.10          0.26         0.12         0.02               0.06      -0.01             0.06        0.01                   -0.01           -0.11                                     
+## amotivation                                 -0.15                -0.25      -0.08   1.00          -0.15        0.29         0.03               -0.07     -0.02             -0.24       -0.14                  -0.12           0.05                                      
 ## autonomous                                  0.22                 0.62       0.51    -0.37         1.00         0.16         0.08               -0.18     -0.05             0.25        0.32                   0.04            0.08                                      
-## controlled                                  0.01                 0.09       0.24    0.26          0.13         1.00         -0.02              0.14      0.16              0.00        0.02                   -0.08           -0.13                                     
-## descriptive norm                            0.06                 0.33       0.22    -0.18         0.37         0.04         1.00               -0.05     0.38              0.15        0.00                   0.14            0.05                                      
+## controlled                                  0.01                 0.09       0.23    0.26          0.13         1.00         -0.02              0.14      0.16              0.00        0.02                   -0.08           -0.13                                     
+## descriptive norm                            0.06                 0.33       0.21    -0.18         0.37         0.04         1.00               -0.05     0.38              0.15        0.00                   0.14            0.05                                      
 ## fat pct                                     -0.11                -0.12      -0.02   0.03          -0.17        0.12         -0.09              1.00      0.02              0.03        0.11                   0.02            -0.06                                     
 ## injunctive norm                             0.03                 0.23       0.15    -0.11         0.23         0.15         0.47               0.00      1.00              0.04        0.08                   0.04            0.06                                      
 ## intention                                   0.15                 0.57       0.37    -0.43         0.63         0.02         0.40               -0.08     0.26              1.00        0.04                   -0.03           0.11                                      
@@ -7316,11 +7663,6 @@ matrix_corLower_parcorUpper <span class="op">%&gt;%</span><span class="st"> </sp
 <span class="co"># Estimate a network</span>
 
 determinants_ggm_network &lt;-<span class="st"> </span>bootnet<span class="op">::</span><span class="kw">estimateNetwork</span>(data, <span class="dt">default=</span><span class="st">&quot;EBICglasso&quot;</span>)
-## Estimating Network. Using package::function:
-##   - qgraph::EBICglasso for EBIC model selection
-##     - using glasso::glasso
-##   - qgraph::cor_auto for correlation computation
-##     - using lavaan::lavCor
 
 bootnetgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(determinants_ggm_network, <span class="dt">edge.labels =</span> <span class="ot">TRUE</span>, <span class="dt">labels =</span> <span class="kw">names</span>(data), <span class="dt">label.scale =</span> <span class="ot">FALSE</span>,
        <span class="dt">title =</span> <span class="st">&quot;partial correlation network, with LASSO regularisation and EBIC model selection&quot;</span>)</code></pre></div>
@@ -7423,89 +7765,87 @@ determinantgraph &lt;-<span class="st"> </span><span class="kw">plot</span>(
 <div id="centrality-and-stability-5" class="section level3">
 <h3>Centrality and stability</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-determinants_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+determinants_centralityPlot &lt;-<span class="st"> </span>qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/determinants-stability-1.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centralityPlot</span>(bootnetgraph, 
                <span class="dt">include =</span> <span class="kw">c</span>(<span class="st">&quot;Strength&quot;</span>, <span class="st">&quot;ExpectedInfluence&quot;</span>),
-               <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)
-## Note: z-scores are shown on x-axis rather than raw centrality indices.</code></pre></div>
+               <span class="dt">orderBy =</span> <span class="st">&quot;ExpectedInfluence&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/determinants-stability-2.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree
 ##                        MVPA accelerometer 
-##                                 0.3385788 
+##                                 0.2905324 
 ##                                  planning 
-##                                 0.9285644 
+##                                 0.9110305 
 ##                                       BCT 
-##                                 0.8616520 
+##                                 0.7729136 
 ##                               amotivation 
-##                                 0.9543071 
+##                                 0.8805057 
 ##                                autonomous 
-##                                 1.6660633 
+##                                 1.6220700 
 ##                                controlled 
-##                                 0.9141851 
+##                                 0.8539979 
 ##                          descriptive norm 
-##                                 0.8106073 
+##                                 0.7951494 
 ##                                   fat pct 
-##                                 0.4834611 
+##                                 0.3888870 
 ##                           injunctive norm 
-##                                 0.6741496 
+##                                 0.6560123 
 ##                                 intention 
-##                                 1.0599191 
+##                                 1.0500592 
 ##                      outcome expectations 
-##                                 0.8544402 
+##                                 0.8061023 
 ##                             opportunities 
-##                                 0.8418134 
+##                                 0.8265152 
 ## self-efficacy perceivedBehaviouralControl 
-##                                 0.8564030
+##                                 0.8052638
 <span class="kw">scale</span>(qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree)
 ##                                                  [,1]
-## MVPA accelerometer                        -1.69517464
-## planning                                   0.20492693
-## BCT                                       -0.01057071
-## amotivation                                0.28783342
-## autonomous                                 2.58010800
-## controlled                                 0.15861708
-## descriptive norm                          -0.17496465
-## fat pct                                   -1.22856824
-## injunctive norm                           -0.61443891
-## intention                                  0.62796648
-## outcome expectations                      -0.03379676
-## opportunities                             -0.07446242
-## self-efficacy perceivedBehaviouralControl -0.02747558
+## MVPA accelerometer                        -1.67011385
+## planning                                   0.28741329
+## BCT                                       -0.14831351
+## amotivation                                0.19111444
+## autonomous                                 2.53057709
+## controlled                                 0.10748854
+## descriptive norm                          -0.07816478
+## fat pct                                   -1.35982790
+## injunctive norm                           -0.51710981
+## intention                                  0.72601630
+## outcome expectations                      -0.04361089
+## opportunities                              0.02078722
+## self-efficacy perceivedBehaviouralControl -0.04625615
 ## attr(,&quot;scaled:center&quot;)
-## [1] 0.8649342
+## [1] 0.8199261
 ## attr(,&quot;scaled:scale&quot;)
-## [1] 0.3105022
+## [1] 0.3169806
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>Closeness
 ##                        MVPA accelerometer 
-##                               0.004801987 
+##                               0.004583714 
 ##                                  planning 
-##                               0.008605359 
+##                               0.008438259 
 ##                                       BCT 
-##                               0.007948373 
+##                               0.007590450 
 ##                               amotivation 
-##                               0.008238230 
+##                               0.007906269 
 ##                                autonomous 
-##                               0.009730062 
+##                               0.009583015 
 ##                                controlled 
-##                               0.008186954 
+##                               0.007846311 
 ##                          descriptive norm 
-##                               0.007039786 
+##                               0.006905966 
 ##                                   fat pct 
-##                               0.005800578 
+##                               0.005344166 
 ##                           injunctive norm 
-##                               0.006445006 
+##                               0.006253966 
 ##                                 intention 
-##                               0.009518981 
+##                               0.009407655 
 ##                      outcome expectations 
-##                               0.008354182 
+##                               0.008277120 
 ##                             opportunities 
-##                               0.006825014 
+##                               0.006704694 
 ## self-efficacy perceivedBehaviouralControl 
-##                               0.006164675
+##                               0.005985898
 qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>Betweenness
 ##                        MVPA accelerometer 
 ##                                         0 
@@ -7514,11 +7854,11 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 ##                                       BCT 
 ##                                         2 
 ##                               amotivation 
-##                                         6 
+##                                         8 
 ##                                autonomous 
-##                                        42 
+##                                        44 
 ##                                controlled 
-##                                        12 
+##                                        14 
 ##                          descriptive norm 
 ##                                        12 
 ##                                   fat pct 
@@ -7532,11 +7872,11 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 ##                             opportunities 
 ##                                        10 
 ## self-efficacy perceivedBehaviouralControl 
-##                                         2
+##                                         0
 
 <span class="kw">cor</span>(qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>InDegree, qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)<span class="op">$</span>Betweenness, 
     <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>) 
-## [1] 0.6462607
+## [1] 0.7444904
 
 <span class="co"># bootnet_stability_determinants &lt;- bootnet::bootnet(determinants_bootnet, nBoots=1000)</span>
 <span class="co"># save(bootnet_stability_determinants, file = &quot;./Rdata_files/bootnet_stability_determinants.Rdata&quot;)</span>
@@ -7544,8 +7884,7 @@ qgraph<span class="op">::</span><span class="kw">centrality</span>(bootnetgraph)
 
 <span class="kw">plot</span>(bootnet_stability_determinants, <span class="dt">labels =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>) </code></pre></div>
 <p><img src="baseline-networks_files/figure-html/determinants-stability-3.png" width="2100" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_determinants, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)
-## Expected significance level given number of bootstrap samples is approximately: 0.05</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(bootnet_stability_determinants, <span class="st">&quot;edge&quot;</span>, <span class="dt">plot =</span> <span class="st">&quot;difference&quot;</span>, <span class="dt">onlyNonZero =</span> <span class="ot">TRUE</span>, <span class="dt">order =</span> <span class="st">&quot;sample&quot;</span>)</code></pre></div>
 <p><img src="baseline-networks_files/figure-html/determinants-stability-4.png" width="2100" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="co"># bootnet_centrality_stability_determinants &lt;- bootnet::bootnet(determinants_bootnet, nBoots=1000,nCores=8, type=&quot;case&quot;)</span>
@@ -8409,8 +8748,8 @@ corMatrix_motivations <span class="op">%&gt;%</span>
                 <span class="st">`</span><span class="dt">Accelerometer wear time</span><span class="st">`</span> =<span class="st"> </span>weartimeAccelerometer_T1) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="st">`</span><span class="dt">MVPA accelerometer</span><span class="st">`</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Bivariate correlations between motivation and MVPA. Sorted by correlation strength with MVPA accelerometer.&quot;</span>)</code></pre></div>
-<div id="htmlwidget-9778b103e0e65b2c9b40" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9778b103e0e65b2c9b40">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between motivation and MVPA. Sorted by correlation strength with MVPA accelerometer.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","PA_integrated_03_T1","padaysLastweek_T1","Autonomous_sumscore","PA_identified_03_T1","PA_integrated_01_T1","PA_intrinsic_02_T1","PA_integrated_02_T1","PA_intrinsic_01_T1","PA_intrinsic_03_T1","weartimeAccelerometer_T1","PA_identified_02_T1","PA_identified_01_T1","PA_introjected_02_T1","PA_introjected_01_T1","Controlled_sumscore","PA_extrinsic_02_T1","PA_extrinsic_03_T1","PA_extrinsic_01_T1","PA_amotivation_03_T1","PA_amotivation_04_T1","PA_amotivation_02_T1","PA_amotivation_01_T1"],[1,0.977655878732249,0.281125325681034,0.254357316320086,0.232257676847066,0.22863430219986,0.22121796111503,0.214946019922426,0.202293985765154,0.186106300843958,0.177276385380893,0.118785595141699,0.115021165973805,0.104307002280568,0.0424845629299181,0.0269978418162724,-0.00278394897553489,-0.0315507266130757,-0.0513100984228871,-0.0571051310995356,-0.132775296572096,-0.138611872461569,-0.158676986214032,-0.166072535976671],[0.254357316320086,0.269694248655921,0.448114072969901,1,0.458334534779223,0.426499466432745,0.382239938566911,0.387806239766034,0.372416922244264,0.359629178435929,0.421145362988844,-0.0510571633707165,0.304279649355291,0.277554365701712,0.13049133714851,0.0766178132943774,0.0457982336481229,-0.027209684664043,-0.0634487099740452,-0.0932687833564905,-0.139507307905678,-0.106474733245353,-0.144931914571863,-0.15572969803233],[0.977655878732249,1,0.288078033051655,0.269694248655921,0.237856217186021,0.232875031918566,0.224493798293355,0.216950185955192,0.205297781554986,0.189233008432542,0.184122596670666,-0.0698313642815344,0.119645601233207,0.112514542959727,0.0587884287111067,0.0260996548390927,-0.000299077103995518,-0.0351762880928586,-0.0502282141660393,-0.0622432767306901,-0.130425539797693,-0.133347502639615,-0.159380378800449,-0.173177750524205],[0.118785595141699,-0.0698313642815344,-0.0364228995217861,-0.0510571633707165,-0.020362499559667,-0.00159374631902018,-0.00172152538083874,-0.012025598301243,-0.00887992838529007,-0.0136635786741425,-0.0308998506682123,1,-0.0077172615223295,-0.043722474144526,-0.0569049963056335,0.0285093218691794,-0.00473666986923727,0.00580968686314084,-0.0163060012370695,0.0174313543930051,-0.00982924616585577,-0.0187731968553097,-0.00509869223412097,0.0359062523436515]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>MVPA accelerometer<\/th>\n      <th>MVPA self report<\/th>\n      <th>MVPA accelerometer (% weartime)<\/th>\n      <th>Accelerometer wear time<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4884885ec0bc72e6dee3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4884885ec0bc72e6dee3">{"x":{"filter":"none","caption":"<caption>Bivariate correlations between motivation and MVPA. Sorted by correlation strength with MVPA accelerometer.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","PA_integrated_03_T1","padaysLastweek_T1","Autonomous_sumscore","PA_identified_03_T1","PA_integrated_01_T1","PA_intrinsic_02_T1","PA_integrated_02_T1","PA_intrinsic_01_T1","PA_intrinsic_03_T1","weartimeAccelerometer_T1","PA_identified_02_T1","PA_identified_01_T1","PA_introjected_02_T1","PA_introjected_01_T1","Controlled_sumscore","PA_extrinsic_02_T1","PA_extrinsic_03_T1","PA_extrinsic_01_T1","PA_amotivation_03_T1","PA_amotivation_04_T1","PA_amotivation_02_T1","PA_amotivation_01_T1"],[1,0.977655878732249,0.281125325681034,0.254357316320086,0.232257676847066,0.22863430219986,0.22121796111503,0.214946019922426,0.202293985765154,0.186106300843958,0.177276385380893,0.118785595141699,0.115021165973805,0.104307002280568,0.0424845629299181,0.0269978418162724,-0.00278394897553489,-0.0315507266130757,-0.0513100984228871,-0.0571051310995356,-0.132775296572096,-0.138611872461569,-0.158676986214032,-0.166072535976671],[0.254357316320086,0.269694248655921,0.448114072969901,1,0.458334534779223,0.426499466432745,0.382239938566911,0.387806239766034,0.372416922244264,0.359629178435929,0.421145362988844,-0.0510571633707165,0.304279649355291,0.277554365701712,0.13049133714851,0.0766178132943774,0.0457982336481229,-0.027209684664043,-0.0634487099740452,-0.0932687833564905,-0.139507307905678,-0.106474733245353,-0.144931914571863,-0.15572969803233],[0.977655878732249,1,0.288078033051655,0.269694248655921,0.237856217186021,0.232875031918566,0.224493798293355,0.216950185955192,0.205297781554986,0.189233008432542,0.184122596670666,-0.0698313642815344,0.119645601233207,0.112514542959727,0.0587884287111067,0.0260996548390927,-0.000299077103995518,-0.0351762880928586,-0.0502282141660393,-0.0622432767306901,-0.130425539797693,-0.133347502639615,-0.159380378800449,-0.173177750524205],[0.118785595141699,-0.0698313642815344,-0.0364228995217861,-0.0510571633707165,-0.020362499559667,-0.00159374631902018,-0.00172152538083874,-0.012025598301243,-0.00887992838529007,-0.0136635786741425,-0.0308998506682123,1,-0.0077172615223295,-0.043722474144526,-0.0569049963056335,0.0285093218691794,-0.00473666986923727,0.00580968686314084,-0.0163060012370695,0.0174313543930051,-0.00982924616585577,-0.0187731968553097,-0.00509869223412097,0.0359062523436515]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>MVPA accelerometer<\/th>\n      <th>MVPA self report<\/th>\n      <th>MVPA accelerometer (% weartime)<\/th>\n      <th>Accelerometer wear time<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 corMatrix_motivations <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">as.data.frame</span>(.) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -8419,8 +8758,8 @@ corMatrix_motivations <span class="op">%&gt;%</span>
                    <span class="st">&quot;Accelerometer minus accelerometer-as-%-weartime&quot;</span> =<span class="st"> </span>mvpaAccelerometer_T1 <span class="op">-</span><span class="st"> </span>mvpaAccelerometer_percentageWeartime_T1) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="st">`</span><span class="dt">Accelerometer minus self-report</span><span class="st">`</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>DT<span class="op">::</span><span class="kw">datatable</span>(<span class="dt">caption =</span> <span class="st">&quot;Differences in correlations among the measures&quot;</span>)</code></pre></div>
-<div id="htmlwidget-e06b592905324639c119" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e06b592905324639c119">{"x":{"filter":"none","caption":"<caption>Differences in correlations among the measures<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","weartimeAccelerometer_T1","PA_extrinsic_01_T1","PA_extrinsic_03_T1","PA_amotivation_03_T1","PA_extrinsic_02_T1","PA_amotivation_01_T1","PA_amotivation_02_T1","PA_amotivation_04_T1","Controlled_sumscore","PA_introjected_01_T1","PA_introjected_02_T1","PA_integrated_01_T1","PA_integrated_03_T1","PA_integrated_02_T1","PA_intrinsic_02_T1","PA_identified_01_T1","PA_intrinsic_01_T1","PA_identified_02_T1","PA_identified_03_T1","Autonomous_sumscore","PA_intrinsic_03_T1","padaysLastweek_T1"],[0.745642683679914,0.707961630076329,0.169842758512415,0.0361636522569549,0.0121386115511581,0.00673201133358181,-0.00434104194903271,-0.0103428379443407,-0.013745071642169,-0.0321371392162166,-0.0485821826236578,-0.049619971478105,-0.0880067742185921,-0.161021977451881,-0.166988747288867,-0.170122936479109,-0.172860219843608,-0.173247363421144,-0.173522877591971,-0.189258483381486,-0.197865164232885,-0.226076857932157,-0.243868977607951,-0.745642683679914],[0.0223441212677505,-0.0223441212677505,0.188616959423233,0.00513814563115448,-0.00108188425684783,-0.00234975677440336,0.00362556147978288,0.00710521454753404,0.000703392586417328,-0.00526436982195419,-0.00248487187153937,0.000898186977179725,-0.0163038657811886,-0.00327583717832461,-0.00695270737062115,-0.00300379578983123,-0.00200416603276649,-0.0082075406791596,-0.00312670758858405,-0.00462443525940169,-0.0042407297187059,-0.00559854033895482,-0.00684621128977289,-0.0153369323358345]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>Accelerometer minus self-report<\/th>\n      <th>Accelerometer minus accelerometer-as-%-weartime<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-cdc139f503cb667ae814" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cdc139f503cb667ae814">{"x":{"filter":"none","caption":"<caption>Differences in correlations among the measures<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],["mvpaAccelerometer_T1","mvpaAccelerometer_percentageWeartime_T1","weartimeAccelerometer_T1","PA_extrinsic_01_T1","PA_extrinsic_03_T1","PA_amotivation_03_T1","PA_extrinsic_02_T1","PA_amotivation_01_T1","PA_amotivation_02_T1","PA_amotivation_04_T1","Controlled_sumscore","PA_introjected_01_T1","PA_introjected_02_T1","PA_integrated_01_T1","PA_integrated_03_T1","PA_integrated_02_T1","PA_intrinsic_02_T1","PA_identified_01_T1","PA_intrinsic_01_T1","PA_identified_02_T1","PA_identified_03_T1","Autonomous_sumscore","PA_intrinsic_03_T1","padaysLastweek_T1"],[0.745642683679914,0.707961630076329,0.169842758512415,0.0361636522569549,0.0121386115511581,0.00673201133358181,-0.00434104194903271,-0.0103428379443407,-0.013745071642169,-0.0321371392162166,-0.0485821826236578,-0.049619971478105,-0.0880067742185921,-0.161021977451881,-0.166988747288867,-0.170122936479109,-0.172860219843608,-0.173247363421144,-0.173522877591971,-0.189258483381486,-0.197865164232885,-0.226076857932157,-0.243868977607951,-0.745642683679914],[0.0223441212677505,-0.0223441212677505,0.188616959423233,0.00513814563115448,-0.00108188425684783,-0.00234975677440336,0.00362556147978288,0.00710521454753404,0.000703392586417328,-0.00526436982195419,-0.00248487187153937,0.000898186977179725,-0.0163038657811886,-0.00327583717832461,-0.00695270737062115,-0.00300379578983123,-0.00200416603276649,-0.0082075406791596,-0.00312670758858405,-0.00462443525940169,-0.0042407297187059,-0.00559854033895482,-0.00684621128977289,-0.0153369323358345]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Variable<\/th>\n      <th>Accelerometer minus self-report<\/th>\n      <th>Accelerometer minus accelerometer-as-%-weartime<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-center","targets":"_all"},{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="motivational-regulations-network" class="section level2">
 <h2>Motivational regulations network</h2>

@@ -683,11 +683,11 @@ vardatatable_bayes %>%
 
 Here we demonstrate how, in the case of sedentary behaviour, using brms default priors gives practically identical results to those, where the prior for the intercept has been drawn from the [feasibility study](https://helda.helsinki.fi/handle/10138/193787). We compare these two models and add a third, where the educational track is included in addition to school and class. 
 
-Based on the information criterion (WAIC), models do not seem to differ with regards their out-of-sample prediction ability.
+Based on the information criterion (WAIC) or cross-validation (LOO), models do not seem to differ with regards their out-of-sample prediction ability.
 
 ```{r WAIC}
 
-# # Model with school and class: 
+# # Model with school and class:
 # m_sitLieAccelerometer_T1 <- brms::brm(sitLieAccelerometer_T1 ~ 1 + (1|school) + (1|group), data = df,
 #                chains = 4,
 #                iter = 5000,
@@ -696,14 +696,14 @@ Based on the information criterion (WAIC), models do not seem to differ with reg
 # save(m_sitLieAccelerometer_T1, file = "./Rdata_files/m_sitLieAccelerometer_T1.Rdata")
 load("./Rdata_files/m_sitLieAccelerometer_T1.Rdata")
 
-# Take the prior from the default model, and change the prior for the intercept:
-# prior_intercept_fromFeasibility <- brms::prior_summary(m_sitLieAccelerometer_T1, data = dftest)
+# # Take the prior from the default model, and change the prior for the intercept:
+# prior_intercept_fromFeasibility <- brms::prior_summary(m_sitLieAccelerometer_T1, data = df)
 # prior_intercept_fromFeasibility[1, 1] <- "normal(563.32, 79.34)"
 # 
 # m_priorFromFeasibility <- brms::brm(
-#   sitLieAccelerometer_T1 ~ 1 + (1|school) + (1|group), data=dftest,
+#   sitLieAccelerometer_T1 ~ 1 + (1|school) + (1|group), data=df,
 #   prior = prior_intercept_fromFeasibility,
-#   chains = 4, 
+#   chains = 4,
 #   iter = 5000,
 #   control = list(adapt_delta = 0.99))
 # 
@@ -715,15 +715,15 @@ load("./Rdata_files/m_priorFromFeasibility.Rdata")
 #                chains = 4,
 #                iter = 5000,
 #                control = list(adapt_delta = 0.99))
-# brms::prior_summary(m, data = dftest)
+# brms::prior_summary(m, data = df)
 # fixef(m_sitLieWithTrack)
 # save(m_sitLieWithTrack, file = "./Rdata_files/m_sitLieWithTrack.Rdata")
 load("./Rdata_files/m_sitLieWithTrack.Rdata")
 
 print("Priors for models summarised:")
-brms::prior_summary(m_sitLieAccelerometer_T1, data = dftest)
-brms::prior_summary(m_priorFromFeasibility, data = dftest)
-brms::prior_summary(m_sitLieWithTrack, data = dftest)
+brms::prior_summary(m_sitLieAccelerometer_T1, data = df)
+brms::prior_summary(m_priorFromFeasibility, data = df)
+brms::prior_summary(m_sitLieWithTrack, data = df)
 
 print("Results of models summarised:")
 brms::fixef(m_sitLieAccelerometer_T1) 
@@ -733,7 +733,7 @@ brms::fixef(m_sitLieWithTrack)
 # WAIC_m_sitLieAccelerometer_T1 <- brms::WAIC(m_sitLieAccelerometer_T1)
 # WAIC_m_priorFromFeasibility <- brms::WAIC(m_priorFromFeasibility)
 # WAIC_m_sitLieWithTrack <- brms::WAIC(m_sitLieWithTrack)
-
+# 
 # save(WAIC_m_sitLieAccelerometer_T1, file = "./Rdata_files/WAIC_m_sitLieAccelerometer_T1.Rdata")
 # save(WAIC_m_priorFromFeasibility, file = "./Rdata_files/WAIC_m_priorFromFeasibility.Rdata")
 # save(WAIC_m_sitLieWithTrack, file = "./Rdata_files/WAIC_m_sitLieWithTrack.Rdata")
@@ -746,13 +746,10 @@ load("./Rdata_files/WAIC_m_sitLieWithTrack.Rdata")
 print("Comparison based on WAIC:")
 brms::compare_ic(WAIC_m_sitLieAccelerometer_T1, WAIC_m_priorFromFeasibility, WAIC_m_sitLieWithTrack)
 
-```
-
-```{r LOO}
 # loo_m_sitLieAccelerometer_T1 <- brms::loo(m_sitLieAccelerometer_T1)
 # loo_m_priorFromFeasibility <- brms::loo(m_priorFromFeasibility)
 # loo_m_sitLieWithTrack <- brms::loo(m_sitLieWithTrack)
-
+# 
 # save(loo_m_sitLieAccelerometer_T1, file = "./Rdata_files/loo_m_sitLieAccelerometer_T1.Rdata")
 # save(loo_m_priorFromFeasibility, file = "./Rdata_files/loo_m_priorFromFeasibility.Rdata")
 # save(loo_m_sitLieWithTrack, file = "./Rdata_files/loo_m_sitLieWithTrack.Rdata")

@@ -20,4 +20,5 @@ stringr
 forcats
 ggridges
 bindrcpp
+httr
 corrgram
