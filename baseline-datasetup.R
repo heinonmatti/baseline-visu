@@ -12,7 +12,7 @@ if (!require(pacman)) install.packages("pacman")
 #library(pacman)
 
 CRANpacks <- c("viridis", "bookdown", "knitr", "tidyverse", "haven", "lme4", 
-               "userfriendlyscience", "sm", "sjstats", "gridExtra", "igraph", 
+               "userfriendlyscience", "ufs", "sm", "sjstats", "gridExtra", "igraph", 
                "devtools","EstimateGroupNetwork", "bootnet", "qgraph","rstanarm",
                "brms", "mlmRev", "rstan", "sandwich", "visreg", "broom", 
                "EstimateGroupNetwork", "bootnet", "qgraph", # for networks
@@ -36,6 +36,7 @@ if (!require(patchwork)) pacman::p_install_gh("thomasp85/patchwork") # so that p
 pacman::p_load(knitr, tidyverse)
 # pacman::p_install_gh("clauswilke/ggridges")
 library(ggridges)
+library(patchwork)
 
 knitr::opts_chunk$set(echo = TRUE, 
                       warning = FALSE,
@@ -47,7 +48,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       dpi = 300)
 knitr::opts_chunk$set(root.dir = ".")  # Always set project root as working directory
 knitr::opts_knit$set(root.dir = ".")  # This is needed for some versions of RStudio
-knitr::opts_chunk$set(echo = TRUE, rows.print=15)
+# knitr::opts_chunk$set(echo = TRUE, rows.print=15)
 
 ggplot2::theme_set(papaja::theme_apa())
 
@@ -695,10 +696,53 @@ d <- lmi %>% dplyr::select(id = ID,
                            weartimeAccelerometer_T1 = Summa19h_ka.1,
                            weartimeAccelerometer_T3 = Summa19h_ka.3,
                            weartimeAccelerometer_T4 = Summa19h_ka.4,
+                           numberOfDaysAccelerometerWasWornOver10h_T1 = Npv.1,
+                           numberOfDaysAccelerometerWasWornOver10h_T3 = Npv.3,
+                           numberOfDaysAccelerometerWasWornOver10h_T4 = Npv.4,
                            vpaAccelerometer_T1 = Ras1m_ka.1,
                            vpaAccelerometer_T3 = Ras1m_ka.3,
                            vpaAccelerometer_T4 = Ras1m_ka.4
                            )
+
+# Delete acclerometer results from participants who wore the device for a fewer number of days (i.e. 4) than required
+d <- d %>% dplyr::mutate_at(vars(contains("accelerometer"), -contains("over10hrWearDays"), -contains("_T3"),  -contains("_T4")), 
+                       funs(ifelse(numberOfDaysAccelerometerWasWornOver10h_T1 < 4, NA, .)))
+
+d <- d %>% dplyr::mutate_at(vars(contains("accelerometer"), -contains("over10hrWearDays"), -contains("_T1"),  -contains("_T4")), 
+                       funs(ifelse(numberOfDaysAccelerometerWasWornOver10h_T3 < 4, NA, .)))
+
+d <- d %>% dplyr::mutate_at(vars(contains("accelerometer"), -contains("over10hrWearDays"), -contains("_T1"),  -contains("_T3")), 
+                       funs(ifelse(numberOfDaysAccelerometerWasWornOver10h_T4 < 4, NA, .))) 
+
+d$lpaAccelerometer_noCutOff_T1 <- lmi$Kev1m_ka.1
+d$mpaAccelerometer_noCutOff_T1 <- lmi$Rei1m_ka.1
+d$mvpaAccelerometer_noCutOff_T1 <- lmi$ReRa1m_ka.1
+d$sitBreaksAccelerometer_noCutOff_T1 <- lmi$Ylos_ka.1
+d$sitLieAccelerometer_noCutOff_T1 <- lmi$MaIs1m19h_ka.1
+d$standingAccelerometer_noCutOff_T1 <- lmi$Sei1m_ka.1
+d$walkStepsAccelerometer_noCutOff_T1 <- lmi$Askel_ka.1
+d$weartimeAccelerometer_noCutOff_T1 <- lmi$Summa19h_ka.1
+d$vpaAccelerometer_noCutOff_T1 <- lmi$Ras1m_ka.1
+
+d$lpaAccelerometer_noCutOff_T3 <- lmi$Kev1m_ka.3
+d$mpaAccelerometer_noCutOff_T3 <- lmi$Rei1m_ka.3
+d$mvpaAccelerometer_noCutOff_T3 <- lmi$ReRa1m_ka.3
+d$sitBreaksAccelerometer_noCutOff_T3 <- lmi$Ylos_ka.3
+d$sitLieAccelerometer_noCutOff_T3 <- lmi$MaIs1m19h_ka.3
+d$standingAccelerometer_noCutOff_T3 <- lmi$Sei1m_ka.3
+d$walkStepsAccelerometer_noCutOff_T3 <- lmi$Askel_ka.3
+d$weartimeAccelerometer_noCutOff_T3 <- lmi$Summa19h_ka.3
+d$vpaAccelerometer_noCutOff_T3 <- lmi$Ras1m_ka.3
+
+d$lpaAccelerometer_noCutOff_T4 <- lmi$Kev1m_ka.4
+d$mpaAccelerometer_noCutOff_T4 <- lmi$Rei1m_ka.4
+d$mvpaAccelerometer_noCutOff_T4 <- lmi$ReRa1m_ka.4
+d$sitBreaksAccelerometer_noCutOff_T4 <- lmi$Ylos_ka.4
+d$sitLieAccelerometer_noCutOff_T4 <- lmi$MaIs1m19h_ka.4
+d$standingAccelerometer_noCutOff_T4 <- lmi$Sei1m_ka.4
+d$walkStepsAccelerometer_noCutOff_T4 <- lmi$Askel_ka.4
+d$weartimeAccelerometer_noCutOff_T4 <- lmi$Summa19h_ka.4
+d$vpaAccelerometer_noCutOff_T4 <- lmi$Ras1m_ka.4
 
 # Reverse coded items to normal: 
 # Take vars that contain "ReverseCoded_", substract them from 8 (each scale is 1-7)
@@ -1024,3 +1068,5 @@ df <- df %>% dplyr::select(-contains("_diffT3T1"), -contains("_diffT4T1"), -cont
 
 save(df, file = "./data/df.Rdata")
 haven::write_sav(df, path = "./data/df.sav")
+
+# readr::write_rds(df, path = "./data/df_for_codebook.RDS")

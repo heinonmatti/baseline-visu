@@ -2,6 +2,21 @@
 title: "Descriptive plots"
 ---
 
+```{r include = FALSE, eval = FALSE, echo = FALSE}
+# Make an RDS file for tiler / sider to explore data
+sapply(df2,class)
+df2 <- df[,names(sort(unlist(lapply(df, class)), decreasing = T))] # https://stackoverflow.com/questions/39959903/r-sort-columns-by-object-class
+df2 <- df2 %>% mutate_at(vars(1:197), funs(as.numeric(.)))
+df2 <- df2 %>% mutate_at(vars(1, 198:203), funs(as.factor(.)))
+
+df2 %>%
+  select(-trackSchool, -contains("SB_"), -id, -group) %>%   
+  na.omit(.) %>% 
+  saveRDS(., "C:/LocalData/hema/git-projects/sideR-master/R/sideR/data/lmi-baseline-PA.rds")
+
+# tiler::run_tiler()
+```
+
 # Introduction 
 
 This section visualises distributions of variables, and describes the scales involved.
@@ -101,6 +116,19 @@ To use package brms (Bayesian Regression Models using 'Stan') you need RStan and
 
 ```
 
+
+<a id="accelerometry"></a>
+# Description of accelerometer measurement
+
+The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a digital triaxial acceleration sensor (ADXL45; Analog Devices, Norwood MA) was attached to a flexible belt and participants were instructed to wear the belt around their right hip for seven consecutive days during waking hours, except during shower and other water activities. The acceleration signal was collected at 100 Hz sampling frequency, ?? 16 g acceleration range and 0.004 g resolution. PA-parameters were based on mean amplitude deviation (MAD) of the resultant acceleration analysed in 6s epochs [1]. The MAD values were then converted to metabolic equivalent (MET) values [2]. The epoch-wise MET values were further smoothed by calculating 1min exponential moving average. Using the smoothed MET values total PA was classified in terms of energy consumption covering MET values higher than 1.5 and moderate-to-vigorous PA (MVPA) covering MET values equal to or higher than 3 [1,2]. According to the definition of SB [3], time spent in sitting and reclining positions were combined to indicate SB, whereas standing was analysed separately as another form of stationary behaviour. Body postures were recognised from the raw acceleration data by employing both direction and intensity information from all three measurement axes. The recognition was based on the low intensity of movement (<1.5 MET) and the accelerometer orientation in relation to identified upright position (angle for posture estimation, APE) calculated at the end of each 6 s epoch [4].
+
+1. Vähä-Ypyä H, Vasankari T, Husu P, Suni J, Sievänen H. A universal, accurate intensity-based classification of different physical activities using raw data of accelerometer. Clinical physiology and functional imaging. 2015;35:64-70. 
+2. Vähä-Ypyä H, Vasankari T, Husu P, Mänttäri A, Vuorimaa T, Suni J, et al. Validation of cut-points for evaluating the intensity of physical activity with accelerometry-based mean amplitude deviation (MAD). PLoS One. 2015;10:e014813. 
+3. Tremblay MS, Aubert S, Barnes JD, Saunders TJ, Carson V, Latimer-Cheung AE, et al. Sedentary Behavior Research Network (SBRN) - Terminology Consensus Project process and outcome. International Journal of Behavioral Nutrition and Physical Activity. 2017;14:75. Available from: https://doi.org/10.1186/s12966-017-0525-8
+4. Vähä-Ypyä H, Husu P, Suni J, Vasankari T, Sievänen H. Reliable recognition of lying, sitting, and standing with a hip-worn accelerometer. Scand J Med Sci Sports. 2018;28:1092-102.
+
+
+<a id="items"></a>
 # Descriptions of scales used to measure theoretical predictors of PA
 
 *Outcome expectations.* Outcome expectations were measured using a 12-item scale, with the items based on a belief elicitation study conducted in the study population, in line with standard procedures (Francis et al., 2004). The scale consisted of 9 positive outcome expectations items and three negative ones.
@@ -143,7 +171,7 @@ The answer scale for frequency-dependent BCTs was as follows: 1 = not once, 2 = 
 1. I have reminded myself in my spare time what kind of positive consequences frequent PA would have in my life.
 2. I have monitored my PA by marking the PA occasions on an exercise log on paper.
 3. I have monitored my PA by using a smartphone, e.g. the Moves-app.
-4. I have used mnemonic cues with which I remember to implement my PA intention.
+4. I have used memory cues with which I remember to implement my PA intention.
 5. I have compared my actualized PA with the PA goal I have set.
 6. I have thought about which reasons to do PA are important to me personally.
 7. I have made changes in my home (e.g. my room or my computer), so that starting PA would be easier.
@@ -465,7 +493,7 @@ ggstatsplot::ggscatterstats(
   y = padaysLastweek_T1,
   type = "robust",                               # type of test that needs to be run
   results.subtitle = FALSE,
-  xlab = "Accelerometer-measured MVPA (following week)",              # label for x axis
+  xlab = "Accelerometer-measured MVPA hours (following week)",              # label for x axis
   ylab = "Self-reported days of >30min MVPA (previous week)",              # label for y axis 
   line.color = "black",                     # changing regression line colour line
   title = "",       # title text for the plot
@@ -475,14 +503,14 @@ ggstatsplot::ggscatterstats(
   marginal.type = "histogram",                     # type of marginal distribution to be displayed
   xfill = "blue",                                # colour fill for x-axis marginal distribution 
   yfill = "red",                                 # colour fill for y-axis marginal distribution
-  centrality.para = "median",                          # which type of intercept line is to be displayed  
-  width.jitter = 0,                            # amount of horizontal jitter for data points
-  height.jitter = 0                            # amount of vertical jitter for data points
+  centrality.para = "median"                          # which type of intercept line is to be displayed  
+  # width.jitter = 0,                            # amount of horizontal jitter for data points
+  # height.jitter = 0                            # amount of vertical jitter for data points
 ) 
 
 df %>% ggplot2::ggplot(aes(x = mvpaAccelerometer_T1, y = padaysLastweek_T1)) + geom_point() + geom_smooth(method = "loess") +
   # geom_vline(xintercept = 120, col = "red") +
-  labs(x = "accelerometer-measured MVPA, following week", y = "self-reported days of 30+ min MVPA, last week")
+  labs(x = "accelerometer-measured MVPA hours, following week", y = "self-reported days of 30+ min MVPA, last week")
 
 corrgram::corrgram(data.frame("Self-rep PA" = df$padaysLastweek_T1, 
                               "Accelerometer PA" = df$mvpaAccelerometer_T1, 
@@ -564,105 +592,115 @@ The tab "Information on data preparation" of this section present information on
 Prepare data
 
 ```{r weartime-accelerometer-data}
-m_weartimeAccelerometer_trackgirl <- brms::bf(weartimeAccelerometer_T1 ~ (1 | track:girl)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# m_weartimeAccelerometer_trackgirl <- brms::bf(weartimeAccelerometer_T1 ~ (1 | track:girl)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_weartimeAccelerometer_trackgirl, data = df)
+# 
+# m_weartimeAccelerometer_trackgirl
+# 
+# b_intercept <- brms::fixef(m_weartimeAccelerometer_trackgirl)[1]
+# 
+# # This gives estimates only:
+# Weartime_trackgirl_estimates <- brms::ranef(m_weartimeAccelerometer_trackgirl)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# Weartime_trackgirl_CIL <- brms::ranef(m_weartimeAccelerometer_trackgirl)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# Weartime_trackgirl_CIH <- brms::ranef(m_weartimeAccelerometer_trackgirl)[[1]][31:40]
+# 
+# Weartime_trackgirl_ci <- data.frame(Weartime_trackgirl_CIL, Weartime_trackgirl_estimates, Weartime_trackgirl_CIH, Variable = labels(brms::ranef(m_weartimeAccelerometer_trackgirl))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(Weartime_trackgirl_CIL = Weartime_trackgirl_CIL + b_intercept,
+#          Weartime_trackgirl_estimates = Weartime_trackgirl_estimates + b_intercept,
+#          Weartime_trackgirl_CIH = Weartime_trackgirl_CIH + b_intercept,
+#          track = c('BA_boy',
+#                    'BA_girl',
+#                    'HRC_boy',
+#                    'HRC_girl',
+#                    'IT_boy',
+#                    'IT_girl',
+#                    'Nur_boy',
+#                    'Nur_girl',
+#                    'Other_boy',
+#                    'Other_girl'
+# ))
+# 
+# Weartime_trackgirl_diamonds_girl <- rbind(
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# Weartime_trackgirl_diamonds_boy <- rbind(
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
+# Weartime_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# 
+# m_weartimeAccelerometer_trackintervention <- brms::bf(weartimeAccelerometer_T1 ~ (1 | track:intervention)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_weartimeAccelerometer_trackintervention, data = df)
+# 
+# m_weartimeAccelerometer_trackintervention
+# 
+# b_intercept <- brms::fixef(m_weartimeAccelerometer_trackintervention)[1]
+# 
+# # This gives estimates only:
+# Weartime_trackintervention_estimates <- brms::ranef(m_weartimeAccelerometer_trackintervention)[[1]][1:10]
+# 
+# 
+# # The 2.5%ile:
+# Weartime_trackintervention_CIL <- brms::ranef(m_weartimeAccelerometer_trackintervention)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# Weartime_trackintervention_CIH <- brms::ranef(m_weartimeAccelerometer_trackintervention)[[1]][31:40]
+# 
+# Weartime_trackintervention_ci <- data.frame(Weartime_trackintervention_CIL, Weartime_trackintervention_estimates, Weartime_trackintervention_CIH, Variable = labels(brms::ranef(m_weartimeAccelerometer_trackintervention))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(Weartime_trackintervention_CIL = Weartime_trackintervention_CIL + b_intercept,
+#          Weartime_trackintervention_estimates = Weartime_trackintervention_estimates + b_intercept,
+#          Weartime_trackintervention_CIH = Weartime_trackintervention_CIH + b_intercept,
+#          track = c('BA_control',
+#                    'BA_intervention',
+#                    'HRC_control',
+#                    'HRC_intervention',
+#                    'IT_control',
+#                    'IT_intervention',
+#                    'Nur_control',
+#                    'Nur_intervention',
+#                    'Other_control',
+#                    'Other_intervention'
+# ))
+# 
+# Weartime_trackintervention_diamonds_intervention <- rbind(
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# Weartime_trackintervention_diamonds_control <- rbind(
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
+# Weartime_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# save(Weartime_trackgirl_diamonds_girl, file = "./Rdata_files/Weartime_trackgirl_diamonds_girl.Rdata")
+# save(Weartime_trackgirl_diamonds_boy, file = "./Rdata_files/Weartime_trackgirl_diamonds_boy.Rdata")
+# save(Weartime_trackintervention_diamonds_intervention, file = "./Rdata_files/Weartime_trackintervention_diamonds_intervention.Rdata")
+# save(Weartime_trackintervention_diamonds_control, file = "./Rdata_files/Weartime_trackintervention_diamonds_control.Rdata")
 
-brms::prior_summary(m_weartimeAccelerometer_trackgirl, data = df)
-
-m_weartimeAccelerometer_trackgirl
-
-b_intercept <- brms::fixef(m_weartimeAccelerometer_trackgirl)[1]
-
-# This gives estimates only:
-Weartime_trackgirl_estimates <- brms::ranef(m_weartimeAccelerometer_trackgirl)[[1]][1:10]
-
-# The 2.5%ile:
-Weartime_trackgirl_CIL <- brms::ranef(m_weartimeAccelerometer_trackgirl)[[1]][21:30]
-
-# The 97.5%ile:
-Weartime_trackgirl_CIH <- brms::ranef(m_weartimeAccelerometer_trackgirl)[[1]][31:40]
-
-Weartime_trackgirl_ci <- data.frame(Weartime_trackgirl_CIL, Weartime_trackgirl_estimates, Weartime_trackgirl_CIH, Variable = labels(brms::ranef(m_weartimeAccelerometer_trackgirl))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(Weartime_trackgirl_CIL = Weartime_trackgirl_CIL + b_intercept,
-         Weartime_trackgirl_estimates = Weartime_trackgirl_estimates + b_intercept,
-         Weartime_trackgirl_CIH = Weartime_trackgirl_CIH + b_intercept,
-         track = c('BA_boy',
-                   'BA_girl',
-                   'HRC_boy',
-                   'HRC_girl',
-                   'IT_boy',
-                   'IT_girl',
-                   'Nur_boy',
-                   'Nur_girl',
-                   'Other_boy',
-                   'Other_girl'
-))
-
-Weartime_trackgirl_diamonds_girl <- rbind(
-Weartime_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
-Weartime_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
-Weartime_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
-Weartime_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-Weartime_trackgirl_diamonds_boy <- rbind(
-Weartime_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
-Weartime_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
-Weartime_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
-Weartime_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-
-m_weartimeAccelerometer_trackintervention <- brms::bf(weartimeAccelerometer_T1 ~ (1 | track:intervention)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
-
-brms::prior_summary(m_weartimeAccelerometer_trackintervention, data = df)
-
-m_weartimeAccelerometer_trackintervention
-
-b_intercept <- brms::fixef(m_weartimeAccelerometer_trackintervention)[1]
-
-# This gives estimates only:
-Weartime_trackintervention_estimates <- brms::ranef(m_weartimeAccelerometer_trackintervention)[[1]][1:10]
-
-
-# The 2.5%ile:
-Weartime_trackintervention_CIL <- brms::ranef(m_weartimeAccelerometer_trackintervention)[[1]][21:30]
-
-# The 97.5%ile:
-Weartime_trackintervention_CIH <- brms::ranef(m_weartimeAccelerometer_trackintervention)[[1]][31:40]
-
-Weartime_trackintervention_ci <- data.frame(Weartime_trackintervention_CIL, Weartime_trackintervention_estimates, Weartime_trackintervention_CIH, Variable = labels(brms::ranef(m_weartimeAccelerometer_trackintervention))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(Weartime_trackintervention_CIL = Weartime_trackintervention_CIL + b_intercept,
-         Weartime_trackintervention_estimates = Weartime_trackintervention_estimates + b_intercept,
-         Weartime_trackintervention_CIH = Weartime_trackintervention_CIH + b_intercept,
-         track = c('BA_control',
-                   'BA_intervention',
-                   'HRC_control',
-                   'HRC_intervention',
-                   'IT_control',
-                   'IT_intervention',
-                   'Nur_control',
-                   'Nur_intervention',
-                   'Other_control',
-                   'Other_intervention'
-))
-
-Weartime_trackintervention_diamonds_intervention <- rbind(
-Weartime_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
-Weartime_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
-Weartime_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
-Weartime_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-Weartime_trackintervention_diamonds_control <- rbind(
-Weartime_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
-Weartime_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
-Weartime_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
-Weartime_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+load("./Rdata_files/Weartime_trackgirl_diamonds_girl.Rdata")
+load("./Rdata_files/Weartime_trackgirl_diamonds_boy.Rdata")
+load("./Rdata_files/Weartime_trackintervention_diamonds_intervention.Rdata")
+load("./Rdata_files/Weartime_trackintervention_diamonds_control.Rdata")
 
 Weartime_trackgirl_diamonds_girl
 Weartime_trackgirl_diamonds_boy
@@ -758,7 +796,7 @@ plot1 <- df %>% dplyr::select(id,
                                     fill = paste(trackSchool, girl)),
                                   scale = 1,
                                   alpha = 0.6, size = 0.25,
-                                  from = 0, to = 450,
+                                  from = 0, #to = 450,
                                   jittered_points=TRUE, point_shape=21,
                                   point_fill="black") +
   labs(x = "",
@@ -915,7 +953,41 @@ plot1 + plot2
 ```
 
 
+
 ## Accelerometer-measured MVPA 
+
+```{r accelerometer-mvpa-relations, include = FALSE}
+lmi %>% 
+  dplyr::group_by(Npv.1) %>% 
+  dplyr::summarise(`Mean daily MVPA minutes` = mean(ReRa1m_ka.1, na.rm = TRUE) %>% round(., 1), 
+                   `SD of mean` = sd(ReRa1m_ka.1, na.rm = TRUE) %>% round(., 1),
+                   `Median` = median(ReRa1m_ka.1, na.rm = TRUE) %>% round(., 1)) %>% 
+  dplyr::rename(`Days with > 10 hours of accelerometer data` = Npv.1) %>% 
+  na.omit(.)
+
+lmi %>% 
+  dplyr::mutate(`Days with > 10 hours of accelerometer data` = Npv.1,
+                `MVPA as proportion of total wear time` = ReRa1m_ka.1 / Summa19h_ka.1) %>%
+  ggplot(aes(x = `Days with > 10 hours of accelerometer data`,
+         y = `MVPA as proportion of total wear time`)) +
+  geom_point(alpha = 0.1, size = 2) +
+  geom_smooth(method = "loess")
+  
+
+lmi %>% 
+  dplyr::mutate(`Days with > 10 hours of accelerometer data` = Npv.1,
+                `MVPA as proportion of total wear time` = ReRa1m_ka.1 / Summa19h_ka.1) %>%
+  dplyr::filter(!is.na(Koulutusohjelma)) %>% 
+  ggplot(aes(x = `MVPA as proportion of total wear time`, fill = factor(`Days with > 10 hours of accelerometer data`))) +
+  geom_density(alpha = 0.6) +
+  facet_wrap('`Koulutusohjelma`')
+
+text_cor_mvpaMin_mvpaSD <- lmi %>% dplyr::group_by(Npv.1) %>% dplyr::summarise(meanMVPA = mean(ReRa1m_ka.1, na.rm = TRUE), sd = sd(ReRa1m_ka.1, na.rm = TRUE))  %>% dplyr::summarise(cor = cor(meanMVPA, sd, use = "pairwise.complete.obs", method = "kendall")) %>% dplyr::pull() %>% round(., 3)
+
+text_cor_mvpaMin_weardays10h <- lmi %>% dplyr::group_by(Npv.1) %>% dplyr::summarise(meanMVPA = mean(ReRa1m_ka.1, na.rm = TRUE), sd = sd(ReRa1m_ka.1, na.rm = TRUE))  %>% dplyr::summarise(cor = cor(meanMVPA, Npv.1, use = "pairwise.complete.obs", method = "kendall")) %>% dplyr::pull() %>% round(., 3)
+
+text_cor_mvpaSD_weardays10h <- lmi %>% dplyr::group_by(Npv.1) %>% dplyr::summarise(meanMVPA = mean(ReRa1m_ka.1, na.rm = TRUE), sd = sd(ReRa1m_ka.1, na.rm = TRUE))  %>% dplyr::summarise(cor = cor(Npv.1, sd, use = "pairwise.complete.obs", method = "kendall")) %>% dplyr::pull() %>% round(., 3)
+```
 
 ```{r lmer-numbers, eval = FALSE, include = FALSE}
 # TODO: Try out if we can estimate the intercepts by gender and educational tracks:
@@ -940,7 +1012,10 @@ Contrary to some other findings, in our sample girls were more active than boys.
 
 ```{r mvpa-difference-boygirl-numbers}
 
-MVPAgirl_df <- df %>% group_by(girl) %>% dplyr::select(girl, mvpaAccelerometer_T1) %>% summarise(`mean accelerometer-measured MVPA difference between girls and boys` = mean(mvpaAccelerometer_T1, na.rm = TRUE), `median accelerometer-measured MVPA difference between girls and boys` = median(mvpaAccelerometer_T1, na.rm = TRUE)) 
+MVPAgirl_df <- df %>% group_by(girl) %>% 
+  dplyr::select(girl, mvpaAccelerometer_T1) %>% 
+  summarise(`mean accelerometer-measured MVPA difference between girls and boys` = mean(mvpaAccelerometer_T1, na.rm = TRUE), 
+            `median accelerometer-measured MVPA difference between girls and boys` = median(mvpaAccelerometer_T1, na.rm = TRUE)) 
 
 userfriendlyscience::meanDiff(df$girl, df$mvpaAccelerometer_T1)
 
@@ -1014,116 +1089,138 @@ text(x = 1.02, y = 1.3, labels = "MVPA hours", pos = 1)
 #### Description
 
 The tab "Information on data preparation" of this section present information on data preparation for the plot
+$~$
+$~$
 
 #### Information on data preparation
 
 Prepare data
 
 ```{r MVPA-accelerometer-data}
-m_mvpaAccelerometer_trackgirl <- brms::bf(mvpaAccelerometer_T1 ~ (1 | track:girl)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# m_mvpaAccelerometer_trackgirl <- brms::bf(mvpaAccelerometer_T1 ~ (1 | track:girl)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_mvpaAccelerometer_trackgirl, data = df)
+# 
+# m_mvpaAccelerometer_trackgirl
+# 
+# b_intercept <- brms::fixef(m_mvpaAccelerometer_trackgirl)[1]
+# 
+# # This gives estimates only:
+# PA_trackgirl_estimates <- brms::ranef(m_mvpaAccelerometer_trackgirl)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# PA_trackgirl_CIL <- brms::ranef(m_mvpaAccelerometer_trackgirl)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# PA_trackgirl_CIH <- brms::ranef(m_mvpaAccelerometer_trackgirl)[[1]][31:40]
+# 
+# PA_trackgirl_ci <- data.frame(PA_trackgirl_CIL, PA_trackgirl_estimates, PA_trackgirl_CIH, Variable = labels(brms::ranef(m_mvpaAccelerometer_trackgirl))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(PA_trackgirl_CIL = PA_trackgirl_CIL + b_intercept,
+#          PA_trackgirl_estimates = PA_trackgirl_estimates + b_intercept,
+#          PA_trackgirl_CIH = PA_trackgirl_CIH + b_intercept,
+#          track = c('BA_boy',
+#                    'BA_girl',
+#                    'HRC_boy',
+#                    'HRC_girl',
+#                    'IT_boy',
+#                    'IT_girl',
+#                    'Nur_boy',
+#                    'Nur_girl',
+#                    'Other_boy',
+#                    'Other_girl'
+# ))
+# 
+# PA_trackgirl_diamonds_girl <- rbind(
+# PA_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
+# PA_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
+# PA_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
+# PA_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# PA_trackgirl_diamonds_boy <- rbind(
+# PA_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
+# PA_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
+# PA_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
+# PA_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# 
+# m_mvpaAccelerometer_trackintervention <- brms::bf(mvpaAccelerometer_T1 ~ (1 | track:intervention)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_mvpaAccelerometer_trackintervention, data = df)
+# 
+# m_mvpaAccelerometer_trackintervention
+# 
+# b_intercept <- brms::fixef(m_mvpaAccelerometer_trackintervention)[1]
+# 
+# # This gives estimates only:
+# PA_trackintervention_estimates <- brms::ranef(m_mvpaAccelerometer_trackintervention)[[1]][1:10]
+# 
+# 
+# # The 2.5%ile:
+# PA_trackintervention_CIL <- brms::ranef(m_mvpaAccelerometer_trackintervention)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# PA_trackintervention_CIH <- brms::ranef(m_mvpaAccelerometer_trackintervention)[[1]][31:40]
+# 
+# PA_trackintervention_ci <- data.frame(PA_trackintervention_CIL, PA_trackintervention_estimates, PA_trackintervention_CIH, Variable = labels(brms::ranef(m_mvpaAccelerometer_trackintervention))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(PA_trackintervention_CIL = PA_trackintervention_CIL + b_intercept,
+#          PA_trackintervention_estimates = PA_trackintervention_estimates + b_intercept,
+#          PA_trackintervention_CIH = PA_trackintervention_CIH + b_intercept,
+#          track = c('BA_control',
+#                    'BA_intervention',
+#                    'HRC_control',
+#                    'HRC_intervention',
+#                    'IT_control',
+#                    'IT_intervention',
+#                    'Nur_control',
+#                    'Nur_intervention',
+#                    'Other_control',
+#                    'Other_intervention'
+# ))
+# 
+# PA_trackintervention_diamonds_intervention <- rbind(
+# PA_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
+# PA_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
+# PA_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
+# PA_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# PA_trackintervention_diamonds_control <- rbind(
+# PA_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
+# PA_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
+# PA_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
+# PA_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# # readr::write_rds(PA_trackgirl_diamonds_girl, 
+# #                  path = "./Rdata_files/PA_trackgirl_diamonds_girl.RDS")
+# # readr::write_rds(PA_trackgirl_diamonds_boy, 
+# #                  path = "./Rdata_files/PA_trackgirl_diamonds_boy.RDS")
+# # readr::write_rds(PA_trackintervention_diamonds_intervention, 
+# #                  path = "./Rdata_files/PA_trackintervention_diamonds_intervention.RDS")
+# # readr::write_rds(PA_trackintervention_diamonds_control, 
+# #                  path = "./Rdata_files/PA_trackintervention_diamonds_control.RDS")
+# 
+# save(PA_trackgirl_diamonds_girl, file = "./Rdata_files/PA_trackgirl_diamonds_girl.Rdata")
+# save(PA_trackgirl_diamonds_boy, file = "./Rdata_files/PA_trackgirl_diamonds_boy.Rdata")
+# save(PA_trackintervention_diamonds_intervention, file = "./Rdata_files/PA_trackintervention_diamonds_intervention.Rdata")
+# save(PA_trackintervention_diamonds_control, file = "./Rdata_files/PA_trackintervention_diamonds_control.Rdata")
 
-brms::prior_summary(m_mvpaAccelerometer_trackgirl, data = df)
-
-m_mvpaAccelerometer_trackgirl
-
-b_intercept <- brms::fixef(m_mvpaAccelerometer_trackgirl)[1]
-
-# This gives estimates only:
-PA_trackgirl_estimates <- brms::ranef(m_mvpaAccelerometer_trackgirl)[[1]][1:10]
-
-# The 2.5%ile:
-PA_trackgirl_CIL <- brms::ranef(m_mvpaAccelerometer_trackgirl)[[1]][21:30]
-
-# The 97.5%ile:
-PA_trackgirl_CIH <- brms::ranef(m_mvpaAccelerometer_trackgirl)[[1]][31:40]
-
-PA_trackgirl_ci <- data.frame(PA_trackgirl_CIL, PA_trackgirl_estimates, PA_trackgirl_CIH, Variable = labels(brms::ranef(m_mvpaAccelerometer_trackgirl))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(PA_trackgirl_CIL = PA_trackgirl_CIL + b_intercept,
-         PA_trackgirl_estimates = PA_trackgirl_estimates + b_intercept,
-         PA_trackgirl_CIH = PA_trackgirl_CIH + b_intercept,
-         track = c('BA_boy',
-                   'BA_girl',
-                   'HRC_boy',
-                   'HRC_girl',
-                   'IT_boy',
-                   'IT_girl',
-                   'Nur_boy',
-                   'Nur_girl',
-                   'Other_boy',
-                   'Other_girl'
-))
-
-PA_trackgirl_diamonds_girl <- rbind(
-PA_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
-PA_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
-PA_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
-PA_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-PA_trackgirl_diamonds_boy <- rbind(
-PA_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
-PA_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
-PA_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
-PA_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-
-m_mvpaAccelerometer_trackintervention <- brms::bf(mvpaAccelerometer_T1 ~ (1 | track:intervention)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
-
-brms::prior_summary(m_mvpaAccelerometer_trackintervention, data = df)
-
-m_mvpaAccelerometer_trackintervention
-
-b_intercept <- brms::fixef(m_mvpaAccelerometer_trackintervention)[1]
-
-# This gives estimates only:
-PA_trackintervention_estimates <- brms::ranef(m_mvpaAccelerometer_trackintervention)[[1]][1:10]
-
-
-# The 2.5%ile:
-PA_trackintervention_CIL <- brms::ranef(m_mvpaAccelerometer_trackintervention)[[1]][21:30]
-
-# The 97.5%ile:
-PA_trackintervention_CIH <- brms::ranef(m_mvpaAccelerometer_trackintervention)[[1]][31:40]
-
-PA_trackintervention_ci <- data.frame(PA_trackintervention_CIL, PA_trackintervention_estimates, PA_trackintervention_CIH, Variable = labels(brms::ranef(m_mvpaAccelerometer_trackintervention))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(PA_trackintervention_CIL = PA_trackintervention_CIL + b_intercept,
-         PA_trackintervention_estimates = PA_trackintervention_estimates + b_intercept,
-         PA_trackintervention_CIH = PA_trackintervention_CIH + b_intercept,
-         track = c('BA_control',
-                   'BA_intervention',
-                   'HRC_control',
-                   'HRC_intervention',
-                   'IT_control',
-                   'IT_intervention',
-                   'Nur_control',
-                   'Nur_intervention',
-                   'Other_control',
-                   'Other_intervention'
-))
-
-PA_trackintervention_diamonds_intervention <- rbind(
-PA_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
-PA_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
-PA_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
-PA_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-PA_trackintervention_diamonds_control <- rbind(
-PA_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
-PA_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
-PA_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
-PA_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+load("./Rdata_files/PA_trackgirl_diamonds_girl.Rdata")
+load("./Rdata_files/PA_trackgirl_diamonds_boy.Rdata")
+load("./Rdata_files/PA_trackintervention_diamonds_intervention.Rdata")
+load("./Rdata_files/PA_trackintervention_diamonds_control.Rdata")
 
 PA_trackgirl_diamonds_girl
 PA_trackgirl_diamonds_boy
 PA_trackintervention_diamonds_intervention
 PA_trackintervention_diamonds_control
+
 ```
 
 #### Sensitivity analyses and robustness checks
@@ -1233,11 +1330,10 @@ plot1 <- df %>% dplyr::select(id,
 plot1
 
 ```
-$~$
-$~$
-<a id="raincloudPlot"></a>
 
 ### Density plot by track
+
+<a id="raincloudPlot"></a>
 
 ```{r MVPA-accelerometer-plot, fig.cap = "Accelerometer-measured MVPA. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
@@ -1391,104 +1487,114 @@ The tab "Information on data preparation" of this section present information on
 Code chunk below prepares data.
 
 ```{r padaysLastweek-data}
-m_padaysLastweek_trackgirl <- brms::bf(padaysLastweek_T1 ~ (1 | track:girl)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# m_padaysLastweek_trackgirl <- brms::bf(padaysLastweek_T1 ~ (1 | track:girl)) %>%
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_padaysLastweek_trackgirl, data = df)
+# 
+# m_padaysLastweek_trackgirl
+# 
+# b_intercept <- brms::fixef(m_padaysLastweek_trackgirl)[1]
+# 
+# # This gives estimates only:
+# padaysLastweek_trackgirl_estimates <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# padaysLastweek_trackgirl_CIL <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# padaysLastweek_trackgirl_CIH <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][31:40]
+# 
+# padaysLastweek_trackgirl_ci <- data.frame(padaysLastweek_trackgirl_CIL, padaysLastweek_trackgirl_estimates, padaysLastweek_trackgirl_CIH, Variable = labels(brms::ranef(m_padaysLastweek_trackgirl))) %>%
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>%
+#   dplyr::mutate(padaysLastweek_trackgirl_CIL = padaysLastweek_trackgirl_CIL + b_intercept,
+#          padaysLastweek_trackgirl_estimates = padaysLastweek_trackgirl_estimates + b_intercept,
+#          padaysLastweek_trackgirl_CIH = padaysLastweek_trackgirl_CIH + b_intercept,
+#          track = c('BA_boy',
+#                    'BA_girl',
+#                    'HRC_boy',
+#                    'HRC_girl',
+#                    'IT_boy',
+#                    'IT_girl',
+#                    'Nur_boy',
+#                    'Nur_girl',
+#                    'Other_boy',
+#                    'Other_girl'
+# ))
+# 
+# padaysLastweek_trackgirl_diamonds_girl <- rbind(
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>%
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# padaysLastweek_trackgirl_diamonds_boy <- rbind(
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
+# padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>%
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# 
+# m_padaysLastweek_trackintervention <- brms::bf(padaysLastweek_T1 ~ (1 | track:intervention)) %>%
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_padaysLastweek_trackintervention, data = df)
+# 
+# m_padaysLastweek_trackintervention
+# 
+# b_intercept <- brms::fixef(m_padaysLastweek_trackintervention)[1]
+# 
+# # This gives estimates only:
+# padaysLastweek_trackintervention_estimates <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# padaysLastweek_trackintervention_CIL <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# padaysLastweek_trackintervention_CIH <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][31:40]
+# 
+# padaysLastweek_trackintervention_ci <- data.frame(padaysLastweek_trackintervention_CIL, padaysLastweek_trackintervention_estimates, padaysLastweek_trackintervention_CIH, Variable = labels(brms::ranef(m_padaysLastweek_trackintervention))) %>%
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>%
+#   dplyr::mutate(padaysLastweek_trackintervention_CIL = padaysLastweek_trackintervention_CIL + b_intercept,
+#          padaysLastweek_trackintervention_estimates = padaysLastweek_trackintervention_estimates + b_intercept,
+#          padaysLastweek_trackintervention_CIH = padaysLastweek_trackintervention_CIH + b_intercept,
+#          track = c('BA_control',
+#                    'BA_intervention',
+#                    'HRC_control',
+#                    'HRC_intervention',
+#                    'IT_control',
+#                    'IT_intervention',
+#                    'Nur_control',
+#                    'Nur_intervention',
+#                    'Other_control',
+#                    'Other_intervention'
+# ))
+# 
+# padaysLastweek_trackintervention_diamonds_intervention <- rbind(
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>%
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# padaysLastweek_trackintervention_diamonds_control <- rbind(
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
+# padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>%
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# save(padaysLastweek_trackgirl_diamonds_girl, file = "./Rdata_files/padaysLastweek_trackgirl_diamonds_girl.Rdata")
+# save(padaysLastweek_trackgirl_diamonds_boy, file = "./Rdata_files/padaysLastweek_trackgirl_diamonds_boy.Rdata")
+# save(padaysLastweek_trackintervention_diamonds_intervention, file = "./Rdata_files/padaysLastweek_trackintervention_diamonds_intervention.Rdata")
+# save(padaysLastweek_trackintervention_diamonds_control, file = "./Rdata_files/padaysLastweek_trackintervention_diamonds_control.Rdata")
 
-brms::prior_summary(m_padaysLastweek_trackgirl, data = df)
-
-m_padaysLastweek_trackgirl
-
-b_intercept <- brms::fixef(m_padaysLastweek_trackgirl)[1]
-
-# This gives estimates only:
-padaysLastweek_trackgirl_estimates <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][1:10]
-
-# The 2.5%ile:
-padaysLastweek_trackgirl_CIL <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][21:30]
-
-# The 97.5%ile:
-padaysLastweek_trackgirl_CIH <- brms::ranef(m_padaysLastweek_trackgirl)[[1]][31:40]
-
-padaysLastweek_trackgirl_ci <- data.frame(padaysLastweek_trackgirl_CIL, padaysLastweek_trackgirl_estimates, padaysLastweek_trackgirl_CIH, Variable = labels(brms::ranef(m_padaysLastweek_trackgirl))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(padaysLastweek_trackgirl_CIL = padaysLastweek_trackgirl_CIL + b_intercept,
-         padaysLastweek_trackgirl_estimates = padaysLastweek_trackgirl_estimates + b_intercept,
-         padaysLastweek_trackgirl_CIH = padaysLastweek_trackgirl_CIH + b_intercept,
-         track = c('BA_boy',
-                   'BA_girl',
-                   'HRC_boy',
-                   'HRC_girl',
-                   'IT_boy',
-                   'IT_girl',
-                   'Nur_boy',
-                   'Nur_girl',
-                   'Other_boy',
-                   'Other_girl'
-))
-
-padaysLastweek_trackgirl_diamonds_girl <- rbind(
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-padaysLastweek_trackgirl_diamonds_boy <- rbind(
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
-padaysLastweek_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-
-m_padaysLastweek_trackintervention <- brms::bf(padaysLastweek_T1 ~ (1 | track:intervention)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
-
-brms::prior_summary(m_padaysLastweek_trackintervention, data = df)
-
-m_padaysLastweek_trackintervention
-
-b_intercept <- brms::fixef(m_padaysLastweek_trackintervention)[1]
-
-# This gives estimates only:
-padaysLastweek_trackintervention_estimates <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][1:10]
-
-# The 2.5%ile:
-padaysLastweek_trackintervention_CIL <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][21:30]
-
-# The 97.5%ile:
-padaysLastweek_trackintervention_CIH <- brms::ranef(m_padaysLastweek_trackintervention)[[1]][31:40]
-
-padaysLastweek_trackintervention_ci <- data.frame(padaysLastweek_trackintervention_CIL, padaysLastweek_trackintervention_estimates, padaysLastweek_trackintervention_CIH, Variable = labels(brms::ranef(m_padaysLastweek_trackintervention))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(padaysLastweek_trackintervention_CIL = padaysLastweek_trackintervention_CIL + b_intercept,
-         padaysLastweek_trackintervention_estimates = padaysLastweek_trackintervention_estimates + b_intercept,
-         padaysLastweek_trackintervention_CIH = padaysLastweek_trackintervention_CIH + b_intercept,
-         track = c('BA_control',
-                   'BA_intervention',
-                   'HRC_control',
-                   'HRC_intervention',
-                   'IT_control',
-                   'IT_intervention',
-                   'Nur_control',
-                   'Nur_intervention',
-                   'Other_control',
-                   'Other_intervention'
-))
-
-padaysLastweek_trackintervention_diamonds_intervention <- rbind(
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-padaysLastweek_trackintervention_diamonds_control <- rbind(
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
-padaysLastweek_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+load("./Rdata_files/padaysLastweek_trackgirl_diamonds_girl.Rdata")
+load("./Rdata_files/padaysLastweek_trackgirl_diamonds_boy.Rdata")
+load("./Rdata_files/padaysLastweek_trackintervention_diamonds_intervention.Rdata")
+load("./Rdata_files/padaysLastweek_trackintervention_diamonds_control.Rdata")
 
 ```
 
@@ -2019,105 +2125,115 @@ The tab "Information on data preparation" of this section present information on
 Prepare data
 
 ```{r nordpaq_alternative_item-accelerometer-data}
-m_nordpaq_alternative_itemAccelerometer_trackgirl <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:girl)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# m_nordpaq_alternative_itemAccelerometer_trackgirl <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:girl)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_nordpaq_alternative_itemAccelerometer_trackgirl, data = df)
+# 
+# m_nordpaq_alternative_itemAccelerometer_trackgirl
+# 
+# b_intercept <- brms::fixef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[1]
+# 
+# # This gives estimates only:
+# nordpaq_alternative_item_trackgirl_estimates <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# nordpaq_alternative_item_trackgirl_CIL <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# nordpaq_alternative_item_trackgirl_CIH <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][31:40]
+# 
+# nordpaq_alternative_item_trackgirl_ci <- data.frame(nordpaq_alternative_item_trackgirl_CIL, nordpaq_alternative_item_trackgirl_estimates, nordpaq_alternative_item_trackgirl_CIH, Variable = labels(brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(nordpaq_alternative_item_trackgirl_CIL = nordpaq_alternative_item_trackgirl_CIL + b_intercept,
+#          nordpaq_alternative_item_trackgirl_estimates = nordpaq_alternative_item_trackgirl_estimates + b_intercept,
+#          nordpaq_alternative_item_trackgirl_CIH = nordpaq_alternative_item_trackgirl_CIH + b_intercept,
+#          track = c('BA_boy',
+#                    'BA_girl',
+#                    'HRC_boy',
+#                    'HRC_girl',
+#                    'IT_boy',
+#                    'IT_girl',
+#                    'Nur_boy',
+#                    'Nur_girl',
+#                    'Other_boy',
+#                    'Other_girl'
+# ))
+# 
+# nordpaq_alternative_item_trackgirl_diamonds_girl <- rbind(
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# nordpaq_alternative_item_trackgirl_diamonds_boy <- rbind(
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
+# nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# 
+# m_nordpaq_alternative_itemAccelerometer_trackintervention <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:intervention)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_nordpaq_alternative_itemAccelerometer_trackintervention, data = df)
+# 
+# m_nordpaq_alternative_itemAccelerometer_trackintervention
+# 
+# b_intercept <- brms::fixef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[1]
+# 
+# # This gives estimates only:
+# nordpaq_alternative_item_trackintervention_estimates <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][1:10]
+# 
+# 
+# # The 2.5%ile:
+# nordpaq_alternative_item_trackintervention_CIL <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# nordpaq_alternative_item_trackintervention_CIH <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][31:40]
+# 
+# nordpaq_alternative_item_trackintervention_ci <- data.frame(nordpaq_alternative_item_trackintervention_CIL, nordpaq_alternative_item_trackintervention_estimates, nordpaq_alternative_item_trackintervention_CIH, Variable = labels(brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(nordpaq_alternative_item_trackintervention_CIL = nordpaq_alternative_item_trackintervention_CIL + b_intercept,
+#          nordpaq_alternative_item_trackintervention_estimates = nordpaq_alternative_item_trackintervention_estimates + b_intercept,
+#          nordpaq_alternative_item_trackintervention_CIH = nordpaq_alternative_item_trackintervention_CIH + b_intercept,
+#          track = c('BA_control',
+#                    'BA_intervention',
+#                    'HRC_control',
+#                    'HRC_intervention',
+#                    'IT_control',
+#                    'IT_intervention',
+#                    'Nur_control',
+#                    'Nur_intervention',
+#                    'Other_control',
+#                    'Other_intervention'
+# ))
+# 
+# nordpaq_alternative_item_trackintervention_diamonds_intervention <- rbind(
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# nordpaq_alternative_item_trackintervention_diamonds_control <- rbind(
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
+# nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# save(nordpaq_alternative_item_trackgirl_diamonds_girl, file = "./Rdata_files/nordpaq_alternative_item_trackgirl_diamonds_girl.Rdata")
+# save(nordpaq_alternative_item_trackgirl_diamonds_boy, file = "./Rdata_files/nordpaq_alternative_item_trackgirl_diamonds_boy.Rdata")
+# save(nordpaq_alternative_item_trackintervention_diamonds_intervention, file = "./Rdata_files/nordpaq_alternative_item_trackintervention_diamonds_intervention.Rdata")
+# save(nordpaq_alternative_item_trackintervention_diamonds_control, file = "./Rdata_files/nordpaq_alternative_item_trackintervention_diamonds_control.Rdata")
 
-brms::prior_summary(m_nordpaq_alternative_itemAccelerometer_trackgirl, data = df)
-
-m_nordpaq_alternative_itemAccelerometer_trackgirl
-
-b_intercept <- brms::fixef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[1]
-
-# This gives estimates only:
-nordpaq_alternative_item_trackgirl_estimates <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][1:10]
-
-# The 2.5%ile:
-nordpaq_alternative_item_trackgirl_CIL <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][21:30]
-
-# The 97.5%ile:
-nordpaq_alternative_item_trackgirl_CIH <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl)[[1]][31:40]
-
-nordpaq_alternative_item_trackgirl_ci <- data.frame(nordpaq_alternative_item_trackgirl_CIL, nordpaq_alternative_item_trackgirl_estimates, nordpaq_alternative_item_trackgirl_CIH, Variable = labels(brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackgirl))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(nordpaq_alternative_item_trackgirl_CIL = nordpaq_alternative_item_trackgirl_CIL + b_intercept,
-         nordpaq_alternative_item_trackgirl_estimates = nordpaq_alternative_item_trackgirl_estimates + b_intercept,
-         nordpaq_alternative_item_trackgirl_CIH = nordpaq_alternative_item_trackgirl_CIH + b_intercept,
-         track = c('BA_boy',
-                   'BA_girl',
-                   'HRC_boy',
-                   'HRC_girl',
-                   'IT_boy',
-                   'IT_girl',
-                   'Nur_boy',
-                   'Nur_girl',
-                   'Other_boy',
-                   'Other_girl'
-))
-
-nordpaq_alternative_item_trackgirl_diamonds_girl <- rbind(
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-nordpaq_alternative_item_trackgirl_diamonds_boy <- rbind(
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
-nordpaq_alternative_item_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-
-m_nordpaq_alternative_itemAccelerometer_trackintervention <- brms::bf(leisuretimeMvpaHoursLastweek_T1 ~ (1 | track:intervention)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
-
-brms::prior_summary(m_nordpaq_alternative_itemAccelerometer_trackintervention, data = df)
-
-m_nordpaq_alternative_itemAccelerometer_trackintervention
-
-b_intercept <- brms::fixef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[1]
-
-# This gives estimates only:
-nordpaq_alternative_item_trackintervention_estimates <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][1:10]
-
-
-# The 2.5%ile:
-nordpaq_alternative_item_trackintervention_CIL <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][21:30]
-
-# The 97.5%ile:
-nordpaq_alternative_item_trackintervention_CIH <- brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention)[[1]][31:40]
-
-nordpaq_alternative_item_trackintervention_ci <- data.frame(nordpaq_alternative_item_trackintervention_CIL, nordpaq_alternative_item_trackintervention_estimates, nordpaq_alternative_item_trackintervention_CIH, Variable = labels(brms::ranef(m_nordpaq_alternative_itemAccelerometer_trackintervention))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(nordpaq_alternative_item_trackintervention_CIL = nordpaq_alternative_item_trackintervention_CIL + b_intercept,
-         nordpaq_alternative_item_trackintervention_estimates = nordpaq_alternative_item_trackintervention_estimates + b_intercept,
-         nordpaq_alternative_item_trackintervention_CIH = nordpaq_alternative_item_trackintervention_CIH + b_intercept,
-         track = c('BA_control',
-                   'BA_intervention',
-                   'HRC_control',
-                   'HRC_intervention',
-                   'IT_control',
-                   'IT_intervention',
-                   'Nur_control',
-                   'Nur_intervention',
-                   'Other_control',
-                   'Other_intervention'
-))
-
-nordpaq_alternative_item_trackintervention_diamonds_intervention <- rbind(
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-nordpaq_alternative_item_trackintervention_diamonds_control <- rbind(
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
-nordpaq_alternative_item_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+load("./Rdata_files/nordpaq_alternative_item_trackgirl_diamonds_girl.Rdata")
+load("./Rdata_files/nordpaq_alternative_item_trackgirl_diamonds_boy.Rdata")
+load("./Rdata_files/nordpaq_alternative_item_trackintervention_diamonds_intervention.Rdata")
+load("./Rdata_files/nordpaq_alternative_item_trackintervention_diamonds_control.Rdata")
 
 nordpaq_alternative_item_trackgirl_diamonds_girl
 nordpaq_alternative_item_trackgirl_diamonds_boy
@@ -2367,7 +2483,7 @@ plot1 + plot2
 
 ```
 
-
+<a id="sitBreaks"></a>
 
 ## Breaks in sedentary time
 
@@ -2384,104 +2500,114 @@ The tab "Information on data preparation" of this section present information on
 Code chunk below prepares data.
 
 ```{r sitBreaksAccelerometer-data}
-m_sitBreaksAccelerometer_trackgirl <- brms::bf(sitBreaksAccelerometer_T1 ~ (1 | track:girl)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# m_sitBreaksAccelerometer_trackgirl <- brms::bf(sitBreaksAccelerometer_T1 ~ (1 | track:girl)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_sitBreaksAccelerometer_trackgirl, data = df)
+# 
+# m_sitBreaksAccelerometer_trackgirl
+# 
+# b_intercept <- brms::fixef(m_sitBreaksAccelerometer_trackgirl)[1]
+# 
+# # This gives estimates only:
+# sitBreaksAccelerometer_trackgirl_estimates <- brms::ranef(m_sitBreaksAccelerometer_trackgirl)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# sitBreaksAccelerometer_trackgirl_CIL <- brms::ranef(m_sitBreaksAccelerometer_trackgirl)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# sitBreaksAccelerometer_trackgirl_CIH <- brms::ranef(m_sitBreaksAccelerometer_trackgirl)[[1]][31:40]
+# 
+# sitBreaksAccelerometer_trackgirl_ci <- data.frame(sitBreaksAccelerometer_trackgirl_CIL, sitBreaksAccelerometer_trackgirl_estimates, sitBreaksAccelerometer_trackgirl_CIH, Variable = labels(brms::ranef(m_sitBreaksAccelerometer_trackgirl))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(sitBreaksAccelerometer_trackgirl_CIL = sitBreaksAccelerometer_trackgirl_CIL + b_intercept,
+#          sitBreaksAccelerometer_trackgirl_estimates = sitBreaksAccelerometer_trackgirl_estimates + b_intercept,
+#          sitBreaksAccelerometer_trackgirl_CIH = sitBreaksAccelerometer_trackgirl_CIH + b_intercept,
+#          track = c('BA_boy',
+#                    'BA_girl',
+#                    'HRC_boy',
+#                    'HRC_girl',
+#                    'IT_boy',
+#                    'IT_girl',
+#                    'Nur_boy',
+#                    'Nur_girl',
+#                    'Other_boy',
+#                    'Other_girl'
+# ))
+# 
+# sitBreaksAccelerometer_trackgirl_diamonds_girl <- rbind(
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# sitBreaksAccelerometer_trackgirl_diamonds_boy <- rbind(
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
+# sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# 
+# m_sitBreaksAccelerometer_trackintervention <- brms::bf(sitBreaksAccelerometer_T1 ~ (1 | track:intervention)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_sitBreaksAccelerometer_trackintervention, data = df)
+# 
+# m_sitBreaksAccelerometer_trackintervention
+# 
+# b_intercept <- brms::fixef(m_sitBreaksAccelerometer_trackintervention)[1]
+# 
+# # This gives estimates only:
+# sitBreaksAccelerometer_trackintervention_estimates <- brms::ranef(m_sitBreaksAccelerometer_trackintervention)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# sitBreaksAccelerometer_trackintervention_CIL <- brms::ranef(m_sitBreaksAccelerometer_trackintervention)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# sitBreaksAccelerometer_trackintervention_CIH <- brms::ranef(m_sitBreaksAccelerometer_trackintervention)[[1]][31:40]
+# 
+# sitBreaksAccelerometer_trackintervention_ci <- data.frame(sitBreaksAccelerometer_trackintervention_CIL, sitBreaksAccelerometer_trackintervention_estimates, sitBreaksAccelerometer_trackintervention_CIH, Variable = labels(brms::ranef(m_sitBreaksAccelerometer_trackintervention))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(sitBreaksAccelerometer_trackintervention_CIL = sitBreaksAccelerometer_trackintervention_CIL + b_intercept,
+#          sitBreaksAccelerometer_trackintervention_estimates = sitBreaksAccelerometer_trackintervention_estimates + b_intercept,
+#          sitBreaksAccelerometer_trackintervention_CIH = sitBreaksAccelerometer_trackintervention_CIH + b_intercept,
+#          track = c('BA_control',
+#                    'BA_intervention',
+#                    'HRC_control',
+#                    'HRC_intervention',
+#                    'IT_control',
+#                    'IT_intervention',
+#                    'Nur_control',
+#                    'Nur_intervention',
+#                    'Other_control',
+#                    'Other_intervention'
+# ))
+# 
+# sitBreaksAccelerometer_trackintervention_diamonds_intervention <- rbind(
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# sitBreaksAccelerometer_trackintervention_diamonds_control <- rbind(
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
+# sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# save(sitBreaksAccelerometer_trackgirl_diamonds_girl, file = "./Rdata_files/sitBreaksAccelerometer_trackgirl_diamonds_girl.Rdata")
+# save(sitBreaksAccelerometer_trackgirl_diamonds_boy, file = "./Rdata_files/sitBreaksAccelerometer_trackgirl_diamonds_boy.Rdata")
+# save(sitBreaksAccelerometer_trackintervention_diamonds_intervention, file = "./Rdata_files/sitBreaksAccelerometer_trackintervention_diamonds_intervention.Rdata")
+# save(sitBreaksAccelerometer_trackintervention_diamonds_control, file = "./Rdata_files/sitBreaksAccelerometer_trackintervention_diamonds_control.Rdata")
 
-brms::prior_summary(m_sitBreaksAccelerometer_trackgirl, data = df)
-
-m_sitBreaksAccelerometer_trackgirl
-
-b_intercept <- brms::fixef(m_sitBreaksAccelerometer_trackgirl)[1]
-
-# This gives estimates only:
-sitBreaksAccelerometer_trackgirl_estimates <- brms::ranef(m_sitBreaksAccelerometer_trackgirl)[[1]][1:10]
-
-# The 2.5%ile:
-sitBreaksAccelerometer_trackgirl_CIL <- brms::ranef(m_sitBreaksAccelerometer_trackgirl)[[1]][21:30]
-
-# The 97.5%ile:
-sitBreaksAccelerometer_trackgirl_CIH <- brms::ranef(m_sitBreaksAccelerometer_trackgirl)[[1]][31:40]
-
-sitBreaksAccelerometer_trackgirl_ci <- data.frame(sitBreaksAccelerometer_trackgirl_CIL, sitBreaksAccelerometer_trackgirl_estimates, sitBreaksAccelerometer_trackgirl_CIH, Variable = labels(brms::ranef(m_sitBreaksAccelerometer_trackgirl))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(sitBreaksAccelerometer_trackgirl_CIL = sitBreaksAccelerometer_trackgirl_CIL + b_intercept,
-         sitBreaksAccelerometer_trackgirl_estimates = sitBreaksAccelerometer_trackgirl_estimates + b_intercept,
-         sitBreaksAccelerometer_trackgirl_CIH = sitBreaksAccelerometer_trackgirl_CIH + b_intercept,
-         track = c('BA_boy',
-                   'BA_girl',
-                   'HRC_boy',
-                   'HRC_girl',
-                   'IT_boy',
-                   'IT_girl',
-                   'Nur_boy',
-                   'Nur_girl',
-                   'Other_boy',
-                   'Other_girl'
-))
-
-sitBreaksAccelerometer_trackgirl_diamonds_girl <- rbind(
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-sitBreaksAccelerometer_trackgirl_diamonds_boy <- rbind(
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
-sitBreaksAccelerometer_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-
-m_sitBreaksAccelerometer_trackintervention <- brms::bf(sitBreaksAccelerometer_T1 ~ (1 | track:intervention)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
-
-brms::prior_summary(m_sitBreaksAccelerometer_trackintervention, data = df)
-
-m_sitBreaksAccelerometer_trackintervention
-
-b_intercept <- brms::fixef(m_sitBreaksAccelerometer_trackintervention)[1]
-
-# This gives estimates only:
-sitBreaksAccelerometer_trackintervention_estimates <- brms::ranef(m_sitBreaksAccelerometer_trackintervention)[[1]][1:10]
-
-# The 2.5%ile:
-sitBreaksAccelerometer_trackintervention_CIL <- brms::ranef(m_sitBreaksAccelerometer_trackintervention)[[1]][21:30]
-
-# The 97.5%ile:
-sitBreaksAccelerometer_trackintervention_CIH <- brms::ranef(m_sitBreaksAccelerometer_trackintervention)[[1]][31:40]
-
-sitBreaksAccelerometer_trackintervention_ci <- data.frame(sitBreaksAccelerometer_trackintervention_CIL, sitBreaksAccelerometer_trackintervention_estimates, sitBreaksAccelerometer_trackintervention_CIH, Variable = labels(brms::ranef(m_sitBreaksAccelerometer_trackintervention))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(sitBreaksAccelerometer_trackintervention_CIL = sitBreaksAccelerometer_trackintervention_CIL + b_intercept,
-         sitBreaksAccelerometer_trackintervention_estimates = sitBreaksAccelerometer_trackintervention_estimates + b_intercept,
-         sitBreaksAccelerometer_trackintervention_CIH = sitBreaksAccelerometer_trackintervention_CIH + b_intercept,
-         track = c('BA_control',
-                   'BA_intervention',
-                   'HRC_control',
-                   'HRC_intervention',
-                   'IT_control',
-                   'IT_intervention',
-                   'Nur_control',
-                   'Nur_intervention',
-                   'Other_control',
-                   'Other_intervention'
-))
-
-sitBreaksAccelerometer_trackintervention_diamonds_intervention <- rbind(
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-sitBreaksAccelerometer_trackintervention_diamonds_control <- rbind(
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
-sitBreaksAccelerometer_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+load("./Rdata_files/sitBreaksAccelerometer_trackgirl_diamonds_girl.Rdata")
+load("./Rdata_files/sitBreaksAccelerometer_trackgirl_diamonds_boy.Rdata")
+load("./Rdata_files/sitBreaksAccelerometer_trackintervention_diamonds_intervention.Rdata")
+load("./Rdata_files/sitBreaksAccelerometer_trackintervention_diamonds_control.Rdata")
 
 ```
 
@@ -2689,6 +2815,8 @@ plot1 + plot2
 
 Girls in all educational tracks interrupted sitting more than boys.
 
+<a id="sitLieAccelerometer"></a>
+
 ## SB, Accelerometer-measured
 
 ### Density plot by intervention and gender
@@ -2766,105 +2894,115 @@ Prepare data: time spent sitting & lying down
 Get credibility intervals track:school
 
 ```{r SB-accelerometer-data}
-m_sitLieAccelerometer_trackgirl <- brms::bf(sitLieAccelerometer_T1 ~ (1 | track:girl)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# m_sitLieAccelerometer_trackgirl <- brms::bf(sitLieAccelerometer_T1 ~ (1 | track:girl)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_sitLieAccelerometer_trackgirl, data = df)
+# 
+# m_sitLieAccelerometer_trackgirl
+# 
+# b_intercept <- brms::fixef(m_sitLieAccelerometer_trackgirl)[1]
+# 
+# # This gives estimates only:
+# sitLie_trackgirl_estimates <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][1:10]
+# 
+# # The 2.5%ile:
+# sitLie_trackgirl_CIL <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# sitLie_trackgirl_CIH <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][31:40]
+# 
+# sitLie_trackgirl_ci <- data.frame(sitLie_trackgirl_CIL, sitLie_trackgirl_estimates, sitLie_trackgirl_CIH, Variable = labels(brms::ranef(m_sitLieAccelerometer_trackgirl))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(sitLie_trackgirl_CIL = sitLie_trackgirl_CIL + b_intercept,
+#          sitLie_trackgirl_estimates = sitLie_trackgirl_estimates + b_intercept,
+#          sitLie_trackgirl_CIH = sitLie_trackgirl_CIH + b_intercept,
+#          track = c('BA_boy',
+#                    'BA_girl',
+#                    'HRC_boy',
+#                    'HRC_girl',
+#                    'IT_boy',
+#                    'IT_girl',
+#                    'Nur_boy',
+#                    'Nur_girl',
+#                    'Other_boy',
+#                    'Other_girl'
+# ))
+# 
+# sitLie_trackgirl_diamonds_girl <- rbind(
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# sitLie_trackgirl_diamonds_boy <- rbind(
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
+# sitLie_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# 
+# m_sitLieAccelerometer_trackintervention <- brms::bf(sitLieAccelerometer_T1 ~ (1 | track:intervention)) %>% 
+#   brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
+# 
+# brms::prior_summary(m_sitLieAccelerometer_trackintervention, data = df)
+# 
+# m_sitLieAccelerometer_trackintervention
+# 
+# b_intercept <- brms::fixef(m_sitLieAccelerometer_trackintervention)[1]
+# 
+# # This gives estimates only:
+# sitLie_trackintervention_estimates <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][1:10]
+# 
+# 
+# # The 2.5%ile:
+# sitLie_trackintervention_CIL <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][21:30]
+# 
+# # The 97.5%ile:
+# sitLie_trackintervention_CIH <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][31:40]
+# 
+# sitLie_trackintervention_ci <- data.frame(sitLie_trackintervention_CIL, sitLie_trackintervention_estimates, sitLie_trackintervention_CIH, Variable = labels(brms::ranef(m_sitLieAccelerometer_trackintervention))) %>% 
+#   dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
+#   dplyr::mutate(sitLie_trackintervention_CIL = sitLie_trackintervention_CIL + b_intercept,
+#          sitLie_trackintervention_estimates = sitLie_trackintervention_estimates + b_intercept,
+#          sitLie_trackintervention_CIH = sitLie_trackintervention_CIH + b_intercept,
+#          track = c('BA_control',
+#                    'BA_intervention',
+#                    'HRC_control',
+#                    'HRC_intervention',
+#                    'IT_control',
+#                    'IT_intervention',
+#                    'Nur_control',
+#                    'Nur_intervention',
+#                    'Other_control',
+#                    'Other_intervention'
+# ))
+# 
+# sitLie_trackintervention_diamonds_intervention <- rbind(
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# sitLie_trackintervention_diamonds_control <- rbind(
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
+# sitLie_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
+#   arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+# 
+# save(sitLie_trackgirl_diamonds_girl, file = "./Rdata_files/sitLie_trackgirl_diamonds_girl.Rdata")
+# save(sitLie_trackgirl_diamonds_boy, file = "./Rdata_files/sitLie_trackgirl_diamonds_boy.Rdata")
+# save(sitLie_trackintervention_diamonds_intervention, file = "./Rdata_files/sitLie_trackintervention_diamonds_intervention.Rdata")
+# save(sitLie_trackintervention_diamonds_control, file = "./Rdata_files/sitLie_trackintervention_diamonds_control.Rdata")
 
-brms::prior_summary(m_sitLieAccelerometer_trackgirl, data = df)
-
-m_sitLieAccelerometer_trackgirl
-
-b_intercept <- brms::fixef(m_sitLieAccelerometer_trackgirl)[1]
-
-# This gives estimates only:
-sitLie_trackgirl_estimates <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][1:10]
-
-# The 2.5%ile:
-sitLie_trackgirl_CIL <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][21:30]
-
-# The 97.5%ile:
-sitLie_trackgirl_CIH <- brms::ranef(m_sitLieAccelerometer_trackgirl)[[1]][31:40]
-
-sitLie_trackgirl_ci <- data.frame(sitLie_trackgirl_CIL, sitLie_trackgirl_estimates, sitLie_trackgirl_CIH, Variable = labels(brms::ranef(m_sitLieAccelerometer_trackgirl))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(sitLie_trackgirl_CIL = sitLie_trackgirl_CIL + b_intercept,
-         sitLie_trackgirl_estimates = sitLie_trackgirl_estimates + b_intercept,
-         sitLie_trackgirl_CIH = sitLie_trackgirl_CIH + b_intercept,
-         track = c('BA_boy',
-                   'BA_girl',
-                   'HRC_boy',
-                   'HRC_girl',
-                   'IT_boy',
-                   'IT_girl',
-                   'Nur_boy',
-                   'Nur_girl',
-                   'Other_boy',
-                   'Other_girl'
-))
-
-sitLie_trackgirl_diamonds_girl <- rbind(
-sitLie_trackgirl_ci %>% dplyr::filter(track == "Nur_girl"),
-sitLie_trackgirl_ci %>% dplyr::filter(track == "HRC_girl"),
-sitLie_trackgirl_ci %>% dplyr::filter(track == "BA_girl"),
-sitLie_trackgirl_ci %>% dplyr::filter(track == "IT_girl")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-sitLie_trackgirl_diamonds_boy <- rbind(
-sitLie_trackgirl_ci %>% dplyr::filter(track == "Nur_boy"),
-sitLie_trackgirl_ci %>% dplyr::filter(track == "HRC_boy"),
-sitLie_trackgirl_ci %>% dplyr::filter(track == "BA_boy"),
-sitLie_trackgirl_ci %>% dplyr::filter(track == "IT_boy")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-
-m_sitLieAccelerometer_trackintervention <- brms::bf(sitLieAccelerometer_T1 ~ (1 | track:intervention)) %>% 
-  brms::brm(., data = df, chains = 4, iter = 4000, control = list(adapt_delta = 0.95))
-
-brms::prior_summary(m_sitLieAccelerometer_trackintervention, data = df)
-
-m_sitLieAccelerometer_trackintervention
-
-b_intercept <- brms::fixef(m_sitLieAccelerometer_trackintervention)[1]
-
-# This gives estimates only:
-sitLie_trackintervention_estimates <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][1:10]
-
-
-# The 2.5%ile:
-sitLie_trackintervention_CIL <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][21:30]
-
-# The 97.5%ile:
-sitLie_trackintervention_CIH <- brms::ranef(m_sitLieAccelerometer_trackintervention)[[1]][31:40]
-
-sitLie_trackintervention_ci <- data.frame(sitLie_trackintervention_CIL, sitLie_trackintervention_estimates, sitLie_trackintervention_CIH, Variable = labels(brms::ranef(m_sitLieAccelerometer_trackintervention))) %>% 
-  dplyr::mutate(b_intercept = rep(b_intercept, 10)) %>% 
-  dplyr::mutate(sitLie_trackintervention_CIL = sitLie_trackintervention_CIL + b_intercept,
-         sitLie_trackintervention_estimates = sitLie_trackintervention_estimates + b_intercept,
-         sitLie_trackintervention_CIH = sitLie_trackintervention_CIH + b_intercept,
-         track = c('BA_control',
-                   'BA_intervention',
-                   'HRC_control',
-                   'HRC_intervention',
-                   'IT_control',
-                   'IT_intervention',
-                   'Nur_control',
-                   'Nur_intervention',
-                   'Other_control',
-                   'Other_intervention'
-))
-
-sitLie_trackintervention_diamonds_intervention <- rbind(
-sitLie_trackintervention_ci %>% dplyr::filter(track == "Nur_intervention"),
-sitLie_trackintervention_ci %>% dplyr::filter(track == "HRC_intervention"),
-sitLie_trackintervention_ci %>% dplyr::filter(track == "BA_intervention"),
-sitLie_trackintervention_ci %>% dplyr::filter(track == "IT_intervention")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
-
-sitLie_trackintervention_diamonds_control <- rbind(
-sitLie_trackintervention_ci %>% dplyr::filter(track == "Nur_control"),
-sitLie_trackintervention_ci %>% dplyr::filter(track == "HRC_control"),
-sitLie_trackintervention_ci %>% dplyr::filter(track == "BA_control"),
-sitLie_trackintervention_ci %>% dplyr::filter(track == "IT_control")) %>% 
-  arrange(-row_number()) # reverse order of rows to make them right for the plot to come
+load("./Rdata_files/sitLie_trackgirl_diamonds_girl.Rdata")
+load("./Rdata_files/sitLie_trackgirl_diamonds_boy.Rdata")
+load("./Rdata_files/sitLie_trackintervention_diamonds_intervention.Rdata")
+load("./Rdata_files/sitLie_trackintervention_diamonds_control.Rdata")
 
 ```
 
@@ -3103,6 +3241,8 @@ load("./Rdata_files/ci_sandwich.Rdata")
 
 ## Simple diamond plot
 
+Diamonds depict 95% confidence intervals for means.
+
 ```{r selfrep-determinants-simple-diamondplot}
 PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & grepl("PA_", diamondlabels) & !grepl("bct", diamondlabels))
 
@@ -3114,12 +3254,12 @@ PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1
 
 ICClabels <- vardatatable_containing_edutrack %>% dplyr::filter(Variable %in% PA_ci_control$diamondlabels)
 
-plot1 <- userfriendlyscience::diamondPlot(PA_ci_girls, color = 'green', alpha=.3, yLabels = PA_ci_girls$diamondlabels, fixedSize = 0.3, xlab = NULL) +
-  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color='blue', alpha=.3, fixedSize = 0.3) +
+plot1 <- userfriendlyscience::diamondPlot(PA_ci_girls, color = viridis::viridis(4, end  =  0.8)[3], alpha=.3, yLabels = PA_ci_girls$diamondlabels, fixedSize = 0.3, xlab = NULL) +
+  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, color=viridis::viridis(4, end  =  0.8)[1], alpha=.3, fixedSize = 0.3) +
   scale_x_continuous(limits = c(1, 7), breaks = 1:7)
 
-plot2 <- userfriendlyscience::diamondPlot(PA_ci_intervention, color = 'red', alpha=.3, yLabels = c(rep("", length(PA_ci_girls$diamondlabels))), fixedSize = 0.3, xlab = NULL, ylab = NULL) +
-  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color='black', alpha=.3, fixedSize = 0.3) +
+plot2 <- userfriendlyscience::diamondPlot(PA_ci_intervention, color = viridis::viridis(4, end  =  0.8)[4], alpha=.3, yLabels = c(rep("", length(PA_ci_girls$diamondlabels))), fixedSize = 0.3, xlab = NULL, ylab = NULL) +
+  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color = viridis::viridis(4, end  =  0.8)[2], alpha=.3, fixedSize = 0.3) +
   scale_x_continuous(limits = c(1, 7), breaks = 1:7)
 
 grid::grid.newpage()
@@ -3131,7 +3271,207 @@ grid::grid.draw(cbind(ggplot2::ggplotGrob(plot1), ggplot2::ggplotGrob(plot2), si
  
 ```
 
+### Boys vs. girls {.tabset}
+
+Diamonds depict 99% confidence intervals for means.
+
 Note: action and coping planning on a scale from 1 to 4.
+
+```{r determinant-diamondplot-boys-girls}
+load("./Rdata_files/ci_total.Rdata")
+
+ci_total_diamond <- ci_total
+
+item_names <- ci_total_diamond %>%
+  dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agreementDependentBCT_T1|PA_frequencyDependentBCT_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_injunctiveNorm_T1|PA_descriptiveNorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_perceivedBehaviouralControl_T1|PA_selfefficacy_T1|SB_descriptiveNorm_T1|SB_injunctiveNorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_total$diamondlabels)) %>% 
+  dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
+  dplyr::select(diamondlabels) %>% 
+  dplyr::pull() %>% 
+  as.character()
+
+plot_df <- df %>% 
+  dplyr::select(intervention, girl, track, item_names)
+
+colnames(plot_df) <- gsub('PA_actionplan_T1', 'PA action planning', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_copingplan_T1', 'PA coping planning', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_agreementDependentBCT_T1', 'PA agreement-BCTs', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_frequencyDependentBCT_T1', 'PA frequency-BCTs', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_amotivation_T1', 'PA amotivation', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_autonomous_T1', 'PA autonomous regulation', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_controlled_T1', 'PA controlled regulation', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_injunctiveNorm_T1', 'PA injunctive norm', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_descriptiveNorm_T1', 'PA descriptive norm', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_intention_T1', 'PA intention', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_outcomeExpectations_T1', 'PA outcome expectations', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_opportunities_T1', 'PA opportunities', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_perceivedBehaviouralControl_T1', 'PA perceived behavioural control', colnames(plot_df))
+colnames(plot_df) <- gsub('PA_selfefficacy_T1', 'PA self-efficacy', colnames(plot_df))
+colnames(plot_df) <- gsub('SB_descriptiveNorm_T1', 'SB descriptive norm', colnames(plot_df))
+colnames(plot_df) <- gsub('SB_injunctiveNorm_T1', 'SB injunctive norm', colnames(plot_df))
+colnames(plot_df) <- gsub('SB_intention_T1', 'SB intention', colnames(plot_df))
+colnames(plot_df) <- gsub('SB_outcomeExpectations_T1', 'SB outcome expectations', colnames(plot_df))
+
+plotlist <- list()
+
+plot_df <- plot_df %>% dplyr::select(intervention, girl, track,
+                                     "PA intention", 
+                                     "PA perceived behavioural control",
+                                     "PA self-efficacy", 
+                                     "PA opportunities",
+                                     "PA descriptive norm",
+                                     "PA injunctive norm",
+                                     "PA outcome expectations",
+                                     "PA action planning",
+                                     "PA coping planning",
+                                     "PA autonomous regulation",
+                                     "PA controlled regulation",
+                                     "PA amotivation",
+                                     "PA agreement-BCTs",
+                                     "PA frequency-BCTs",
+                                     "SB intention",
+                                     "SB descriptive norm",
+                                     "SB injunctive norm",
+                                     "SB outcome expectations")
+
+plot_df %>%
+  dplyr::filter(!is.na(girl)) %>% 
+  dplyr::mutate(girl = factor(girl)) %>%
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                labels = colnames(plot_df)[21:4], 
+                                compareBy = "girl",
+                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(3, 1)],
+                                lineSize = 0.35,
+                                alpha = 0.7,
+                                dataAlpha = .05,
+                                dataSize = .5,
+                                fixedSize = .25,
+                                showData = TRUE,
+                                xbreaks = 1:7,
+                                jitterWidth = .15,
+                                jitterHeight = .3,
+                                conf.level = c(0.99, 0.99))
+
+
+```
+
+```{r determinant-diamonds-tracks-gender, results = "asis", fig.show = "asis"}
+
+for (i in c("Nur", "HRC", "BA", "IT")){
+    
+cat('\n\n####', i, '\n\n  ')
+  
+plotlist[[i]] <- plot_df %>%
+  dplyr::mutate(girl = factor(girl)) %>% 
+  dplyr::filter(track == i) %>%
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                labels = colnames(plot_df)[21:4], 
+                                compareBy = "girl",
+                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(3, 1)],
+                                lineSize = 0.25,
+                                dataAlpha = .1,
+                                dataSize = 1,
+                                fixedSize = .25,
+                                showData = TRUE,
+                                xbreaks = 1:7,
+                                jitterWidth = .15,
+                                jitterHeight = .3,
+                                conf.level = c(0.99, 0.99))  
+}
+```
+
+#### Plot from manuscript
+
+<a id="determinant-diamondplot"></a>
+
+```{r determinant-diamondplot-manuscript, fig.height = 8}
+
+genderComparisonDiamonds <- plot_df %>%
+  dplyr::filter(!is.na(girl)) %>% 
+  dplyr::mutate(girl = factor(girl)) %>%
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                labels = colnames(plot_df)[21:4], 
+                                compareBy = "girl",
+                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(3, 1)],
+                                lineSize = 0.35,
+                                alpha = 0.7,
+                                dataAlpha = .05,
+                                dataSize = .5,
+                                fixedSize = .25,
+                                showData = TRUE,
+                                drawPlot = FALSE,
+                                xbreaks = 1:7,
+                                jitterWidth = .15,
+                                jitterHeight = .3,
+                                conf.level = c(0.99, 0.99))
+
+interventionComparisonDiamonds <- plot_df %>% 
+  dplyr::mutate(intervention = forcats::fct_recode(plot_df$intervention, "Control" = "0", "Intervention" = "1")) %>% 
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                labels = colnames(plot_df)[21:4], 
+                                compareBy = "intervention",
+                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(2, 4)],
+                                lineSize = 0.35,
+                                alpha = 0.7,
+                                dataAlpha = .05,
+                                dataSize = .5,
+                                fixedSize = .25,
+                                showData = TRUE,
+                                drawPlot = FALSE,
+                                xbreaks = 1:7,
+                                jitterWidth = .15,
+                                jitterHeight = .3,
+                                conf.level = c(0.99, 0.99))
+
+gridExtra::grid.arrange(genderComparisonDiamonds, interventionComparisonDiamonds)
+```
+
+### Intervention vs. control {.tabset}
+
+Diamonds depict 99% confidence intervals for means.
+
+```{r determinant-diamondplot-intervention-control}
+plot_df %>% 
+  dplyr::mutate(intervention = forcats::fct_recode(plot_df$intervention, "Control" = "0", "Intervention" = "1")) %>% 
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                labels = colnames(plot_df)[21:4], 
+                                compareBy = "intervention",
+                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(2, 4)],
+                                lineSize = 0.35,
+                                alpha = 0.7,
+                                dataAlpha = .05,
+                                dataSize = .5,
+                                fixedSize = .25,
+                                showData = TRUE,
+                                xbreaks = 1:7,
+                                jitterWidth = .15,
+                                jitterHeight = .3,
+                                conf.level = c(0.99, 0.99))
+```
+
+```{r determinant-diamondplot-tracks-intervention-control, results = "asis", fig.show = "asis"}
+
+for (i in c("Nur", "HRC", "BA", "IT")){
+  
+cat('\n\n####', i, '\n\n  ')
+  
+plotlist[[i]] <- plot_df %>% 
+  dplyr::mutate(intervention = forcats::fct_recode(plot_df$intervention, "Control" = "0", "Intervention" = "1")) %>% 
+  dplyr::filter(track == i) %>%
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                                labels = colnames(plot_df)[21:4], 
+                                                compareBy = "intervention",
+                                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(2, 4)],
+                                                lineSize = 0.25,
+                                                dataAlpha = .1,
+                                                dataSize = 1,
+                                                fixedSize = .25,
+                                                showData = TRUE,
+                                                xbreaks = 1:7,
+                                                jitterWidth = .15,
+                                                jitterHeight = .3)  
+
+}
+```
 
 ```{r ggscatterstats, include = FALSE, eval = FALSE}
 
@@ -3161,6 +3501,586 @@ ggstatsplot::ggscatterstats(data = na.omit(dplyr::select(lmi, LiikuntaT1_ka, Kys
                             y = Kys0045.1)
 ```
 
+## Distributions of PA determinants
+
+The sample had generally a high intention for physical activity, as well as positive outcome expectations, perceived behavioural control, self-efficacy and opportunities. Norms were distributed more flatly. Differences between girls and boys were most pronounced in perceived behavioral control, where girls indicated lower values than boys. As visual inspection indicates, this effect is not very large.
+
+```{r densityplot-intention-oexp-perceivedBehaviouralControl-se-opp-norms, fig.cap = "Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+
+plot1 <- df %>% dplyr::select(id,
+                              intervention,
+                              group,
+                              school,
+                              girl,
+                              'PA intention' = PA_intention_T1,
+                              'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
+                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
+                              'PA self efficacy' = PA_selfefficacy_T1,
+                              'PA perceived\nopportunities' = PA_opportunities_T1,
+                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1)  %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value, colour = "black", 
+                                    fill = paste(Variable, girl)), 
+                                    alpha = 0.6, size = 0.25, 
+                                    from = 1, to = 7, scale = 1) +
+  labs(x = "",
+       y = "") +
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(breaks = c("PA descriptive\nnorm boy", "PA descriptive\nnorm girl"),
+                                labels = c( 'PA descriptive\nnorm boy' = "Boy", 'PA descriptive\nnorm girl' = "Girl"),
+                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(legend.position="bottom", axis.text=element_text(size=10))
+
+target = c(
+"PA_intention_T1",
+"PA_outcomeExpectations_T1",
+"PA_perceivedBehaviouralControl_T1",
+"PA_selfefficacy_T1",
+"PA_opportunities_T1",
+"PA_descriptiveNorm_T1")
+
+PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
+
+PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
+
+PA_ci_boys <- ci_boys %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
+
+PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
+
+plot1 <- plot1 + userfriendlyscience::diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[3], 
+                alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
+  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, lineColor = "black", linetype = "solid", color=viridis::viridis(4, end = 0.8)[1],  
+                alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
+
+plot2 <- df %>% dplyr::select(id,
+                              intervention,
+                              group,
+                              school,
+                              girl,
+                              'PA intention' = PA_intention_T1,
+                              'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
+                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
+                              'PA self efficacy' = PA_selfefficacy_T1,
+                              'PA perceived\nopportunities' = PA_opportunities_T1,
+                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1)  %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value, colour = "black", 
+                                    fill = paste(Variable, intervention)), 
+                                    alpha = 0.75, size = 0.25, from = 1, to = 7, scale = 1) +
+  labs(x = "",
+       y = "") +
+  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(breaks = c("PA descriptive\nnorm 0", "PA descriptive\nnorm 1"),
+                                labels = c( 'PA descriptive\nnorm 0' = "Control", 'PA descriptive\nnorm 1' = "Intervention"),
+                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  theme(legend.position="bottom", axis.text=element_text(size=10))
+
+PA_ci_intervention <- ci_intervention %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
+
+PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
+
+PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
+
+PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
+
+plot2 <- plot2 + 
+  userfriendlyscience::diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[4],
+              alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
+  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[2], 
+              alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
+
+plot1 + plot2 
+
+# Test that the legend is right; descriptive norms are smaller for girls
+df %>% group_by(girl) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "girl") %>% dplyr::select(mean) < df %>% group_by(girl) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "boy") %>% dplyr::select(mean)
+
+df %>% group_by(intervention) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "1") %>% dplyr::select(mean) < df %>% group_by(intervention) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "0") %>% dplyr::select(mean)
+```
+
+```{r bct-determinants-showdata}
+
+plot1 <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+'PA action and\ncoping planning' = PA_actCop_T1,
+'PA intention' = PA_intention_T1,
+'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
+'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
+'PA self efficacy' = PA_selfefficacy_T1,
+'PA perceived\nopportunities' = PA_opportunities_T1,
+'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
+'PA injunctive\nnorm' = PA_injunctiveNorm_T1)  %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value,
+                                    colour = "black",
+                                    fill = paste(Variable, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl,
+                                    point_size = girl,
+                                    point_alpha = girl),
+                                scale = .5, alpha = .6, size = 0.25,
+                                from = 1, to = 7,
+                                position = position_raincloud(width = 0.03, height = 0.5),
+                                jittered_points = TRUE,
+                                point_size = 1) + 
+    labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                      labels = c('PA action and\ncoping planning boy' = "Boy", 'PA action and\ncoping planning girl' = "Girl"),
+                      values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                      name = "", 
+                      guide = guide_legend(override.aes = list(alpha = 1, 
+                                                               point_shape = c(24, 25),
+                                                               point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(24, 25),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_size", 
+                                  values = c(.75, .75),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = c(0.1, 0.1),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot2 <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+'PA action and\ncoping planning' = PA_actCop_T1,
+'PA intention' = PA_intention_T1,
+'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
+'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
+'PA self efficacy' = PA_selfefficacy_T1,
+'PA perceived\nopportunities' = PA_opportunities_T1,
+'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
+'PA injunctive\nnorm' = PA_injunctiveNorm_T1) %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value,
+                                    colour = "black",
+                                    fill = paste(Variable, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention,
+                                    point_size = intervention,
+                                    point_alpha = intervention),
+                                scale = .5, alpha = .6, size = 0.25,
+                                from = 1, to = 7,
+                                position = position_raincloud(width = 0.03, height = 0.5),
+                                jittered_points = TRUE,
+                                point_size = 1) + 
+    labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                      labels = c('PA action and\ncoping planning 0' = "Control", 'PA action and\ncoping planning 1' = "intervention"),
+                      values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                      name = "", 
+                      guide = guide_legend(override.aes = list(alpha = 1, 
+                                                               point_shape = c(21, 22),
+                                                               point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(21, 22),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_size", 
+                                  values = c(.75, .75),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = c(0.1, 0.1),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+target = c("PA_actCop_T1",
+"PA_intention_T1",
+"PA_outcomeExpectations_T1",
+"PA_perceivedBehaviouralControl_T1",
+"PA_selfefficacy_T1",
+"PA_opportunities_T1",
+"PA_descriptiveNorm_T1",
+"PA_injunctiveNorm_T1")
+
+PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_actCop_T1", diamondlabels) | 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
+
+PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
+
+PA_ci_boys <- ci_boys %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_actCop_T1", diamondlabels) | 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
+
+PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
+
+plot1 <- plot1 + 
+  userfriendlyscience::diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, linecolor = "black", color=viridis::viridis(4, end = 0.8)[1],# 'blue', 
+                alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
+  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[3], #'green', 
+                alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
+
+PA_ci_intervention <- ci_intervention %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_actCop_T1", diamondlabels) | 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
+
+PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
+
+PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
+                                     grepl("PA_actCop_T1", diamondlabels) | 
+                                     grepl("PA_intention_T1", diamondlabels) | 
+                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
+                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
+                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
+                                     grepl("PA_opportunities_T1", diamondlabels) | 
+                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
+                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
+
+PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
+
+plot2 <- plot2 + 
+  userfriendlyscience::diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[4],# 'blue',
+              alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
+  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[2], #'red', 
+              alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
+
+plot1 + plot2
+```
+
+## Distributions of PA opportunity items
+
+(Nb. these single likert-scale items would be better represented with a histogram)
+
+```{r opportunities}
+
+plot1 <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  "enough money" = PA_opportunities_01_T1,
+  "biking and hiking tracks" = PA_opportunities_02_T1,
+  "has PA gear" = PA_opportunitiesReverseCoded_03_T1,
+  "facilities (e.g. gyms)" = PA_opportunities_04_T1,
+  "PA gear no obstacle" = PA_opportunities_05_T1,
+  "life not too busy" = PA_opportunitiesReverseCoded_06_T1,
+  "opportunities at home" = PA_opportunities_07_T1,  
+  "religion or family" = PA_opportunitiesReverseCoded_08_T1) %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value,
+                                    colour = "black",
+                                    fill = paste(Variable, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl,
+                                    point_size = girl,
+                                    point_alpha = girl),
+                                scale = 1.25, alpha = .6, size = 0.25,
+                                from = 1, to = 7,
+                                position = position_raincloud(width = 0.03, height = 0.15),
+                                jittered_points = TRUE,
+                                point_size = .5) + 
+    labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                      labels = c('biking and hiking tracks boy' = "Boy", 'biking and hiking tracks girl' = "Girl"),
+                      values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                      name = "", 
+                      guide = guide_legend(override.aes = list(alpha = 1, 
+                                                               point_shape = c(24, 25),
+                                                               point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(24, 25),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_size", 
+                                  values = c(.75, .75),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = c(0.1, 0.1),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom", 
+        axis.ticks = element_blank())
+
+plot2 <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+  "enough money" = PA_opportunities_01_T1,
+  "biking and hiking tracks" = PA_opportunities_02_T1,
+  "has PA gear" = PA_opportunitiesReverseCoded_03_T1,
+  "facilities (e.g. gyms)" = PA_opportunities_04_T1,
+  "PA gear no obstacle" = PA_opportunities_05_T1,
+  "life not too busy" = PA_opportunitiesReverseCoded_06_T1,
+  "opportunities at home" = PA_opportunities_07_T1,  
+  "religion or family" = PA_opportunitiesReverseCoded_08_T1) %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value,
+                                    colour = "black",
+                                    fill = paste(Variable, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention,
+                                    point_size = intervention,
+                                    point_alpha = intervention),
+                                scale = 1.25, alpha = .6, size = 0.25,
+                                from = 1, to = 7,
+                                position = position_raincloud(width = 0.03, height = 0.15),
+                                jittered_points = TRUE,
+                                point_size = .5) + 
+    labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                      labels = c('biking and hiking tracks 0' = "Control", 'biking and hiking tracks 1' = "Intervention"),
+                      values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                      name = "", 
+                      guide = guide_legend(override.aes = list(alpha = 1, 
+                                                               point_shape = c(21, 22),
+                                                               point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(21, 22),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_size", 
+                                  values = c(.75, .75),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = c(0.1, 0.1),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom", 
+        axis.ticks = element_blank())
+
+plot1 + plot2
+```
+
+
+## Distributions of SB determinants
+
+```{r sb-determinants}
+
+# Draw plot with gender densities
+
+plot1 <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+'SB intention' = SB_intention_T1,
+'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
+'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyperceivedBehaviouralControl_T1,
+'SB descriptive\nnorm' = SB_descriptiveNorm_T1,
+'SB injunctive\nnorm' = SB_injunctiveNorm_T1)  %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value,
+                                    colour = "black",
+                                    fill = paste(Variable, girl),
+                                    point_color = girl,
+                                    point_fill = girl,
+                                    point_shape = girl,
+                                    point_size = girl,
+                                    point_alpha = girl),
+                                scale = .5, alpha = .6, size = 0.25,
+                                from = 1, to = 7,
+                                position = position_raincloud(width = 0.03, height = 0.5),
+                                jittered_points = TRUE,
+                                point_size = 1) + 
+    labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.01, 0)) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                      labels = c('SB descriptive\nnorm boy' = "Boy", 'SB descriptive\nnorm girl' = "Girl"),
+                      values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                      name = "", 
+                      guide = guide_legend(override.aes = list(alpha = 1, 
+                                                               point_shape = c(24, 25),
+                                                               point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(24, 25),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_size", 
+                                  values = c(.75, .75),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = c(0.1, 0.1),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot2 <- df %>% dplyr::select(id,
+  intervention,
+  group,
+  school,
+  girl,
+'SB intention' = SB_intention_T1,
+'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
+'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyperceivedBehaviouralControl_T1,
+'SB descriptive\nnorm' = SB_descriptiveNorm_T1,
+'SB injunctive\nnorm' = SB_injunctiveNorm_T1)  %>%
+  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
+  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
+  ggplot2::ggplot(aes(y = Variable)) +
+  ggridges::geom_density_ridges(aes(x = Value,
+                                    colour = "black",
+                                    fill = paste(Variable, intervention),
+                                    point_color = intervention,
+                                    point_fill = intervention,
+                                    point_shape = intervention,
+                                    point_size = intervention,
+                                    point_alpha = intervention),
+                                scale = .5, alpha = .6, size = 0.25,
+                                from = 1, to = 7,
+                                position = position_raincloud(width = 0.03, height = 0.5),
+                                jittered_points = TRUE,
+                                point_size = 1) + 
+    labs(x = NULL,
+       y = NULL) +
+  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  ggridges::scale_fill_cyclical(
+                      labels = c('SB descriptive\nnorm 0' = "Control", 'SB descriptive\nnorm 1' = "intervention"),
+                      values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                      name = "", 
+                      guide = guide_legend(override.aes = list(alpha = 1, 
+                                                               point_shape = c(21, 22),
+                                                               point_size = 2))) +
+  ggridges::scale_colour_cyclical(values = "black") +
+  ggridges::theme_ridges(grid = FALSE) +
+  ggridges::scale_discrete_manual(aesthetics = "point_color", 
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_fill",
+                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
+                                  values = c(21, 22),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_size", 
+                                  values = c(.75, .75),
+                                  guide = "none") +
+  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
+                                  values = c(0.1, 0.1),
+                                  guide = "none") +
+  papaja::theme_apa() +
+  theme(legend.position = "bottom")
+
+plot1 + plot2
+```
 
 ## PA motivation
 
@@ -3807,6 +4727,7 @@ text(x = 1.02, y = 1.3, labels = "Agreement-based BCT sumscore mean", pos = 1) #
 $~$
 $~$
 <a id="freqHistogram"></a>
+
 #### Frequency-measured BCTs
 
 These questions were asked with the lead "Have you done the following during the last three weeks?". 
@@ -3825,7 +4746,7 @@ Items are as follows:
 1. I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life.
 2. I have monitored my PA by marking the PA occasions on an exercise log on paper.
 3. I have monitored my PA by using a smart phone, e.g. the Moves-app.
-4. I use mnemonic cues with which I remember to implement my PA intention.
+4. I use memory cues with which I remember to implement my PA intention.
 5. I have compared my actualized PA with the PA goal I have set.
 6. I have thought about which reasons to do PA are important to me personally.
 7. I have made changes in my home (e.g. my room or my computer), so that starting PA would be easier.
@@ -3843,10 +4764,10 @@ bctGirls <- df %>% dplyr::select(id,
 'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
 'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
 'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
-'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Uses memory cues' = PA_frequencyDependentBCT_04_T1,
 'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
 'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
-'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has made environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
 'Has sought social support' = PA_frequencyDependentBCT_08_T1,
 'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
@@ -3877,10 +4798,10 @@ bctBoys <- df %>% dplyr::select(id,
 'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
 'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
 'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
-'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Uses memory cues' = PA_frequencyDependentBCT_04_T1,
 'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
 'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
-'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has made environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
 'Has sought social support' = PA_frequencyDependentBCT_08_T1,
 'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
@@ -3911,10 +4832,10 @@ bctInt <- df %>% dplyr::select(id,
 'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
 'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
 'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
-'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Uses memory cues' = PA_frequencyDependentBCT_04_T1,
 'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
 'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
-'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has made environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
 'Has sought social support' = PA_frequencyDependentBCT_08_T1,
 'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
@@ -3944,10 +4865,10 @@ bctCont <- df %>% dplyr::select(id,
 'Reminded self of positive consequences' = PA_frequencyDependentBCT_01_T1,
 'Has logged PA on paper' = PA_frequencyDependentBCT_02_T1,
 'Has monitored PA on smartphone' = PA_frequencyDependentBCT_03_T1,
-'Uses mnemonic cues' = PA_frequencyDependentBCT_04_T1,
+'Uses memory cues' = PA_frequencyDependentBCT_04_T1,
 'Has compared actual with goal' = PA_frequencyDependentBCT_05_T1,
 'Has thought of relevance of PA' = PA_frequencyDependentBCT_06_T1,
-'Has made changes at home' = PA_frequencyDependentBCT_07_T1,
+'Has made environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
 'Has sought social support' = PA_frequencyDependentBCT_08_T1,
 'Has evaluated why goal not reached' = PA_frequencyDependentBCT_09_T1) %>%
   tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>%
@@ -4140,9 +5061,9 @@ bctBoys + bctGirls + bctInt + bctCont + plot_layout(nrow = 1)
 ```
 
 
-## (A determinant Plot without fill)
+<!-- ## (A determinant Plot without fill) -->
 
-```{r bct-determinants-nofill}
+```{r bct-determinants-nofill, eval = FALSE, include = FALSE}
 plot1 <- df %>% dplyr::select(id,
                               intervention,
                               group,
@@ -4268,455 +5189,6 @@ plot2 <- plot2 +
               alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
   userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, color=viridis::viridis(4, end = 0.8)[c(2)], 
               alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
-
-plot1 + plot2
-```
-
-## PA psychosocial mediators
-
-The sample had generally a high intention for physical activity, as well as positive outcome expectations, perceived behavioural control, self-efficacy and opportunities. Norms were distributed more flatly. Differences between girls and boys were most pronounced in perceived behavioral control, where girls indicated lower values than boys. As visual inspection indicates, this effect is not very large.
-
-```{r densityplot-intention-oexp-perceivedBehaviouralControl-se-opp-norms, fig.cap = "Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
-
-plot1 <- df %>% dplyr::select(id,
-                              intervention,
-                              group,
-                              school,
-                              girl,
-                              'PA intention' = PA_intention_T1,
-                              'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
-                              'PA self efficacy' = PA_selfefficacy_T1,
-                              'PA perceived\nopportunities' = PA_opportunities_T1,
-                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1)  %>%
-  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
-  ggplot2::ggplot(aes(y = Variable)) +
-  ggridges::geom_density_ridges(aes(x = Value, colour = "black", 
-                                    fill = paste(Variable, girl)), 
-                                    alpha = 0.6, size = 0.25, 
-                                    from = 1, to = 7, scale = 1) +
-  labs(x = "",
-       y = "") +
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  ggridges::scale_fill_cyclical(breaks = c("PA descriptive\nnorm boy", "PA descriptive\nnorm girl"),
-                                labels = c( 'PA descriptive\nnorm boy' = "Boy", 'PA descriptive\nnorm girl' = "Girl"),
-                                values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
-  ggridges::scale_colour_cyclical(values = "black") +
-  ggridges::theme_ridges(grid = FALSE) +
-  theme(legend.position="bottom", axis.text=element_text(size=10))
-
-target = c(
-"PA_intention_T1",
-"PA_outcomeExpectations_T1",
-"PA_perceivedBehaviouralControl_T1",
-"PA_selfefficacy_T1",
-"PA_opportunities_T1",
-"PA_descriptiveNorm_T1")
-
-PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
-
-PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
-
-PA_ci_boys <- ci_boys %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
-
-PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
-
-plot1 <- plot1 + userfriendlyscience::diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[3], 
-                alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
-  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, lineColor = "black", linetype = "solid", color=viridis::viridis(4, end = 0.8)[1],  
-                alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
-
-plot2 <- df %>% dplyr::select(id,
-                              intervention,
-                              group,
-                              school,
-                              girl,
-                              'PA intention' = PA_intention_T1,
-                              'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-                              'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
-                              'PA self efficacy' = PA_selfefficacy_T1,
-                              'PA perceived\nopportunities' = PA_opportunities_T1,
-                              'PA descriptive\nnorm' = PA_descriptiveNorm_T1)  %>%
-  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>%
-  ggplot2::ggplot(aes(y = Variable)) +
-  ggridges::geom_density_ridges(aes(x = Value, colour = "black", 
-                                    fill = paste(Variable, intervention)), 
-                                    alpha = 0.75, size = 0.25, from = 1, to = 7, scale = 1) +
-  labs(x = "",
-       y = "") +
-  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  ggridges::scale_fill_cyclical(breaks = c("PA descriptive\nnorm 0", "PA descriptive\nnorm 1"),
-                                labels = c( 'PA descriptive\nnorm 0' = "Control", 'PA descriptive\nnorm 1' = "Intervention"),
-                                values = viridis::viridis(4, end = 0.8)[c(2, 4)],
-                                name = "", guide = guide_legend(override.aes = list(alpha = 1))) +
-  ggridges::scale_colour_cyclical(values = "black") +
-  ggridges::theme_ridges(grid = FALSE) +
-  theme(legend.position="bottom", axis.text=element_text(size=10))
-
-PA_ci_intervention <- ci_intervention %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
-
-PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
-
-PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels))
-
-PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
-
-plot2 <- plot2 + 
-  userfriendlyscience::diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[4],
-              alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
-  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[2], 
-              alpha=.6, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
-
-plot1 + plot2 
-
-# Test that the legend is right; descriptive norms are smaller for girls
-df %>% group_by(girl) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "girl") %>% dplyr::select(mean) < df %>% group_by(girl) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(girl == "boy") %>% dplyr::select(mean)
-
-df %>% group_by(intervention) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "1") %>% dplyr::select(mean) < df %>% group_by(intervention) %>% summarise(mean = mean(PA_descriptiveNorm_T1, na.rm = TRUE)) %>% dplyr::filter(intervention == "0") %>% dplyr::select(mean)
-```
-
-```{r bct-determinants-showdata}
-
-plot1 <- df %>% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-'PA action and\ncoping planning' = PA_actCop_T1,
-'PA intention' = PA_intention_T1,
-'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
-'PA self efficacy' = PA_selfefficacy_T1,
-'PA perceived\nopportunities' = PA_opportunities_T1,
-'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
-'PA injunctive\nnorm' = PA_injunctiveNorm_T1)  %>%
-  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
-  ggplot2::ggplot(aes(y = Variable)) +
-  ggridges::geom_density_ridges(aes(x = Value,
-                                    colour = "black",
-                                    fill = paste(Variable, girl),
-                                    point_color = girl,
-                                    point_fill = girl,
-                                    point_shape = girl,
-                                    point_size = girl,
-                                    point_alpha = girl),
-                                scale = .5, alpha = .6, size = 0.25,
-                                from = 1, to = 7,
-                                position = position_raincloud(width = 0.03, height = 0.5),
-                                jittered_points = TRUE,
-                                point_size = 1) + 
-    labs(x = NULL,
-       y = NULL) +
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  ggridges::scale_fill_cyclical(
-                      labels = c('PA action and\ncoping planning boy' = "Boy", 'PA action and\ncoping planning girl' = "Girl"),
-                      values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                      name = "", 
-                      guide = guide_legend(override.aes = list(alpha = 1, 
-                                                               point_shape = c(24, 25),
-                                                               point_size = 2))) +
-  ggridges::scale_colour_cyclical(values = "black") +
-  ggridges::theme_ridges(grid = FALSE) +
-  ggridges::scale_discrete_manual(aesthetics = "point_color", 
-                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_fill",
-                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(24, 25),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_size", 
-                                  values = c(.75, .75),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
-                                  values = c(0.1, 0.1),
-                                  guide = "none") +
-  papaja::theme_apa() +
-  theme(legend.position = "bottom")
-
-plot2 <- df %>% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-'PA action and\ncoping planning' = PA_actCop_T1,
-'PA intention' = PA_intention_T1,
-'PA outcome\nexpectations' = PA_outcomeExpectations_T1,
-'PA perceived\nbehavioural control' = PA_perceivedBehaviouralControl_T1,
-'PA self efficacy' = PA_selfefficacy_T1,
-'PA perceived\nopportunities' = PA_opportunities_T1,
-'PA descriptive\nnorm' = PA_descriptiveNorm_T1,
-'PA injunctive\nnorm' = PA_injunctiveNorm_T1) %>%
-  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  tidyr::gather(key = Variable, value = Value, 6:ncol(.), factor_key = TRUE) %>% 
-  ggplot2::ggplot(aes(y = Variable)) +
-  ggridges::geom_density_ridges(aes(x = Value,
-                                    colour = "black",
-                                    fill = paste(Variable, intervention),
-                                    point_color = intervention,
-                                    point_fill = intervention,
-                                    point_shape = intervention,
-                                    point_size = intervention,
-                                    point_alpha = intervention),
-                                scale = .5, alpha = .6, size = 0.25,
-                                from = 1, to = 7,
-                                position = position_raincloud(width = 0.03, height = 0.5),
-                                jittered_points = TRUE,
-                                point_size = 1) + 
-    labs(x = NULL,
-       y = NULL) +
-  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  ggridges::scale_fill_cyclical(
-                      labels = c('PA action and\ncoping planning 0' = "Control", 'PA action and\ncoping planning 1' = "intervention"),
-                      values = viridis::viridis(4, end = 0.8)[c(2, 4)],
-                      name = "", 
-                      guide = guide_legend(override.aes = list(alpha = 1, 
-                                                               point_shape = c(21, 22),
-                                                               point_size = 2))) +
-  ggridges::scale_colour_cyclical(values = "black") +
-  ggridges::theme_ridges(grid = FALSE) +
-  ggridges::scale_discrete_manual(aesthetics = "point_color", 
-                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_fill",
-                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 22),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_size", 
-                                  values = c(.75, .75),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
-                                  values = c(0.1, 0.1),
-                                  guide = "none") +
-  papaja::theme_apa() +
-  theme(legend.position = "bottom")
-
-target = c("PA_actCop_T1",
-"PA_intention_T1",
-"PA_outcomeExpectations_T1",
-"PA_perceivedBehaviouralControl_T1",
-"PA_selfefficacy_T1",
-"PA_opportunities_T1",
-"PA_descriptiveNorm_T1",
-"PA_injunctiveNorm_T1")
-
-PA_ci_girls <- ci_girls %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_actCop_T1", diamondlabels) | 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
-                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
-
-PA_ci_girls <- PA_ci_girls[match(target, PA_ci_girls$diamondlabels), ]
-
-PA_ci_boys <- ci_boys %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_actCop_T1", diamondlabels) | 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
-                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
-
-PA_ci_boys <- PA_ci_boys[match(target, PA_ci_boys$diamondlabels), ]
-
-plot1 <- plot1 + 
-  userfriendlyscience::diamondPlot(PA_ci_girls, returnLayerOnly = TRUE, linecolor = "black", color=viridis::viridis(4, end = 0.8)[1],# 'blue', 
-                alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
-  userfriendlyscience::diamondPlot(PA_ci_boys, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[3], #'green', 
-                alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
-
-PA_ci_intervention <- ci_intervention %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_actCop_T1", diamondlabels) | 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
-                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
-
-PA_ci_intervention <- PA_ci_intervention[match(target, PA_ci_intervention$diamondlabels), ]
-
-PA_ci_control <- ci_control %>% dplyr::filter(diamondlabels %in% names(scales_T1) & 
-                                     grepl("PA_actCop_T1", diamondlabels) | 
-                                     grepl("PA_intention_T1", diamondlabels) | 
-                                     grepl("PA_outcomeExpectations_T1", diamondlabels) | 
-                                     grepl("PA_perceivedBehaviouralControl_T1", diamondlabels) | 
-                                     grepl("PA_selfefficacy_T1", diamondlabels) | 
-                                     grepl("PA_opportunities_T1", diamondlabels) | 
-                                     grepl("PA_descriptiveNorm_T1", diamondlabels) | 
-                                     grepl("PA_injunctiveNorm_T1", diamondlabels))
-
-PA_ci_control <- PA_ci_control[match(target, PA_ci_control$diamondlabels), ]
-
-plot2 <- plot2 + 
-  userfriendlyscience::diamondPlot(PA_ci_intervention, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[4],# 'blue',
-              alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2)) +
-  userfriendlyscience::diamondPlot(PA_ci_control, returnLayerOnly = TRUE, lineColor = "black", color=viridis::viridis(4, end = 0.8)[2], #'red', 
-              alpha=.95, fixedSize = 0.15, otherAxisCol = (1:length(target) + .2))
-
-plot1 + plot2
-```
-
-## SB determinants
-
-```{r sb-determinants}
-
-# Draw plot with gender densities
-
-plot1 <- df %>% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-'SB intention' = SB_intention_T1,
-'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
-'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyperceivedBehaviouralControl_T1,
-'SB descriptive\nnorm' = SB_descriptiveNorm_T1,
-'SB injunctive\nnorm' = SB_injunctiveNorm_T1)  %>%
-  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
-  ggplot2::ggplot(aes(y = Variable)) +
-  ggridges::geom_density_ridges(aes(x = Value,
-                                    colour = "black",
-                                    fill = paste(Variable, girl),
-                                    point_color = girl,
-                                    point_fill = girl,
-                                    point_shape = girl,
-                                    point_size = girl,
-                                    point_alpha = girl),
-                                scale = .5, alpha = .6, size = 0.25,
-                                from = 1, to = 7,
-                                position = position_raincloud(width = 0.03, height = 0.5),
-                                jittered_points = TRUE,
-                                point_size = 1) + 
-    labs(x = NULL,
-       y = NULL) +
-  scale_y_discrete(expand = c(0.01, 0)) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  ggridges::scale_fill_cyclical(
-                      labels = c('SB descriptive\nnorm boy' = "Boy", 'SB descriptive\nnorm girl' = "Girl"),
-                      values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                      name = "", 
-                      guide = guide_legend(override.aes = list(alpha = 1, 
-                                                               point_shape = c(24, 25),
-                                                               point_size = 2))) +
-  ggridges::scale_colour_cyclical(values = "black") +
-  ggridges::theme_ridges(grid = FALSE) +
-  ggridges::scale_discrete_manual(aesthetics = "point_color", 
-                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_fill",
-                                  values = viridis::viridis(4, end = 0.8)[c(1, 3)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(24, 25),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_size", 
-                                  values = c(.75, .75),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
-                                  values = c(0.1, 0.1),
-                                  guide = "none") +
-  papaja::theme_apa() +
-  theme(legend.position = "bottom")
-
-plot2 <- df %>% dplyr::select(id,
-  intervention,
-  group,
-  school,
-  girl,
-'SB intention' = SB_intention_T1,
-'SB outcome\nexpectations' = SB_outcomeExpectations_T1,
-'SB self-efficacy\nand perceived\nbehavioural control' = SB_selfEfficacyperceivedBehaviouralControl_T1,
-'SB descriptive\nnorm' = SB_descriptiveNorm_T1,
-'SB injunctive\nnorm' = SB_injunctiveNorm_T1)  %>%
-  # dplyr::select(noquote(order(colnames(.)))) %>% # Orders columns alphabetically
-  tidyr::gather(key = Variable, value = Value, 6:ncol(.)) %>% 
-  ggplot2::ggplot(aes(y = Variable)) +
-  ggridges::geom_density_ridges(aes(x = Value,
-                                    colour = "black",
-                                    fill = paste(Variable, intervention),
-                                    point_color = intervention,
-                                    point_fill = intervention,
-                                    point_shape = intervention,
-                                    point_size = intervention,
-                                    point_alpha = intervention),
-                                scale = .5, alpha = .6, size = 0.25,
-                                from = 1, to = 7,
-                                position = position_raincloud(width = 0.03, height = 0.5),
-                                jittered_points = TRUE,
-                                point_size = 1) + 
-    labs(x = NULL,
-       y = NULL) +
-  scale_y_discrete(expand = c(0.01, 0), labels = NULL) +
-  scale_x_continuous(expand = c(0.01, 0)) +
-  ggridges::scale_fill_cyclical(
-                      labels = c('SB descriptive\nnorm 0' = "Control", 'SB descriptive\nnorm 1' = "intervention"),
-                      values = viridis::viridis(4, end = 0.8)[c(2, 4)],
-                      name = "", 
-                      guide = guide_legend(override.aes = list(alpha = 1, 
-                                                               point_shape = c(21, 22),
-                                                               point_size = 2))) +
-  ggridges::scale_colour_cyclical(values = "black") +
-  ggridges::theme_ridges(grid = FALSE) +
-  ggridges::scale_discrete_manual(aesthetics = "point_color", 
-                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_fill",
-                                  values = viridis::viridis(4, end = 0.8)[c(2, 4)],
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_shape", 
-                                  values = c(21, 22),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_size", 
-                                  values = c(.75, .75),
-                                  guide = "none") +
-  ggridges::scale_discrete_manual(aesthetics = "point_alpha", 
-                                  values = c(0.1, 0.1),
-                                  guide = "none") +
-  papaja::theme_apa() +
-  theme(legend.position = "bottom")
 
 plot1 + plot2
 ```
@@ -4859,9 +5331,11 @@ meansplot_df %>%
 #   scale_y_continuous(breaks = seq(0, 100, by = 10)) +
 #   scale_x_continuous(breaks = seq(0, 100, by = 10)) +
 #   theme_light()
+
+text_total_n <- sum(!is.na(df$mvpaAccelerometer_T1) & !is.na(df$padaysLastweek_T1))
 ```
 
-We see that, for example, `r ((middleprobs(0.35, 0.65) / 895) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
+We see that, for example, `r ((middleprobs(0.35, 0.65) / text_total_n) %>% round(., 3) * 100)` percent of participants fell in the middle 30% of all four outcome variables. 
 
 <!-- CIBER (not included for now) -->
 

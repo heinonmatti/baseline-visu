@@ -89,11 +89,13 @@ $~$
 $~$
 <a id="network"></a>
 
+As with all models, network analysis entails its own set of assumptions. Due to the similarity with regression models, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. In this regard, behaviour change technique use and the quality of one's motivation (as posited by self-determination theory) seem less problematic. Hence, we start with those.
+
 # Network featured in manuscript {.tabset}
 
 ## Network
 
-All BCTs are shown here separately; exceptions: mnemonic cues which seems quite unclear a question, as well as and failure contemplation, which only concerns those who have not reached their goals (for which an option on the scale was given, making it differ from the other BCTs).
+All BCTs are shown here separately; exceptions: memory cues which seems quite unclear a question, as well as analysing goal failure, which only concerns those who have not reached their goals (for which an option on the scale was given, making it differ from the other BCTs).
 
 ```{r}
 bctdf_mgm_T1 <- df %>% dplyr::select(
@@ -103,24 +105,24 @@ bctdf_mgm_T1 <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA survey' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -129,35 +131,35 @@ bctdf_mgm_T1 <- df %>% dplyr::select(
  rowwise() %>% 
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-#  'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+#  'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
-  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
-  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-#  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+  'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+  'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+#  'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   'social support' = ifelse(`social support` == 1, 0, 1),
-  'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic, integrated), na.rm = T),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
 #  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
-  dplyr::select(-`log on paper`, -`smartphone`, 
-                # -`plan by other`, -`implementation plan`, 
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, 
+                # -`plan by other`, -`own plan`, 
                 -identified, -intrinsic, -integrated,
-         -`failure contemplation` # only concerns those who haven't reached goals
-         # -`barrier identification`, -`coping planning`, # closely related
+         -`analysing goal failure` # only concerns those who haven't reached goals
+         # -`barrier identification`, -`problem solving`, # closely related
            ) %>% 
 #  dplyr::select(-controlled) %>% # Not really gaussian at all 
   dplyr::select('MVPA survey', 'MVPA accelerometer', everything())
@@ -309,24 +311,24 @@ BCT_mgm_T1_CV <- qgraph::qgraph(mgm_obj_T1_CV$pairwise$wadj,
 
 bctdf_ggm_T1 <- df %>% dplyr::select(
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA survey' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -335,27 +337,27 @@ bctdf_ggm_T1 <- df %>% dplyr::select(
  rowwise() %>% 
  mutate(
   # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
-  # 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  # 'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+  # 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+  # 'goal review' = ifelse(`goal review` == 1, 0, 1),
+  # 'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  # 'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  # 'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic, integrated), na.rm = T),
   'controlled motivation' = `controlled motivation` * 1) %>% 
-  dplyr::select(-`log on paper`, -`smartphone`, 
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, 
                 -identified, -intrinsic, -integrated,
-         -`failure contemplation` # only concerns those who haven't reached goals
+         -`analysing goal failure` # only concerns those who haven't reached goals
            ) %>% 
   dplyr::select('MVPA survey', 'MVPA accelerometer', everything()) %>% 
   mutate_all(as.numeric)
@@ -833,24 +835,24 @@ bctdf_mgm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -859,36 +861,36 @@ bctdf_mgm <- df %>% dplyr::select(
  rowwise() %>% 
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-#  'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+#  'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
 #  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-#  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
-#  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
-#  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-#  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+#  'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+#  'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+#  'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+#  'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   'social support' = ifelse(`social support` == 1, 0, 1),
-  'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = T),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
 #  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
-  dplyr::select(-`log on paper`, -`smartphone`, 
-                # -`plan by other`, -`implementation plan`, 
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, 
+                # -`plan by other`, -`own plan`, 
                 -identified, -intrinsic,
-         -`failure contemplation`, # only concerns those who haven't reached goals
-         -`barrier identification`, -`coping planning`, # closely related
-         -`PA identity`, -`PA life values`) %>% # closely related
+         -`analysing goal failure`, # only concerns those who haven't reached goals
+         -`barrier identification`, -`problem solving`, # closely related
+         -`PA identity reflection`, -`aligning PA with life values`) %>% # closely related
 #  dplyr::select(-controlled) %>% # Not really gaussian at all 
   dplyr::select('MVPA questionnaire', 'MVPA accelerometer', everything())
 
@@ -972,22 +974,22 @@ bctdf_ggm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
@@ -997,19 +999,19 @@ bctdf_ggm <- df %>% dplyr::select(
   'controlled motivation' = PA_controlled_T1) %>%
  rowwise() %>% 
  mutate(
-#  'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
-  'barriers identified or planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE),
-  'identity, life values' = mean(c(`PA identity` == 1, `PA life values`), na.rm = TRUE),
-  'monitoring PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE),
+#  'has plan' = mean(c(`own plan`, `plan by other`), na.rm = TRUE),
+  'barriers identified or planned for' = mean(c(`problem solving`, `barrier identification`), na.rm = TRUE),
+  'identity, life values' = mean(c(`PA identity reflection` == 1, `aligning PA with life values`), na.rm = TRUE),
+  'monitoring PA' = mean(c(`self-monitor (paper)`, `self-monitor (app)`), na.rm = TRUE),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = T)) %>% 
 #  'girl' = ifelse(girl == "girl", 1, 0),
 #  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
-  dplyr::select(-`log on paper`, -`smartphone`, 
-#                -`plan by other`, -`implementation plan`,
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, 
+#                -`plan by other`, -`own plan`,
                 -identified, -intrinsic,
          -`failure contemplated`, # only concerns those who haven't reached goals
-         -`barrier identification`, -`coping planning`, # closely related
-         -`PA identity`, -`PA life values`) %>% # closely related
+         -`barrier identification`, -`problem solving`, # closely related
+         -`PA identity reflection`, -`aligning PA with life values`) %>% # closely related
 #  dplyr::select(-controlled) %>% # Not really gaussian at all 
   dplyr::select("MVPA questionnaire", "MVPA accelerometer", "autonomous motivation", "controlled motivation", everything()) %>% 
   dplyr::mutate_all(as.numeric)
@@ -1164,22 +1166,22 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_ggm), graph = "pcor",
 
 bivariate_BCTs <- df %>% dplyr::select(
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
@@ -1241,24 +1243,24 @@ bctdf_mgm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1267,26 +1269,26 @@ bctdf_mgm <- df %>% dplyr::select(
  rowwise() %>% 
  dplyr::transmute(
   # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  # 'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+ 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  # 'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+  # 'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  # 'goal review' = ifelse(`goal review` == 1, 0, 1),
+  # 'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  # 'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  # 'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
@@ -1357,24 +1359,24 @@ bctdf_mgm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1383,26 +1385,26 @@ bctdf_mgm <- df %>% dplyr::select(
  rowwise() %>% 
  dplyr::transmute(
   # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  # 'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+ 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  # 'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+  # 'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  # 'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  # 'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  # 'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
@@ -1472,24 +1474,24 @@ bctdf_mgm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1498,26 +1500,26 @@ bctdf_mgm <- df %>% dplyr::select(
  rowwise() %>% 
  dplyr::transmute(
   # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+ 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+  # 'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  # 'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  # 'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  # 'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
@@ -1587,24 +1589,24 @@ bctdf_mgm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1613,26 +1615,26 @@ bctdf_mgm <- df %>% dplyr::select(
  rowwise() %>% 
  dplyr::transmute(
   # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+ 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+ 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+  # 'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  # 'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  # 'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  # 'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
@@ -1702,24 +1704,24 @@ bctdf_mgm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1728,26 +1730,26 @@ bctdf_mgm <- df %>% dplyr::select(
  rowwise() %>% 
  dplyr::transmute(
   # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+ 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+ 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+  # 'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  # 'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  # 'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  # 'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
@@ -1813,24 +1815,24 @@ bctdf_mgm <- df %>% dplyr::select(
 #  school,
 #  girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
-  'failure contemplation' = PA_frequencyDependentBCT_09_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
   'MVPA questionnaire' = padaysLastweek_T1,
   'MVPA accelerometer' = mvpaAccelerometer_T1,
   'intrinsic' = PA_intrinsic_T1,
@@ -1839,32 +1841,32 @@ bctdf_mgm <- df %>% dplyr::select(
  rowwise() %>% 
  dplyr::transmute(
   # 'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   # 'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   # 'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  # 'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  # 'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  # 'monitoring PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-  # 'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  # 'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  # 'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+ # 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+ 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  # 'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+  # 'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  # 'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  # 'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   # 'social support' = ifelse(`social support` == 1, 0, 1),
-  # 'failure contemplation' = ifelse(`failure contemplation` == 1, 0, 1),
+  # 'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
   'autonomous motivation' = mean(c(identified, intrinsic), na.rm = TRUE),
 #  'girl' = ifelse(girl == "girl", 1, 0),
   'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1), # If "at least partly" or more true, input 1. Normality otherwise a problem.
   'MVPA questionnaire' = `MVPA questionnaire` * 1, 
   'MVPA accelerometer' = `MVPA accelerometer` * 1) %>%  
-  dplyr::select('MVPA questionnaire', 'autonomous motivation', 'positive consequences')
+  dplyr::select('MVPA questionnaire', 'autonomous motivation', 'remind of PA benefits')
 
 bctdf_mgm$`autonomous motivation`[is.nan(bctdf_mgm$`autonomous motivation`)] <- NA
 
@@ -1913,6 +1915,92 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.scale = FALSE)
 
 ```
+
+# Environmental variables (group, opportunities)
+
+Environmental opportunities include having enough money to be physically active, biking and hiking tracks in one's environment, needed PA equipment (gear), facilities for being physically active (such as sports halls/centres, gyms) nearby, not feeling like lack of PA gear is an obstackle for being active, not being too busy with school, hobbies and/or friends, having good opportunities to be active at home, and not feeling like one's family or religion restricts their activity.
+
+```{r}
+environmentdf_mgm_T1 <- df %>% 
+  dplyr::select('group feels safe' = groupFeelsSafe_T1,
+  'group listens to me' = groupListensToMe_T1,
+  'group supports me' = groupSupportsMe_T1,
+  'group understands me' = groupUnderstandsMe_T1,
+  'group values me' = groupValuesMe_T1,
+  "enough money" = PA_opportunities_01_T1,
+  "biking and hiking tracks" = PA_opportunities_02_T1,
+  "has PA gear" = PA_opportunitiesReverseCoded_03_T1,
+  "facilities (e.g. gyms)" = PA_opportunities_04_T1,
+  "PA gear no obstacle" = PA_opportunities_05_T1,
+  "life not too busy" = PA_opportunitiesReverseCoded_06_T1,
+  "opportunities at home" = PA_opportunities_07_T1,  
+  "religion or family" = PA_opportunitiesReverseCoded_08_T1,
+  'MVPA survey' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1) %>% 
+ rowwise() %>% 
+ mutate("religion or family" = ifelse(`religion or family` < 7, 0, 1)) %>% # highly skewed, so dichotomised
+  dplyr::select('MVPA survey', 'MVPA accelerometer', everything())
+
+labs <- names(environmentdf_mgm_T1)
+
+# mgm wants full data, see package missForest for imputation methods
+environmentdf_mgm_T1 <- environmentdf_mgm_T1 %>% na.omit(.)
+# environmentdf_mgm %>% names()
+mgm_variable_types <- c(rep("g", 14), rep("c", 1))
+mgm_variable_levels <- c(rep("1", 14), rep("2", 1))
+# data.frame(mgm_variable_types, mgm_variable_levels, names(environmentdf_mgm))
+
+mgm_obj_T1 <- mgm::mgm(data = environmentdf_mgm_T1,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "EBIC",
+  # lambdaFolds = 10,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+# Node pies:
+# pies_T1 <- environmentdf_mgm_T1 %>% 
+#   dplyr::summarise_all(~mean(., na.rm = TRUE)) # results in a series of means, which is ok for dichotomous vars
+# pies_T1[1] <- pies_T1[1] / 7
+# pies_T1[2] <- pies_T1[2] / max(environmentdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
+# pies_T1[20] <- pies_T1[20] / 5
+
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 5), # 5x Color 2 for group-variables
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 8)) # Color 3 for opportunities  
+
+# environment_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
+#             layout = "spring",
+#             repulsion = 0.99, # To nudge the network from originally bad visual state
+#             edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+#             # pie = pies_T1,
+#             # pieColor = pie_colors_T1,
+#             pieColor = node_colors,
+#             labels = names(environmentdf_mgm_T1),
+#             # pieBorder = 1,
+#             label.cex = 0.75,
+#             cut = 0,
+#             edge.labels = TRUE,
+#             label.scale = FALSE)
+
+environment_mgm_T1_circle <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
+            layout = "circle",
+            title = "Mixed graphical model: PA, group environment & opportunities",
+            edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+            # pie = pies_T1,
+            # pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(environmentdf_mgm_T1),
+            label.cex = 0.75,
+            cut = 0,
+            label.scale = FALSE)
+
+
+```
+
+
 
 # Exercise types
 
@@ -2379,22 +2467,22 @@ Note: This is only to demonstrate data exploration, as many assumptions (such as
 
 bivariate_BCTs <- df %>% dplyr::select(
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
@@ -2590,34 +2678,34 @@ bctdf_pa_mgm <- df %>% dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  # 'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  # 'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
- 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  # 'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
- 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
- 'PA life values' = ifelse(`PA life values` == 1, 0, 1)) %>% 
-  # 'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1),
-  # dplyr::select(-`log on paper`, -`smartphone`, -`plan by other`, -`implementation plan`, -identified, -intrinsic,
+ 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+ 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+ 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1)) %>% 
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  # dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, -`plan by other`, -`own plan`, -identified, -intrinsic,
   #        -`failure contemplated`, # only concerns those who haven't reached goals
-  #        -`barrier identification`, -`coping planning`, # closely related
-  #        -`PA identity`, -`PA life values`) %>% # closely related
+  #        -`barrier identification`, -`problem solving`, # closely related
+  #        -`PA identity reflection`, -`aligning PA with life values`) %>% # closely related
 #  dplyr::select(-controlled) %>% # Not really gaussian at all 
   # data.frame %>% 
   mutate_all(as.numeric)
@@ -2798,33 +2886,33 @@ bctdf_pa_combinedAgreementBcts <- df %>% dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  'has plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
-  # 'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  # 'own plan' = ifelse(`own plan` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   # 'plan by other' = ifelse(`plan by other` == 1, 0, 1), 
   # 'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  # 'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  'barriers identified or planned for' = ifelse(`coping planning` == 1 & `barrier identification` == 1, 0, 1),
-  # 'PA identity' = ifelse(`PA identity` == 1, 0, 1),
-  # 'PA life values' = ifelse(`PA life values` == 1, 0, 1)) %>% 
-  'identity, life values' = ifelse(`PA identity` == 1 & `PA life values` == 1, 0, 1)) %>% 
-  dplyr::select(-`plan by other`, -`implementation plan`,
-         -`barrier identification`, -`coping planning`, # closely related
-         -`PA identity`, -`PA life values`) %>% # closely related
+  # 'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+  # 'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+  # 'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1)) %>% 
+  'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1)) %>% 
+  dplyr::select(-`plan by other`, -`own plan`,
+         -`barrier identification`, -`problem solving`, # closely related
+         -`PA identity reflection`, -`aligning PA with life values`) %>% # closely related
   mutate_all(as.numeric)
 
 
@@ -2892,23 +2980,23 @@ combinedAgreementBcts_ggm_df <- df %>% dplyr::select(
   'PA selfrep' = padaysLastweek_T1,
   'PA accelerometer' = mvpaAccelerometer_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
-  'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
-  'barriers identified or planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE),
-  'identity, life values' = mean(c(`PA identity` == 1, `PA life values`), na.rm = TRUE)) %>% 
-  dplyr::select(-`plan by other`, -`implementation plan`, 
-         -`barrier identification`, -`coping planning`, # closely related
-         -`PA identity`, -`PA life values`) %>% # closely related
+  'has plan' = mean(c(`own plan`, `plan by other`), na.rm = TRUE),
+  'barriers identified or planned for' = mean(c(`problem solving`, `barrier identification`), na.rm = TRUE),
+  'identity, life values' = mean(c(`PA identity reflection` == 1, `aligning PA with life values`), na.rm = TRUE)) %>% 
+  dplyr::select(-`plan by other`, -`own plan`, 
+         -`barrier identification`, -`problem solving`, # closely related
+         -`PA identity reflection`, -`aligning PA with life values`) %>% # closely related
   mutate_all(as.numeric)
 
 # Create means for filling nodes
@@ -3039,22 +3127,22 @@ combinedAgreementBcts_tracks_df <- df %>%
   # 'PA accelerometer' = mvpaAccelerometer_T1,
   'Autonomous' = PA_autonomous_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   # 'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  # 'new PA options' = PA_agreementDependentBCT_06_T1,
+  # 'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1) %>%
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1) %>%
  rowwise() %>% 
  mutate(
-  'barriers identified or planned for' = mean(c(`coping planning`, `barrier identification`), na.rm = TRUE), 
-  'identity, life values' = mean(c(`PA identity` == 1, `PA life values`), na.rm = TRUE)) %>% 
+  'barriers identified or planned for' = mean(c(`problem solving`, `barrier identification`), na.rm = TRUE), 
+  'identity, life values' = mean(c(`PA identity reflection` == 1, `aligning PA with life values`), na.rm = TRUE)) %>% 
   dplyr::select( 
-         -`barrier identification`, -`coping planning`, # closely related
-         -`PA identity`, -`PA life values`) %>% # closely related
+         -`barrier identification`, -`problem solving`, # closely related
+         -`PA identity reflection`, -`aligning PA with life values`) %>% # closely related
   mutate_all(as.numeric) 
 
 combinedAgreementBcts_tracks_df <- cbind(track = df$track, combinedAgreementBcts_tracks_df) 
@@ -3152,42 +3240,42 @@ bctdf <- df %>% dplyr::select(id,
   school,
   girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
-  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  'log on paper' = ifelse(`log on paper` == 1, 0, 1),
-  'smartphone' = ifelse(`smartphone` == 1, 0, 1),
-  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+  'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  'self-monitor (paper)' = ifelse(`self-monitor (paper)` == 1, 0, 1),
+  'self-monitor (app)' = ifelse(`self-monitor (app)` == 1, 0, 1),
+  'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   'social support' = ifelse(`social support` == 1, 0, 1),
   'failure contemplated' = ifelse(`failure contemplated` == 1, 0, 1)) 
 
@@ -3278,43 +3366,43 @@ bctdf <- df %>% dplyr::select(id,
   school,
   girl,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
  mutate(
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1 & `plan by other` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
   'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
   'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
-  'coping planning' = ifelse(`coping planning` == 1, 0, 1),
-  'PA identity' = ifelse(`PA identity` == 1, 0, 1),
-  'PA life values' = ifelse(`PA life values` == 1, 0, 1),
-  'positive consequences' = ifelse(`positive consequences` == 1, 0, 1),
-  'monitored PA' = ifelse(`log on paper` == 1 & `smartphone` == 1, 0, 1),
-#  'mnemonic cues' = ifelse(`mnemonic cues` == 1, 0, 1),
-  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'relevance of PA' = ifelse(`relevance of PA` == 1, 0, 1),
-  'changes at home' = ifelse(`changes at home` == 1, 0, 1),
+  'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+  'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  'self-monitor' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+#  'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
   'social support' = ifelse(`social support` == 1, 0, 1),
   'failure contemplated' = ifelse(`failure contemplated` == 1, 0, 1)) %>%
-  dplyr::select(-`log on paper`, -`smartphone`, -`plan by other`) %>% 
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, -`plan by other`) %>% 
   mutate_all(as.numeric)
 
 # Network for all participants
@@ -3406,29 +3494,29 @@ bctdf <- df %>% dplyr::select(id,
   'Autonomous' = PA_autonomous_T1,
   'Controlled' = PA_controlled_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
   rowwise() %>% 
   mutate( 
-  #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
-  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
-  dplyr::select(-`log on paper`, -`smartphone`) %>%
+  #'has plan' = mean(c(`own plan`, `plan by other`), na.rm = TRUE),
+  'self-monitor' = mean(c(`self-monitor (paper)`, `self-monitor (app)`), na.rm = TRUE)) %>%
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`) %>%
   mutate_all(as.numeric)
 
 # Network for all participants
@@ -3472,14 +3560,14 @@ plot(nwBCT, layout = "spring", label.scale = FALSE, title = "GGM: BCTs & motivat
 
 ```
 
-Network after combining goal setting and implementation planning, as well as barrier identification and coping planning:
+Network after combining goal setting and own planning, as well as barrier identification and problem solving:
 
 ```{r bct-moti-ggm-combined}
 # Combine items further:
 bctdf2 <- bctdf %>% rowwise %>% 
-  dplyr::mutate('goals and plans' = mean(c(`goal setting`, `implementation plan`), na.rm = TRUE)) %>% 
-  dplyr::mutate('barriers identified\nand planned for' = mean(c(`barrier identification`, `coping planning`), na.rm = TRUE)) %>% 
-  dplyr::select(-`goal setting`, -`implementation plan`, -`barrier identification`, -`coping planning`)
+  dplyr::mutate('goals and plans' = mean(c(`goal setting`, `own plan`), na.rm = TRUE)) %>% 
+  dplyr::mutate('barriers identified\nand planned for' = mean(c(`barrier identification`, `problem solving`), na.rm = TRUE)) %>% 
+  dplyr::select(-`goal setting`, -`own plan`, -`barrier identification`, -`problem solving`)
 
 S.total2 <- bctdf2 %>% dplyr::select(`Autonomous`:ncol(bctdf2))
 nwBCT2 <- bootnet::estimateNetwork(S.total2, default="EBICglasso")
@@ -3630,29 +3718,29 @@ bctdf_PA <- df %>% dplyr::select(id,
   'Autonomous' = PA_autonomous_T1,
   'Controlled' = PA_controlled_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
   rowwise() %>% 
   mutate( 
-  #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
-  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
-  dplyr::select(-`log on paper`, -`smartphone`) %>% 
+  #'has plan' = mean(c(`own plan`, `plan by other`), na.rm = TRUE),
+  'self-monitor' = mean(c(`self-monitor (paper)`, `self-monitor (app)`), na.rm = TRUE)) %>%
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`) %>% 
   mutate_all(as.numeric)
 
 # Network for all participants
@@ -3682,9 +3770,9 @@ plot(nwBCT_PA, layout = "spring", label.scale = FALSE, title = "GGM: Acceleromet
 
 # Combine items further:
 bctdf_PA2 <- bctdf_PA %>% rowwise %>% 
-  mutate('goals and plans' = mean(c(`goal setting`, `implementation plan`), na.rm = TRUE)) %>% 
-  mutate('barriers identified\nand planned for' = mean(c(`barrier identification`, `coping planning`), na.rm = TRUE)) %>% 
-  dplyr::select(-`goal setting`, -`implementation plan`, -`barrier identification`, -`coping planning`) %>% 
+  mutate('goals and plans' = mean(c(`goal setting`, `own plan`), na.rm = TRUE)) %>% 
+  mutate('barriers identified\nand planned for' = mean(c(`barrier identification`, `problem solving`), na.rm = TRUE)) %>% 
+  dplyr::select(-`goal setting`, -`own plan`, -`barrier identification`, -`problem solving`) %>% 
   data.frame
 
 S.total_PA2 <- bctdf_PA2 %>% dplyr::select(MVPA:ncol(bctdf_PA2))
@@ -3800,16 +3888,16 @@ When a person has tried out a new PA way to be physically active, they have almo
 top5Bcts_df <- df %>% dplyr::select(
   MVPA = padaysLastweek_T1,
   Autonomous = PA_autonomous_T1, 
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1) %>% 
  mutate(
   'MVPA' = ifelse(`MVPA` == 0, 0, 1),
   'Autonomous' = ifelse(`Autonomous` < 3, 0, 1),
-  'goal contrast' = ifelse(`goal contrast` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1))  
@@ -3888,16 +3976,16 @@ top5Bcts_tracks_df <- df %>% dplyr::select(
   track,
   PA = padaysLastweek_T1,
   Autonomous = PA_autonomous_T1, 
-  'new PA options' = PA_agreementDependentBCT_06_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1) %>% 
  mutate(
   'PA' = ifelse(`PA` == 0, 0, 1),
   'Autonomous' = ifelse(`Autonomous` < 3, 0, 1),
-  'new PA options' = ifelse(`new PA options` == 1, 0, 1),
-  'implementation plan' = ifelse(`implementation plan` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
   'plan by other' = ifelse(`plan by other` == 1, 0, 1),
   'goal setting' = ifelse(`goal setting` == 1, 0, 1),
   'subgoals' = ifelse(`subgoals` == 1, 0, 1))
@@ -4009,29 +4097,29 @@ bctdf <- df %>% dplyr::select(id,
   'Introjected' = PA_introjected_T1,
   'Extrinsic' = PA_extrinsic_T1,
   'goal setting' = PA_agreementDependentBCT_01_T1,
-  'implementation plan' = PA_agreementDependentBCT_02_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
   'plan by other' = PA_agreementDependentBCT_03_T1,
   'reminder of plan' = PA_agreementDependentBCT_04_T1,
   'subgoals' = PA_agreementDependentBCT_05_T1,
-  'new PA options' = PA_agreementDependentBCT_06_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
   'barrier identification' = PA_agreementDependentBCT_07_T1,
-  'coping planning' = PA_agreementDependentBCT_08_T1,
-  'PA identity' = PA_agreementDependentBCT_09_T1,
-  'PA life values' = PA_agreementDependentBCT_10_T1,
-  'positive consequences' = PA_frequencyDependentBCT_01_T1,
-  'log on paper' = PA_frequencyDependentBCT_02_T1,
-  'smartphone' = PA_frequencyDependentBCT_03_T1,
-#  'mnemonic cues' = PA_frequencyDependentBCT_04_T1,
-  'goal contrast' = PA_frequencyDependentBCT_05_T1,
-  'relevance of PA' = PA_frequencyDependentBCT_06_T1,
-  'changes at home' = PA_frequencyDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1,
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
   'social support' = PA_frequencyDependentBCT_08_T1,
   'failure contemplated' = PA_frequencyDependentBCT_09_T1) %>%
   rowwise() %>% 
   mutate( 
-  #'has plan' = mean(c(`implementation plan`, `plan by other`), na.rm = TRUE),
-  'monitored PA' = mean(c(`log on paper`, `smartphone`), na.rm = TRUE)) %>%
-  dplyr::select(-`log on paper`, -`smartphone`) %>% 
+  #'has plan' = mean(c(`own plan`, `plan by other`), na.rm = TRUE),
+  'self-monitor' = mean(c(`self-monitor (paper)`, `self-monitor (app)`), na.rm = TRUE)) %>%
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`) %>% 
   data.frame # %>% 
   # mutate_all(as.numeric)
 
@@ -4084,7 +4172,7 @@ piefill <- data %>%
   summarise_all(funs(mean(., na.rm = TRUE))) %>% 
   mutate_at(vars(PA, SB),
             funs(. / (24*60))) %>% # proportion of day used doing the behaviour
-  mutate_at(vars(`action planning`, `coping planning`),
+  mutate_at(vars(`action planning`, `problem solving`),
             funs(. / 4)) %>% 
   mutate_at(vars(6:ncol(data)),
             funs(. / 7)) %>% 

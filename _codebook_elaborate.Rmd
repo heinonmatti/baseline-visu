@@ -1,0 +1,41 @@
+---
+title: "Codebook (elaborate)"
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+    code_folding: 'hide'
+    self_contained: true
+---
+
+<!-- This codebook is a supplementary file to the Let's Move It baseline analysis; see the [supplementary website](https://heinonmatti.github.io/baseline-visu/index.html)) -->
+
+```{r codebook, echo = FALSE, message = FALSE}
+
+source("baseline-datasetup.R")
+
+knitr::opts_chunk$set(
+  warning = FALSE, # show warnings during codebook generation
+  message = FALSE, # show messages during codebook generation
+  error = TRUE, # do not interrupt codebook generation in case of errors,
+                # usually makes debugging easier, and sometimes half a codebook
+                # is better than none
+  echo = FALSE,  # don't show the R code,
+  cache = FALSE
+)
+
+ggplot2::theme_set(ggplot2::theme_bw())
+pander::panderOptions("table.split.table", Inf)
+
+df_codebook <- df %>% dplyr::select(df %>% 
+                                      purrr::map(~ is.null(attributes(.x)$scale_item_names)) %>% 
+                                      unlist() %>% 
+                                      sort() %>% 
+                                      names())
+
+codebook::codebook(df_codebook)
+```
+
+
+

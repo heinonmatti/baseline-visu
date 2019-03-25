@@ -9,7 +9,7 @@ This section describes how confidence intervals were estimated, as well as prese
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 source("baseline-datasetup.R")
 
-summarytools::view(summarytools::dfSummary(df), file = "./codebook_concise.html")
+# summarytools::view(summarytools::dfSummary(df), file = "./codebook_concise.html")
 
 ```
 
@@ -41,13 +41,13 @@ nonmissings <- NA
 
 ## # Use this to test a single variable:
 ## dftest <- df #%>% na.omit()
-## m <- lme4::lmer(sitLieAccelerometer_diff ~ (1|school) + (1|group), data=dftest)
+## m <- lme4::lmer(mvpaAccelerometer_T1 ~ (1|school) + (1|group), data=dftest)
 ## mean <- lme4::fixef(m)
 ## m_p <- profile(m, which = "beta_")
 ## ci_low <- confint(m_p)[, 1]
 ## ci_high <- confint(m_p)[, 2]
-## ICC_group <- icc(m)[1]
-## ICC_School <- icc(m)[2]
+## ICC_group <- sjstats::icc(m)[1]
+## ICC_School <- sjstats::icc(m)[2]
 ## nonmissings <- length(m@resp$y)
 
 
@@ -84,7 +84,7 @@ nonmissings <- NA
 #   as.data.frame()
 #
 # # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
+# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer", "mvpaAccelerometer_noCutOff", "mpaAccelerometer_noCutOff", "vpaAccelerometer_noCutOff", "lpaAccelerometer_noCutOff", "weartimeAccelerometer_noCutOff", "sitLieAccelerometer_noCutOff", "standingAccelerometer_noCutOff")
 #
 # for (variableToChange in timeVariables) {
 # originalMean <- vardatatable[vardatatable$Variable == variableToChange, "Mean"] %>% as.numeric()
@@ -102,6 +102,7 @@ nonmissings <- NA
 # save(ci_total, file = "./Rdata_files/ci_total.Rdata")
 load("./Rdata_files/vardatatable.Rdata")
 load("./Rdata_files/ci_total.Rdata")
+
 ```
 
 ```{r primary-outcome-vars-table-total, results = 'asis'}
@@ -251,7 +252,7 @@ ICC_track <- NA
 #   as.data.frame()
 # 
 # # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
+# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer", "mvpaAccelerometer_noCutOff", "mpaAccelerometer_noCutOff", "vpaAccelerometer_noCutOff", "lpaAccelerometer_noCutOff", "weartimeAccelerometer_noCutOff", "sitLieAccelerometer_noCutOff", "standingAccelerometer_noCutOff")
 # 
 # for (variableToChange in timeVariables) {
 # originalMean <- vardatatable_containing_edutrack[vardatatable_containing_edutrack$Variable == variableToChange, "Mean"] %>% as.numeric()
@@ -372,7 +373,7 @@ ICC_track <- NA
 #   as.data.frame()
 # 
 # # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
+# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer", "mvpaAccelerometer_noCutOff", "mpaAccelerometer_noCutOff", "vpaAccelerometer_noCutOff", "lpaAccelerometer_noCutOff", "weartimeAccelerometer_noCutOff", "sitLieAccelerometer_noCutOff", "standingAccelerometer_noCutOff")
 # 
 # for (variableToChange in timeVariables) {
 # originalMean <- vardatatable_edutrack_only[vardatatable_edutrack_only$Variable == variableToChange, "Mean"] %>% as.numeric()
@@ -474,7 +475,7 @@ nonmissings <- NA
 #   as.data.frame()
 # 
 # # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
+# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer", "mvpaAccelerometer_noCutOff", "mpaAccelerometer_noCutOff", "vpaAccelerometer_noCutOff", "lpaAccelerometer_noCutOff", "weartimeAccelerometer_noCutOff", "sitLieAccelerometer_noCutOff", "standingAccelerometer_noCutOff")
 # 
 # for (variableToChange in timeVariables) {
 # originalMean <- vardatatable_sandwich[vardatatable_sandwich$Variable == variableToChange, "Mean"] %>% as.numeric()
@@ -566,7 +567,7 @@ variable <- NA
 #   as.data.frame()
 # 
 # # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
+# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer", "mvpaAccelerometer_noCutOff", "mpaAccelerometer_noCutOff", "vpaAccelerometer_noCutOff", "lpaAccelerometer_noCutOff", "weartimeAccelerometer_noCutOff", "sitLieAccelerometer_noCutOff", "standingAccelerometer_noCutOff")
 # 
 # for (variableToChange in timeVariables) {
 # originalMean <- vardatatable_bayes[vardatatable_bayes$Variable == variableToChange, "Mean"] %>% as.numeric()
@@ -650,7 +651,7 @@ variable <- NA
 #   as.data.frame()
 # 
 # # To improve readability, change the variables which are expressed in minutes, to the form "Xh Ymin"
-# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer")
+# timeVariables <- c("mvpaAccelerometer", "mpaAccelerometer", "vpaAccelerometer", "lpaAccelerometer", "weartimeAccelerometer", "sitLieAccelerometer", "standingAccelerometer", "mvpaAccelerometer_noCutOff", "mpaAccelerometer_noCutOff", "vpaAccelerometer_noCutOff", "lpaAccelerometer_noCutOff", "weartimeAccelerometer_noCutOff", "sitLieAccelerometer_noCutOff", "standingAccelerometer_noCutOff")
 # 
 # for (variableToChange in timeVariables) {
 # originalMean <- vardatatable_bayes_containing_edutrack[vardatatable_bayes_containing_edutrack$Variable == variableToChange, "Mean"] %>% as.numeric()
@@ -767,7 +768,7 @@ brms::compare_ic(loo_m_sitLieAccelerometer_T1, loo_m_priorFromFeasibility, loo_m
 
 ```{r table-parameters-observed}
 
-df_for_uncorrected <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff"))
+df_for_uncorrected <- df %>% dplyr::select(-id, -intervention, -group, -school, -girl, -SB_selfRepSitbreaksDidNotSit30min_T1, -track, -trackSchool, -contains("_T3"), -contains("_diff"), -contains("_T4"))
 
 # Create empty soon-to-be-filled objects
 mean_uncorrected <- NA
@@ -1821,15 +1822,29 @@ papaja::apa_table(outtable_mega, caption = "Baseline demographics of educational
 ```
 
 
-## Mediator table with CIs
+## Determinant table with CIs
 
 ```{r outcome-table2, results = 'asis'}
+vars_to_get_n_for <- ci_total %>%
+  dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agreementDependentBCT_T1|PA_frequencyDependentBCT_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_injunctiveNorm_T1|PA_descriptiveNorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_perceivedBehaviouralControl_T1|PA_selfefficacy_T1|SB_descriptiveNorm_T1|SB_injunctiveNorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_total$diamondlabels)) %>% 
+  dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
+  dplyr::select(vars = diamondlabels) %>% 
+  dplyr::pull()
 
 mediatortable_intervention <- ci_intervention %>%
   dplyr::filter(grepl('PA_actionplan_T1|PA_copingplan_T1|PA_agreementDependentBCT_T1|PA_frequencyDependentBCT_T1|PA_amotivation_T1|PA_autonomous_T1|PA_controlled_T1|PA_goal_T1|PA_injunctiveNorm_T1|PA_descriptiveNorm_T1|PA_intention_T1|PA_outcomeExpectations_T1|PA_opportunities_T1|PA_perceivedBehaviouralControl_T1|PA_selfefficacy_T1|SB_descriptiveNorm_T1|SB_injunctiveNorm_T1|SB_intention_T1|SB_outcomeExpectations_T1', ci_intervention$diamondlabels)) %>% 
   dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
   dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
          mean = round(mean, 1) %>% format(., nsmall = 1))
+
+n_range_intervention <- df %>% 
+  dplyr::filter(intervention == "1") %>% 
+  dplyr::select(one_of(vars_to_get_n_for)) %>% 
+  tidyr::gather(variable, value) %>% 
+  dplyr::group_by(variable) %>% 
+  dplyr::summarise_each(funs(sum(!is.na(.))))
+
+n_range_intervention <- paste0("(n = ", min(n_range_intervention$value), "-", max(n_range_intervention$value), ")")
 
 mediatortable_intervention$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_intervention$diamondlabels)
 mediatortable_intervention$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_intervention$diamondlabels)
@@ -1856,6 +1871,15 @@ mediatortable_control <- ci_control %>%
   dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
          mean = round(mean, 1) %>% format(., nsmall = 1))
 
+n_range_control <- df %>% 
+  dplyr::filter(intervention == "0") %>% 
+  dplyr::select(one_of(vars_to_get_n_for)) %>% 
+  tidyr::gather(variable, value) %>% 
+  dplyr::group_by(variable) %>% 
+  dplyr::summarise_each(funs(sum(!is.na(.))))
+
+n_range_control <- paste0("(n = ", min(n_range_control$value), "-", max(n_range_control$value), ")")
+
 mediatortable_control$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_control$diamondlabels)
 mediatortable_control$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_control$diamondlabels)
 mediatortable_control$diamondlabels <- gsub('PA_agreementDependentBCT_T1', 'PA agreement-BCTs', mediatortable_control$diamondlabels)
@@ -1880,6 +1904,15 @@ mediatortable_girls <- ci_girls %>%
   dplyr::filter(diamondlabels != "PA_goal_T1") %>% 
   dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
          mean = round(mean, 1) %>% format(., nsmall = 1))
+
+n_range_girls <- df %>% 
+  dplyr::filter(girl == "girl") %>% 
+  dplyr::select(one_of(vars_to_get_n_for)) %>% 
+  tidyr::gather(variable, value) %>% 
+  dplyr::group_by(variable) %>% 
+  dplyr::summarise_each(funs(sum(!is.na(.))))
+
+n_range_girls <- paste0("(n = ", min(n_range_girls$value), "-", max(n_range_girls$value), ")")
 
 mediatortable_girls$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_girls$diamondlabels)
 mediatortable_girls$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_girls$diamondlabels)
@@ -1906,6 +1939,15 @@ mediatortable_boys <- ci_boys %>%
   dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
          mean = round(mean, 1) %>% format(., nsmall = 1))
 
+n_range_boys <- df %>% 
+  dplyr::filter(girl == "boy") %>% 
+  dplyr::select(one_of(vars_to_get_n_for)) %>% 
+  tidyr::gather(variable, value) %>% 
+  dplyr::group_by(variable) %>% 
+  dplyr::summarise_each(funs(sum(!is.na(.))))
+
+n_range_boys <- paste0("(n = ", min(n_range_boys$value), "-", max(n_range_boys$value), ")")
+
 mediatortable_boys$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_boys$diamondlabels)
 mediatortable_boys$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_boys$diamondlabels)
 mediatortable_boys$diamondlabels <- gsub('PA_agreementDependentBCT_T1', 'PA agreement-BCTs', mediatortable_boys$diamondlabels)
@@ -1931,6 +1973,13 @@ mediatortable_total <- ci_total %>%
   dplyr::mutate("CI95" = paste(round(ciLo, 1) %>% format(., nsmall = 1), "-", round(ciHi, 1) %>% format(., nsmall = 1)),
          mean = round(mean, 1) %>% format(., nsmall = 1))
 
+n_range_total <- df %>% dplyr::select(one_of(vars_to_get_n_for)) %>% 
+  tidyr::gather(variable, value) %>% 
+  dplyr::group_by(variable) %>% 
+  dplyr::summarise_each(funs(sum(!is.na(.))))
+
+n_range_total <- paste0("(n = ", min(n_range_total$value), "-", max(n_range_total$value), ")")
+
 mediatortable_total$diamondlabels <- gsub('PA_actionplan_T1', 'PA action planning', mediatortable_total$diamondlabels)
 mediatortable_total$diamondlabels <- gsub('PA_copingplan_T1', 'PA coping planning', mediatortable_total$diamondlabels)
 mediatortable_total$diamondlabels <- gsub('PA_agreementDependentBCT_T1', 'PA agreement-BCTs', mediatortable_total$diamondlabels)
@@ -1951,7 +2000,7 @@ mediatortable_total$diamondlabels <- gsub('SB_intention_T1', 'SB intention', med
 mediatortable_total$diamondlabels <- gsub('SB_outcomeExpectations_T1', 'SB outcome expectations', mediatortable_total$diamondlabels)
 
 mega_mediatortable <- data.frame(
-  Variable = mediatortable_girls$diamondlabels, 
+  "Variable" = mediatortable_girls$diamondlabels, 
   "Girls" = paste0(round(mediatortable_girls$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_girls$CI95, ")"),
   "Boys" = paste0(round(mediatortable_boys$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_boys$CI95, ")"),
   "Intervention" = paste0(round(mediatortable_intervention$mean %>% as.numeric(.), 1) %>% format(., nsmall = 1), " (", mediatortable_intervention$CI95, ")"),
@@ -1960,8 +2009,32 @@ mega_mediatortable <- data.frame(
   ) %>% 
   arrange(Variable)
 
+colnames(mega_mediatortable) <- paste(colnames(mega_mediatortable),
+                                      c("", n_range_girls, n_range_boys, n_range_intervention, n_range_control, n_range_total))
+
+mega_mediatortable <- mega_mediatortable %>% dplyr::arrange(factor(mega_mediatortable$Variable, levels = c(
+                                                    "PA intention",
+                                                    "PA perceived behavioural control",
+                                                    "PA self-efficacy",
+                                                    "PA opportunities",
+                                                    "PA descriptive norm",
+                                                    "PA injunctive norm",
+                                                    "PA outcome expectations",
+                                                    "PA action planning",
+                                                    "PA coping planning",
+                                                    "PA autonomous regulation",
+                                                    "PA controlled regulation",
+                                                    "PA amotivation",
+                                                    "PA agreement-BCTs",
+                                                    "PA frequency-BCTs",
+                                                    "SB intention",
+                                                    "SB descriptive norm",
+                                                    "SB injunctive norm",
+                                                    "SB outcome expectations")))
+
+
 save(mega_mediatortable, file = "./Rdata_files/mega_mediatortable.Rdata")
-papaja::apa_table(mega_mediatortable, caption = "Main mediating variables of PA and SB")
+papaja::apa_table(mega_mediatortable, caption = "Main theoretical determinants of PA and SB. Number of observations in brackets after column names.")
 
 
 ```

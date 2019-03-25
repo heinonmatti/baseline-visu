@@ -19,6 +19,4 @@ dplyr
 stringr
 forcats
 ggridges
-bindrcpp
 corrgram
-httr
