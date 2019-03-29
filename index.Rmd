@@ -4,13 +4,13 @@ title: "Baseline index"
 
 **Welcome!**
 
-This site is a companion web page to the description of baseline characteristics of the Let's Move It intervention participants, to be submitted to IJBNPA.
+This site is a companion web page to the description of baseline characteristics of the Let's Move It intervention participants, submitted to journal IJBNPA.
 
 GitHub repository for the files can be found [here](https://github.com/heinonmatti/baseline-visu).
 
 Data setup code used in all the sections can be found [here](https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R).
 
-A concise codebook for the variables can be accessed [here](codebook_concise.html) and a more elaborate one with scale properties (look for variables starting with "Scale:") [here](codebook_elaborate.html).
+A concise codebook for the variables can be accessed [here](codebook_concise.html) and a more elaborate one with scale properties [here](codebook_elaborate.html).
 
 For issues, please contact matti.tj.heino@gmail.com. 
 

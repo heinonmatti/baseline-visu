@@ -91,7 +91,7 @@ $~$
 
 As with all models, network analysis entails its own set of assumptions. Due to the similarity with regression models, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. In this regard, behaviour change technique use and the quality of one's motivation (as posited by self-determination theory) seem less problematic. Hence, we start with those.
 
-# Network featured in manuscript {.tabset}
+# Network featured in manuscript
 
 ## Network
 
@@ -180,16 +180,16 @@ mgm_obj_T1 <- mgm::mgm(data = bctdf_mgm_T1,
   level = mgm_variable_levels,
   lambdaSel = "EBIC",
   # lambdaFolds = 10,
+  verbatim = FALSE,
   pbar = FALSE, 
   binarySign = TRUE)
 
 # Node pies:
 pies_T1 <- bctdf_mgm_T1 %>% 
-  dplyr::summarise_all(~mean(., na.rm = TRUE)) # results in a series of means, which is ok for dichotomous vars
-pies_T1[1] <- pies_T1[1] / 7
-pies_T1[2] <- pies_T1[2] / max(bctdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
-pies_T1[20] <- pies_T1[20] / 5
-
+  colMeans() # results in a series of means, which is ok for dichotomous vars
+pies_T1["MVPA survey"] <- pies_T1["MVPA survey"] / 7
+pies_T1["MVPA accelerometer"] <- pies_T1["MVPA accelerometer"] / max(bctdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
+pies_T1["autonomous motivation"] <- pies_T1["autonomous motivation"] / 5
 
 node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
                  viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
@@ -210,7 +210,10 @@ BCT_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj,
             label.cex = 0.75,
             cut = 0,
             edge.labels = TRUE,
-            label.scale = FALSE)
+            label.scale = FALSE,
+            DoNotPlot = TRUE)
+
+plot(BCT_mgm_T1)
 
 BCT_mgm_T1_circle <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
             layout = "circle",
@@ -222,34 +225,58 @@ BCT_mgm_T1_circle <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj,
             labels = names(bctdf_mgm_T1),
             label.cex = 0.75,
             cut = 0,
-            label.scale = FALSE)
+            label.scale = FALSE, 
+            DoNotPlot = TRUE)
 
+plot(BCT_mgm_T1_circle)
+```
+
+## Details and diagnostics {.tabset}
+
+### Description
+
+Tabs in this section show robustness diagnostics for the network. For details, see:
+
+Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195-212. https://doi.org/10.3758/s13428-017-0862-1
+
+### Bootstrap stability {.tabset}
+
+Graphs below depict bootstrapped sampling distributions for the edges, taking 100 bootstrap samples from the original data. Edges are introduced in decreasing order of strength. Line width indicates the edge values drawn from samples between the 5th and 95th quantiles, while the number inside the line is the proportion of non-zero parameter estimates. 
+
+```{r manuscript-network-resample-bootstrap, fig.width = 10, fig.height = 7, results = "asis", fig.show = "asis"}
+
+# all_BCTs_mgm_stability <- mgm::resample(object = mgm_obj_T1, data = bctdf_mgm_T1, nB = 100)
+# save(all_BCTs_mgm_stability, file = "./Rdata_files/all_BCTs_mgm_stability.Rdata")
+load("./Rdata_files/all_BCTs_mgm_stability.Rdata")
+
+labels_for_plot <- bctdf_mgm_T1 %>% 
+  names()
+  
+labels_for_plot[nchar(labels_for_plot) > 15] <- paste0(strtrim(labels_for_plot[nchar(labels_for_plot) > 15], 15), "...")
+
+number_of_edges <- ncol(bctdf_mgm_T1) * (ncol(bctdf_mgm_T1) - 1) / 2
+
+for (i in c(seq(from = 1, to = number_of_edges, by = 19))) {
+
+ cat('\n\n####', paste0("edges ", i, "-", i+18), '\n\n  ')
+  
+ plot_resample <- mgm::plotRes(object = all_BCTs_mgm_stability,
+        quantiles = c(.05, .95),
+        cex.label = 0.5,
+        lwd.qtl = 2.5,
+        cex.mean = .5,
+        decreasing = TRUE,
+        cut = i:(i+18),
+        axis.ticks = c(-0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5),
+        labels = labels_for_plot)
+
+ plot_resample
+}
 
 ```
 
-## Bootstrap stability
 
-Omitted for now, due to technical problems. 
-
-```{r}
-
-# all_BCTs_mgm_stability <- mgm::resample(object = mgm_obj_T1 %>% na.omit(.), data = bctdf_mgm, nB = 100)
-# # save(all_BCTs_mgm_stability, file = "./Rdata_files/all_BCTs_mgm_stability.Rdata")
-# load("./Rdata_files/all_BCTs_mgm_stability.Rdata")
-# 
-# mgm::plotRes(object = all_BCTs_mgm_stability, 
-#         quantiles = c(.05, .95), 
-#         cex.label = 0.5,
-#         lwd.qtl = 2.5, 
-#         cex.mean = .5,
-#        labels = names(bctdf_mgm))
-
-# Error in data[, ind_cat[i]] : subscript out of bounds
-
-```
-
-
-## Edge weights matrix
+### Edge weights matrix
 
 ```{r edgeWeights, results = 'asis'}
 
@@ -257,13 +284,13 @@ edgeweights <- mgm_obj_T1$pairwise$wadj %>% round(., 3)
 colnames(edgeweights) <- labs
 rownames(edgeweights) <- labs
 
-edgeweights
+edgeweights %>% knitr::kable()
 
 ```
 
 
 
-## Other estimation methods (mgm CV, GGM)
+### Other estimation methods (mgm CV, GGM)
 
 This section estimates models with different methods: mgm with cross-validation, the standard Gaussian Graphical Model (GGM), and unregularised GGM. The distributions violate normality assumptions of the GGM. 
 
@@ -280,10 +307,10 @@ mgm_obj_T1_CV <- mgm::mgm(data = bctdf_mgm_T1,
 
 # Node pies:
 pies_T1 <- bctdf_mgm_T1 %>% 
-  dplyr::summarise_all(~mean(., na.rm = TRUE)) # results in a series of means, which is ok for dichotomous vars
-pies_T1[1] <- pies_T1[1] / 7
-pies_T1[2] <- pies_T1[2] / max(bctdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
-pies_T1[20] <- pies_T1[20] / 5
+  colMeans() # results in a series of means, which is ok for dichotomous vars
+pies_T1["MVPA survey"] <- pies_T1["MVPA survey"] / 7
+pies_T1["MVPA accelerometer"] <- pies_T1["MVPA accelerometer"] / max(bctdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
+pies_T1["autonomous motivation"] <- pies_T1["autonomous motivation"] / 5
 
 
 node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
@@ -399,9 +426,20 @@ g4 <- qgraph::qgraph(modSelect_0.5$graph,
 ```
 
 
-##  Centrality
+### GGM centrality {.tabset}
 
-```{r}
+#### Description 
+
+This section explores centrality measures for the gaussian models, assumptions of which are arguably less than optimally fulfilled in this data. For caveats to interpreting centrality, see:
+
+1) Bringmann, L. F., Elmer, T., Epskamp, S., Krause, R. W., Schoch, D., Wichers, M., . Bringmann, L. What do centrality measures measure in psychological networks? Preprint available: https://www.researchgate.net/publication/329129039_What_do_centrality_measures_measure_in_psychological_networks
+
+2) Hallquist, M., Wright, A. G. C., & Molenaar, P. C. M. (2019). Problems with centrality measures in psychopathology symptom networks: Why network psychometrics cannot escape psychometric theory. https://doi.org/10.31234/osf.io/pg4mf
+
+#### Centrality plot
+
+```{r centrality-diagnostics-manuscript-network}
+
 qgraph::centralityPlot(
   list(
     # mgm_EBIC = BCT_mgm_T1,
@@ -414,6 +452,12 @@ qgraph::centralityPlot(
                orderBy = "ExpectedInfluence")
 
 
+```
+
+<!-- #### Centrality stability -- Omitted due to technical problems -->
+
+```{r centrality-stability-manuscript, eval = FALSE, include = FALSE}
+boot_for_centrality <- bootnet::bootnet(BCT_ggm, nBoots = 2500, type = "case")
 ```
 
 
@@ -607,14 +651,15 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 # Make a sequence of numers, to be used as a pie chart in nodes, to depict mean:
 piefill <- bctdf_mgm %>% 
-  dplyr::summarise_all(funs(mean)) %>% 
-  dplyr::mutate('MVPA survey' = `MVPA survey` / 7,
-                'MVPA accelerom.' = `MVPA accelerom.` / mean(df$weartimeAccelerometer_T1, na.rm = TRUE),
-                'Intrinsic' = `Intrinsic` / 5,
-                'Identified' = `Identified` / 5,
-                'Introjected' = `Introjected` / 1, # already a proportion
-                'Extrinsic' = `Extrinsic` / 1,
-                'BCT usage' = `BCT usage` / 6) 
+  colMeans(.) 
+
+piefill['MVPA survey'] <- piefill["MVPA survey"] / 7
+piefill['MVPA accelerom.'] <- piefill['MVPA accelerom.'] / (max(df$mvpaAccelerometer_T1, na.rm = TRUE))
+piefill['Intrinsic'] <- piefill['Intrinsic'] / 5
+piefill['Identified'] <- piefill['Identified'] / 5
+piefill['Introjected'] <- piefill['Introjected'] / 1 # already a proportion
+piefill['Extrinsic'] <- piefill['Extrinsic'] / 1
+piefill['BCT usage'] <- piefill['BCT usage'] / 6
 
 corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), graph = "cor",
               color = node_colors,
@@ -628,7 +673,7 @@ corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm), graph = "cor",
 
 ```
 
-```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "A) Mixed graphical model with LASSO regularisation and model selection by cross-validation. Pie indicates node predictability. B) Bivariate correlation network. Pie indicates node mean as % of theoretical maximum (for MVPA accelerometer, mean as % average weartime)."}
+```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "A) Mixed graphical model with LASSO regularisation and model selection by cross-validation. Pie indicates node predictability. B) Bivariate correlation network. Pie indicates node mean as % of theoretical maximum (for MVPA accelerometer, mean as % maximum observed MVPA)."}
 
 averagedLayout <- qgraph::averageLayout(BCT_mgm, corgraph)
 
@@ -652,7 +697,7 @@ corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm),
               graph = "cor",
               pie = piefill,
               pieBorder = 1,
-              nodeColor = node_colors,
+              pieColor = node_colors,
               labels = names(bctdf_mgm),
               # label.cex = 1,
               label.scale = FALSE,
@@ -663,7 +708,7 @@ corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_mgm),
 
 The "last motivation type", i.e. the fifth, is Amotivation (dichotomised due to skew). A node for that is added in the network below:
 
-```{r}
+```{r network-with-amotivation-and-resampling, fig.width = 10}
 
 bctdf_mgm <- df %>% dplyr::select(
   'agr-BCTs' = PA_agreementDependentBCT_T1,
@@ -740,8 +785,9 @@ load("./Rdata_files/BCT_mgm_withAmotivation_stability.Rdata")
 
 mgm::plotRes(object = BCT_mgm_withAmotivation_stability, 
         quantiles = c(.05, .95), 
-        cex.label = 1.25, 
-        lwd.qtl = 2.5, 
+        cex.label = 0.5, 
+        lwd.qtl = 2.5,
+        labels = bctdf_mgm %>% names(),
         cex.mean = .5)
 
 ```
@@ -2845,6 +2891,16 @@ bootnetgraph <- plot(individualAgreementBCTs,
 
 ### Centrality and stability
 
+For interpretation, see:
+
+Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195-212. https://doi.org/10.3758/s13428-017-0862-1
+
+For caveats to interpreting centrality, see:
+
+1) Bringmann, L. F., Elmer, T., Epskamp, S., Krause, R. W., Schoch, D., Wichers, M., . Bringmann, L. What do centrality measures measure in psychological networks? Preprint available: https://www.researchgate.net/publication/329129039_What_do_centrality_measures_measure_in_psychological_networks
+
+2) Hallquist, M., Wright, A. G. C., & Molenaar, P. C. M. (2019). Problems with centrality measures in psychopathology symptom networks: Why network psychometrics cannot escape psychometric theory. https://doi.org/10.31234/osf.io/pg4mf
+
 ```{r individualAgreementBCTs-stability}
 
 combinedAgreementBcts_centralityPlot <- qgraph::centralityPlot(bootnetgraph)
@@ -3286,21 +3342,17 @@ nwGirls <- bootnet::estimateNetwork(S.girls, default="IsingFit")
 
 # Create means for filling nodes
 
-girlmeans <- bctdf %>% dplyr::group_by(girl) %>% 
+girlmeans <- bctdf %>%
+  dplyr::filter(girl == "girl") %>% 
   summarise_at(vars(-(id:girl)),
-  funs(mean(., na.rm = TRUE))) %>% 
-  filter(girl == "girl") %>% 
-  dplyr::select(-girl)
+  funs(mean(., na.rm = TRUE))) 
 
-boymeans <- bctdf %>% group_by(girl) %>% 
+boymeans <- bctdf %>%
+  dplyr::filter(girl == "boy") %>% 
   summarise_at(vars(-(id:girl)),
-  funs(mean(., na.rm = TRUE))) %>% 
-  filter(girl == "boy") %>% 
-  dplyr::select(-girl)
+  funs(mean(., na.rm = TRUE))) 
 
 ```
-
-## Plot BCT Ising-networks 
 
 For girls and boys.
 
@@ -3324,6 +3376,23 @@ plot(nwBoys, layout = Layout, label.scale = FALSE, title = "Boys", label.cex = 0
 
 ```
 
+### Network comparison test: boys vs. girls
+
+```{r nctboysgirls, cache = TRUE, results = "asis"}
+
+# nct_results <- NetworkComparisonTest::NCT(S.boys, S.girls, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
+
+# save(nct_results, file = "./Rdata_files/nct_results.Rdata")
+load("./Rdata_files/nct_results.Rdata")
+
+cat("P-value of network structure difference test:", nct_results$nwinv.pval)
+cat("P-value of global connectivity difference test:", nct_results$glstrinv.pval)
+nct_results$einv.pvals %>% 
+  dplyr::filter(`p-value` < 1) %>%      #p values testing diffs for all individual edges 
+  knitr::kable(caption = "P-values for edge strength differences among boys and girls. Omitted edges where p = 1.")
+
+```
+
 For all participants.
 
 ```{r onlyAllBctsIsing-allparticipants}
@@ -3331,29 +3400,44 @@ For all participants.
 S.total <- bctdf %>% dplyr::select(6:ncol(bctdf))
 nwBCT <- bootnet::estimateNetwork(S.total, default="IsingFit")
 
-# smallworldIndex(plot(nwBCT))
-
 # Create means for filling nodes
 piefill <- S.total %>%
   summarise_all(funs(mean(., na.rm = TRUE))) 
 
 # Plot network
-plot(nwBCT, layout = "spring", label.scale = FALSE, title = "Ising fit", label.cex = 0.75,
+Ising_fit <- plot(nwBCT, layout = "spring", 
+     label.scale = FALSE, title = "Ising fit", label.cex = 0.75,
      pie = piefill, 
      color = "skyblue",
-     pieBorder = 1)
+     pieBorder = 1,
+     # DoNotPlot = TRUE
+     )
 
-# Estimate ising network without regularisation
-nwBCT_nonreg <- bootnet::estimateNetwork(S.total, default="IsingSampler")
-
-plot(nwBCT_nonreg, layout = "spring", label.scale = FALSE, title = "Non-regularised Ising model", label.cex = 0.75,
-     pie = piefill, 
-     color = "skyblue",
-     pieBorder = 1)
+# # Estimate ising network without regularisation DOES NOT CONVERGE --> OMITTED
+# nwBCT_nonreg <- bootnet::estimateNetwork(S.total, default="IsingSampler")
+# 
+# nonreg <- plot(nwBCT_nonreg, layout = "spring", 
+#      label.scale = FALSE, title = "Non-regularised Ising model", label.cex = 0.75,
+#      pie = piefill, 
+#      color = "skyblue",
+#      pieBorder = 1,
+#      DoNotPlot = TRUE)
+# 
+# layout_allParticipants <- qgraph::averageLayout(Ising_fit, nonreg)
+# 
+# # Plot network
+# plot(nwBCT, layout = "layout_allParticipants", 
+#      label.scale = FALSE, title = "Ising fit", label.cex = 0.75,
+#      pie = piefill, 
+#      color = "skyblue",
+#      pieBorder = 1)
+# 
+# plot(nwBCT_nonreg, layout = "layout_allParticipants", 
+#      label.scale = FALSE, title = "Non-regularised Ising model", label.cex = 0.75,
+#      pie = piefill, 
+#      color = "skyblue",
+#      pieBorder = 1)
 ```
-
-
-
 
 ## Ising network Combined items 
 
@@ -3460,20 +3544,6 @@ plot(bootnet_centrality_stability_onlyCombinedBctsIsing)
 plot(bootnet_centrality_stability_onlyCombinedBctsIsing, perNode=T, "strength")
 
 bootnet::corStability(bootnet_centrality_stability_onlyCombinedBctsIsing)
-
-```
-
-#### Network comparison test: boys vs. girls
-
-```{r nctboysgirls, eval = FALSE, cache = TRUE, results = "asis"}
-
-nct_results <- NetworkComparisonTest::NCT(nwGirls, nwBoys, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
-
-nct_results$nwinv.pval  # p value of network structure diff test: 0.424
-nct_results$glstrinv.pval  # p value of global connectivity diff test: 0.071
-nct_results$einv.pvals     #p values testing diffs for all individual edges: lowest p-value 0.017, most = 1
-sum(nct_results$einv.pvals$"p-value" < 0.05)  # how many edges are different0
-
 
 ```
 
@@ -5048,7 +5118,7 @@ corMatrix_motivations %>%
 
 ## Motivational regulations network
 
-```{r, include = FALSE, eval = FALSE}
+```{r sdt-network}
 ## TEE TÄNNE PIEFILL? tummempi sama väri tai opacity?
 
 # Was going to do fused graphical lasso, but the items not normal...
@@ -5129,17 +5199,17 @@ names(data1) <- c(paste0(rep("Amoti", 4), 1:4),
 nwAll <- bootnet::estimateNetwork(data1, default="IsingFit")
 
 # Create means for filling nodes
-girlmeans <- regulations.df %>% group_by(girl) %>% 
-  summarise_at(vars(5:(5+nItems-1)),
-  funs(mean(., na.rm = TRUE))) %>% 
-  filter(girl == "girl") %>% 
-  dplyr::select(-1)
-
-boymeans <- regulations.df %>% group_by(girl) %>% 
-  summarise_at(vars(5:(5+nItems-1)),
-  funs(mean(., na.rm = TRUE))) %>% 
-  filter(girl == "boy") %>% 
-  dplyr::select(-1)
+# girlmeans <- regulations.df %>% group_by(girl) %>% 
+#   summarise_at(vars(5:(5+nItems-1)),
+#   funs(mean(., na.rm = TRUE))) %>% 
+#   filter(girl == "girl") %>% 
+#   dplyr::select(-1)
+# 
+# boymeans <- regulations.df %>% group_by(girl) %>% 
+#   summarise_at(vars(5:(5+nItems-1)),
+#   funs(mean(., na.rm = TRUE))) %>% 
+#   filter(girl == "boy") %>% 
+#   dplyr::select(-1)
 
 # Find average layout for comparability and plot graphs next to each other
 
@@ -5147,13 +5217,13 @@ Layout <- qgraph::averageLayout(nwGirls, nwBoys)
 
 
 layout(t(1:2))
-plot(nwGirls, layout = Layout, label.scale = FALSE, title = "Girls", label.cex = 0.75,
-     pie = girlmeans, 
+plot(nwGirls, layout = Layout, label.scale = FALSE, title = "Girls", label.cex = 0.5,
+     # pie = girlmeans, 
      color = "skyblue",
      pieBorder = 1)
 
-plot(nwBoys, layout = Layout, label.scale = FALSE, title = "Boys", label.cex = 0.75, 
-     pie = boymeans, 
+plot(nwBoys, layout = Layout, label.scale = FALSE, title = "Boys", label.cex = 0.5, 
+     # pie = boymeans, 
      color = "skyblue",
      pieBorder = 1)
 

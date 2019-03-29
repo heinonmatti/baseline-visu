@@ -23,7 +23,7 @@ navbar:
   - text: About
     href: index.html
   - text: Manuscript
-    href: baseline-manuscript.html
+    href: https://psyarxiv.com/46rzm/
   - text: Descriptive tables
     href: baseline-tables.html
   - text: Descriptive plots

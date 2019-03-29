@@ -504,6 +504,8 @@ vardatatable_sandwich %>%
 
 ## Calculating (Bayesian) credibility interval {.tabset}
 
+[Due to incompatibility of researchers' equipment and Stan/brms, this section omitted until further notice. Code below is left to demonstrate how one would perform the analysis]
+
 ### Credible interval for model including school & group
 
 ```{r table-parameters-bayes}
@@ -1054,8 +1056,8 @@ ci_total_big <- ci_total %>% dplyr::filter(mean > 10)
 ci_edutrack_big <- ci_edutrack %>% dplyr::filter(mean > 10)
 ci_uncorrected_big <- ci_uncorrected %>% dplyr::filter(mean > 10)
 ci_sandwich_big <- ci_sandwich %>% dplyr::filter(mean > 10)
-ci_bayes_big <- ci_bayes %>% dplyr::filter(mean > 10)
-ci_bayes_containing_edutrack_big <- ci_bayes_containing_edutrack %>% dplyr::filter(mean > 10)
+# ci_bayes_big <- ci_bayes %>% dplyr::filter(mean > 10)
+# ci_bayes_containing_edutrack_big <- ci_bayes_containing_edutrack %>% dplyr::filter(mean > 10)
 
 for (i in 1:4){
 plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ], 
@@ -1085,24 +1087,24 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ],
                                    yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
                                    fixedSize = 0.3, 
                                    xlab = NULL) +
-  userfriendlyscience::diamondPlot(ci_bayes_big[i, ], 
-                                   returnLayerOnly = TRUE,
-                                   color = "red", 
-                                   alpha = 0, 
-                                   yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
-                                   fixedSize = 0.10, 
-                                   xlab = NULL,
-                                   linetype = "dashed",
-                                   size = 1.05) +
-  userfriendlyscience::diamondPlot(ci_bayes_containing_edutrack_big[i, ], 
-                                   returnLayerOnly = TRUE,
-                                   color = viridis::viridis(5)[5], 
-                                   alpha = 0, 
-                                   yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
-                                   fixedSize = 0.15, 
-                                   xlab = NULL,
-                                   linetype = "dashed",
-                                   size = 1.05) +
+  # userfriendlyscience::diamondPlot(ci_bayes_big[i, ], 
+  #                                  returnLayerOnly = TRUE,
+  #                                  color = "red", 
+  #                                  alpha = 0, 
+  #                                  yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
+  #                                  fixedSize = 0.10, 
+  #                                  xlab = NULL,
+  #                                  linetype = "dashed",
+  #                                  size = 1.05) +
+  # userfriendlyscience::diamondPlot(ci_bayes_containing_edutrack_big[i, ], 
+  #                                  returnLayerOnly = TRUE,
+  #                                  color = viridis::viridis(5)[5], 
+  #                                  alpha = 0, 
+  #                                  yLabels = ci_uncorrected_big[i, ]$diamondlabels, 
+  #                                  fixedSize = 0.15, 
+  #                                  xlab = NULL,
+  #                                  linetype = "dashed",
+  #                                  size = 1.05) +
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom & school"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Classroom, school & track"), 
@@ -1111,13 +1113,14 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_big[i, ],
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom & school"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom, school & track"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  # geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom & school"), 
+  #           colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  # geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom, school & track"), 
+  #           colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   scale_fill_manual('Model',
-                    values = c("red",
-                               viridis::viridis(5)[5],
+                    values = c(
+                      # "red",
+                      #          viridis::viridis(5)[5],
                                viridis::viridis(5)[1], 
                                viridis::viridis(5)[2], 
                                viridis::viridis(5)[4], 
@@ -1139,8 +1142,8 @@ ci_total_small <- ci_total %>% dplyr::filter(mean <= 10)
 ci_edutrack_small <- ci_edutrack %>% dplyr::filter(mean <= 10)
 ci_uncorrected_small <- ci_uncorrected %>% dplyr::filter(mean <= 10)
 ci_sandwich_small <- ci_sandwich %>% dplyr::filter(mean <= 10)
-ci_bayes_small <- ci_bayes %>% dplyr::filter(mean <= 10)
-ci_bayes_containing_edutrack_small <- ci_bayes_containing_edutrack %>% dplyr::filter(mean <= 10)
+# ci_bayes_small <- ci_bayes %>% dplyr::filter(mean <= 10)
+# ci_bayes_containing_edutrack_small <- ci_bayes_containing_edutrack %>% dplyr::filter(mean <= 10)
 
 # Now, four data frames contain columns ciLo, mean, ciHi, and variable name, for each variable (i.e. row).
 # Make a diamondPlot layer from each of these data frames, so that i number of variables are in the same plot: 
@@ -1173,14 +1176,14 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 6), ],
                                    yLabels = ci_uncorrected_small[i:(i + 6), ]$diamondlabels, 
                                    fixedSize = 0.3, 
                                    xlab = NULL) +
-  geom_point(aes(x = ci_bayes_small$ciLo[i:(i + 6)], y = 1:7),
-             color = "red") +
-  geom_point(aes(x = ci_bayes_small$ciHi[i:(i + 6)], y = 1:7),
-             color = "red") +
-  geom_point(aes(x = ci_bayes_containing_edutrack_small$ciLo[i:(i + 6)], y = 1:7),
-             color = viridis::viridis(5)[5]) +
-  geom_point(aes(x = ci_bayes_containing_edutrack_small$ciHi[i:(i + 6)], y = 1:7),
-             color = viridis::viridis(5)[5]) +
+  # geom_point(aes(x = ci_bayes_small$ciLo[i:(i + 6)], y = 1:7),
+  #            color = "red") +
+  # geom_point(aes(x = ci_bayes_small$ciHi[i:(i + 6)], y = 1:7),
+  #            color = "red") +
+  # geom_point(aes(x = ci_bayes_containing_edutrack_small$ciLo[i:(i + 6)], y = 1:7),
+  #            color = viridis::viridis(5)[5]) +
+  # geom_point(aes(x = ci_bayes_containing_edutrack_small$ciHi[i:(i + 6)], y = 1:7),
+  #            color = viridis::viridis(5)[5]) +
   # userfriendlyscience::diamondPlot(ci_bayes_small[i:(i + 6), ], 
   #                                  returnLayerOnly = TRUE,
   #                                  color = viridis::viridis(5)[5], 
@@ -1207,13 +1210,14 @@ plot1 <- userfriendlyscience::diamondPlot(ci_total_small[i:(i + 6), ],
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Sandwich"), 
             colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom & school"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
-  geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom, school & track"), 
-            colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  # geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom & school"), 
+  #           colour=NA, alpha=0.05) + # Create invisible rectangle for legend
+  # geom_rect(aes(xmin=Inf, xmax=Inf, ymin=Inf, ymax=Inf, fill = "Bayes: classroom, school & track"), 
+  #           colour=NA, alpha=0.05) + # Create invisible rectangle for legend
   scale_fill_manual('Model: ',
-                    values = c("red",
-                               viridis::viridis(5)[5],
+                    values = c(
+                      # "red",
+                      #          viridis::viridis(5)[5],
                                viridis::viridis(5)[1], 
                                viridis::viridis(5)[2], 
                                viridis::viridis(5)[4], 

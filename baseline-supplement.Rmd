@@ -118,6 +118,7 @@ To use package brms (Bayesian Regression Models using 'Stan') you need RStan and
 
 
 <a id="accelerometry"></a>
+
 # Description of accelerometer measurement
 
 The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a digital triaxial acceleration sensor (ADXL45; Analog Devices, Norwood MA) was attached to a flexible belt and participants were instructed to wear the belt around their right hip for seven consecutive days during waking hours, except during shower and other water activities. The acceleration signal was collected at 100 Hz sampling frequency, ?? 16 g acceleration range and 0.004 g resolution. PA-parameters were based on mean amplitude deviation (MAD) of the resultant acceleration analysed in 6s epochs [1]. The MAD values were then converted to metabolic equivalent (MET) values [2]. The epoch-wise MET values were further smoothed by calculating 1min exponential moving average. Using the smoothed MET values total PA was classified in terms of energy consumption covering MET values higher than 1.5 and moderate-to-vigorous PA (MVPA) covering MET values equal to or higher than 3 [1,2]. According to the definition of SB [3], time spent in sitting and reclining positions were combined to indicate SB, whereas standing was analysed separately as another form of stationary behaviour. Body postures were recognised from the raw acceleration data by employing both direction and intensity information from all three measurement axes. The recognition was based on the low intensity of movement (<1.5 MET) and the accelerometer orientation in relation to identified upright position (angle for posture estimation, APE) calculated at the end of each 6 s epoch [4].
@@ -127,8 +128,8 @@ The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a 
 3. Tremblay MS, Aubert S, Barnes JD, Saunders TJ, Carson V, Latimer-Cheung AE, et al. Sedentary Behavior Research Network (SBRN) - Terminology Consensus Project process and outcome. International Journal of Behavioral Nutrition and Physical Activity. 2017;14:75. Available from: https://doi.org/10.1186/s12966-017-0525-8
 4. Vähä-Ypyä H, Husu P, Suni J, Vasankari T, Sievänen H. Reliable recognition of lying, sitting, and standing with a hip-worn accelerometer. Scand J Med Sci Sports. 2018;28:1092-102.
 
-
 <a id="items"></a>
+
 # Descriptions of scales used to measure theoretical predictors of PA
 
 *Outcome expectations.* Outcome expectations were measured using a 12-item scale, with the items based on a belief elicitation study conducted in the study population, in line with standard procedures (Francis et al., 2004). The scale consisted of 9 positive outcome expectations items and three negative ones.
@@ -864,15 +865,20 @@ plot1 <- df %>% dplyr::select(id,
   papaja::theme_apa() +
   theme(legend.position = "bottom")
 
+Weartime_trackgirl_diamonds_girl_hours <- Weartime_trackgirl_diamonds_girl %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+Weartime_trackgirl_diamonds_boy_hours <- Weartime_trackgirl_diamonds_boy %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+
 plot1 <- plot1 + 
-  userfriendlyscience::diamondPlot(Weartime_trackgirl_diamonds_girl, 
+  userfriendlyscience::diamondPlot(Weartime_trackgirl_diamonds_girl_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    color=viridis::viridis(4, end = 0.8)[3],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
-  userfriendlyscience::diamondPlot(Weartime_trackgirl_diamonds_boy, 
+  userfriendlyscience::diamondPlot(Weartime_trackgirl_diamonds_boy_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    linetype = "solid", 
@@ -931,15 +937,20 @@ plot2 <- df %>% dplyr::select(id,
   papaja::theme_apa() +
   theme(legend.position = "bottom")
 
+Weartime_trackintervention_diamonds_intervention_hours <- Weartime_trackintervention_diamonds_intervention %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+Weartime_trackintervention_diamonds_control_hours <- Weartime_trackintervention_diamonds_control %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+
 plot2 <- plot2 + 
-  userfriendlyscience::diamondPlot(Weartime_trackintervention_diamonds_intervention, 
+  userfriendlyscience::diamondPlot(Weartime_trackintervention_diamonds_intervention_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black",  
                                    color=viridis::viridis(4, end = 0.8)[4],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15)) +
-  userfriendlyscience::diamondPlot(Weartime_trackintervention_diamonds_control, 
+  userfriendlyscience::diamondPlot(Weartime_trackintervention_diamonds_control_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black",  
                                    color=viridis::viridis(4, end = 0.8)[2],
@@ -1382,15 +1393,20 @@ plot1 <- df %>% dplyr::select(id,
   papaja::theme_apa() +
   theme(legend.position = "bottom")
 
+PA_trackgirl_diamonds_girl_hours <- PA_trackgirl_diamonds_girl %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+PA_trackgirl_diamonds_boy_hours <- PA_trackgirl_diamonds_boy %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+
 plot1 <- plot1 + 
-  userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_girl, 
+  userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_girl_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    color=viridis::viridis(4, end = 0.8)[3],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
-  userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_boy, 
+  userfriendlyscience::diamondPlot(PA_trackgirl_diamonds_boy_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    linetype = "solid", 
@@ -1446,15 +1462,20 @@ plot2 <- df %>% dplyr::select(id,
   papaja::theme_apa() +
   theme(legend.position = "bottom")
 
+PA_trackintervention_diamonds_intervention_hours <- PA_trackintervention_diamonds_intervention %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+PA_trackintervention_diamonds_control_hours <- PA_trackintervention_diamonds_control %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+
 plot2 <- plot2 + 
-  userfriendlyscience::diamondPlot(PA_trackintervention_diamonds_intervention, 
+  userfriendlyscience::diamondPlot(PA_trackintervention_diamonds_intervention_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black",  
                                    color=viridis::viridis(4, end = 0.8)[4],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15)) +
-  userfriendlyscience::diamondPlot(PA_trackintervention_diamonds_control, 
+  userfriendlyscience::diamondPlot(PA_trackintervention_diamonds_control_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black",  
                                    color=viridis::viridis(4, end = 0.8)[2],
@@ -3115,15 +3136,20 @@ plot1 <- df %>% dplyr::select(id,
   papaja::theme_apa() +
   theme(legend.position = "bottom")
 
+sitLie_trackgirl_diamonds_girl_hours <- sitLie_trackgirl_diamonds_girl %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+sitLie_trackgirl_diamonds_boy_hours <- sitLie_trackgirl_diamonds_boy %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+
 plot1 <- plot1 + 
-  userfriendlyscience::diamondPlot(sitLie_trackgirl_diamonds_girl, 
+  userfriendlyscience::diamondPlot(sitLie_trackgirl_diamonds_girl_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    color=viridis::viridis(4, end = 0.8)[3],
                                    alpha=.6, 
                                    fixedSize = 0.1, 
                                    otherAxisCol = (1:4 + .15)) + # specify y-position; option to move the diamond 
-  userfriendlyscience::diamondPlot(sitLie_trackgirl_diamonds_boy, 
+  userfriendlyscience::diamondPlot(sitLie_trackgirl_diamonds_boy_hours, 
                                    returnLayerOnly = TRUE, 
                                    lineColor = "black", 
                                    linetype = "solid", 
@@ -3179,6 +3205,11 @@ plot2 <- df %>% dplyr::select(id,
   papaja::theme_apa() +
   theme(legend.position = "bottom")
 
+sitLie_trackintervention_diamonds_intervention_hours <- sitLie_trackintervention_diamonds_intervention %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+sitLie_trackintervention_diamonds_control_hours <- sitLie_trackintervention_diamonds_control %>% 
+  dplyr::mutate_if(is.numeric, ~./60)
+
 plot2 <- plot2 + 
   userfriendlyscience::diamondPlot(sitLie_trackintervention_diamonds_intervention, 
                                    returnLayerOnly = TRUE, 
@@ -3218,7 +3249,7 @@ df %>% dplyr::select(sitLieAccelerometer_T1, girl, intervention, track) %>%
 ```
 
 
-# PA Determinants
+# PA Determinants and BCT use
 
 This section reports various hypothesised determinants of physical activity.
 
@@ -3379,52 +3410,6 @@ plotlist[[i]] <- plot_df %>%
 }
 ```
 
-#### Plot from manuscript
-
-<a id="determinant-diamondplot"></a>
-
-```{r determinant-diamondplot-manuscript, fig.height = 8}
-
-genderComparisonDiamonds <- plot_df %>%
-  dplyr::filter(!is.na(girl)) %>% 
-  dplyr::mutate(girl = factor(girl)) %>%
-  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
-                                labels = colnames(plot_df)[21:4], 
-                                compareBy = "girl",
-                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(3, 1)],
-                                lineSize = 0.35,
-                                alpha = 0.7,
-                                dataAlpha = .05,
-                                dataSize = .5,
-                                fixedSize = .25,
-                                showData = TRUE,
-                                drawPlot = FALSE,
-                                xbreaks = 1:7,
-                                jitterWidth = .15,
-                                jitterHeight = .3,
-                                conf.level = c(0.99, 0.99))
-
-interventionComparisonDiamonds <- plot_df %>% 
-  dplyr::mutate(intervention = forcats::fct_recode(plot_df$intervention, "Control" = "0", "Intervention" = "1")) %>% 
-  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
-                                labels = colnames(plot_df)[21:4], 
-                                compareBy = "intervention",
-                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(2, 4)],
-                                lineSize = 0.35,
-                                alpha = 0.7,
-                                dataAlpha = .05,
-                                dataSize = .5,
-                                fixedSize = .25,
-                                showData = TRUE,
-                                drawPlot = FALSE,
-                                xbreaks = 1:7,
-                                jitterWidth = .15,
-                                jitterHeight = .3,
-                                conf.level = c(0.99, 0.99))
-
-gridExtra::grid.arrange(genderComparisonDiamonds, interventionComparisonDiamonds)
-```
-
 ### Intervention vs. control {.tabset}
 
 Diamonds depict 99% confidence intervals for means.
@@ -3499,6 +3484,52 @@ ggstatsplot::ggscatterstats(
 ggstatsplot::ggscatterstats(data = na.omit(dplyr::select(lmi, LiikuntaT1_ka, Kys0045.1)), 
                             x = LiikuntaT1_ka, 
                             y = Kys0045.1)
+```
+
+<a id="determinant-diamondplot"></a>
+
+## Determinant plot featured in manuscript
+
+```{r determinant-diamondplot-manuscript, fig.height = 8}
+
+genderComparisonDiamonds <- plot_df %>%
+  dplyr::filter(!is.na(girl)) %>% 
+  dplyr::mutate(girl = factor(girl)) %>%
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                labels = colnames(plot_df)[21:4], 
+                                compareBy = "girl",
+                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(3, 1)],
+                                lineSize = 0.35,
+                                alpha = 0.7,
+                                dataAlpha = .05,
+                                dataSize = .5,
+                                fixedSize = .25,
+                                showData = TRUE,
+                                drawPlot = FALSE,
+                                xbreaks = 1:7,
+                                jitterWidth = .15,
+                                jitterHeight = .3,
+                                conf.level = c(0.99, 0.99))
+
+interventionComparisonDiamonds <- plot_df %>% 
+  dplyr::mutate(intervention = forcats::fct_recode(plot_df$intervention, "Control" = "0", "Intervention" = "1")) %>% 
+  ufs::duoComparisonDiamondPlot(items = colnames(plot_df)[21:4], 
+                                labels = colnames(plot_df)[21:4], 
+                                compareBy = "intervention",
+                                comparisonColors = viridis::viridis(4, end  =  0.8)[c(2, 4)],
+                                lineSize = 0.35,
+                                alpha = 0.7,
+                                dataAlpha = .05,
+                                dataSize = .5,
+                                fixedSize = .25,
+                                showData = TRUE,
+                                drawPlot = FALSE,
+                                xbreaks = 1:7,
+                                jitterWidth = .15,
+                                jitterHeight = .3,
+                                conf.level = c(0.99, 0.99))
+
+gridExtra::grid.arrange(genderComparisonDiamonds, interventionComparisonDiamonds)
 ```
 
 ## Distributions of PA determinants
@@ -4084,7 +4115,7 @@ plot1 + plot2
 
 ## PA motivation
 
-The participants in control and intervention groups, as well as boys and girls, reported on PA motivation similarly. Averages describe the variables poorly, as autonomous motivation is relatively flat and the two others are skewed. 
+The participants in control and intervention groups, as well as boys and girls, reported on PA motivation similarly. Averages describe the variables poorly, as autonomous motivation (consisting of intrinsic, integrated and identified regulation) is relatively flat, whereas controlled motivation (consisting of introjected and extrinsic regulation), as well as amotivation are highly skewed. 
 
 ```{r motivation-histograms-gender-intervention}
 regulations.df <- df %>% dplyr::select(
