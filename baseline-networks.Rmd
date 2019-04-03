@@ -89,7 +89,7 @@ $~$
 $~$
 <a id="network"></a>
 
-As with all models, network analysis entails its own set of assumptions. Due to the similarity with regression models, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. In this regard, behaviour change technique use and the quality of one's motivation (as posited by self-determination theory) seem less problematic. Hence, we start with those.
+As with all models, network analysis entails its own set of assumptions. Due to the similarity with regression models, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. In this regard, behaviour change technique use and the quality of one’s motivation (as posited by self-determination theory) seem less problematic. Hence, we start with those.
 
 # Network featured in manuscript
 
@@ -237,7 +237,7 @@ plot(BCT_mgm_T1_circle)
 
 Tabs in this section show robustness diagnostics for the network. For details, see:
 
-Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195-212. https://doi.org/10.3758/s13428-017-0862-1
+Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195–212. https://doi.org/10.3758/s13428-017-0862-1
 
 ### Bootstrap stability {.tabset}
 
@@ -424,42 +424,6 @@ g4 <- qgraph::qgraph(modSelect_0.5$graph,
                      color = node_colors, 
                      cut = 0)
 ```
-
-
-### GGM centrality {.tabset}
-
-#### Description 
-
-This section explores centrality measures for the gaussian models, assumptions of which are arguably less than optimally fulfilled in this data. For caveats to interpreting centrality, see:
-
-1) Bringmann, L. F., Elmer, T., Epskamp, S., Krause, R. W., Schoch, D., Wichers, M., . Bringmann, L. What do centrality measures measure in psychological networks? Preprint available: https://www.researchgate.net/publication/329129039_What_do_centrality_measures_measure_in_psychological_networks
-
-2) Hallquist, M., Wright, A. G. C., & Molenaar, P. C. M. (2019). Problems with centrality measures in psychopathology symptom networks: Why network psychometrics cannot escape psychometric theory. https://doi.org/10.31234/osf.io/pg4mf
-
-#### Centrality plot
-
-```{r centrality-diagnostics-manuscript-network}
-
-qgraph::centralityPlot(
-  list(
-    # mgm_EBIC = BCT_mgm_T1,
-    # mgm_CV = mgm_obj_T1_CV,
-       ggm = BCT_ggm,
-       ggmModSelect_0 = g3,
-       ggmModSelect_0.5 = g4
-       ),
-  include = c("Strength","ExpectedInfluence"),
-               orderBy = "ExpectedInfluence")
-
-
-```
-
-<!-- #### Centrality stability -- Omitted due to technical problems -->
-
-```{r centrality-stability-manuscript, eval = FALSE, include = FALSE}
-boot_for_centrality <- bootnet::bootnet(BCT_ggm, nBoots = 2500, type = "case")
-```
-
 
 # Combined BCT chunks
 
@@ -2893,11 +2857,11 @@ bootnetgraph <- plot(individualAgreementBCTs,
 
 For interpretation, see:
 
-Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195-212. https://doi.org/10.3758/s13428-017-0862-1
+Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195–212. https://doi.org/10.3758/s13428-017-0862-1
 
 For caveats to interpreting centrality, see:
 
-1) Bringmann, L. F., Elmer, T., Epskamp, S., Krause, R. W., Schoch, D., Wichers, M., . Bringmann, L. What do centrality measures measure in psychological networks? Preprint available: https://www.researchgate.net/publication/329129039_What_do_centrality_measures_measure_in_psychological_networks
+1) Bringmann, L. F., Elmer, T., Epskamp, S., Krause, R. W., Schoch, D., Wichers, M., … Bringmann, L. What do centrality measures measure in psychological networks? Preprint available: https://www.researchgate.net/publication/329129039_What_do_centrality_measures_measure_in_psychological_networks
 
 2) Hallquist, M., Wright, A. G. C., & Molenaar, P. C. M. (2019). Problems with centrality measures in psychopathology symptom networks: Why network psychometrics cannot escape psychometric theory. https://doi.org/10.31234/osf.io/pg4mf
 
@@ -3171,7 +3135,7 @@ bootnet::corStability(bootnet_centrality_stability_combinedAgreementBcts)
 
 ### Heterogeneity
 
-The smallest track (IT) has 163 observations. According to the heuristic sample size for p variables for Gaussian data, (p*(p-1)/2 + p), we could estimate about 7 variables. (based on [these slides](https://cvborkulo.files.wordpress.com/2014/09/winterschool2017.pdf) referring to this source: B�hlmann, P. & van de Geer, S. (2011). Statistics for High-Dimensional Data: Methods, Theory and Applications. Springer.)
+The smallest track (IT) has 163 observations. According to the heuristic sample size for p variables for Gaussian data, (p*(p-1)/2 + p), we could estimate about 7 variables. (based on [these slides](https://cvborkulo.files.wordpress.com/2014/09/winterschool2017.pdf) referring to this source: Bühlmann, P. & van de Geer, S. (2011). Statistics for High-Dimensional Data: Methods, Theory and Applications. Springer.)
 
 All tracks seem sufficiently similar on these BCTs.
 
@@ -5119,7 +5083,7 @@ corMatrix_motivations %>%
 ## Motivational regulations network
 
 ```{r sdt-network}
-## TEE T�NNE PIEFILL? tummempi sama v�ri tai opacity?
+## TEE TÄNNE PIEFILL? tummempi sama väri tai opacity?
 
 # Was going to do fused graphical lasso, but the items not normal...
 

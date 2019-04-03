@@ -11,7 +11,9 @@ output:
 
 <!-- This codebook is a supplementary file to the Let's Move It baseline analysis; see the [supplementary website](https://heinonmatti.github.io/baseline-visu/index.html)) -->
 
-```{r codebook, echo = FALSE, message = FALSE}
+<!-- SETUP -->
+
+```{r codebook, echo = FALSE, message = FALSE, warning = FALSE}
 
 source("baseline-datasetup.R")
 
@@ -34,8 +36,479 @@ df_codebook <- df %>% dplyr::select(df %>%
                                       sort() %>% 
                                       names())
 
-codebook::codebook(df_codebook)
+```
+
+```{r google-sheets, echo = FALSE, message = FALSE}
+### In preparing the code for variable and value labels, this code was used to copy-paste everything in 
+### Google Sheets (https://docs.google.com/spreadsheets/d/1fHON4e_wujD1ktcZcfUAaX6uIUUX7GpKsLSHbHAdob0/edit?usp=sharing),
+### where a research assistant translated variables and code below was created
+
+# df_attributes <- data_frame(variable = names(df), 
+#            # iterate over variable, subset df and if NULL replace with NA; collapse to chr
+#            description = map_chr(variable, ~attributes(df[[.x]])$label %||% NA), 
+#            values = map(variable, ~df[[.x]] %>% unique() %>% sort()))
+# 
+# df_attributes$variable %>%  
+#   write.table(., sep = "\t", file = "clipboard", row.names = FALSE, col.names = FALSE)
+# 
+# df_attributes$description2 <- gsub(".*: ","", df_attributes$description) 
+# 
+# df_attributes$description2 %>% 
+#   write.table(., sep = "\t", file = "clipboard", row.names = FALSE, col.names = FALSE)
+# 
+# df_attributes$varNum <- gsub(":.*","", df_attributes$description) 
+# 
+# df_attributes$varNum %>% 
+#   write.table(., sep = "\t", file = "clipboard", row.names = FALSE, col.names = FALSE)
+# 
+# purrr::map(df, ~attributes(.)$label) 
+# 
+# attributes(df$padaysLastweek_T1)$labels <- NULL
+# attributes(df$pahrsLastweek_T1)$labels <- NULL
+# attributes(df$pahrsUsually_T1)$labels <- NULL
+# attributes(df$pafreqUsually_T1)$labels <- NULL
+```
+
+```{r variable-labels, echo = FALSE, message = FALSE, warning = FALSE}
+
+labelled::var_label(df_codebook) <- list(
+  walkStepsAccelerometer_noCutOff_T1 = "Average daily steps, without cut-off of > 10 hours on > 4 days weartime",
+  lpaAccelerometer_noCutOff_T1 = "Average daily light physical activity, without cut-off of > 10 hours on > 4 days weartime",
+  sitLieAccelerometer_noCutOff_T1 = "Average daily sitting or lying down, without cut-off of > 10 hours on > 4 days weartime",
+  weartimeAccelerometer_noCutOff_T1 = "Average daily weartime, without cut-off of > 10 hours on > 4 days weartime",
+  lpaAccelerometer_T1 = "Average daily light physical activity",
+  mpaAccelerometer_T1 = "Average daily moderate physical activity",
+  mvpaAccelerometer_T1 = "Average daily moderate or vigorous physical activity",
+  sitBreaksAccelerometer_T1 = "Average daily interruptions to sitting",
+  sitLieAccelerometer_T1 = "Average daily sitting or lying down time",
+  standingAccelerometer_T1 = "Average daily standing time",
+  walkStepsAccelerometer_T1 = "Average daily walking steps",
+  weartimeAccelerometer_T1 = "Average daily weartime",
+  numberOfDaysAccelerometerWasWornOver10h_T1 = "Number of days accelerometer was worn > 10h",
+  vpaAccelerometer_T1 = "Average daily vigorous physical activity",
+  mpaAccelerometer_noCutOff_T1 = "Average daily moderate physical activity, without cut-off of > 10 hours on > 4 days weartime",
+  mvpaAccelerometer_noCutOff_T1 = "Average daily moderate or vigorous physical activity, without cut-off of > 10 hours on > 4 days weartime",
+  standingAccelerometer_noCutOff_T1 = "Average daily standing time, without cut-off of > 10 hours on > 4 days weartime",
+  sitBreaksAccelerometer_noCutOff_T1 = "Average daily interruptions to sitting, without cut-off of > 10 hours on > 4 days weartime",
+  fatpct_T1 = "Fat percentage",
+  symptom_neckShoulderPain_T1 = "Neck or shoulder pain",
+  symptom_lowerBackPain_T1 = "Lower back pain",
+  symptom_stomachAche_T1 = "Stomach ache",
+  symptom_tensionNervousness_T1 = "Tension or nervousness",
+  symptom_irritabilityAngerbursts_T1 = "Irritability or bursts of anger ",
+  symptom_sleepDifficulty_T1 = "Difficulties to fall asleep, or waking up at night",
+  symptom_headAche_T1 = "Headache",
+  symptom_tirednessFaintness_T1 = "Tiredness or faintness",
+  pahrsLastweek_T1 = "During the past 7 days, how many hours of this kind of physical activity did you get during your free time (give your answer with an accuracy of 30 minutes). Hours",
+  paminLastweek_T1 = "During the past 7 days, how many hours of this kind of physical activity did you get during your free time (give your answer with an accuracy of 30 minutes). Minutes",
+  padaysLastweek_T1 = "On your free time, how often do you engage in physical activity for at least 30 minutes in a way that you are at least slightly catching your breath and sweating",
+  pafreqUsually_T1 = "How much are you physically active or physically strain yourself on your free-time? (If this varies seasonally, mark down the option that best describes your average situation.)",
+  pahrsUsually_T1 = "How many hours a week are you usually physically active in a way that you are catching your breath and sweating? ",
+  PA_outcomeExpectations_01_T1 = "It would put me in a good mood",
+  PA_outcomeExpectationsNegativeReverseCoded_02_T1 = "It would take too much time from other important things in my life ",
+  PA_outcomeExpectations_03_T1 = "It would help me to control my weight ",
+  PA_outcomeExpectations_04_T1 = "It would help me to grow muscle mass ",
+  PA_outcomeExpectations_05_T1 = "It would improve my ability to work and do my daily chores ",
+  PA_outcomeExpectations_06_T1 = "It would help me to have energy  ",
+  PA_outcomeExpectations_07_T1 = "It would help me gain new experiences",
+  PA_outcomeExpectationsNegativeReverseCoded_08_T1 = "t would be stressful and mentally consuming ",
+  PA_outcomeExpectationsNegativeReverseCoded_09_T1 = "It would be physically consuming in a negative way",
+  PA_outcomeExpectations_10_T1 = "It would help me to sleep better",
+  PA_outcomeExpectations_11_T1 = "It would help me to get experiences of success",
+  PA_outcomeExpectations_12_T1 = "It would support my self-esteem",
+  PA_controlled_01_T1 = "... other people say I should.",
+  PA_extrinsic_01_T1 = "... other people say I should.",
+  PA_controlled_02_T1 = "... others will not be pleased with me if I do not.",
+  PA_extrinsic_02_T1 = "... others will not be pleased with me if I do not.",
+  PA_amotivation_01_T1 = "I can not see why I should bother exercising on my free time.",
+  PA_controlled_03_T1 = "...I feel under pressure from my friends/family to exercise.",
+  PA_extrinsic_03_T1 = "...I feel under pressure from my friends/family to exercise.",
+  PA_controlled_04_T1 = "... I feel guilty when I do not exercise.",
+  PA_introjected_01_T1 = "... I feel guilty when I do not exercise.",
+  PA_controlled_05_T1 = "... I feel like a failure when I have not exercised in a while.",
+  PA_introjected_02_T1 = "... I feel like a failure when I have not exercised in a while.",
+  PA_amotivation_02_T1 = "I do not see why I should have to exercise on my free time.",
+  PA_autonomous_01_T1 = "... I think it is important to make the effort to exercise regularly.",
+  PA_identified_01_T1 = "... I think it is important to make the effort to exercise regularly.",
+  PA_autonomous_02_T1 = "... I value the benefits of exercise. ",
+  PA_identified_02_T1 = "... I value the benefits of exercise. ",
+  PA_autonomous_04_T1 = "... it is consistent with my life goals.",
+  PA_integrated_01_T1 = "... it is consistent with my life goals.",
+  PA_autonomous_03_T1 = "...It is important to me to exercise regularly.",
+  PA_identified_03_T1 = "...It is important to me to exercise regularly.",
+  PA_autonomous_07_T1 = "...I get pleasure and satisfaction from participating in exercise.",
+  PA_intrinsic_01_T1 = "...I get pleasure and satisfaction from participating in exercise.",
+  PA_autonomous_05_T1 = "...I comsider exercise consistent with my values.",
+  PA_integrated_02_T1 = "...I comsider exercise consistent with my values.",
+  PA_autonomous_08_T1 = "... it is fun.",
+  PA_intrinsic_02_T1 = "... it is fun.",
+  PA_autonomous_06_T1 = "... exercise is a fundamental part of what I am.",
+  PA_integrated_03_T1 = "... exercise is a fundamental part of what I am.",
+  PA_autonomous_09_T1 = "... I enjoy my exercise sessions.",
+  PA_intrinsic_03_T1 = "... I enjoy my exercise sessions.",
+  PA_amotivation_03_T1 = "I do not see the point in exercising.",
+  PA_amotivation_04_T1 = "I think exercising is a waste of time.",
+  PA_opportunities_01_T1 = "I have enough money to be physically active ",
+  PA_opportunities_02_T1 = "There are good bikeways and running tracks in my environment ",
+  PA_opportunitiesReverseCoded_03_T1 = "I do not have the sports equipment I need",
+  PA_opportunities_04_T1 = "There are a lot of good exercise facilities near me (e.g. swimming halls, gyms, sports centers)",
+  PA_opportunities_05_T1 = "Lacking sports equipment is not keep me from doing PA ",
+  PA_opportunitiesReverseCoded_06_T1 = "I am very busy because of  school, hobbies and/or friends",
+  PA_opportunities_07_T1 = "I have a lot of opportunities to do PA at home ",
+  PA_opportunitiesReverseCoded_08_T1 = "My or my family's religion restricts my physical activity",
+  PA_descriptiveNorm_01_T1 = "Most of my friends are regularly physically active, at least 1.5 hours per week ",
+  PA_descriptiveNorm_02_T1 = "My parents are regularly physically active, at least 1.5 hours per week",
+  PA_injunctiveNorm_01_T1 = "My parents would want me to be regularly physically active, at least 1.5 hours per week",
+  PA_injunctiveNorm_T1 = "Injunctive norm sumscore",
+  PA_intention_01_T1 = "I intend to be regularly physically active, at least 1.5 hours per week, during the next month",
+  PA_intention_02_T1 = "I intend to be regularly physically active, at least 1.5 hours per week, during the next month",
+  PA_actionPlanning_01_T1 = "Currently, I have made a detailed plan regarding... when to exercise",
+  PA_actionPlanning_02_T1 = "Currently, I have made a detailed plan regarding... where to exercise",
+  PA_actionPlanning_03_T1 = "Currently, I have made a detailed plan regarding... how to exercise",
+  PA_actionPlanning_04_T1 = "Currently, I have made a detailed plan regarding... how often to exercise",
+  PA_copingPlanning_01_T1 = "Currently, I have made a detailed plan regarding... what to do if something interferes with my plans",
+  PA_copingPlanning_02_T1 = "Currently, I have made a detailed plan regarding... how to cope with possible setbacks",
+  PA_copingPlanning_03_T1 = "Currently, I have made a detailed plan regarding... what to do in difficult situations in order to act according to my intentions",
+  PA_copingPlanning_04_T1 = "Currently, I have made a detailed plan regarding... which good opportunities for action to take",
+  PA_selfefficacy_01_T1 = "If I wanted to, I could be regularly physically active.",
+  PA_selfefficacyReverseCoded_02_T1 = "For me being regularly physically active is",
+  PA_perceivedBehaviouralControl_01_T1 = "I have full contol over whether or not to be regularly physically active",
+  PA_perceivedBehaviouralControlReverseCoded_02_T1 = "Being physically active is not entirely up to me",
+  PA_perceivedBehaviouralControl_03_T1 = "I am confident that I can overcome difficulties that prevent me from being regularly physically active",
+  PA_agreementDependentBCT_01_T1 = "I have set PA goals for myself.",
+  PA_agreementDependentBCT_02_T1 = "I have personally made a specific plan (what, where, how) to implement my PA.",
+  PA_agreementDependentBCT_03_T1 = "I have a PA plan, which has been made by someone else, e.g. my sports club (e.g. a workout schedule).",
+  PA_agreementDependentBCT_04_T1 = "I have a way by which I remind myself of my PA plan, e.g. I write it down in the calendar.",
+  PA_agreementDependentBCT_05_T1 = "I have cut larger PA goals to smaller subgoals.",
+  PA_agreementDependentBCT_06_T1 = "I have tried out new ways for me to be physically active.",
+  PA_agreementDependentBCT_07_T1 = "I have pondered, what kind of difficult situations or barriers prevent me from implementing my PA plan.",
+  PA_agreementDependentBCT_08_T1 = "I have planned for ways to overcome barriers to doing PA.",
+  PA_agreementDependentBCT_09_T1 = "I have thought about how PA fits my identity (self concept).",
+  PA_agreementDependentBCT_10_T1 = "I have attempted to find ways to exercise so, that it will not obstruct but instead helps actualise my other life values.",
+  PA_frequencyDependentBCT_01_T1 = "I have reminded myself even in my spare time, what kind of positive consequences frequent PA would have in my life.",
+  PA_frequencyDependentBCT_02_T1 = "I have monitored my PA by marking the PA occasions on an exercise log on paper.",
+  PA_frequencyDependentBCT_03_T1 = "I have monitored my PA by using a smart phone, e.g. the Moves-app.",
+  PA_frequencyDependentBCT_04_T1 = "I use mnemonic cues with which I remember to implement my PA intention.",
+  PA_frequencyDependentBCT_05_T1 = "I have compared my actualized PA with the PA goal I have set.",
+  PA_frequencyDependentBCT_06_T1 = "I have thought about which reasons to do PA are important to me personally.",
+  PA_frequencyDependentBCT_07_T1 = "I have made changes in my home (e.g. my room or my computer), so that starting PA would be easier.",
+  PA_frequencyDependentBCT_08_T1 = "I have asked my friends or family for support to reach my PA goals.",
+  PA_frequencyDependentBCT_09_T1 = "If I have not reached my PA goal, I have evaluated, what went wrong.",
+  PA_goal_01_T1 = "Do you currently have a PA goal?",
+  PA_goal_T1 = "Do you currently have a PA goal?",
+  big5extraversion_01_T1 = "... Extraverted, enthusiastic.",
+  big5agreeablenessReverseCoded_02_T1 = "... Critical, quarrelsome.",
+  big5conscientiousness_01_T1 = "... Dependable, self-disciplined.",
+  big5neuroticism_01_T1 = "... Anxious, easily upset.",
+  big5openness_01_T1 = "... Open to new experiences, complex.",
+  big5extraversionReverseCoded_02_T1 = "... Reserved, quiet.",
+  big5agreeableness_01_T1 = "... Sympathetic, warm.",
+  big5conscientiousnessReverseCoded_02_T1 = "... Disorganized, careless.",
+  big5neuroticismReverseCoded_02_T1 = "... Calm, emotionally stable.",
+  big5opennessReverseCoded_02_T1 = "... Conventional, uncreative",
+  SB_avgDailySelfRepSittingHoursLastWeekWeekday_T1 = "Hours",
+  SB_avgDailySelfRepSittingMinutesLastWeekWeekday_T1 = "Minutes",
+  SB_avgDailySelfRepSittingHoursLastWeekWeekend_T1 = "Hours",
+  SB_avgDailySelfRepSittingMinutesLastWeekWeekend_T1 = "Minutes",
+  SB_selfRepSittingMinutesDuringClass_T1 = "Please estimate, how long do you sit still during a lesson (45 min).",
+  SB_selfRepSitbreaksDuringClass_T1 = "...during lessons",
+  SB_selfRepSitbreaksTVDVD_T1 = "... at home watching TV or DVDs.",
+  SB_selfRepSitbreaksHomeComputer_T1 = "... at home on computer.",
+  SB_selfRepSitbreaksWithFriends_T1 = "... while hanging out with friends.",
+  SB_selfRepSitbreaksWorkPlacement_T1 = "...during the learning-on-the-job ",
+  SB_selfRepSitbreaksDidNotSit30min_T1 = "OR I did not sit still more than 30 minutes at a time during the day ",
+  SB_perceivedTooMuchSitting_T1 = "What do you find a too long of a time to sit still in at a time?",
+  SB_outcomeExpectationsNegativeReverseCoded_01_T1 = "... I would feel uncomfortable",
+  SB_outcomeExpectations_02_T1 = "... I would be refreshed and gain energy",
+  SB_outcomeExpectations_03_T1 = "... I would be able to better concentrate",
+  SB_outcomeExpectations_04_T1 = "... neck and back pains and headaches would be reduced. ",
+  SB_outcomeExpectations_05_T1 = "... my muscles would not degenerate",
+  SB_outcomeExpectations_06_T1 = "... my brain would function better",
+  SB_outcomeExpectationsNegativeReverseCoded_07_T1 = "... it would disturb doing other things.",
+  SB_descriptiveNorm_01_T1 = "...try to restrict their sitting during the SCHOOLDAY",
+  SB_descriptiveNorm_02_T1 = "...try to restrict their sitting during their FREE-TIME",
+  SB_injunctiveNorm_01_T1 = "...sees it as acceptable that I try to restrict my sitting AT SCHOOL",
+  SB_injunctiveNorm_02_T1 = "Most of my teachers would accept it if I restricted my sitting AT SCHOOL",
+  SB_selfEfficacyperceivedBehaviouralControl_01_T1 = "If I want, I can restrict my sitting AT SCHOOL",
+  SB_selfEfficacyperceivedBehaviouralControl_02_T1 = "It is fully up to me whether I restrict my sitting AT SCHOOL ",
+  SB_selfEfficacyperceivedBehaviouralControl_03_T1 = "If I want, I can restrict my sitting ON MY FREE-TIME",
+  SB_selfEfficacyperceivedBehaviouralControl_04_T1 = "It is fully up to me whether I restrict my sitting ON MY FREE-TIME",
+  SB_selfEfficacyperceivedBehaviouralControl_05_T1 = "If I want, I can restrict my sitting while LEARNING ON THE JOB",
+  SB_intention_01_T1 = "I intend to restrict my sitting during the next month AT SCHOOL",
+  SB_intention_02_T1 = "I intend to restrict my sitting during the next month AT SCHOOL",
+  SB_intention_03_T1 = "I intend to restrict my sitting during the next month ON MY FREE-TIME",
+  SB_intention_04_T1 = "I intend to restrict my sitting during the next month ON MY FREE-TIME",
+  SB_classroomOpportunities_T1 = "...I am provided with chances to reduce sitting.",
+  SB_classroomSitbreaksEvery30min_T1 = "...there is a break from sitting after every 30 minutes",
+  groupSupportsMe_T1 = "supported",
+  groupListensToMe_T1 = "listened to",
+  groupUnderstandsMe_T1 = "understood",
+  groupValuesMe_T1 = "valued",
+  groupFeelsSafe_T1 = "safe",
+  id = "Participant ID",
+  intervention = "Intervention allocation",
+  group = "Study group, i.e. classroom",
+  school = "School",
+  girl = "Gender",
+  track = "Educational track",
+  trackSchool = "Variable constructed by pasting together educational track and school",
+  vpaAccelerometer_noCutOff_T1 = "Average daily vigorous physical activity, without cut-off of > 10 hours on > 4 days weartime",
+  big5agreeableness_T1 = "Big-5 agreeableness sumscore",
+  big5conscientiousness_T1 = "Big-5 conscientiousness sumscore",
+  big5extraversion_T1 = "Big-5 extraversion sumscore",
+  big5neuroticism_T1 = "Big-5 neuroticism sumscore",
+  big5openness_T1 = "Big-5 openness sumscore",
+  PA_agreementDependentBCT_T1 = "Agreement-dependent BCTs sumscore",
+  PA_amotivation_T1 = "Amotivation sumscore",
+  PA_autonomous_T1 = "Autonomous motivation sumscore",
+  PA_controlled_T1 = "Controlled motivation sumscore",
+  PA_descriptiveNorm_T1 = "Descriptive norm sumscore",
+  PA_frequencyDependentBCT_T1 = "Frequency-dependent BCTs sumscore",
+  PA_intention_T1 = "Intention sumscore",
+  PA_outcomeExpectations_T1 = "Outcome expectations sumscore",
+  PA_opportunities_T1 = "Perceived environmental opportunities sumscore",
+  PA_perceivedBehaviouralControl_T1 = "Perceived behavioural control sumscore",
+  PA_selfefficacy_T1 = "Self-efficacy sumscore",
+  SB_descriptiveNorm_T1 = "Descriptive norm sumscore",
+  SB_injunctiveNorm_T1 = "Injunctive norm sumscore",
+  SB_intention_T1 = "Intention sumscore",
+  SB_outcomeExpectations_T1 = "Outcome expectations sumscore",
+  SB_selfEfficacyperceivedBehaviouralControl_T1 = "Self-efficacy and perceived behavioural control sumscore",
+  symptom_T1 = "Symptoms sumscore",
+  leisuretimeMvpaHoursLastweek_T1 = "Combination of self-reported MVPA minutes, paminLastweek, and hours, pahrsLastweek",
+  PA_actionplan_T1 = "Action planning sumscore",
+  PA_copingplan_T1 = "Coping planning sumscore",
+  PA_selfEfficacyperceivedBehaviouralControl_T1 = "Self-efficacy and perceived behavioural control sumscore",
+  PA_actCop_T1 = "Action and coping planning sumscore",
+  PA_intrinsic_T1 = "Intrinsic motivation sumscore",
+  PA_integrated_T1 = "Integrated motivation sumscore",
+  PA_identified_T1 = "Identified motivation sumscore",
+  PA_introjected_T1 = "Introjected motivation sumscore",
+  PA_extrinsic_T1 = "Extrinsic motivation sumscore"
+)
+
+```
+
+```{r value-labels, echo = FALSE, message = FALSE, warning = FALSE}
+
+labelled::val_labels(df_codebook$symptom_neckShoulderPain_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+labelled::val_labels(df_codebook$symptom_lowerBackPain_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+labelled::val_labels(df_codebook$symptom_stomachAche_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+labelled::val_labels(df_codebook$symptom_tensionNervousness_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+labelled::val_labels(df_codebook$symptom_irritabilityAngerbursts_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+labelled::val_labels(df_codebook$symptom_sleepDifficulty_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+labelled::val_labels(df_codebook$symptom_headAche_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+labelled::val_labels(df_codebook$symptom_tirednessFaintness_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+
+
+labelled::val_labels(df_codebook$padaysLastweek_T1) <- c("I cannot be physically active due to an illness or injury" = 1, "Less than once a week" = 2, "1-2 times a week" = 3, "3 times a week" = 4, "4 times a week" = 5, "5 times a week or more" = 6)
+labelled::val_labels(df_codebook$pafreqUsually_T1) <- c("On my free-time, I read, watch TV and do chores where I am not especially physically active or that do not physically strain me." = 1, "On my free-time, I walk, bike or am otherwise physically active at least 4 hours per week." = 2, "On my free-time, I engage in actual fitness training on average at least for 3 hours per week." = 3, "On my free-time, I engage in competitive training regularly multiple times a week." = 4)
+labelled::val_labels(df_codebook$pahrsUsually_T1) <- c("Not at all" = 1, "About half an hour" = 2, "About an hour" = 3, "About 1,5 hours" = 4, "About 2-3 hours" = 5, "About 4-6 hours" = 6, "About 7 hours or more" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectationsNegativeReverseCoded_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_03_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_04_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_05_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_06_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_07_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectationsNegativeReverseCoded_08_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectationsNegativeReverseCoded_09_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_10_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_11_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_outcomeExpectations_12_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_controlled_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_extrinsic_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_controlled_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_extrinsic_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_amotivation_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_controlled_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_extrinsic_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_controlled_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_introjected_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_controlled_05_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_introjected_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_amotivation_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_identified_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_identified_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_integrated_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_identified_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_07_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_intrinsic_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_05_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_integrated_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_08_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_intrinsic_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_06_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_integrated_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_09_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_intrinsic_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_amotivation_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_amotivation_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_opportunities_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunities_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunitiesReverseCoded_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunities_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunities_05_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunitiesReverseCoded_06_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunities_07_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunitiesReverseCoded_08_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_descriptiveNorm_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_descriptiveNorm_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_injunctiveNorm_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_injunctiveNorm_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_intention_01_T1) <- c("Unlikely 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Likely 7" = 7)
+labelled::val_labels(df_codebook$PA_intention_02_T1) <- c("Definitely not 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Definitely yes 7" = 7)
+labelled::val_labels(df_codebook$PA_actionPlanning_01_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_actionPlanning_02_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_actionPlanning_03_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_actionPlanning_04_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_copingPlanning_01_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_copingPlanning_02_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_copingPlanning_03_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_copingPlanning_04_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_selfefficacy_01_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$PA_selfefficacyReverseCoded_02_T1) <- c("Easy 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Difficult 7" = 7 )
+labelled::val_labels(df_codebook$PA_perceivedBehaviouralControl_01_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$PA_perceivedBehaviouralControlReverseCoded_02_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$PA_perceivedBehaviouralControl_03_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_05_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_06_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_07_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_08_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_09_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_10_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_05_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_06_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_07_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_08_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_09_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_goal_01_T1) <- c("Yes" = 0, "No" = 1)
+labelled::val_labels(df_codebook$PA_goal_T1) <- c("Yes" = 0, "No" = 1)
+labelled::val_labels(df_codebook$big5extraversion_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5agreeablenessReverseCoded_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5conscientiousness_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5neuroticism_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5openness_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5extraversionReverseCoded_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5agreeableness_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5conscientiousnessReverseCoded_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5neuroticismReverseCoded_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5opennessReverseCoded_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+
+
+
+
+
+labelled::val_labels(df_codebook$SB_selfRepSitbreaksDuringClass_T1) <- c("Less than every hour" = 1, "Every hour" = 2, "Every 30min" = 3, "Every 10min" = 4, "Every 5min" = 5)
+labelled::val_labels(df_codebook$SB_selfRepSitbreaksTVDVD_T1) <- c("Less than every hour" = 1, "Every hour" = 2, "Every 30min" = 3, "Every 10min" = 4, "Every 5min" = 5)
+labelled::val_labels(df_codebook$SB_selfRepSitbreaksHomeComputer_T1) <- c("Less than every hour" = 1, "Every hour" = 2, "Every 30min" = 3, "Every 10min" = 4, "Every 5min" = 5)
+labelled::val_labels(df_codebook$SB_selfRepSitbreaksWithFriends_T1) <- c("Less than every hour" = 1, "Every hour" = 2, "Every 30min" = 3, "Every 10min" = 4, "Every 5min" = 5)
+labelled::val_labels(df_codebook$SB_selfRepSitbreaksWorkPlacement_T1) <- c("Less than every hour" = 1, "Every hour" = 2, "Every 30min" = 3, "Every 10min" = 4, "Every 5min" = 5)
+labelled::val_labels(df_codebook$SB_selfRepSitbreaksDidNotSit30min_T1) <- c("Did not sit over 30min" = 1)
+labelled::val_labels(df_codebook$SB_perceivedTooMuchSitting_T1) <- c("I do not think there is a limit" = 1, "15min at a time" = 2, "30min at a time" = 3, "45min at a time" = 4, "1h at a time" = 5, "2hrs at a time" = 6, "3hrs at a time" = 7, "4hrs at a time" = 8, "Unable to say" = 9)
+labelled::val_labels(df_codebook$SB_outcomeExpectationsNegativeReverseCoded_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_outcomeExpectations_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_outcomeExpectations_03_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_outcomeExpectations_04_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_outcomeExpectations_05_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_outcomeExpectations_06_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_outcomeExpectationsNegativeReverseCoded_07_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_descriptiveNorm_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_descriptiveNorm_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_injunctiveNorm_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_injunctiveNorm_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_selfEfficacyperceivedBehaviouralControl_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_selfEfficacyperceivedBehaviouralControl_02_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_selfEfficacyperceivedBehaviouralControl_03_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_selfEfficacyperceivedBehaviouralControl_04_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_selfEfficacyperceivedBehaviouralControl_05_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_intention_01_T1) <- c("Unlikely 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Likely 7" = 7)
+labelled::val_labels(df_codebook$SB_intention_02_T1) <- c("Definitely not 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Definitely yes 7" = 7)
+labelled::val_labels(df_codebook$SB_intention_03_T1) <- c("Unlikely 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Likely 7" = 7)
+labelled::val_labels(df_codebook$SB_intention_04_T1) <- c("Definitely not 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Definitely yes 7" = 7)
+labelled::val_labels(df_codebook$SB_classroomOpportunities_T1) <- c("Never" = 1, "Once a month or more seldom" = 2, "Couple of times a month" = 3, "About once a week" = 4, "A few times a week" = 5, "Daily" = 6)
+labelled::val_labels(df_codebook$SB_classroomSitbreaksEvery30min_T1) <- c("Never" = 1, "Once a month or more seldom" = 2, "Couple of times a month" = 3, "About once a week" = 4, "A few times a week" = 5, "Daily" = 6)
+labelled::val_labels(df_codebook$groupSupportsMe_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$groupListensToMe_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$groupUnderstandsMe_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$groupValuesMe_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$groupFeelsSafe_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+
+labelled::val_labels(df_codebook$intervention) <- c("Intervention" = 1, "Control" = 0)
+
+
+
+
+
+
+labelled::val_labels(df_codebook$big5agreeableness_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5conscientiousness_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5extraversion_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5neuroticism_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$big5openness_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_amotivation_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_autonomous_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_controlled_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_descriptiveNorm_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+
+labelled::val_labels(df_codebook$PA_outcomeExpectations_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$PA_opportunities_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$PA_perceivedBehaviouralControl_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$PA_selfefficacy_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$SB_descriptiveNorm_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$SB_injunctiveNorm_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$SB_intention_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
+labelled::val_labels(df_codebook$SB_outcomeExpectations_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
+labelled::val_labels(df_codebook$SB_selfEfficacyperceivedBehaviouralControl_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$symptom_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
+
+labelled::val_labels(df_codebook$PA_actionplan_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_copingplan_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_selfEfficacyperceivedBehaviouralControl_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
+labelled::val_labels(df_codebook$PA_actCop_T1) <- c("Completely disagree 1" = 1, "Disagree 2" = 2, "Agree 3" = 3, "Completely agree 4" = 4)
+labelled::val_labels(df_codebook$PA_intrinsic_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_integrated_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_identified_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_introjected_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_extrinsic_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
+
 ```
 
 
+```{r knit-codebook, echo = FALSE, message = FALSE, warning = FALSE}
+codebook::metadata(df_codebook)$name <- "Baseline data from Let's Move It intervention trial"
+codebook::metadata(df_codebook)$creator <- "Matti TJ Heino"
+codebook::metadata(df_codebook)$description <- "Baseline data from Let's Move It intervention trial"
+codebook::metadata(df_codebook)$identifier <- "10.31234/osf.io/46rzm"
+codebook::metadata(df_codebook)$citation <- "Heino, M. T. J., Fried, E. I., Sund, R., Haukkala, A., Knittle, K. P., Borodulin, K., Uutela, A., Araujo-Soares, V., Vasankari, T., & Hankonen, N. (2019). Visualisation and network analysis of physical activity and its determinants: Demonstrating opportunities in analysing baseline associations in the Let’s Move It trial."
+codebook::metadata(df_codebook)$url <- "https://doi.org/10.31234/osf.io/46rzm"
+codebook::metadata(df_codebook)$measurementTechnique <- "Online survey, bioimpedance, accelerometer"
+codebook::metadata(df_codebook)$datePublished <- "Not yet published"
+codebook::metadata(df_codebook)$temporalCoverage <- "January 2015 - April 2016"
+codebook::metadata(df_codebook)$spatialCoverage <- "Southern Finland"
+
+codebook::codebook(df_codebook)
+
+```
+
+```{r concise, eval = FALSE, echo = FALSE, message = FALSE}
+## For the concise version:
+# library(summarytools)
+summarytools::view(summarytools::dfSummary(df_codebook, method = "render"), file = "./codebook_concise.html")
+
+```
 

@@ -138,6 +138,8 @@ vardatatable2 %>%
         )
 ```
 
+<a id="variables-with-icc"></a>
+
 ## All main variables, their means, CIs and ICCs.
 
 Values calculated with a multilevel model accounting for school and classroom.
@@ -186,8 +188,6 @@ vardatatable %>% dplyr::select(Variable, `ICC class`, `ICC school`, n) %>%
 ## Model with school, class and educational track {.tabset}
 
 The model below is the same as the one above, except it adds educational track. 
-
-As before, we create a table with all variables, their means, CIs and ICCs.
 
 ```{r multilevel-edutrack-school-group}
 #library(sjstats)
@@ -1321,7 +1321,9 @@ demographics <- lmi %>% dplyr::select(id = ID,
   intervention = ryhma,
   school = Aineisto.1,
   girl = Kys0013.1,
-  ethnicity = Kys0005.1,
+  ethnicity1 = Kys0005.1,
+  ethnicity2 = Kys0005.2,
+  ethnicity3 = Kys0005.3,
   studyYear = Kys0014.1) %>% 
   dplyr::mutate(
     surveyYear = lubridate::year(surveyDate),
@@ -1331,9 +1333,12 @@ demographics <- lmi %>% dplyr::select(id = ID,
     girl = ifelse(girl == "2", 1, 0),
     girl = as.numeric(girl, levels = c("1", "0")),
     school = factor(school, levels = c("1", "2", "3", "4", "5")),
-    bornInFinland = as.numeric(ifelse(ethnicity == 1, 1, 0)),
+    bornInFinland = ifelse(!is.na(ethnicity1), ethnicity1, 
+                           ifelse(!is.na(ethnicity2), ethnicity2,
+                                  ifelse(!is.na(ethnicity3), ethnicity3, NA))),
+    bornInFinland = as.numeric(ifelse(bornInFinland == 1, 1, 0)),
     studyYear = ifelse(as.numeric(studyYear) == 0, NA, as.numeric(studyYear))) %>%  # Remove "other" from study year
-  dplyr::select(-surveyDate, -surveyYear)
+  dplyr::select(-surveyDate, -surveyYear, -ethnicity1, -ethnicity2, -ethnicity3)
 
 # Insert track variable with those who answered "other" with one of the actual category labels given the appropriate category:
 Track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
