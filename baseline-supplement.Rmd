@@ -130,7 +130,9 @@ The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a 
 
 <a id="items"></a>
 
-# Descriptions of scales used to measure theoretical predictors of PA
+# Descriptions of scales used to measure main theoretical predictors of PA
+
+All scales, their properties and individual items can be found in the [codebook](https://heinonmatti.github.io/baseline-visu/codebook_elaborate.html).
 
 *Outcome expectations.* Outcome expectations were measured using a 12-item scale, with the items based on a belief elicitation study conducted in the study population, in line with standard procedures (Francis et al., 2004). The scale consisted of 9 positive outcome expectations items and three negative ones.
 

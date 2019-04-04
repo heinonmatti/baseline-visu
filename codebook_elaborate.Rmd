@@ -11,6 +11,10 @@ output:
 
 <!-- This codebook is a supplementary file to the Let's Move It baseline analysis; see the [supplementary website](https://heinonmatti.github.io/baseline-visu/index.html)) -->
 
+**For a concise codebook version with variables and distributions only, see [here](https://heinonmatti.github.io/baseline-visu/codebook_concise.html).**
+
+**For the online questionnaire form, see [here](https://github.com/heinonmatti/baseline-visu/blob/master/Student-questionnaire_T1_english.pdf)**
+
 <!-- SETUP -->
 
 ```{r codebook, echo = FALSE, message = FALSE, warning = FALSE}
@@ -505,7 +509,7 @@ codebook::codebook(df_codebook)
 
 ```
 
-```{r concise, eval = FALSE, echo = FALSE, message = FALSE}
+```{r concise, eval = TRUE, echo = FALSE, message = FALSE}
 ## For the concise version:
 # library(summarytools)
 summarytools::view(summarytools::dfSummary(df_codebook, method = "render"), file = "./codebook_concise.html")

@@ -80,6 +80,16 @@ readr::write_lines(htmlhead, path = "/mnt/Data/autoentrepreneur/header.html")
 
 ```{r setup}
 
+knitr::opts_chunk$set(
+  warning = FALSE, # show warnings during codebook generation
+  message = FALSE, # show messages during codebook generation
+  error = TRUE, # do not interrupt codebook generation in case of errors,
+                # usually makes debugging easier, and sometimes half a codebook
+                # is better than none
+  echo = FALSE,  # don't show the R code,
+  cache = FALSE
+)
+
 source("baseline-datasetup.R")
 
 ```
@@ -2160,7 +2170,7 @@ exerciseTypes_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 Below, we average the layout and plot these networks side-by-side for comparison.
 
 ```{r exercisetypes-comparison}
-avglayout <- averageLayout(exerciseTypes_mgm, exerciseTypes_ising)
+avglayout <- qgraph::averageLayout(exerciseTypes_mgm, exerciseTypes_ising)
 
 layout(t(1:2))
 
@@ -2363,7 +2373,7 @@ exerciseTypes_mgm_withMeasures2 <- qgraph::qgraph(mgm_obj_EBIC$pairwise$wadj,
             label.scale = FALSE,
             label.color = c(rep("black", 15)))
 
-# exerciseTypes_mgm_withMeasures_cor <- qgraph::qgraph(cor_auto(exerciseTypes_df), 
+# exerciseTypes_mgm_withMeasures_cor <- qgraph::qgraph(qgraph::cor_auto(exerciseTypes_df), 
 #             layout = "spring",
 #             repulsion = 0.99, # To nudge the network from originally bad visual state
 #             title = "Bivariate correlations",
@@ -2381,7 +2391,7 @@ exerciseTypes_mgm_withMeasures2 <- qgraph::qgraph(mgm_obj_EBIC$pairwise$wadj,
 To compare the two previous graphs, we again average the layout and plot them next to each other.
 
 ```{r exercisetypes-comparison2}
-avglayout <- averageLayout(exerciseTypes_mgm_withMeasures, exerciseTypes_mgm_withMeasures2)
+avglayout <- qgraph::averageLayout(exerciseTypes_mgm_withMeasures, exerciseTypes_mgm_withMeasures2)
 
 layout(t(1:2))
 
@@ -2456,7 +2466,7 @@ exerciseTypes_df <- as.tbl(exerciseTypes_df)
 # Take all names, replace the dots with space
 names(exerciseTypes_df) <- stringr::str_replace_all(names(exerciseTypes_df), pattern = "\\.", replacement = " ")
 
-cor_auto(exerciseTypes_df) %>% data.frame() %>% 
+qgraph::cor_auto(exerciseTypes_df) %>% data.frame() %>% 
   dplyr::mutate(variable = names(exerciseTypes_df)) %>% 
   dplyr::mutate_at(vars(PA.accelerometer, PA.self.report), funs(round(., 3))) %>% 
   dplyr::select(variable, PA.accelerometer, PA.self.report) %>% 
@@ -4112,11 +4122,11 @@ cat("Number of edges, which appear different (p<0.05):", sum(nct_results_top5Bct
 
 ```
 
-# BCT-SDT Regression analyses
+<!-- # BCT-SDT Regression analyses -->
 
-Here's the classical linear model.
+<!-- Here's the classical linear model. -->
 
-```{r bct-sdt-regression, results = "asis"}
+```{r bct-sdt-regression, results = "asis", eval = FALSE, include = FALSE, echo = FALSE}
 
 bctdf <- df %>% dplyr::select(id,
   intervention,
@@ -4167,17 +4177,17 @@ outcomevars <- c('Autonomous',
 
 for (i in outcomevars) {
 m <- lm(paste0(i, " ~ 
-  goal.setting +
-  implementation.plan +
-  plan.by.other +
-  reminder.of.plan +
-  subgoals +
-  new.PA.options +
-  barrier.identification +
-  coping.planning +
-  PA.identity +
-  PA.life.values +
-  positive.consequences"), 
+  'goal setting' +
+  'own plan' +
+  'plan by other' +
+  'reminder of plan' +
+  'subgoals' +
+  'trying new PA' +
+  'barrier identification' +
+  'problem solving' +
+  'PA identity reflection' +
+  'aligning PA with life values' +
+  'remind of PA benefits'"), 
   data = bctdf)
 
 cat("\n\nEstimates for", i, "regulation", sep = " ")
@@ -4200,13 +4210,13 @@ names <- df %>% dplyr::select('PA' = mvpaAccelerometer_T1, 'SB' = sitLieAccelero
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
-cormatrix <- cor_auto(data) 
+cormatrix <- qgraph::cor_auto(data) 
 
 piefill <- data %>%
   summarise_all(funs(mean(., na.rm = TRUE))) %>% 
   mutate_at(vars(PA, SB),
             funs(. / (24*60))) %>% # proportion of day used doing the behaviour
-  mutate_at(vars(`action planning`, `problem solving`),
+  mutate_at(vars(`action planning`, `coping planning`),
             funs(. / 4)) %>% 
   mutate_at(vars(6:ncol(data)),
             funs(. / 7)) %>% 
@@ -4223,7 +4233,7 @@ nodeColors <- c(rep(viridis::viridis(7, begin = 0.3, end = 1)[1], 2), # PA, SB
                 rep(viridis::viridis(7, begin = 0.3, end = 1)[6], 3)) # OE, SE/perceivedBehaviouralControl, Opportunities
 
 
-qgraph(cor_auto(data), layout = "spring", labels = TRUE, 
+qgraph::qgraph(qgraph::cor_auto(data), layout = "spring", labels = TRUE, 
        # groups = group.spinglass, 
      color=nodeColors,
      label.cex = 0.75,
@@ -4755,7 +4765,7 @@ data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, actCop = PA_actcop_T1, B
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
-cormatrix <- cor_auto(data)
+cormatrix <- qgraph::cor_auto(data)
 
 graph1<-qgraph(cormatrix, graph="glasso", layout="spring", sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
@@ -4790,7 +4800,7 @@ data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping plann
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
-cormatrix <- cor_auto(data)
+cormatrix <- qgraph::cor_auto(data)
 
 graph1 <- qgraph(cormatrix, graph="glasso", layout="spring", sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
@@ -4847,7 +4857,7 @@ data <- df %>% dplyr::select(PA = mvpaAccelerometer_T1, 'action and coping plann
 
 # Spinglass algorithm detects communities. Tutorial here: http://psych-networks.com/r-tutorial-identify-communities-items-networks/
 
-cormatrix <- cor_auto(data)
+cormatrix <- qgraph::cor_auto(data)
 
 graph1 <- qgraph(cormatrix, graph="glasso", layout="spring", sampleSize = nrow(data),
               vsize=7, cut=0, maximum=.45, border.width=1.5)
