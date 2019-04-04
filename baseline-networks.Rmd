@@ -4,97 +4,14 @@ title: "Network analyses"
 
 This section describes network analyses and displays correlation structures in the data. Here, physical activity (PA) is used interchangeably with moderate-to-vigorous physical activity (MVPA); all measures of activity relate to MVPA.
 
-```{r htmlTemp3, echo=FALSE, eval=FALSE, INCLUDE = FALSE}
-# This chunk was an attempt at html_document2 with code folding... Turned out to be a bit much.
-
-codejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/codefolding.js")
-collapsejs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/collapse.js")
-transitionjs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/transition.js")
-dropdownjs <- readr::read_lines("/mnt/Data/autoentrepreneur/js/dropdown.js")
-
-htmlhead <- c(
-  paste('
-<script>',
-paste(transitionjs, collapse = "\n"),
-'</script>
-<script>',
-paste(collapsejs, collapse = "\n"),
-'</script>
-<script>',
-paste(codejs, collapse = "\n"),
-'</script>
-<script>',
-paste(dropdownjs, collapse = "\n"),
-'</script>
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-.row { display: flex; }
-.collapse { display: none; }
-.in { display:block }
-.pull-right > .dropdown-menu {
-    right: 0;
-    left: auto;
-}
-.open > .dropdown-menu {
-    display: block;
-}
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    display: none;
-    float: left;
-    min-width: 160px;
-    padding: 5px 0;
-    margin: 2px 0 0;
-    font-size: 14px;
-    text-align: left;
-    list-style: none;
-    background-color: #fff;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0,0,0,.15);
-    border-radius: 4px;
-    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-    box-shadow: 0 6px 12px rgba(0,0,0,.175);
-}
-</style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("show" === "hide");
-});
-</script>
-', sep = "\n"),
-  paste0('
-<script>
-document.write(\'<div class="btn-group pull-right" style="position: absolute; top: 20%; right: 2%; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>\')
-</script>
-')
-)
-
-readr::write_lines(htmlhead, path = "/mnt/Data/autoentrepreneur/header.html")
-```
-
-
-```{r setup}
-
-knitr::opts_chunk$set(
-  warning = FALSE, # show warnings during codebook generation
-  message = FALSE, # show messages during codebook generation
-  error = TRUE, # do not interrupt codebook generation in case of errors,
-                # usually makes debugging easier, and sometimes half a codebook
-                # is better than none
-  echo = FALSE,  # don't show the R code,
-  cache = FALSE
-)
+```{r setup, message = FALSE, warning = FALSE}
 
 source("baseline-datasetup.R")
 
 ```
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
+
 $~$
 $~$
 <a id="network"></a>
@@ -4756,7 +4673,7 @@ plot(bootnet_centrality_stability_determinants, perNode=T, "strength")
 bootnet::corStability(bootnet_centrality_stability_determinants)
 ```
 
-### PA network without SDT motivations
+<!-- ### PA network without SDT motivations -->
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
@@ -4790,7 +4707,7 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 ```
 
-### PA network without BCTs and SDT
+<!-- ### PA network without BCTs and SDT -->
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
@@ -4847,7 +4764,7 @@ plot(nwBoys, label.scale = FALSE, title = "Boys", label.cex = 0.75,
      pieBorder = 1)
 ```
 
-### PA network without BCTs and SDT, intention, MVPA, fat%
+<!-- ### PA network without BCTs and SDT, intention, MVPA, fat% -->
 
 ```{r, include = FALSE, eval = FALSE}
 # Network without motivation variables
@@ -4895,7 +4812,7 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 ```
 
-## Robustness test 
+<!-- ## Robustness test  -->
 
 ```{r, include = FALSE, eval = FALSE}
 
@@ -4917,7 +4834,7 @@ qgraph::centralityPlot(Network)
 qgraph::centralityPlot(Network2)
 ```
 
-## Centrality stability
+<!-- ## Centrality stability -->
 
 ```{r, eval = FALSE}
 boot2 <- bootnet::bootnet(Network1, nBoots = 2500, type = "case", nCores = 2)
@@ -4934,7 +4851,7 @@ plot(boot1, "betweenness")
 plot(boot1, "closeness")
 ```
 
-## Network comparison test: girls and boys
+<!-- ## Network comparison test: girls and boys -->
 
 ```{r, include = FALSE, eval = FALSE}
 
@@ -4972,8 +4889,9 @@ sum(nct_results$einv.pvals$"p-value" < 0.05)  # how many edges are different
 
 ```
 
-## Robustness test 
-```{r, eval = FALSE}
+<!-- ## Robustness test  -->
+
+```{r, include = FALSE, eval = FALSE}
 data <- data %>% dplyr::select(BCT = agreementDependentBCT_T1,
     AUT = autonomous_T1,
     Intn = intention_T1,
@@ -4998,9 +4916,9 @@ qgraph::centralityPlot(Network)
 qgraph::centralityPlot(Network2)
 ```
 
-# Centrality stability
+<!-- # Centrality stability -->
 
-```{r, eval = FALSE}
+```{r, include = FALSE, eval = FALSE}
 boot2 <- bootnet::bootnet(Network, nBoots = 2500, type = "case", nCores = 2)
 bootnet::corStability(boot2)
 
@@ -5227,9 +5145,20 @@ itemGroups <- c(rep("Amotivation", 4),
                 rep("Integrated", 3),
                 rep("Intrinsic", 3))
 
+```
+
+```{r sdt-network-all}
 
 plot(nwAll, groups = itemGroups, nodeNames = itemNames, legend.cex = 0.25)
 
 ```
 
+# Session information
 
+Description of the R environment can be found below.
+
+```{r session-info, results = 'markup'}
+devtools::session_info()
+
+pander::pander(sessionInfo())
+```

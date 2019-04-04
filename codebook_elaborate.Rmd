@@ -13,7 +13,7 @@ output:
 
 **For a concise codebook version with variables and distributions only, see [here](https://heinonmatti.github.io/baseline-visu/codebook_concise.html).**
 
-**For the online questionnaire form, see [here](https://github.com/heinonmatti/baseline-visu/blob/master/Student-questionnaire_T1_english.pdf)**
+**For a translation of the online questionnaire form filled in by the participants, see [here](https://github.com/heinonmatti/baseline-visu/blob/master/Student-questionnaire_T1_english.pdf)**
 
 <!-- SETUP -->
 
@@ -496,7 +496,7 @@ labelled::val_labels(df_codebook$PA_extrinsic_T1) <- c("Not at all true 1" = 1, 
 ```{r knit-codebook, echo = FALSE, message = FALSE, warning = FALSE}
 codebook::metadata(df_codebook)$name <- "Baseline data from Let's Move It intervention trial"
 codebook::metadata(df_codebook)$creator <- "Matti TJ Heino"
-codebook::metadata(df_codebook)$description <- "Baseline data from Let's Move It intervention trial"
+codebook::metadata(df_codebook)$description <- "Baseline data from Let's Move It intervention trial, described in detail at https://heinonmatti.github.io/baseline-visu/index.html"
 codebook::metadata(df_codebook)$identifier <- "10.31234/osf.io/46rzm"
 codebook::metadata(df_codebook)$citation <- "Heino, M. T. J., Fried, E. I., Sund, R., Haukkala, A., Knittle, K. P., Borodulin, K., Uutela, A., Araujo-Soares, V., Vasankari, T., & Hankonen, N. (2019). Visualisation and network analysis of physical activity and its determinants: Demonstrating opportunities in analysing baseline associations in the Let’s Move It trial."
 codebook::metadata(df_codebook)$url <- "https://doi.org/10.31234/osf.io/46rzm"

@@ -115,7 +115,7 @@ This study analyses baseline data from a cluster-randomised controlled trial tes
 
 Six school units were included in the study. There were four educational tracks in the schools from which students were recruited: 1. Practical Nurse (Nur), 2. Hotel, Restaurant and Catering (HRC), 3. Business and Administration (BA), and 4. Information and Communications Technology (IT). Schools were paired so that there would be matching numbers of students from each educational track for both members of the pair. Blinded randomisation by a statistician was then conducted so that a random member of each pair was selected as intervention school, the other as control school (details reported in @hankonenLetMoveIt2016). Student participants were blind to allocation at baseline.
 
-All conducted analyses and visualisations with accompanying code, can be found in the supplementary website at https://git.io/fNHuf (permalink at [REF]), previously piloted in [@heinoSimpleRationaleprovidingSMS2018]. Source code to reproduce this manuscript and all its figures can be found at https://git.io/fptcC.
+All conducted analyses and visualisations with accompanying code, can be found in the supplementary website at https://git.io/fNHuf (permalink at [REF]), previously piloted in [@heinoSimpleRationaleprovidingSMS2018]. Source code to reproduce this manuscript (written with the R package `papaja` [@austPapajaPreparingAPA2019]), and all its figures can be found at https://git.io/fptcC.
 
 <!-- TODO right before submission -->
 
@@ -133,7 +133,7 @@ In the LMI trial, there were multiple primary outcomes. The primary outcome for 
 
 ### Theoretical predictors of PA
 
-The determinants postulated by the program theory included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, opportunities, action- and coping planning, and behaviour change technique (BCT) use. Participants were allowed to skip questions, and scales were computed as means of all items where responses were available. In other words, answering a single item of a specific scale sufficed. All items, response options, and descriptive statistics of scales are available in the supplementary website (section https://git.io/fAj0e); made using R package `codebook` @arslanHowAutomaticallyDocument for automatic dataset documentation.
+The determinants postulated by the program theory included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, opportunities, action- and coping planning, and behaviour change technique (BCT) use. Participants were allowed to skip questions, and scales were computed as means of all items where responses were available. In other words, answering a single item of a specific scale sufficed. All items, response options, and descriptive statistics of scales are available in the supplementary website (section https://git.io/fAj0e); made using R package `codebook` [@arslanHowAutomaticallyDocument] for automatic dataset documentation.
 
 ### Statistical analysis
 
@@ -1101,7 +1101,9 @@ In conclusion, this analysis of baseline data from the Let's Move It interventio
 
 ### List of abbreviations  
 
-\noindent PA = Physical activity  
+\noindent 
+
+PA = Physical activity  
 MVPA = Moderate-to-vigorous physical activity  
 SB = Sedentary behaviour  
 BCT = Behaviour change technique  

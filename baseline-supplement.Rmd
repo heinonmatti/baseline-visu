@@ -1,5 +1,8 @@
 ---
 title: "Descriptive plots"
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r include = FALSE, eval = FALSE, echo = FALSE}
@@ -96,7 +99,7 @@ readr::write_lines(htmlhead, path = "/mnt/Data/autoentrepreneur/header.html")
 
 Clicking the "Code"-buttons on the right shows code for each chunk.
 
-To start data analysis, we run a data compilation file to enable compiling the document. This file can be found under the tab "Data setup code" on top of the screen.
+To start data analysis, we run a data compilation file to enable compiling the document. This file can be found [here](https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R).
 
 ```{r setup, verbose = FALSE, warning = FALSE, message = FALSE}
 
@@ -6370,4 +6373,10 @@ plot1 + plot2
 
 ```
 
+# Session information
 
+Description of the R environment can be found below.
+
+```{r session-info, results = 'markup'}
+devtools::session_info()
+```
