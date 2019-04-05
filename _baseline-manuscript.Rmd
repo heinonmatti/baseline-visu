@@ -48,9 +48,9 @@ affiliation:
 author_note: |
   Trial Registration Number: ISRCTN10979479. Registered retrospectively: 31.12.2015
 abstract: | 
-  Background: Let's Move It is a complex whole-school system intervention aiming to reduce sedentary behaviours (SB) and increase physical activity (PA) among adolescents in vocational schools, by targeting their environmental and psychosocial determinants. This paper describes participants' baseline characteristics in a cluster-randomised trial testing the Let's Move It intervention, and explores possibilities for visual data presentation, making use of recent developments in software and network analyses. We provide an example of a comprehensive research report with all analysis code and results in a readily accessible format, allowing other researchers to apply these tools to their own data. 
+  Background: Let's Move It is a complex whole-school system intervention aiming to reduce sedentary behaviours (SB) and increase physical activity (PA) among adolescents in vocational schools, by targeting their environmental and psychosocial determinants. This paper describes participants' baseline characteristics in a cluster-randomised trial testing the intervention, and explores possibilities for visual data presentation, making use of recent developments in software and network analyses. We provide an example of a comprehensive research report with all analysis code and results in a readily accessible format, allowing other researchers to apply these tools to their own data. 
   
-  Methods: At baseline, 1166 adolescents in 57 classes at 6 school clusters, distributed across four educational tracks, participated the study. We measured PA and SB (with 7-day accelerometry), psychological and social constructs hypothesised to affect the intervention's effects on outcomes (with questionnaires), and body composition (with bioimpedance measurement). Data were visualised using various techniques, e.g., combining ridge plots and diamond plots. Network analysis was used to explore relations between psychological/social variables and outcomes. 
+  Methods: At baseline, 1166 adolescents in 57 classes at 6 school clusters, distributed across four educational tracks, participated the study. We measured PA and SB (with 7-day accelerometry), psychological and social constructs hypothesised to influence the intervention's effects on outcomes (with questionnaires), and body composition (with bioimpedance measurement). Data were visualised using various techniques, e.g., combining ridge plots and diamond plots. Network analysis was used to explore relations between psychological/social variables and outcomes. 
   
   Results: Participants' mean age was 18.5 (Median = 18.0) years. On average, participants engaged in moderate-to-vigorous daily PA for 1h 5min	(CI95: 0h 57min - 1h 13min), SB for 8h 44min	(CI95: 8h 4min - 9h 24min), and interrupted their sitting 25.8 times (CI95: 23.5 - 28.0) per day on average. Cluster randomisation appeared to result in balanced distributions for baseline characteristics between intervention and control groups, but differences emerged across the four educational tracks. Self-reported behaviour change technique (BCT) use was low for many but not all techniques. A network analysis revealed direct relationships between PA and behavioural experiments, planning and autonomous motivation. Several BCTs were connected to PA via autonomous motivation. 
   
@@ -85,7 +85,7 @@ knitr::opts_chunk$set(echo = FALSE,
                dpi = 300
                )
 
-# rmarkdown::render(input = "_baseline-manuscript.Rmd", output_format = "papaja::apa6_word") 
+# rmarkdown::render(input = "_baseline-manuscript.Rmd", output_format = "papaja::apa6_word", encoding = "UTF-8") 
 # citr::tidy_bib_file(rmd_file = "_baseline-manuscript.Rmd", messy_bibliography = "baseline-visu.bib")
 ```
 
@@ -99,7 +99,7 @@ As adolescents spend a significant amount of their time in schools, the school s
 
 The hypothesised programme theories [@mooreProcessEvaluationComplex2015; @rogersUsingProgrammeTheory2008a] for changing PA and SB differed from one another. In order to increase PA, one needs to make a conscious effort and implement self-regulatory skills (e.g. action planning and overcoming barriers to PA) to make optimal use of opportunities. The Let's Move it intervention places a particular emphasis on helping adolescents understand and use techniques to manage their motivation and behaviour (see also @hankonenRandomisedControlledFeasibility2017 and @hankonenParticipantsEnactmentBehavior2018). To date, there is little knowledge about how the use of these techniques links to each other, and it would be important to examine these links empirically. The theoretical model for changing SB, on the other hand, is more driven by environmental opportunities, such as having the option to stand up during class.
 
-In order to increase moderate-to-vigorous-intensity PA, the Let's Move It intervention targeted several behavioural determinants, including behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, environmental opportunities, action and coping planning, and behaviour change technique (BCT) use. Key hypotheses regarding students' PA change have been registered in OSF (https://osf.io/tb8fu/). To reduce total SB and introduce breaks in SB, the programme aimed to change the school environment by training teachers in the use of active teaching techniques and altering physical choice architecture in classrooms [@koykkaCombiningReasonedAction2018]. The intervention included also poster campaigns in schools, and a website, as well as materials to target community actors and parents [@koykkaCombiningReasonedAction2018]. More information of the content of the intervention and the development of it is reported elsewhere [@hankonenRandomisedControlledFeasibility2017; @hankonenLetMoveIt2016]. 
+In order to increase moderate-to-vigorous-intensity PA, the Let's Move It intervention targeted several behavioural determinants, including behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, environmental opportunities, action and coping planning, and behaviour change technique (BCT) use. Key hypotheses regarding students' PA change have been registered in OSF (https://osf.io/tb8fu/). To reduce total SB and introduce breaks in SB, the programme aimed to change the school environment by training teachers in the use of active teaching techniques and altering physical choice architecture in classrooms [@koykkaCombiningReasonedAction2018]. The intervention also included poster campaigns in schools, a website, and materials to target community actors and parents [@koykkaCombiningReasonedAction2018]. More information of the content of the intervention and the development of it is reported elsewhere [@hankonenRandomisedControlledFeasibility2017; @hankonenLetMoveIt2016; @hankonenChangingActivityBehaviours2019]. 
 
 It has long been a standard recommendation for quantitative analyses to investigate data visually as a core precursor of conducting statistical analyses [@clevelandVisualizingData1993; @tukeyExploratoryDataAnalysis1977]. However, in social and life sciences, such visualisations are rarely shared in publications. Information about data are usually limited to means and standard deviations, which presents at best limited information about the variables of interest. Medians, modes, skewness and kurtosis provide helpful additional information, but human cognition places limits on evaluating these statistics simultaneously, especially when comparing groups of observations. For example, two distributions can have different means but the same mode, different modes but the same mean, or the same mean and standard deviation but a meaningful skew. Summary statistics conventionally calculated from the data leave important distributional properties uncovered, as illustrated in recent discussions on the inadequacy of bar plots [@saxonBarCharts2015; @weissgerberBarLineGraphs2015; @weissgerberStaticInteractiveTransforming2016].
 
@@ -107,7 +107,7 @@ Data visualisations are crucial supplements to large numerical tables of descrip
 
 Three recent developments give impetus to a new approach. First, many journals now allow publication of supplementary online materials, which circumvents both word and figure restrictions of traditional manuscripts. Second, statistical software such as R [@rcoreteamLanguageEnvironmentStatistical2015] has recently become increasingly mainstream among applied researchers, with many free tutorials available online, opening the door for a variety of data visualisation techniques. Third, novel statistical methods in social and health psychology, such as psychological network analysis, may help to understand relationships between variables by making better use of visual representations of associations.
 
-The aims of this paper are to describe central characteristics of the Let's Move It trial baseline cohort, focusing on co-primary outcomes and other activity measures (as measured by accelerometry) of the trial both arms, genders and educational tracks in both trial arms. A further aim is to describe psychological and social correlates, as well as hypothesised determinants of the intervention's effect on moderate-to-vigorous PA (MVPA), with detailed visualisations of the dataset provided in an extensive supplementary website. As a sub-aim, we also investigate network of relationships between MVPA, quality of motivation and BCT use at baseline. We provide all code as open source scripts, so that other researchers can use those scripts as templates to visualise their own datasets in a format that requires no special skills or tools to view.
+The aims of this paper are to describe central characteristics of the Let's Move It trial baseline cohort, focusing on co-primary outcomes and other activity measures (as measured by accelerometry) of the trial both arms, genders and educational tracks in both trial arms. A further aim is to describe psychological and social correlates, as well as hypothesised determinants of the intervention's effect on moderate-to-vigorous PA (MVPA), with detailed visualisations of the dataset provided in an extensive supplementary website. As a sub-aim, we also investigate the network of relationships between MVPA, quality of motivation and BCT use at baseline. We provide all code as open source scripts, so that other researchers can use those scripts as templates to visualise their own datasets in a format that requires no special skills or tools to view.
 
 # Methods
 
@@ -115,9 +115,7 @@ This study analyses baseline data from a cluster-randomised controlled trial tes
 
 Six school units were included in the study. There were four educational tracks in the schools from which students were recruited: 1. Practical Nurse (Nur), 2. Hotel, Restaurant and Catering (HRC), 3. Business and Administration (BA), and 4. Information and Communications Technology (IT). Schools were paired so that there would be matching numbers of students from each educational track for both members of the pair. Blinded randomisation by a statistician was then conducted so that a random member of each pair was selected as intervention school, the other as control school (details reported in @hankonenLetMoveIt2016). Student participants were blind to allocation at baseline.
 
-All conducted analyses and visualisations with accompanying code, can be found in the supplementary website at https://git.io/fNHuf (permalink at [REF]), previously piloted in [@heinoSimpleRationaleprovidingSMS2018]. Source code to reproduce this manuscript (written with the R package `papaja` [@austPapajaPreparingAPA2019]), and all its figures can be found at https://git.io/fptcC.
-
-<!-- TODO right before submission -->
+All conducted analyses and visualisations with accompanying code, can be found in the supplementary website at https://git.io/fNHuf (permalink at @heinoSourceCodeVisualisation2019), previously piloted in [@heinoSimpleRationaleprovidingSMS2018]. Source code to reproduce this manuscript (written with the R package `papaja` [@austPapajaPreparingAPA2019]), and all its figures can be found at https://git.io/fptcC.
 
 ## Measures
 
@@ -247,7 +245,7 @@ text_gendermins <- df %>% dplyr::group_by(girl) %>%
 
 Table \@ref(tab:primary-outcome-vars-table-total) shows summary statistics for primary outcome variables with their intra-class correlations (ICCs)  for class and school (see supplementary website, section https://git.io/fjIcc, for ICCs of all variables). The ICC can be interpreted as the proportion of the variable's variance accounted for by group membership.
 
-At baseline, `r text_cutoff_reached_percentage` students provided at least 4 days with a minimum of 10 hours per day of valid accelerometer data. On average, the participants reported engaging in at least 30 minutes of MVPA on `r text_mean_mvpaDays` days a week. Accelerometer data indicated, that girls were slightly more active than boys (mean `r text_gendermins[1]` vs. `r text_gendermins[2]` minutes). Given that boys are generally more active than girls [@husuObjectivelyMeasuredSedentary2016], this result will be elaborated on below. 
+At baseline, `r text_cutoff_reached_percentage` students provided at least 4 days with a minimum of 10 hours per day of valid accelerometer data. On average, the participants reported engaging in at least 30 minutes of MVPA on `r text_mean_mvpaDays` days a week. Accelerometer data indicated, that girls were as active as boys (mean `r text_gendermins[1]` vs. `r text_gendermins[2]` minutes). Given that boys are generally more active than girls [@husuObjectivelyMeasuredSedentary2016], this result will be elaborated on below. 
 
 ```{r primary-outcome-vars-table-total, results = 'asis'}
 
@@ -318,7 +316,7 @@ text_ICCclass <- vardatatable3["Daily time spent sitting or lying down (accelero
 
 To give the reader a richer perspective than from what can be gauged from considering these summary statistics only, we present the results graphically in figure \@ref(fig:average-day-activity-plot). We can see that the patterns of average baseline activity, as measured by the accelerometer, are similar within gender and intervention allocation groups. However, the charts reveal that the IT track is more sedentary compared to other tracks and that girls are actually *less* active in each educational track.
 
-```{r average-day-activity-plot, fig.cap = "Stacked bar plot drawn with R package `ggplot` (code available at https://git.io/fptlp), showing proportions of accelerometer-measured physical activity (PA) in relation to measurement time, averaged over genders, arms and educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.", fig.width = 12, fig.height = 6}
+```{r average-day-activity-plot, fig.cap = "Stacked bar plot drawn with R package `ggplot` (@wickhamGgplot2CreateElegant2018, code available at https://git.io/fptlp), showing proportions of accelerometer-measured physical activity (PA) in relation to measurement time, averaged over genders, arms and educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.", fig.width = 12, fig.height = 6}
 
 averageDayActivityPlot_gender <- df %>% 
   dplyr::mutate_at(vars(contains("Accelerometer"), -contains("weartime")), funs(./weartimeAccelerometer_T1)) %>% 
@@ -459,7 +457,7 @@ df %>%
 
 Figure \@ref(fig:MVPA-accelerometer-plot) displays an augmented density plot, representing and elaborating on information from table \@ref(tab:mvpa-table). The density curves can be read like a histogram, but the shape is not dependent on the bar width. They also help illustrate differences across groups, revealing potential differences in variability and distribution shape.
 
-```{r MVPA-accelerometer-plot, fig.cap = "Raincloud ridge plot combined with a diamond plot, drawn with R packages `ggridges` and `userfriendlyscience` (code available at https://git.io/fpt4c), showing hours of accelerometer-measured moderate-to-vigorous physical activity for different educational tracks. Midpoints of diamonds indicate means, endpoints 95% credible intervals (see [@heinoBayesianEvaluationBehavior2018] for interpretation). Individual observations are presented under the density curves, with random scatter on the y-axis to ease inspection. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
+```{r MVPA-accelerometer-plot, fig.cap = "Raincloud ridge plot combined with a diamond plot, drawn with R packages `ggridges` [@wilkeGgridgesRidgelinePlots2018] and `userfriendlyscience` (@petersUserfriendlyscienceQuantitativeAnalysis2018, code available at https://git.io/fjLBG), showing hours of accelerometer-measured moderate-to-vigorous physical activity for different educational tracks. Midpoints of diamonds indicate means, endpoints 95% credible intervals (see [@heinoBayesianEvaluationBehavior2018] for interpretation). Individual observations are presented under the density curves, with random scatter on the y-axis to ease inspection. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology."}
 
 # The preparation of this plot depends on lenghty prior code  for the interval estimates in the diamonds (which can be greatly improved by shortening and using R package purrr), and is thus presented only in the supplement.
 
@@ -494,7 +492,7 @@ In table \@ref(tab:determinant-table) below, we present the means for the primar
 ```{r determinant-table, results = 'asis'}
 load("./Rdata_files/mega_mediatortable.Rdata")
 
-papaja::apa_table(mega_mediatortable, caption = "Main theoretical determinants of physical activity (PA) and sedentary behaviour (SB). Mean (CI95, taking into account school and class membership). Action and coping planning are evaluated on a scale from 1 to 4, autonomous / controlled regulation, amotivation and behaviour change technique (BCT) use on a scale from 1 to 5 -- all other variables from 1 to 7.")
+papaja::apa_table(mega_mediatortable, caption = "Main theoretical determinants of physical activity (PA) and sedentary behaviour (SB). Mean (CI95, taking into account school and class membership). Action and coping planning are evaluated on a scale from 1 to 4, autonomous / controlled regulation, amotivation and behaviour change technique (BCT) use on a scale from 1 to 6 -- all other variables from 1 to 7.")
 ```
 
 ```{r prepare-data-determinant-diamondplot}
@@ -581,7 +579,7 @@ text_controlAdvantage_percentages <- df_controlAdvantage %>%
 
 In `r text_controlAdvantage_n[[1]]` of the `r text_controlAdvantage_n[[2]]` variables presented here, the mean of the control group is more favourable than that of the intervention group (average unadjusted advantage `r text_controlAdvantage_percentages`). In figure \@ref(fig:determinant-diamondplot-manuscript), the results are visualised in a concise manner.
 
-```{r determinant-diamondplot-manuscript, fig.height = 8, fig.width = 7, fig.cap = "Diamond comparison plot drawn with R package `ufs` (code available at https://git.io/fjvWw), showing means (middle of diamonds), 99% confidence intervals (endpoints of diamonds) and individual answers (dots) separated by gender and arm. Rightmost plots show heuristic effect sizes for differences in means (transformed to Pearson's r). ICC is not accounted for in any plot."}
+```{r determinant-diamondplot-manuscript, fig.height = 8, fig.width = 7, fig.cap = "Diamond comparison plot drawn with R package `ufs` (@petersUfsQuantitativeAnalysis2019, code available at https://git.io/fjLBB), showing means (middle of diamonds), 99% confidence intervals (endpoints of diamonds) and individual answers (dots) separated by gender and arm. Rightmost plots show heuristic effect sizes for differences in means (transformed to Pearson's r). ICC is not accounted for in any plot."}
 
 genderComparisonDiamonds <- plot_df %>%
   dplyr::filter(!is.na(girl)) %>% 
@@ -627,9 +625,9 @@ We can observe, for example, that SB descriptive norms are bimodal and thus the 
 
 ### Behaviour change technique usage
 
-There were no clear differences between frequency-dependent BCT use between genders and arm (Figure \@ref(fig:histogram-frequencyDependentBCTs)). 
+There were no clear differences in frequency-dependent BCT use between genders or arms (Figure \@ref(fig:histogram-frequencyDependentBCTs)). 
 
-```{r histogram-frequencyDependentBCTs, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges` (code available at https://git.io/fpOLj), showing self-reported use of frequency-dependent BCTs (1 = Not once ... 6 = Daily)."}
+```{r histogram-frequencyDependentBCTs, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges` (@wilkeGgridgesRidgelinePlots2018, code available at https://git.io/fpOLj), showing self-reported use of frequency-dependent BCTs (1 = Not once ... 6 = Daily)."}
 
 genderInterventionColors <- viridis::viridis(11, end = 0.8)
 
@@ -776,7 +774,7 @@ Figure \@ref(fig:histogram-frequencyDependentBCTs) tells that the most frequent 
 
 The aforementioned forms can also be observed in the distributions of agreement-dependent BCTs, as presented in Figure \@ref(fig:histogram-agreementDependentBCTs).
 
-```{r histogram-agreementDependentBCTs, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges` (code available at https://git.io/fpOtq), showing self-reported use of agreement-dependent BCTs (1 = Not at all true ... 6 = Completely true)."}
+```{r histogram-agreementDependentBCTs, fig.width = 8, fig.height = 6, fig.cap = "Histogram drawn with R package `ggridges` (@wilkeGgridgesRidgelinePlots2018, code available at https://git.io/fjLBE), showing self-reported use of agreement-dependent BCTs (1 = Not at all true ... 6 = Completely true)."}
 
 bctGirls <- df %>% dplyr::select(id,
   intervention,
@@ -1029,7 +1027,7 @@ node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for 
 
 ```
 
-```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "Mixed graphical model with LASSO regularisation and model selection by EBIC. Network models drawn with packages `mgm` and `qgraph` (code available at https://git.io/fpOXV). Blue lines indicate positive relationships. Plot shows the conditional dependence relationships between the variables of interest (edges which connect nodes), which can be interpreted akin to partial correlations. Pies depict means as proportion of theoretical maximum (in the case of accelerometer-measured moderate-to-vigorous physical activity (MVPA), mean as proportion of highest observed value); behaviour change technique (BCT) use and controlled motivation are dichotomised (see Methods). Colours distinguish the three types of nodes; MPVA, motivation, and BCT use.", echo = FALSE}
+```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "Mixed graphical model with LASSO regularisation and model selection by EBIC. Network models estimated and drawn with packages `mgm` [@haslbeckMgmEstimatingTimeVarying2019] and `qgraph` (@epskampQgraphGraphPlotting2019, code available at https://git.io/fpOXV). Blue lines indicate positive relationships. Plot shows the conditional dependence relationships between the variables of interest (edges which connect nodes), which can be interpreted akin to partial correlations. Pies depict means as proportion of theoretical maximum (in the case of accelerometer-measured moderate-to-vigorous physical activity (MVPA), mean as proportion of highest observed value); behaviour change technique (BCT) use and controlled motivation are dichotomised (see Methods). Colours distinguish the three types of nodes; MPVA, motivation, and BCT use.", echo = FALSE}
 
 BCT_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
             layout = "spring",
@@ -1052,7 +1050,7 @@ BCT_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj,
 
 This study investigated the baseline characteristics of the Let's Move It trial cohort, making use of modern tools to visualise key results and exhaustively report the analyses, findings and analytical choices made. We found high levels of sedentary behaviour in the sample, with heterogeneity across educational tracks. MVPA, motivation and BCT use were modeled as a network, which highlighted the relevance of autonomous motivation in associations between PA and BCT use.
 
-In contrast to earlier international and Finnish data collected in the general population (e.g. @husuObjectivelyMeasuredSedentary2016a), girls performed more PA than boys in this sample. This is due to the practical nurse track being most active and mostly female; in other words, after accounting for track, no meaningful gender differences in accelerometer-measured MVPA could be seen. Further, boys reported doing more MVPA than girls, and the accelerometer-measurement implied boys were also more sedentary and interrupted sitting less often. Intervention and control groups were similar in their accelerometer-measured MVPA. This observation supports the decision of pairing educational tracks in randomisation, such that all tracks were represented in both arms. The practical nurse track was simultaneously the largest, the most active and had the highest percentage of girls, which means that potential gender differences in eventual intervention results should be interpreted with caution. 
+In contrast to earlier international and Finnish data collected in the general population (e.g. @husuObjectivelyMeasuredSedentary2016a), girls performed slightly more PA than boys in this sample. This is due to the practical nurse track being most active and mostly female; in other words, after accounting for track, no meaningful gender differences in accelerometer-measured MVPA could be seen. Further, boys reported doing more MVPA than girls, and the accelerometer-measurement implied boys were also more sedentary and interrupted sitting less often. Intervention and control groups were similar in their accelerometer-measured MVPA. This observation supports the decision of pairing educational tracks in randomisation, such that all tracks were represented in both arms. The practical nurse track was simultaneously the largest, the most active and had the highest percentage of girls, which means that potential gender differences in eventual intervention results should be interpreted with caution. 
 
 To our knowledge, this is one of the first studies to measure the use of potential BCTs comprehensively already at the trial baseline. As can be expected, many people indeed do use BCTs even before the intervention takes place. The results reveal that in the past three weeks, many participants report not having used self-regulation related BCTs such as planning, problem solving or goal setting, which on the other hand have been indicated to be useful techniques for PA self-management [@michieEffectiveTechniquesHealthy2009]. To our knowledge, this is also the first trial to measure the use of a range of BCTs among both control and intervention arm participants.
 
@@ -1120,9 +1118,7 @@ The research proposal was reviewed by the Ethics Committee for Gynaecology and O
 
 ### Availability of data and materials
 
-The analysis data will be available at https://osf.io/jn9ax/ directly after the anonymisation process has been completed. All analyses and code are available at https://git.io/fNHuf (permalink at [REF], repository at https://git.io/fjIQ6). The online questionnaire form is available at https://git.io/fjIP5.
-
-<!-- Todo: permalink for zenodo here and in intro -->
+The analysis data will be available at https://osf.io/jn9ax/ after the anonymisation process has been completed in August 2019. All analyses and code are available at https://git.io/fNHuf (permalink at @heinoSourceCodeVisualisation2019, GitHub repository at https://git.io/fjIQ6). The electronic questionnaire form is available at https://git.io/fjIP5.
 
 ### Competing interests
 

@@ -295,6 +295,25 @@ labelled::var_label(df_codebook) <- list(
 
 ```{r value-labels, echo = FALSE, message = FALSE, warning = FALSE}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 labelled::val_labels(df_codebook$symptom_neckShoulderPain_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
 labelled::val_labels(df_codebook$symptom_lowerBackPain_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
 labelled::val_labels(df_codebook$symptom_stomachAche_T1) <- c("Rarely or not at all" = 1, "Around once a month" = 2, "Around once a week" = 3, "Almost daily" = 4)
@@ -379,25 +398,25 @@ labelled::val_labels(df_codebook$PA_selfefficacyReverseCoded_02_T1) <- c("Easy 1
 labelled::val_labels(df_codebook$PA_perceivedBehaviouralControl_01_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
 labelled::val_labels(df_codebook$PA_perceivedBehaviouralControlReverseCoded_02_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
 labelled::val_labels(df_codebook$PA_perceivedBehaviouralControl_03_T1) <- c("Strongly disagree 1" = 1,  "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Strongly agree 7" = 7 )
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_05_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_06_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_07_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_08_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_09_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_10_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_01_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_02_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_03_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_04_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_05_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_06_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_07_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_08_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_09_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_01_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_02_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_03_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_04_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_05_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_06_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_07_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_08_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_09_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_10_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_01_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_02_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_03_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_04_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_05_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_06_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_07_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_08_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_09_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
 labelled::val_labels(df_codebook$PA_goal_01_T1) <- c("Yes" = 0, "No" = 1)
 labelled::val_labels(df_codebook$PA_goal_T1) <- c("Yes" = 0, "No" = 1)
 labelled::val_labels(df_codebook$big5extraversion_01_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
@@ -462,12 +481,12 @@ labelled::val_labels(df_codebook$big5conscientiousness_T1) <- c("Completely disa
 labelled::val_labels(df_codebook$big5extraversion_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
 labelled::val_labels(df_codebook$big5neuroticism_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
 labelled::val_labels(df_codebook$big5openness_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
-labelled::val_labels(df_codebook$PA_agreementDependentBCT_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_agreementDependentBCT_T1) <- c("Not at all true 0" = 1, "1" = 2, "2" = 3, "3" = 4, "4" = 5, "Completely true 5" = 6)
 labelled::val_labels(df_codebook$PA_amotivation_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
 labelled::val_labels(df_codebook$PA_autonomous_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
 labelled::val_labels(df_codebook$PA_controlled_T1) <- c("Not at all true 1" = 1, "2" = 2, "Partly true 3" = 3, "4" = 4, "Completely true 5" = 5)
 labelled::val_labels(df_codebook$PA_descriptiveNorm_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)
-labelled::val_labels(df_codebook$PA_frequencyDependentBCT_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "4" = 4, "Completely true 5" = 5)
+labelled::val_labels(df_codebook$PA_frequencyDependentBCT_T1) <- c("Not once 0" = 1, "Once 1" = 2, "Twice 2" = 3, "Weekly 3" = 4, "About every second day 4" = 5,  "Daily 5" = 6)
 
 labelled::val_labels(df_codebook$PA_outcomeExpectations_T1) <- c("Completely disagree 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely agree 7" = 7)
 labelled::val_labels(df_codebook$PA_opportunities_T1) <- c("Not at all true 1" = 1, "2" = 2, "3" = 3, "Neither disagree nor agree 4" = 4, "5" = 5, "6" = 6, "Completely true 7" = 7)

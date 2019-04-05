@@ -4759,10 +4759,12 @@ text(x = 1.02, y = 1.3, labels = "Agreement-based BCT sumscore mean", pos = 1) #
 
 ```
 
-### Histograms for individual items
-$~$
-$~$
 <a id="freqHistogram"></a>
+
+$~$
+$~$
+
+### Histograms for individual items
 
 #### Frequency-measured BCTs
 
@@ -4928,6 +4930,11 @@ bctCont <- df %>% dplyr::select(id,
 
 bctBoys + bctGirls + bctInt + bctCont + plot_layout(nrow = 1) 
 ```
+
+<a id="agrHistogram"></a>
+
+$~$
+$~$
 
 #### Agreement-measured BCTs
 

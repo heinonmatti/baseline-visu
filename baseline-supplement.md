@@ -4953,10 +4953,12 @@ text(x = 1.02, y = 1.3, labels = "Agreement-based BCT sumscore mean", pos = 1) #
 
 ![](baseline-supplement_files/figure-html/sm-agreementDependentBCT-1.png)<!-- -->
 
-### Histograms for individual items
-$~$
-$~$
 <a id="freqHistogram"></a>
+
+$~$
+$~$
+
+### Histograms for individual items
 
 #### Frequency-measured BCTs
 
@@ -5125,6 +5127,11 @@ bctBoys + bctGirls + bctInt + bctCont + plot_layout(nrow = 1)
 ```
 
 ![](baseline-supplement_files/figure-html/histogram-frequencyDependentBCTs-1.png)<!-- -->
+
+<a id="agrHistogram"></a>
+
+$~$
+$~$
 
 #### Agreement-measured BCTs
 
@@ -6486,7 +6493,7 @@ devtools::session_info()
 ##  collate  Finnish_Finland.1252        
 ##  ctype    Finnish_Finland.1252        
 ##  tz       Europe/Helsinki             
-##  date     2019-04-04                  
+##  date     2019-04-05                  
 ## 
 ## - Packages --------------------------------------------------------------
 ##  package               * version    date       lib
