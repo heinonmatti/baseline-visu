@@ -1,4 +1,4 @@
-\documentclass[english,man,floatsintext]{apa6}
+\documentclass[british,man]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -23,17 +23,17 @@
 }{}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Visualisation and network analysis of physical activity and its determinants: Demonstrating opportunities using baseline associations in the Let's Move It trial},
+            pdftitle={Visualisation and network analysis of physical activity and its determinants: Demonstrating opportunities in analysing baseline associations in the Let's Move It trial},
             pdfauthor={Matti T. J. Heino, Eiko Fried, Reijo Sund, Ari Haukkala, Keegan Knittle, Katja Borodulin, Antti Uutela, Vera Araujo-Soares, Tommi Vasankari, \& Nelli Hankonen},
-            pdfkeywords={exercise, physical activity, school-based intervention, behaviour change, sedentary behaviour},
+            pdfkeywords={Exercise, physical activity, school-based intervention, behaviour change, sedentary behaviour},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,main=english]{babel}
+  \usepackage[shorthands=off,main=british]{babel}
 \else
   \usepackage{polyglossia}
-  \setmainlanguage[]{english}
+  \setmainlanguage[variant=british]{english}
 \fi
 \usepackage{graphicx,grffile}
 \makeatletter
@@ -69,15 +69,15 @@
 \def\footnote{\protect\rmarkdownfootnote}
 
 
-  \title{Visualisation and network analysis of physical activity and its determinants: Demonstrating opportunities using baseline associations in the Let's Move It trial}
-    \author{Matti T. J. Heino\textsuperscript{1*}, Eiko Fried\textsuperscript{2}, Reijo Sund\textsuperscript{3}, Ari Haukkala\textsuperscript{1}, Keegan Knittle\textsuperscript{1}, Katja Borodulin\textsuperscript{1}, Antti Uutela\textsuperscript{1}, Vera Araujo-Soares\textsuperscript{4}, Tommi Vasankari\textsuperscript{5}, \& Nelli Hankonen\textsuperscript{1}}
+  \title{Visualisation and network analysis of physical activity and its determinants: Demonstrating opportunities in analysing baseline associations in the Let's Move It trial}
+    \author{Matti T. J. Heino\textsuperscript{1}, Eiko Fried\textsuperscript{2}, Reijo Sund\textsuperscript{3}, Ari Haukkala\textsuperscript{1}, Keegan Knittle\textsuperscript{1}, Katja Borodulin\textsuperscript{1}, Antti Uutela\textsuperscript{1}, Vera Araujo-Soares\textsuperscript{4}, Tommi Vasankari\textsuperscript{5}, \& Nelli Hankonen\textsuperscript{1}}
     \date{}
   
-\shorttitle{Visualisation and network analysis in physical activity}
+\shorttitle{Visualisation and network analysis in PA and SB}
 \affiliation{
 \vspace{0.5cm}
 \textsuperscript{1} Faculty of Social Sciences, University of Helsinki, PO Box 54, 00014 University of Helsinki, Finland\\\textsuperscript{2} Department of Clinical Psychology, Leiden University, Wassenaarseweg 52, 2333 AK, Leiden, The Netherlands\\\textsuperscript{3} Faculty of Health Sciences, University of Eastern Finland, PO Box 1627, 70211 Kuopio, Finland\\\textsuperscript{4} Institute of Health and Society, Medical Faculty, Newcastle University, Baddiley-Clarke Building, Richardson Road NE2 4AX, United Kindom\\\textsuperscript{5} UKK institute for Health Promotion Research, Kaupinpuistonkatu 1, 33500 Tampere, Finland}
-\keywords{exercise, physical activity, school-based intervention, behaviour change, sedentary behaviour}
+\keywords{Exercise, physical activity, school-based intervention, behaviour change, sedentary behaviour}
 \usepackage{csquotes}
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
@@ -98,16 +98,31 @@
 \newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
 
 
+\DeclareDelayedFloatFlavor{ThreePartTable}{table}
+\DeclareDelayedFloatFlavor{lltable}{table}
+\DeclareDelayedFloatFlavor*{longtable}{table}
+\makeatletter
+\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
+\makeatother
 \usepackage{lineno}
 
 \linenumbers
 
-\authornote{Trial Registration Number: ISRCTN10979479. Registered retrospectively: 31.12.2015
+\authornote{
 
-Correspondence concerning this article should be addressed to Matti T. J. Heino, . E-mail: \href{mailto:matti.tj.heino@gmail.com}{\nolinkurl{matti.tj.heino@gmail.com}}}
-
+Correspondence concerning this article should be addressed to Matti T. J. Heino, Faculty of Social Sciences, University of Helsinki, PO Box 54, 00014 University of Helsinki, Finland. E-mail: \href{mailto:matti.tj.heino@gmail.com}{\nolinkurl{matti.tj.heino@gmail.com}}}
+\note{Trial Registration Number: ISRCTN10979479. Registered retrospectively: 31.12.2015. The authors declare that they have no competing interests.}
 \abstract{
-Background: Let's Move It is a complex whole-school system intervention aiming to reduce sedentary behaviours (SB) and increase physical activity (PA) among adolescents in vocational schools, by targeting their environmental and psychosocial determinants. This paper describes participants' baseline characteristics in a cluster-randomised trial testing the Let's Move It intervention, and explores possibilities for visual data presentation, making use of recent developments in software and network analyses. We provide an example of a comprehensive research report with all analysis code and results in a readily accessible format, for researchers to apply these tools to other data. Methods: At baseline, 1166 adolescents in 57 classes at 6 school units, distributed across four educational tracks, participated the study. We measured health status, activity and inactivity, as well as psychological and social constructs possibly mediating effects of the intervention on outcomes, with 7-day accelerometry, bioimpedance measures, and questionnaires. Data were visualized using various techniques, e.g., combining ridge plots and diamond plots. Network analysis was used to explore relations between psychological/social variables and outcomes. Results: Mean age of participants was 18.8 (Md = 17.0) years. On average, participants engaged in moderate-to-vigorous daily PA for 1h 29min (CI95: 1h 19min - 1h 40min), SB for 9h 34min (CI95: 8h 56min - 10h 12min), and interrupted sitting 28 times (CI95: 24.7 - 31.4) per day on average. Randomization appeared to result in balanced distributions for baseline characteristics between intervention and control groups , but differences emerged across the four educational tracks. Self-reported behaviour change technique (BCT) use was low for many but not all techniques. In network analysis with a network consisting of BCTs, motivation and PA , behavioural experiments, planning and autonomous motivation were directly related to PA, and several BCTs were connected via autonomous motivation. Conclusion: Grasping the dynamics of complex multicausal systems is a challenging task, which can be aided by data-visualization and data exploration (e.g.~via network analysis). We discuss benefits of presenting complex data visually to encourage researchers to publish extensive analyses and descriptions as website supplements. That would increase speed and quality of scientific communication, and may address recent concerns of reduced confidence towards research findings.
+Visualisation and network analysis of physical activity and its determinants: Demonstrating opportunities in analysing baseline associations in the Let's Move It trial
+
+Background: The Let's Move It intervention aimed to increase physical activity (PA) and reduce sedentary behaviours (SB) among vocational school students. This study visually explores the baseline cohort of a cluster-randomised trial testing the intervention, making use of recent developments in software and network analyses to go beyond tabulated results.
+
+Methods: At baseline, 1166 adolescents, distributed across 6 school clusters and four educational tracks, completed measures of PA and SB, theoretical predictors of these behaviors, and body composition. Data were tabulated and visualised, and network analyses explored relations between predictor variables and outcomes.
+
+Results: Average daily moderate-to-vigorous PA was 65min (CI95: 57min-73min), and SB 8h44min (CI95: 8h04min-9h24min), with 25.8 (CI95: 23.5-28.0) interruptions to sitting. The four educational tracks were heterogeneous, and self-reported behaviour change technique use was generally low. Network analyses revealed direct relationships between PA and behavioural experiments, planning, and autonomous motivation.
+
+Conclusions: Presenting complex data visually unearths dynamics involved in complex multi-causal systems beyond what is possible with tabulated results alone. Researchers should engage with these new methods and publish extended descriptive expositions as website supplements, which can increase the speed and quality of scientific communication.
+
 
 
 }
@@ -120,105 +135,104 @@ Background: Let's Move It is a complex whole-school system intervention aiming t
 \hypertarget{background}{%
 \section{Background}\label{background}}
 
-Declining physical activity (PA) and increasing sedentary behaviour (SB) are costly and growing concerns for public health, studies indicating a higher risk for individuals with low socioeconomic status (SES) {[}1{]}. Patterns of low PA among adults begin earlier in the life course, with evidence that declines in PA and increases in SB begin during childhood and adolescence {[}3,4{]}. This highlights the need for further research into interventions to improve PA and SB among adolescents.
+Declining physical activity (PA) and increasing sedentary behaviour (SB) are costly and growing concerns for public health, especially among individuals with low socioeconomic status (SES) (Elgar et al., 2015, p. @dielemanTrendsFutureHealth2018). Patterns of low PA among adults begin earlier in the life course, with evidence that declines in PA and increases in SB begin during childhood and adolescence (Husu et al., 2016; Mäkelä et al., 2016). This highlights the need for further research into interventions to improve PA and SB among adolescents.
 
-As adolescents spend a significant amount of their time in schools, the school setting provides valuable opportunities for PA and SB interventions {[}5{]}. The Let's Move It intervention aimed to reduce SB and increase PA among adolescents in vocational schools, and was developed using stakeholder input and co-creation with target group representatives, as well as theories and empirical evidence from behavioural science {[}6,7{]}. Contrary to typical school-based interventions with relatively homogeneous participants, this trial was carried out in vocational schools with varied and distinct educational tracks (i.e.~practical nurse, business information and communication technology, business administration, and hotel, restaurant and catering). Understanding the implications of these distinct tracks on the way participants engage in both PA and SB will support a better understanding of the individual and contextual determinants of behaviour and more informed interpretations of the results obtained in the trial.
+As adolescents spend a significant amount of their time in schools, the school setting provides valuable opportunities for PA and SB interventions (van Sluijs et al., 2008). The Let's Move It intervention aimed to reduce SB and increase PA among adolescents in vocational schools, and was developed using stakeholder input and co-creation with target group representatives, as well as theories and empirical evidence from behavioural science (Hankonen, Heino, Kujala, et al., 2017; Hynynen et al., 2016). Contrary to typical school-based interventions with relatively homogeneous participants, this trial was carried out in vocational schools with distinct and varied educational tracks (i.e.~practical nurse, business information and communication technology, business administration, and hotel, restaurant and catering). Understanding the implications of these distinct tracks on the way participants engage in both PA and SB will support a better understanding of the individual and contextual determinants of behaviour and more informed interpretations of the results obtained in the trial.
 
-The hypothesised programme theories {[}8,9{]} for changing PA and SB differed from one another. In order to increase PA, one needs to make a conscious effort and implement self-regulatory skills (e.g.~action planning and overcoming barriers to PA) to make optimal use of opportunities. The Let's Move it intervention places a particular emphasis on helping adolescents understand and use techniques to manage their motivation and behaviour (see also {[}10{]}). To date, there is little knowledge about how the use of these techniques links to each other, and it would be important to examine these links empirically. The theoretical model for changing SB, on the other hand, is more driven by environmental opportunities, such as having the option of standing up during class.
+The hypothesised programme theories (Moore et al., 2015; Rogers, 2008) for changing PA and SB differed from one another. In order to increase PA, one needs to make a conscious effort and implement self-regulatory skills (e.g.~action planning and overcoming barriers to PA) to make optimal use of opportunities. The Let's Move it intervention places a particular emphasis on helping adolescents understand and use techniques to manage their motivation and behaviour (see also Hankonen, Heino, Hynynen, et al. (2017) and Hankonen (2018)). To date, there is little knowledge about how the use of these techniques links to each other, and it would be important to examine these links empirically. The theoretical model for changing SB, on the other hand, is more driven by environmental opportunities, such as having the option to stand up during class.
 
-In order to increase moderate-to-vigorous-intensity PA, the Let's Move It intervention targeted several mediating behavioral determinants, including behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, environmental opportunities, action and coping planning, and behaviour change technique (BCT) use. Key hypotheses regarding students' PA change have been registered in OSF (\url{https://osf.io/tb8fu/}). To reduce total SB and introduce breaks in SB, the programme aimed to change the school environment by training teachers in the use of active teaching techniques and altering physical choice architecture in classrooms {[}11{]}. The intervention included also poster campaigns in schools, and a website, as well as materials to target community actors and parents {[}11{]}. More information of the content of the intervention and the development of it is reported elsewhere ({[}10{]}, Hankonen et al.~unpublished manuscript).
+In order to increase moderate-to-vigorous-intensity PA, the Let's Move It intervention targeted several behavioural determinants, including behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, environmental opportunities, action and coping planning, and behaviour change technique (BCT) use. Key hypotheses regarding students' PA change have been registered in OSF (\url{https://osf.io/tb8fu/}). To reduce total SB and introduce breaks in SB, the programme aimed to change the school environment by training teachers in the use of active teaching techniques and altering physical choice architecture in classrooms (Köykkä et al., 2018). The intervention also included poster campaigns in schools, a website, and materials to target community actors and parents (Köykkä et al., 2018). More information of the content of the intervention and the development of it is reported elsewhere (Hankonen, Absetz, \& Araujo-Soares, 2019; Hankonen et al., 2016; Hankonen, Heino, Hynynen, et al., 2017).
 
-It has long been a standard recommendation for quantitative analyses to investigate data visually as a core precursor of conducting statistical analyses {[}12,13{]}. However, in social and life sciences, such visualisations have rarely been shared in publications. Information about data are usually limited to means and standard deviations, which presents at best limited information about the variables of interest. Medians, modes, skewness and kurtosis provide helpful additional information, but human cognition places limits on evaluating these statistics simultaneously, especially when comparing groups of observations. For example, two distributions can have different means but the same mode, different modes but the same mean, same mean and standard deviation but a meaningful skew, et cetera. Summary statistics conventionally calculated from the data leave important distributional properties uncovered, as illustrated in recent discussions on the inadequacy of bar plots {[}14--16{]}.
+It has long been a standard recommendation for quantitative analyses to investigate data visually as a core precursor of conducting statistical analyses (Cleveland, 1993; Tukey, 1977). However, in social and life sciences, such visualisations are rarely shared in publications. Information about data are usually limited to means and standard deviations, which presents at best limited information about the variables of interest (Trafimow, Wang, \& Wang, 2018). Medians, modes, skewness and kurtosis provide helpful additional information, but human cognition places limits on evaluating these statistics simultaneously, especially when comparing groups of observations. For example, two distributions can have different means but the same mode, different modes but the same mean, or the same mean and standard deviation but a meaningful skew. Summary statistics conventionally calculated from the data leave important distributional properties uncovered, as illustrated in recent discussions on the inadequacy of bar plots (Saxon, 2015; Weissgerber, Garovic, Savic, Winham, \& Milic, 2016; Weissgerber, Milic, Winham, \& Garovic, 2015).
 
-Data visualisation is crucial to supplement possibly large numerical tables of descriptive statistics {[}17{]}. With visualisations, researchers can communicate large amounts of information -- including the associated uncertainty -- in an accessible format, without requiring extensive mathematical expertise from the reader. This is important for researchers who intend to build on previous results {[}18{]}. Such practices may be a way to reduce problems that have led to the recent loss of confidence in the reproducibility and replicability of research findings {[}19--28{]}. The ideal would be to share fully open data, but this is not always possible due to privacy concerns {[}29{]} and, at the time of writing, a lamentably rare practice {[}30{]}. In addition, open data does not necessarily accommodate stakeholders with low technical expertise in data analysis and visualisation, such as clinicians, patients and policy makers; see {[}31{]}, p.~2.
+Data visualisations are crucial supplements to large numerical tables of descriptive statistics (Tay, Parrigon, Huang, \& LeBreton, 2016). With visualisations, researchers can communicate large amounts of information -- including the associated uncertainty -- in an accessible format, without requiring extensive mathematical expertise from the reader. This is important for researchers who intend to build on previous results (Chalmers \& Glasziou, 2009). Such practices may reduce problems that have led to the recent loss of confidence in the reproducibility and replicability of research findings (Gigerenzer, 2018; Kepes \& McDaniel, 2013; Nosek, Ebersole, DeHaven, \& Mellor, 2018; Nosek, Spies, \& Motyl, 2012; Simmons, Nelson, \& Simonsohn, 2011; Smaldino \& McElreath, 2016). Fully open data sharing would be ideal, but this is not always possible due to privacy concerns (Expert Advisory Group on Data Access, 2015) and, at the time of writing, remains a lamentably rare practice (Vanpaemel, Vermorgen, Deriemaecker, \& Storms, 2015). In addition, open data does not necessarily accommodate stakeholders with low technical expertise in data analysis and visualisation, such as clinicians, patients and policy makers; see Hallgren, McCabe, King, and Atkins (2018), p.~2.
 
-Three recent developments give impetus to a new approach. First, many journals now allow publication of supplementary online materials, which circumvents both word and figure restrictions of traditional manuscripts. Second, statistical software such as R {[}32{]} has recently become increasingly mainstream among applied researchers, with many free tutorials available online, opening the door also for a variety of data visualisation techniques. Third, novel statistical methods in social and health psychology, such as psychological network analysis, may help to understand relationships between variables, by making better use of visual representations of associations.
+Three recent developments give impetus to a new approach. First, many journals now allow publication of supplementary online materials, which circumvents both word and figure restrictions of traditional manuscripts. Second, statistical software such as R (R Core Team, 2015) has recently become increasingly mainstream among applied researchers, with many free tutorials available online, opening the door for a variety of data visualisation techniques. Third, novel statistical methods in social and health psychology, such as psychological network analysis, may help to understand relationships between variables by making better use of visual representations of associations.
 
-The aims of this paper are to describe central characteristics of the Let's Move It trial baseline cohort, focusing on co-primary outcomes and other activity measures (as measured by accelerometry) of the trial both arms, genders and educational tracks in both trial arms. A further aim is to describe psychological and social correlates, as well as hypothesised determinants of the intervention effect on moderate-to-vigorous physical activity, with detailed visualisations of the dataset provided in an extensive supplement. As a subaim, we also investigate network of relationships between moderate-to-vigorous intensity physical activity (MVPA), quality of motivation and BCT use at baseline. We provide all code as open source scripts so that other researchers can use those scripts as templates to deliver visualized information in a format that requires no special skills or tools to view.
+The aims of this paper are to describe central characteristics of the Let's Move It trial baseline cohort, focusing on co-primary outcomes and other activity measures (as measured by accelerometry) of the trial both arms, genders and educational tracks in both trial arms. A further aim is to describe psychological and social correlates, as well as hypothesised determinants of the intervention's effect on moderate-to-vigorous PA (MVPA), with detailed visualisations of the dataset provided in an extensive supplementary website. As a sub-aim, we also investigate the network of relationships between MVPA, quality of motivation and BCT use at baseline. We provide all code as open source scripts, so that other researchers can use those scripts as templates to visualise their own datasets in a format that requires no special skills or tools to view.
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
 
-This study analyzes baseline data from a cluster-randomised controlled trial testing Let's Move It, a complex whole-school system multi-level intervention conducted in Finnish vocational schools. Details of Let's Move It trial have been described in the study protocol {[}33{]}. At baseline, consenting participants in both intervention and control groups answered an electronic survey, underwent bioimpedance measurements and were instructed to wear an accelerometer for seven consecutive days.
+This study analyses baseline data from a cluster-randomised controlled trial testing Let's Move It, a complex whole-school system multi-level intervention conducted in Finnish vocational schools. Details of the Let's Move It trial have been described in the study protocol (Hankonen et al., 2016). At baseline, consenting participants in both intervention and control groups answered an electronic survey, underwent bioimpedance measurements and were instructed to wear an accelerometer for seven consecutive days. The baseline data collection started in January 2015 and ended in April 2016.
 
-Six school units were included in the study. There were four educational tracks in the schools from which students were recruited: 1. Practical Nurse (Nur), 2. Hotel, Restaurant and Catering (HRC), 3. Business and Administration (BA), and 4. Information and Communications Technology (IT). Schools were paired so that there would be matching numbers of students from each educational track for both members of the pair. Blinded randomization by a statistician was then conducted so that a random member of each pair was selected as intervention school, the other as control school (details reported in {[}33{]}). Student participants were blind to allocation at baseline.
+Six school units were included in the study. There were four educational tracks in the schools from which students were recruited: 1. Practical Nurse (Nur), 2. Hotel, Restaurant and Catering (HRC), 3. Business and Administration (BA), and 4. Information and Communications Technology (IT). Schools were paired so that there would be matching numbers of students from each educational track for both members of the pair. Blinded randomisation by a statistician was then conducted so that a random member of each pair was selected as intervention school, the other as control school (details reported in Hankonen et al. (2016)). Student participants were blind to allocation at baseline.
 
-All conducted analyses and visualisations with accompanying code, can be found in the supplementary website at \url{https://git.io/fNHuf} (permalink at {[}REF, to be added right before submission{]}). Source code to reproduce this manuscript and all its figures can be found at \url{https://git.io/fptcC}.
+All conducted analyses and visualisations with accompanying code, can be found in the supplementary website at \url{https://git.io/fNHuf} (permalink at Heino and Sund (2019)), previously piloted in (Heino et al., 2018a). Source code to reproduce this manuscript (written with the R package \texttt{papaja} (Aust, 2014/2019)), and all its figures can be found at \url{https://git.io/fptcC}.
 
 \hypertarget{measures}{%
 \subsection{Measures}\label{measures}}
 
-The measures are presented briefly, as they have been previously described in {[}33{]}, and all individual items of the scales are available in the supplementary file {[}todo: add direct link{]}.
+The measures are presented briefly, as they have been previously described in Hankonen et al. (2016), and all individual items of the scales are available in the supplementary website (see section \url{https://git.io/fjfLw}).
 
 \hypertarget{primary-outcome-variables-of-the-trial}{%
 \subsubsection{Primary outcome variables of the trial}\label{primary-outcome-variables-of-the-trial}}
 
-In the LMI trial, the primary outcome for PA was moderate to vigorous PA (MVPA), measured by accelerometry and self-reports. Primary outcomes for sedentary behaviour (SB) were measured by accelerometry. They included time spent sitting or lying down, and the number of times sitting was interrupted during the day.
+In the LMI trial, there were multiple primary outcomes. The primary outcome for PA was moderate to vigorous PA (MVPA), measured by accelerometry and self-reports. Primary outcomes for sedentary behaviour (SB) were measured by accelerometry; they included time spent sitting or lying down, and the number of times sitting was interrupted during the day.
 
-\emph{Self-reported MVPA.} Self-reported MVPA was measured with two questions in accordance with the NordPAQ measurement {[}34{]}. The first question asked participants about the number of days during the last week in which they did more than 30 minutes of MVPA, the other probed the overall amount of MVPA (in hours) during the past seven days.
+\emph{Self-reported MVPA.} Self-reported MVPA was measured with two questions in accordance with the NordPAQ measurement (Fagt et al., 2012). The first question asked participants about the number of days during the last week in which they did more than 30 minutes of MVPA, the other probed the overall amount of MVPA (in hours) during the past seven days.
 
-\emph{Accelerometer-measured MVPA and SB.} No more than seven days after responding to the questionnaire, students were given an accelerometer to be worn on seven consecutive days. The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a digital triaxial acceleration sensor (ADXL345; Analog Devices, Norwood MA) was attached to a flexible belt and participants were instructed to wear the belt around their right hip for seven consecutive days during waking hours, except during shower and other water activities. The acceleration signal was collected at 100 Hz sampling frequency, \(\pm\) 16 g acceleration range and 0.004 g resolution. PA-parameters were based on mean amplitude deviation (MAD) of the resultant acceleration analysed in 6s epochs {[}35{]}. The MAD values were then converted to metabolic equivalent (MET) values {[}36{]}. The epoch-wise MET values were further smoothed by calculating 1min exponential moving average. Using the smoothed MET values total PA was classified in terms of energy consumption covering MET values higher than 1.5 and moderate-to-vigorous PA (MVPA) covering MET values equal to or higher than 3 {[}35,36{]}. According to the definition of SB {[}37{]}, time spent in sitting and reclining positions were combined to indicate SB, whereas standing was analysed separately as another form of stationary behaviour. Body postures were recognized from the raw acceleration data by employing both direction and intensity information from all three measurement axes. The recognition was based on the low intensity of movement (\textless{}1.5 MET) and the accelerometer orientation in relation to identified upright position (angle for posture estimation, APE) calculated at the end of each 6 s epoch {[}38{]}.
+\emph{Accelerometer-measured MVPA and SB.} No more than seven days after responding to the questionnaire, students were given an accelerometer to be worn on seven consecutive days. The hip-worn accelerometer (Hookie AM 20, Traxmeet Ltd, Espoo, Finland) using a digital triaxial acceleration sensor (ADXL345; Analog Devices, Norwood MA) was attached to a flexible belt and participants were instructed to wear the belt around their right hip for seven consecutive days during waking hours, except during shower and other water activities. The acceleration signal was collected at 100 Hz sampling frequency, \(\pm\) 16 g acceleration range and 0.004 g resolution. Definitions of the parameters are described in detail in the supplementary website (section \url{https://git.io/fjJNi}).
 
 \hypertarget{theoretical-predictors-of-pa}{%
 \subsubsection{Theoretical predictors of PA}\label{theoretical-predictors-of-pa}}
 
-The mediators postulated by the program theory included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, opportunities, action- and coping planning, and behaviour change technique (BCT) use. Participants were allowed to skip questions, and scales were computed as means of all items where responses were available. In other words, answering a single item sufficed. All items, response options, and descriptive statistics of scales are available in the supplementary website (\url{https://git.io/fAj0e}).
+The determinants postulated by the program theory included behavioural beliefs (outcome expectations, descriptive norms, intention, self-efficacy/perceived behavioural control), autonomous and controlled motivation, opportunities, action- and coping planning, and behaviour change technique (BCT) use. Participants were allowed to skip questions, and scales were computed as means of all items where responses were available. In other words, answering a single item of a specific scale sufficed. All items, response options, and descriptive statistics of scales are available in the supplementary website (section \url{https://git.io/fAj0e}); made using R package \texttt{codebook} (Arslan, forthcoming) for automatic dataset documentation.
 
 \hypertarget{statistical-analysis}{%
 \subsubsection{Statistical analysis}\label{statistical-analysis}}
 
-We used RStudio {[}39{]} 1.1.456 running R {[}40{]} 3.5.1 for all our analyses and figures.
+We used RStudio (RStudio Team, 2015) 1.1.456 running R (Version 3.5.3; R Core Team, 2018) 3.5.3 for all our analyses and figures.
 
-In our case (no confirmatory hypotheses), confidence intervals are more appropriate to report than p-values, as they provide readily interpretable values on the same scale as the original variable, accommodating inferences of practical relevance {[}23,41--43{]}. Hence, we omit explicit statistical testing from the tables.
+In our case (no confirmatory hypotheses), confidence intervals are more appropriate to report than p-values, as they provide readily interpretable values on the same scale as the original variable, accommodating inferences of practical relevance (Gardner \& Altman, 1986; Nosek et al., 2018; Sterne, 2001; Wasserstein \& Lazar, 2016). Hence, we omit explicit statistical testing from the tables.
 
-Activity data was explored by utilising 100\% stacked bar charts, which are useful when comparing proportions which add to 100\%. MVPA data was, in addition, examined with augmented raincloud ridge plots to unveil distributional properties. Psychological and social determinants were examined with diamond plots, and heuristic effect sizes between means of intervention arms and genders transformed from Cohen's d to Pearson's r. Distributions of BCT use were examined with histograms.
+Activity data was explored by utilising 100\% stacked bar charts, which are useful when comparing proportions which add to 100\%. MVPA data was, in addition, examined with augmented raincloud ridge plots to unveil distributional properties. Psychological and social determinants were examined with diamond plots (Peters, 2018), and heuristic effect sizes between means of intervention arms and genders transformed from Cohen's d to Pearson's r. Distributions of BCT use were examined with histograms.
 
 Psychological network analysis was used to estimate and visualise relations among BCT use, motivation and MVPA. Such networks contain nodes (variables) and edges (statistical relationships between variables). Unlike in social network analysis, the connections are not directly observed, but are estimated. We used network models that estimate conditional dependence relations among a set of variables, which can be interpreted similarly to partial correlations. An edge between two variables implies that they are related after controlling for all other variables; the absence of an edge implies that the two variables are (conditionally) independent.
 
-The Mixed Graphical Model uses regularization, a procedure that has been shown to help recover the true network structure in data in case the data were simulated under a network model {[}44{]}. Regularization has the goal to avoid estimating spurious relationships among items (i.e.~false positive relations), and results in a parsimonious network structure. The regularization technique used here is the Least Absolute Shrinkage and Selection Operator (LASSO; {[}45{]}), which shrinks all edges and sets very small edges to exact zero. A paper that explains lasso regularization in network models in detail can be found elsewhere {[}46{]}.
+The Mixed Graphical Model uses regularisation, a procedure that has been shown to help recover the true network structure in data in case the data were simulated under a network model (Haslbeck \& Waldorp, 2015). Regularisation has the goal to avoid estimating spurious relationships among items (i.e.~false positive relations), and results in a parsimonious network structure. The regularisation technique used here is the Least Absolute Shrinkage and Selection Operator (LASSO; Tibshirani (1996)), which shrinks all edges and sets very small edges to exact zero. A paper that explains lasso regularisation in network models in detail can be found elsewhere (Epskamp \& Fried, 2018).
 
-Network models applied to between-subjects data at one time-point can be useful for describing health psychological data, as well as facilitating group-level hypothesis generation regarding which parts of the system are central for a problem at hand {[}47{]}. Identifying these determinants of importance can thus supplement traditional structural equation modeling (SEM) approaches. Network analysis has recently been taken up in many fields such as social psychology {[}48,49{]}, personality {[}50{]}, intelligence {[}51{]}, psychopathology {[}52{]}, and empathy research {[}53{]}, and is beginning to be applied for health behaviours on a broader scale. Several helpful tutorial papers aimed at empirical researchers are available {[}46,54--57{]}, and also exist for health psychology context in particular {[}58{]}.
+Network models applied to between-subjects data at one time-point can be useful for describing health psychological data, as well as facilitating group-level hypothesis generation regarding which parts of the system are central for a problem at hand (Fried \& Cramer, 2017). Identifying these determinants of importance can thus supplement traditional structural equation modeling (SEM) approaches. Network analysis has recently been taken up in many fields such as social psychology (Dalege et al., 2017a, 2016), personality (Mõttus \& Allerhand, 2017), intelligence (Van Der Maas, Kan, Marsman, \& Stevenson, 2017), psychopathology (Fried et al., 2017), and empathy research (Briganti, Kempenaers, Braun, Fried, \& Linkowski, 2018), and is beginning to be applied for health behaviours on a broader scale. Several helpful tutorial papers aimed at empirical researchers are available (Costantini et al., 2015, 2017; Dalege et al., 2017b; Epskamp et al., 2018; Epskamp \& Fried, 2018), and also exist for health psychology context in particular (Hevey, 2018).
 
-To ease interpretation of the network analysis, we dichotomised the heavily skewed controlled motivation dimension in such a way that 1 represents answers 3 (\enquote{partly true for me}) or higher, and 0 the rest. In addition, BCT use variables were dichotomised by giving 0 if a person reports completely disagreeing with their statements, or never having used the technique, and 1 otherwise. A correlation matrix of the variables can be found in the supplement (\url{https://git.io/fhAgk}).
+To ease interpretation of the network analysis, we dichotomised the heavily skewed controlled motivation variable in such a way that 1 represents answers 3 (\enquote{partly true for me}) or higher, and 0 the rest. In addition, BCT use variables were dichotomised by giving 0 if a person reports completely disagreeing with their statements, or never having used the technique, and 1 otherwise. A correlation matrix of the variables can be found in the supplement (\url{https://git.io/fhAgk}).
 
 \hypertarget{findings}{%
 \section{Findings}\label{findings}}
 
-In this section, we first present data in traditional numeric tables, and follow up by augmenting them with graphical illustrations. Table \ref{tab:demographics-table} shows the main demographic variables of the cohort by educational track. Most (83.1\%) participants were born in Finland. While on average the sample consist of both boys and girls (43.5\% vs.~56.5\%), educational tracks were heavily divided by gender: Practical Nurse track had the highest amount of girls (82.3\%) and IT track lowest (16.0\%). Age ranged from 16 to 49, with the average age being 18.50. Altogether there were 190 (16\%) students who reported being at least 20 years old.
+In this section, we first present data in traditional numeric tables, and follow up by augmenting them with graphical illustrations. Table \ref{tab:demographics-table} shows the main demographic variables of the cohort by educational track. Among 638 intervention arm participants, 80.5\% (429/533) reported having been born in Finland. Among the 528 control arm participants, the percentage was 88.7\% (423/477).
 
-\begin{table}[tbp]
-\begin{center}
-\begin{threeparttable}
-\caption{\label{tab:demographics-table}Baseline demographics of educational tracks.}
-\begin{tabular}{llllll}
+While on average the sample was relatively balanced on boys and girls (43.5\% vs.~56.5\%), educational tracks were heavily divided by gender: Practical Nurse track had the highest amount of girls (82.3\%) and IT track lowest (16.0\%). Age ranged from 16 to 49, with the average age being 18.50. Altogether there were 190 (16\%) students who reported being at least 20 years old.
+
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:demographics-table}Baseline demographics of educational tracks. Omitted are 24 participants, who reported "other" 
+                  as their track, as well as 81 participants from whom data is not available. 
+                  Nur = Practical nurse, HRC = Hotel, restaurant and catering studies, 
+                  BA = Business and administration, IT = Business information technology.}\\
 \toprule
 Variable & \multicolumn{1}{c}{Nur} & \multicolumn{1}{c}{HRC} & \multicolumn{1}{c}{BA} & \multicolumn{1}{c}{IT} & \multicolumn{1}{c}{Full sample}\\
 \midrule
 n & 402 & 213 & 282 & 163 & 1166\\
 Mean study year (sd, median) & 1.7 (0.9, 1.0) & 1.9 (0.7, 2.0) & 1.7 (0.9, 1.0) & 1.7 (0.9, 1.0) & 1.7 (0.9, 1.0)\\
 Mean age (range, median) & 18.8 (16.0-49.0, 17.0) & 18.5 (17.0-27.0, 18.0) & 18.0 (16.0-35.0, 17.0) & 18.5 (17.0-43.0, 17.0) & 18.5 (16.0-49.0, 18.0)\\
-Born in Finland (\%) & 80.0 & 88.2 & 87.1 & 87.9 & 83.1\\
+Born in Finland (\%) & 80.1 & 88.3 & 89.7 & 86.7 & 84.4\\
 \% girl & 82.3 & 60.6 & 39.0 & 16.0 & 56.5\\
 \% allocated to intervention & 68.9 & 31.5 & 53.5 & 46.6 & 54.7\\
 \bottomrule
-\addlinespace
-\end{tabular}
-\begin{tablenotes}[para]
-\normalsize{\textit{Note.} Omitted are 24 participants, who reported "other" as their track, as well as 81 participants from whom the data is not available. Nur = Practical nurse, HRC = Hotel, restaurant and catering studies, BA = Business and administration, IT = Business information technology.}
-\end{tablenotes}
-\end{threeparttable}
-\end{center}
-\end{table}
+\end{longtable}
+\end{lltable}
 
-Table \ref{tab:primary-outcome-vars-table-total} shows summary statistics for primary outcome variables with their intra-class correlations (ICCs) for class and school (see supplementary website for ICCs for all variables). The ICC can be interpreted as the proportion of the variable's variance, which can be accounted for by group membership.
+Table \ref{tab:primary-outcome-vars-table-total} shows summary statistics for primary outcome variables with their intra-class correlations (ICCs) for class and school (see supplementary website, section \url{https://git.io/fjIcc}, for ICCs of all variables). The ICC can be interpreted as the proportion of the variable's variance accounted for by group membership.
 
-At baseline, 63.6\% students provided at least 4 days with a minimum of 10 hours per day of valid accelerometer data. On average, the participants reported engaging in at least 30 minutes of MVPA on 2.80 days a week. Accelerometer data indicated, that girls were slightly more active than boys (mean 65 vs.~67 minutes). Given that boys are generally more active than girls {[}3{]}, this result will be elaborated on below.
+At baseline, 63.6\% students provided at least 4 days with a minimum of 10 hours per day of valid accelerometer data. On average, the participants reported engaging in at least 30 minutes of MVPA on 2.80 days a week. Accelerometer data indicated, that girls were as active as boys (mean 65 vs.~67 minutes). Given that boys are generally more active than girls (Husu et al., 2016), this result will be elaborated on below.
 
-\begin{table}[tbp]
-\begin{center}
-\begin{threeparttable}
-\caption{\label{tab:primary-outcome-vars-table-total}Primary outcome variables with their class and school ICCs. Accelerometer results, including wear time, are only included from those participants who met the cutoff of at least 10 hours of measurement time for at least four days.}
-\begin{tabular}{llllll}
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:primary-outcome-vars-table-total}Key variables with their class and school intra-class correlations (ICCs). Let's Move It trial's primary outcome variables marked with asterisks. Accelerometry data is missing from 435 participants, of whom 169 due to not meeting the cutoff of at least 10 hours of measurement time for at least four days. Survey data missing from 84 participants.}\\
 \toprule
 Variable & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{CI95} & \multicolumn{1}{c}{ICC class} & \multicolumn{1}{c}{ICC school} & \multicolumn{1}{c}{n}\\
 \midrule
@@ -229,32 +243,27 @@ Daily time spent sitting or lying down (accelerometer)* & 8h 44min & 8h 4min - 9
 Daily number of times sitting was interrupted (accelerometer)* & \ \ 25.8 & \ \ 23.5\ \ -\ \ \ \ 28.0 & .047 & .080 & 731\\
 Number of days with >30 MVPA min previous week (self-report)* & \ \  2.8 & \ \  2.6\ \ -\ \ \ \  3.0 & .047 & < .001 & 1082\\
 \bottomrule
-\addlinespace
-\end{tabular}
-\begin{tablenotes}[para]
-\normalsize{\textit{Note.} *Primary outcome variables. Accelerometry data missing from 435, and survey data from 84 participants.}
-\end{tablenotes}
-\end{threeparttable}
-\end{center}
-\end{table}
+\end{longtable}
+\end{lltable}
 
 To give the reader a richer perspective than from what can be gauged from considering these summary statistics only, we present the results graphically in figure \ref{fig:average-day-activity-plot}. We can see that the patterns of average baseline activity, as measured by the accelerometer, are similar within gender and intervention allocation groups. However, the charts reveal that the IT track is more sedentary compared to other tracks and that girls are actually \emph{less} active in each educational track.
 
 \begin{figure}
 \centering
 \includegraphics{_baseline-manuscript_files/figure-latex/average-day-activity-plot-1.pdf}
-\caption{\label{fig:average-day-activity-plot}Stacked bar plot drawn with R package \texttt{ggplot} (code available at \url{https://git.io/fptlp}), showing proportions of accelerometer-measured activity in relation to measurement time, averaged over genders, arms and educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.}
+\caption{\label{fig:average-day-activity-plot}Stacked bar plot drawn with R package \texttt{ggplot} (Wickham et al. (2018), code available at \url{https://git.io/fptlp}), showing proportions of accelerometer-measured physical activity (PA) in relation to measurement time, averaged over genders, arms and educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.}
 \end{figure}
 
 The plot shows the average activity types relative to measurement time, but hides variability around the averages. The graph does not depict, for example, that while the average portion of time spent in sedentary behaviour for the IT track was 72.0\%, almost half (42.0\%) of that track's participants were sedentary more than 75\% of the time.
 
 Zooming in on accelerometer-measured MVPA, table \ref{tab:mvpa-table} gives us statistics -- some of which more commonly reported, others less so -- on the variable.
 
-\begin{table}[tbp]
-\begin{center}
-\begin{threeparttable}
-\caption{\label{tab:mvpa-table}Statistics describing MVPA in different educational tracks. Values not corrected for effects of clustering.}
-\begin{tabular}{llllll}
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:mvpa-table}Statistics describing accelerometer-measured moderate-to-vigorous physical activity 
+                    in different educational tracks. Values not corrected for effects of clustering.}\\
 \toprule
 Gender & \multicolumn{1}{c}{Arm} & \multicolumn{1}{c}{Nur} & \multicolumn{1}{c}{HRC} & \multicolumn{1}{c}{BA} & \multicolumn{1}{c}{IT}\\
 \midrule
@@ -263,35 +272,33 @@ girl & intervention & M=71.8; SD=28.4; skewness=1.0; kurtosis= 1.6; n=227 & M=52
 boy & control & M=72.7; SD=28.9; skewness=0.3; kurtosis=-1.1; n=21 & M=56.1; SD=27.4; skewness=1.5; kurtosis= 2.0; n=56 & M=70.4; SD=27.3; skewness=0.7; kurtosis= 0.6; n=78 & M=55.2; SD=25.2; skewness=1.2; kurtosis= 2.8; n=73\\
 boy & intervention & M=89.6; SD=39.1; skewness=0.7; kurtosis= 0.2; n=50 & M=71.2; SD=43.9; skewness=0.9; kurtosis= 0.5; n=28 & M=72.1; SD=31.1; skewness=0.5; kurtosis=-0.8; n=94 & M=54.5; SD=25.3; skewness=1.2; kurtosis= 1.4; n=64\\
 \bottomrule
-\end{tabular}
-\end{threeparttable}
-\end{center}
-\end{table}
+\end{longtable}
+\end{lltable}
 
 Figure \ref{fig:MVPA-accelerometer-plot} displays an augmented density plot, representing and elaborating on information from table \ref{tab:mvpa-table}. The density curves can be read like a histogram, but the shape is not dependent on the bar width. They also help illustrate differences across groups, revealing potential differences in variability and distribution shape.
 
 \begin{figure}
 \centering
 \includegraphics{_baseline-manuscript_files/figure-latex/MVPA-accelerometer-plot-1.pdf}
-\caption{\label{fig:MVPA-accelerometer-plot}Raincloud ridge plot combined with a diamond plot, drawn with R packages \texttt{ggridges} and \texttt{userfriendlyscience} (code available at \url{https://git.io/fpt4c}), showing hours of MVPA for different educational tracks. Midpoints of diamonds indicate means, endpoints 95\% credible intervals (see {[}{\textbf{???}}{]} for interpretation). Individual observations are presented under the density curves, with random scatter on the y-axis to ease inspection. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.}
+\caption{\label{fig:MVPA-accelerometer-plot}Raincloud ridge plot combined with a diamond plot, drawn with R packages \texttt{ggridges} (Wilke \& ggridges), 2018) and \texttt{userfriendlyscience} (Peters et al. (2018), code available at \url{https://git.io/fjLBG}), showing hours of accelerometer-measured moderate-to-vigorous physical activity for different educational tracks. Midpoints of diamonds indicate means, endpoints 95\% credible intervals (see (Heino et al., 2018b) for interpretation). Individual observations are presented under the density curves, with random scatter on the y-axis to ease inspection. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.}
 \end{figure}
 
-As can be seen from the x-axis placement of diamonds in figure \ref{fig:MVPA-accelerometer-plot}, participants who study practical nurssing are the most active, followed by HRC students and BA students, with the IT track being the least active. There is considerable variation within tracks though. This explains the gender difference in MVPA: the practical nurse track is the largest, and its students, mostly girls, are the most active. The IT students, mostly boys, are the least active.
+As the diamonds in figure \ref{fig:MVPA-accelerometer-plot} illustrate, participants who study practical nursing are the most active, followed by HRC students and BA students, with the IT track being the least active. There is considerable variation within tracks though. This explains the gender difference in MVPA: the practical nurse track is the largest, and its students, mostly girls, are the most active. The IT students, mostly boys, are the least active.
 
-In sum, boys did more MVPA in every educational track (mean differences in minutes: 12.80 for Practical nurse, 5.40 for Hotel, restaurant and catering, 11.30 for Business and administration, and 19.80 for IT). In spite of this, girls appear more active in the aggregate. This is also known as the Simpson's paradox, and is best investigated by visualising data (see {[}59{]} for an introduction). Examining the left side of figure \ref{fig:MVPA-accelerometer-plot} reveals the difference between boys and girls in MVPA, the difference between Practical nurse and IT tracks, the differences in gender decomposition, and differences in the amount of participants in each track which, put together, contributes to a comprehensive understanding of the data.
+In sum, boys did more MVPA in every educational track (mean differences in minutes: 12.80 for Practical nurse, 5.40 for Hotel, restaurant and catering, 11.30 for Business and administration, and 19.80 for IT). In spite of this, girls appear more active in the aggregate. This is also known as the Simpson's paradox, and is best investigated by visualising data (see Kievit, Frankenhuis, Waldorp, and Borsboom (2013) for an introduction). Examining the left side of figure \ref{fig:MVPA-accelerometer-plot} reveals the difference between boys and girls in MVPA, the difference between Practical nurse and IT tracks, the differences in gender composition, and differences in the amount of participants in each track. These, when taken together, contribute to a comprehensive understanding of the data.
 
-Similar plots for all primary outcome variables can be found in the supplement. In brief, regardless of track, boys reported more days with at least 30 minutes of MVPA, while reporting more e.g.~gym training, which was more strongly connected to the self-reported MVPA than the accelerometer-measured one. Accelerometer measurement also indicated, that boys engaged in more sedentary time and interrupted sitting less often than girls. These results are also described in the supplement.
+Similar plots for all primary outcome variables can be found in the supplement. In brief, regardless of track, boys reported more days with at least 30 minutes of MVPA, while reporting more e.g.~gym training, which was more strongly connected to the self-reported MVPA than the accelerometer-measured one. Accelerometer measurement also indicated, that boys engaged in more sedentary time and interrupted sitting less often than girls (see supplementary website, sections \url{https://git.io/fjvWv} and \url{https://git.io/fjvCj}).
 
 \hypertarget{theoretical-determinants}{%
 \subsection{Theoretical determinants}\label{theoretical-determinants}}
 
-In table \ref{tab:mediator-table} below, we present the means for the primary outcome variables by gender and trial arm.
+In table \ref{tab:determinant-table} below, we present the means for the primary outcome variables by gender and trial arm.
 
-\begin{table}[tbp]
-\begin{center}
-\begin{threeparttable}
-\caption{\label{tab:mediator-table}Main theoretical determinants of PA and SB. Mean (CI95).}
-\begin{tabular}{llllll}
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:determinant-table}Main theoretical determinants of physical activity (PA) and sedentary behaviour (SB). Mean (CI95, taking into account school and class membership). Action and coping planning are evaluated on a scale from 1 to 4, autonomous / controlled regulation, amotivation and behaviour change technique (BCT) use on a scale from 1 to 6 -- all other variables from 1 to 7.}\\
 \toprule
 Variable  & \multicolumn{1}{c}{Girls (n = 603-611)} & \multicolumn{1}{c}{Boys (n = 459-467)} & \multicolumn{1}{c}{Intervention (n = 570-579)} & \multicolumn{1}{c}{Control (n = 492-499)} & \multicolumn{1}{c}{Total (n = 1062-1078)}\\
 \midrule
@@ -314,17 +321,15 @@ SB descriptive norm & 3.2 (3.0 - 3.4) & 3.4 (3.1 - 3.6) & 3.2 (3.0 - 3.4) & 3.3 
 SB injunctive norm & 4.0 (3.8 - 4.1) & 4.1 (3.9 - 4.3) & 3.9 (3.8 - 4.1) & 4.1 (4.0 - 4.2) & 4.0 (3.9 - 4.1)\\
 SB outcome expectations & 4.9 (4.8 - 5.0) & 4.5 (4.4 - 4.7) & 4.8 (4.5 - 5.0) & 4.8 (4.6 - 5.0) & 4.8 (4.6 - 4.9)\\
 \bottomrule
-\end{tabular}
-\end{threeparttable}
-\end{center}
-\end{table}
+\end{longtable}
+\end{lltable}
 
-In 14 of the 19 variables presented here, the mean of the control group is more favourable than that of the intervention group (average unadjusted advantage 1.75\%). In figure \ref{fig:determinant-diamondplot-manuscript}, the results are visualised in a concise manner.
+In 14 of the 18 variables presented here, the mean of the control group is more favourable than that of the intervention group (average unadjusted advantage 1.91\%). In figure \ref{fig:determinant-diamondplot-manuscript}, the results are visualised in a concise manner.
 
 \begin{figure}
 \centering
 \includegraphics{_baseline-manuscript_files/figure-latex/determinant-diamondplot-manuscript-1.pdf}
-\caption{\label{fig:determinant-diamondplot-manuscript}Diamond comparison plot drawn with R package \texttt{ufs} (code available at {[}add link to supplement's determinant-diamondplot{]}), showing means (middle of diamonds), 99\% confidence intervals (endpoints of diamonds) and individual answers (dots) separated by gender and arm. Rightmost plots show heuristic effect sizes for differences in means (transformed to Pearson's r). ICC is not accounted for in any plot. Nb. action and coping planning are evaluated on a scale from 1 to 4.}
+\caption{\label{fig:determinant-diamondplot-manuscript}Diamond comparison plot drawn with R package \texttt{ufs} (Peters (2019), code available at \url{https://git.io/fjLBB}), showing means (middle of diamonds), 99\% confidence intervals (endpoints of diamonds) and individual answers (dots) separated by gender and arm. Rightmost plots show heuristic effect sizes for differences in means (transformed to Pearson's r). ICC is not accounted for in any plot.}
 \end{figure}
 
 We can observe, for example, that SB descriptive norms are bimodal and thus the means are not representative of typical participants. In addition, several of the variables are skewed, which has implications on analytical choices as well as interpretations of the mean values.
@@ -332,12 +337,12 @@ We can observe, for example, that SB descriptive norms are bimodal and thus the 
 \hypertarget{behaviour-change-technique-usage}{%
 \subsubsection{Behaviour change technique usage}\label{behaviour-change-technique-usage}}
 
-There were no clear differences between frequency-dependent BCT use between genders and arm (Figure \ref{fig:histogram-frequencyDependentBCTs}).
+There were no clear differences in frequency-dependent BCT use between genders or arms (Figure \ref{fig:histogram-frequencyDependentBCTs}).
 
 \begin{figure}
 \centering
 \includegraphics{_baseline-manuscript_files/figure-latex/histogram-frequencyDependentBCTs-1.pdf}
-\caption{\label{fig:histogram-frequencyDependentBCTs}Histogram drawn with R package \texttt{ggridges} (code available at \url{https://git.io/fpOLj}), showing self-reported use of frequency-dependent BCTs (1 = Not once \ldots{} 6 = Daily).}
+\caption{\label{fig:histogram-frequencyDependentBCTs}Histogram drawn with R package \texttt{ggridges} (Wilke and ggridges) (2018), code available at \url{https://git.io/fpOLj}), showing self-reported use of frequency-dependent BCTs (1 = Not once \ldots{} 6 = Daily).}
 \end{figure}
 
 Figure \ref{fig:histogram-frequencyDependentBCTs} tells that the most frequent response is 1, indicating non-use of that BCT. In fact, a large number of BCTs seem to indicate a composite distribution, where one population reports never using the BCT, and another is seems normally distributed around the middle of the scale.
@@ -347,46 +352,50 @@ The aforementioned forms can also be observed in the distributions of agreement-
 \begin{figure}
 \centering
 \includegraphics{_baseline-manuscript_files/figure-latex/histogram-agreementDependentBCTs-1.pdf}
-\caption{\label{fig:histogram-agreementDependentBCTs}Histogram drawn with R package \texttt{ggridges} (code available at \url{https://git.io/fpOtq}), showing self-reported use of agreement-dependent BCTs (1 = Not at all true \ldots{} 6 = Completely true).}
+\caption{\label{fig:histogram-agreementDependentBCTs}Histogram drawn with R package \texttt{ggridges} (Wilke and ggridges) (2018), code available at \url{https://git.io/fjLBE}), showing self-reported use of agreement-dependent BCTs (1 = Not at all true \ldots{} 6 = Completely true).}
 \end{figure}
 
 \hypertarget{demonstration-of-network-analysis}{%
 \subsection{Demonstration of network analysis}\label{demonstration-of-network-analysis}}
 
-Figure \ref{fig:network-plot} shows a LASSO regularised mixed graphical model of BCT use, motivation and the two MVPA measures. We can observe, that after taking into account all the other nodes in the network and regularising small connections to zero, autonomous motivation appears to serve as a link between many BCTs and MVPA. In fact, only having a plan made by someone else, and having tried out new ways to be physically active (during the past three weeks), are directly connected to either of the MVPA nodes. In addition, use of certain BCTs are coupled particularly closely: Strong links exist between goal setting and having an own PA plan, between identifying barriers and planning to overcome them (i.e.~problem solving), and between goal setting and an own PA plan. We can also see a triad, where reflecting positive consequences is connected to goal review, through having thought of personal reasons to do PA, as well as less strongly coupled social support and having made changes to home environment. These types of close connections can be indicative of underlying latent variables {[}60{]}.
+Figure \ref{fig:network-plot} shows a LASSO regularised mixed graphical model of BCT use, motivation and the two MVPA measures. We can observe, that after taking into account all the other nodes in the network and regularising small connections to zero, autonomous motivation appears to serve as a link between many BCTs and MVPA. In fact, only having a plan made by someone else, and having tried out new ways to be physically active (during the past three weeks), are directly connected to either of the MVPA nodes. In addition, use of certain BCTs are coupled particularly closely: Comparatively strong links exist between goal setting and having an own PA plan, between identifying barriers and planning to overcome them (i.e.~problem solving/coping planning), and between goal setting and an own PA plan (i.e.~action planning). We can also see a triad, where reflecting positive consequences is connected to goal review, through having thought of personal reasons to do PA, as well as less strongly coupled social support and having made changes to home environment. Such connections can be understood as variables influencing each other, but can also be indicative of underlying latent variables (i.e., the three variables are causal consequences of a shared origin) (Molenaar, 2010).
 
 \begin{figure}
 \centering
 \includegraphics{_baseline-manuscript_files/figure-latex/network-plot-1.pdf}
-\caption{\label{fig:network-plot}Mixed graphical model with LASSO regularisation and model selection by EBIC. Network models drawn with packages mgm and qgraph (code available at \url{https://git.io/fpOXV}). Blue lines indicate positive relationships. Plot shows the conditional dependence relationships between the variables of interest (edges which connect nodes), which can be interpreted akin to partial correlations. Pies depict means as proportion of theoretical maximum (in the case of accelerometer-measured MVPA, mean as proportion of highest observed value); BCT use and controlled motivation are dichotomised (see Methods).}
+\caption{\label{fig:network-plot}Mixed graphical model with LASSO regularisation and model selection by EBIC. Network models estimated and drawn with packages \texttt{mgm} (Haslbeck, 2019) and \texttt{qgraph} (Epskamp et al. (2019), code available at \url{https://git.io/fpOXV}). Blue lines indicate positive relationships. Plot shows the conditional dependence relationships between the variables of interest (edges which connect nodes), which can be interpreted akin to partial correlations. Pies depict means as proportion of theoretical maximum (in the case of accelerometer-measured moderate-to-vigorous physical activity (MVPA), mean as proportion of highest observed value); behaviour change technique (BCT) use and controlled motivation are dichotomised (see Methods). Colours distinguish the three types of nodes; MPVA, motivation, and BCT use.}
 \end{figure}
 
 \hypertarget{conclusions}{%
 \section{Conclusions}\label{conclusions}}
 
-This study investigated the baseline characteristics of the Let's Move It trial cohort, making use of modern tools to visualize key results and exhaustively report the analyses and findings and the analytical choices made. We found high levels of sedentary behaviour in the sample, with heterogeneity across educational tracks. MVPA, motivation and BCT use were modeled as a network, which highlighted the relevance of autonomous motivation in associations between PA and BCT use.
+This study investigated the baseline characteristics of the Let's Move It trial cohort, making use of modern tools to visualise key results and exhaustively report the analyses, findings and analytical choices made. We found high levels of sedentary behaviour in the sample, with heterogeneity across educational tracks. MVPA, motivation and BCT use were modeled as a network, which highlighted the relevance of autonomous motivation in associations between PA and BCT use.
 
-In contrast to earlier international and Finnish evidence collected in the general population (e.g.~{[}61{]}), girls performed more PA than boys in this sample. This is due to the practical nurse track being most active and mostly female; in other words, after accounting for track, no meaningful gender differences in accelerometer-measured MVPA could be seen. Further, boys reported doing more MVPA than girls, and the accelerometer-measurement implied they were also more sedentary and interrupted sitting less often. Intervention and control groups were similar in their accelerometer-measured MVPA. This observation supports the decision of pairing educational tracks in randomisation, such that all tracks were represented in both arms. The practical nurse track was simultaneously the largest, the most active and had the highest percentage of girls, which means that potential gender differences in eventual intervention results should be interpreted with caution.
+In contrast to earlier international and Finnish data collected in the general population (e.g.~Husu, Suni, et al. (2016)), girls performed slightly more PA than boys in this sample. This is due to the practical nurse track being most active and mostly female; in other words, after accounting for track, no meaningful gender differences in accelerometer-measured MVPA could be seen. Further, boys reported doing more MVPA than girls, and the accelerometer-measurement implied boys were also more sedentary and interrupted sitting less often. Intervention and control groups were similar in their accelerometer-measured MVPA. This observation supports the decision of pairing educational tracks in randomisation, such that all tracks were represented in both arms. The practical nurse track was simultaneously the largest, the most active and had the highest percentage of girls, which means that potential gender differences in eventual intervention results should be interpreted with caution.
 
-To our knowledge, this is one of the first studies to measure the use of potential behaviour change techniques comprehensively already at the trial baseline. As can be expected, many people indeed do use BCTs even before the intervention takes place. The results reveal that in the past three weeks, many participants had not used self-regulation related BCTs such as planning, problem solving or goal setting, which on the other hand have been indicated to be useful techniques for PA self-management {[}62{]}. To our knowledge, this is also the first trial to measure the use of a range of BCTs also in the control arm participants which previous similar studies have failed to do.
+To our knowledge, this is one of the first studies to measure the use of potential BCTs comprehensively already at the trial baseline. As can be expected, many people indeed do use BCTs even before the intervention takes place. The results reveal that in the past three weeks, many participants report not having used self-regulation related BCTs such as planning, problem solving or goal setting, which on the other hand have been indicated to be useful techniques for PA self-management (Michie, Abraham, Whittington, McAteer, \& Gupta, 2009). To our knowledge, this is also the first trial to measure the use of a range of BCTs among both control and intervention arm participants.
 
-Comprehensive, transparent reporting of results leads to a vast amount of information to be presented; visual exposition is thus vital. Visualising distributions makes it salient, how much variability there is among study participants, which informs us about the distributional assumptions, which underlie many of the statistical techniques we use. In addition, modern and traditional approaches to data visualisation allow us to go further than just comparing means, as well as provide opportunities to avoid drawing false conclusions (e.g.~in the case of Simpson's paradox) based on summary statistics.
+Comprehensive, transparent reporting of results leads to a vast amount of information to be presented: visual exposition is thus vital. Visualising distributions makes the variability among study participants more salient, which informs us about the distributional assumptions that underlie many common statistical techniques. Modern and traditional approaches to data visualisation also allow us to go further than just comparing means (Rousselet, Pernet, \& Wilcox, 2017), and provide opportunities to avoid drawing false conclusions (e.g.~in the case of Simpson's paradox) based on summary statistics alone.
 
-The results of the network analysis highlight, how the effect of most naturally used BCTs on MVPA -- exceptions including having a plan made by someone else, and trying out new forms of PA -- are possibly mediated via autonomous motivation. This finding, if corroborated in longitudinal data, would support the theoretical framework of the intervention, which held autonomy support and behavioural experiments at the forefront. So far, network models have been largely used as a tool for exploring empirical relationships among variables, often with little existing theory {[}50,63{]}. One could understand this as the first generation of network papers in psychology, and there have been recent calls for a second generation that is confirmatory in nature, and based on existing theories of relationships among biological, psychological and social variables {[}47{]}.
+The results of the network analysis highlight, how most naturally used BCTs -- exceptions including having a plan made by someone else, and trying out new forms of PA -- possibly require autonomous motivation to affect MVPA. This finding, if corroborated in longitudinal data, would support the theoretical framework of the intervention, which held autonomy support and behavioural experiments at the forefront. So far, network models have been largely used as a tool for exploring empirical relationships among variables, often with little existing theory (Fried et al., 2017; Mõttus \& Allerhand, 2017). One could understand this as the first generation of network papers in psychology, and there have been recent calls for a second generation that is confirmatory in nature, and based on existing theories of relationships among biological, psychological and social variables (Fried \& Cramer, 2017).
 
-The study also has limitations. It should be noted that while we consider 7-day accelerometry (more than 4 days of over 10 hours wear time) an approximation of a participant's true habitual PA and SB in their daily life, it is not an errorless measure of it, and does not capture all forms of activity. Additionally, the questionnaire to measure the BCTs requires future validation.
+The study also has limitations. It should be noted that while we consider 7-day accelerometry (with inclusion criterion of accumulating more than 4 days of over 10 hours wear time) an approximation of a participant's true habitual PA and SB in their daily life, it is not an errorless measure and it does not capture all forms of activity. Additionally, the questionnaire to measure the BCTs requires future validation (Bringmann \& Eronen, 2016; Flake \& Fried, 2019; Hankonen, 2018).
 
-In the network model used, regularization techniques are applied to remove spurious relations and control for multiple testing (for an in-depth tutorial on such regularized network models, see {[}46{]}, and for a health psychology specific use case, see {[}58{]}). At the same time, these networks estimate relations that are akin to partial correlations to derive the conditional dependence structure among variables. Potential pitfalls of these models and their application have been discussed elsewhere in detail {[}47,64{]}. Most importantly, in social networks one can include all relevant nodes (e.g., all people in a classroom or company) in the network. This is not so in biopsychosocial networks, where the question of what items to include has turned out to be a challenging question. Relations among items are often interpreted as putative causal pathways (although many other interpretations exist, {[}46{]}), which means one should not include two variables that are simply two indicators of the same construct (e.g.~the items \enquote{I often feel sad} and \enquote{I often feel blue}). Another important challenge is that one should avoid statistically controlling for common effects, also known as colliders: If in the true model both A and B independently cause C, C is a collider. If one controls for C in the model, a negative relation between A and B will emerge where no relation exists in the true model. This applies to any regression models, and also in network models that are based on regressions, and it can be challenging to determine if a given variable is a collider. Rohrer {[}65{]} provides an approachable introduction to causal inference in observational data.
+In the network model used, regularisation techniques are applied to remove spurious relations and control for multiple testing (for an in-depth tutorial on such regularised network models, see Epskamp and Fried (2018), and for a health psychology specific use case, see Hevey (2018)). At the same time, these networks estimate relations that are akin to partial correlations to derive the conditional dependence structure among variables. Potential pitfalls of these models and their application have been discussed elsewhere in detail (Fried \& Cramer, 2017; Guloksuz, Pries, \& Van Os, 2017). Most importantly, while in social networks one can include all relevant nodes (e.g., all people in a classroom or company), this is not so in biopsychosocial networks, where the question of what items to include as nodes remains a challenging question. Relations among items are often interpreted as putative causal pathways (although many other interpretations exist, Epskamp and Fried (2018)), which means one should not include two variables that are simply two indicators of the same construct (e.g.~the items \enquote{I often feel sad} and \enquote{I often feel blue}). Another important challenge is that one should avoid statistically controlling for common effects, also known as colliders: If in the true model both A and B independently cause C, C is a collider. If one controls for C in the model, a negative relation between A and B will emerge where no relation exists in the true model. This applies to all regression models and network models that are based on regressions, and it can be challenging to determine if a given variable is a collider. Rohrer Rohrer (2018) provides an approachable introduction to causal inference in observational data.
 
-The type of supplement used for this manuscript allows for presenting a lot, but not all, information due to resource considerations. One of the reader groups not fully considered are researchers and educators, who wish to use these data to guide intervention design. We would like to point out that the results, like most of the research in the area, only provide a group-level snapshot of a wide variety of constantly unfolding dynamic processes. Few individual participants are described by the group-level summary statistics: In fact, using Daniels' {[}66{]} definition of an \enquote{approximately average individual} as falling in the middle 30\% of the range of values, only 1.20\% of participants can be considered \enquote{average} on all of the primary outcome measures (see supplementary website, section \url{https://git.io/fpOy1}). Intervention designers looking at this cohort to choose to-be-targeted determinants for their study, may want to consider applying clustering techniques on the data once it becomes publicly available. Still, and especially when processes are considered, group-level data does not inform the individual-level mechanisms of action in the case of non-ergodic systems, and hence the agreement between features of these two levels should be investigated {[}67{]}.
+The type of supplement used for this manuscript allows for presenting a lot, but not all, information due to resource considerations. One of the reader groups not fully considered are researchers and educators, who wish to use these data to guide intervention design. We would like to point out that the results, like most of the research in the area, only provide a group-level snapshot of a wide variety of constantly unfolding dynamic processes. Few individual participants are described by the group-level summary statistics: In fact, using Daniels' (Daniels, 1952) definition of an \enquote{approximately average individual} as falling in the middle 30\% of the range of values, only 1.50\% of participants can be considered \enquote{average} on all of the primary outcome measures (see supplementary website, section \url{https://git.io/fpOy1}). Intervention designers looking at this cohort to choose to-be-targeted determinants for their study may want to consider applying clustering techniques on the data once it becomes publicly available. Still, and especially when processes are considered, group-level data does not inform the individual-level mechanisms of action in the case of non-ergodic systems, and hence the agreement between features of these two levels should be investigated (Fisher, Medaglia, \& Jeronimus, 2018).
 
-In conclusion, this analysis of baseline data from the Let's Move It intervention trial indicates that randomization did not result in highly disproportionate groups, i.e.~the differences between arms were minimal -- although, in the case of complex systems, even small differences may proliferate and lead to group imbalances {[}68{]}. It also has highlighted that the vocational school students differ in many regards by their chosen educational track. Finally, graphical methods of presenting descriptive data are an important addition to traditional tables displaying means and standard deviations, and transparent sharing of analyses and analytical choices is imperative for increasing confidence in research findings.
+In conclusion, this analysis of baseline data from the Let's Move It intervention trial indicates that randomisation did not result in highly disproportionate groups, i.e.~the differences between arms were small -- although, in the case of complex systems, even minimal differences may proliferate and lead to group imbalances (Rickles, 2009). It also highlights that vocational school students differ in many regards by their chosen educational track. Finally, graphical methods of presenting descriptive data are an important addition to traditional tables displaying means and standard deviations. Transparent sharing of analyses and analytical choices is imperative for increasing confidence in research findings.
 
 \hypertarget{list-of-abbreviations}{%
 \subsubsection{List of abbreviations}\label{list-of-abbreviations}}
 
-MVPA moderate-to-vigorous physical activity\\
-SB sedentary behavior\\
+\noindent 
+
+PA = Physical activity\\
+MVPA = Moderate-to-vigorous physical activity\\
+SB = Sedentary behaviour\\
+BCT = Behaviour change technique\\
 Nur = Practical nurse\\
 HRC = Hotel, restaurant and catering studies\\
 BA = Business and administration\\
@@ -403,7 +412,7 @@ The research proposal was reviewed by the Ethics Committee for Gynaecology and O
 \hypertarget{availability-of-data-and-materials}{%
 \subsubsection{Availability of data and materials}\label{availability-of-data-and-materials}}
 
-The analysis data will be available at {[}OSF storage{]} on 1st July 2019. All analyses and code are available at \url{https://git.io/fNHuf} (permalink at {[}REF{]}, repository at {[}REF{]}).
+The analysis data will be available at \url{https://osf.io/jn9ax/} after the anonymisation process has been completed in August 2019. All analyses and code are available at \url{https://git.io/fNHuf} (permalink at Heino and Sund (2019), GitHub repository at \url{https://git.io/fjIQ6}). The electronic questionnaire form is available at \url{https://git.io/fjIP5}.
 
 \hypertarget{competing-interests}{%
 \subsubsection{Competing interests}\label{competing-interests}}
@@ -413,7 +422,7 @@ The authors declare that they have no competing interests.
 \hypertarget{authors-contributions}{%
 \subsubsection{Authors' contributions}\label{authors-contributions}}
 
-MH wrote the analysis code, including the full online supplement, formulated the initial draft of the manuscript and revised it in collaboration with all co-authors. TV was responsible for planning and analysing the PA and SB measured from data collected with accelerometer. RS and EIF provided expertise regarding the statistical analyses. KB, AH, AU, VA, TV, RS and NH contributed to planning of the trial design and data collection including the measures used. NH conceived of the study and acted as principal investigator of the research project. All authors read and approved the final manuscript.
+MH wrote the analysis code, including the full online supplement, formulated the initial draft of the manuscript and revised it in collaboration with all co-authors. TV was responsible for planning and analysing the PA and SB measured from data collected with accelerometer. RS and EIF provided expertise regarding the statistical analyses. KB, AH, AU, VA-S, TV, RS and NH contributed to planning of the trial design and data collection including the measures used. NH, with the study co-applicants, conceived of the study. NH acted as principal investigator of the research project. All authors read and approved the final manuscript.
 
 \hypertarget{funding}{%
 \subsubsection{Funding}\label{funding}}
@@ -423,7 +432,7 @@ MH was supported by Academy of Finland (grant number 295765) and Ministry for Ed
 \hypertarget{acknowledgements}{%
 \subsubsection{Acknowledgements}\label{acknowledgements}}
 
-We would like to thank participating schools, their staff and students, as well as the numerous people who have helped in study design and data collection.
+We would like to thank participating schools, their staff and students, as well as the numerous people who have helped in study design and data collection. We are also grateful to Frederik Aust for technical support in creating a reproducible manuscript, as well as Ruben Arslan in creating the codebook.
 
 \newpage
 
@@ -435,209 +444,236 @@ We would like to thank participating schools, their staff and students, as well 
 \setlength{\leftskip}{0.5in}
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-elgarSocioeconomicInequalitiesAdolescent2015}{}%
-1. Elgar FJ, Pförtner T-K, Moor I, De Clercq B, Stevens GWJM, Currie C. Socioeconomic inequalities in adolescent health 2002--2010: A time-series analysis of 34 countries participating in the Health Behaviour in School-aged Children study. The Lancet {[}Internet{]}. 2015 {[}cited 2016 Feb 24{]};385:2088--95. Available from: \url{http://linkinghub.elsevier.com/retrieve/pii/S0140673614614604}
+\leavevmode\hypertarget{ref-arslanHowAutomaticallyDocument}{}%
+Arslan, R. C. (forthcoming). How to automatically document data with the codebook package to facilitate data re-use. \emph{Advances in Methods and Practices in Psychological Science}. \url{https://doi.org/10.31234/osf.io/5qc6h}
 
-\leavevmode\hypertarget{ref-dielemanTrendsFutureHealth2018}{}%
-2. Dieleman JL, Sadat N, Chang AY, Fullman N, Abbafati C, Acharya P, et al. Trends in future health financing and coverage: Future health spending and universal health coverage in 188 countries, 2016--40. The Lancet. 2018;391:1783--98.
-
-\leavevmode\hypertarget{ref-husuObjectivelyMeasuredSedentary2016}{}%
-3. Husu P, Vähä-Ypyä H, Vasankari T. Objectively measured sedentary behavior and physical activity of Finnish 7-to 14-year-old children--associations with perceived health status: A cross-sectional study. BMC public health. 2016;16:338.
-
-\leavevmode\hypertarget{ref-makelaPhysicalActivityScreen2016}{}%
-4. Mäkelä K, Kokko S, Kannas L, Villberg J, Vasankari T, Heinonen JO, et al. Physical Activity, Screen Time and Sleep among Youth Participating and Non-Participating in Organized Sports: The Finnish Health Promoting Sports Club (FHPSC) Study. Advances in Physical Education. 2016;6.
-
-\leavevmode\hypertarget{ref-vansluijsPhysicalActivityDietary2008}{}%
-5. van Sluijs EM, Skidmore PM, Mwanza K, Jones AP, Callaghan AM, Ekelund U, et al. Physical activity and dietary behaviour in a population-based sample of British 10-year old children: The SPEEDY study (Sport, Physical activity and Eating behaviour: Environmental Determinants in Young people). BMC public health. 2008;8:388.
-
-\leavevmode\hypertarget{ref-hankonenWhatExplainsSocioeconomic2017}{}%
-6. Hankonen N, Heino MT, Kujala E, Hynynen S-T, Absetz P, Ara\a'ujo-Soares V, et al. What explains the socioeconomic status gap in activity? Educational differences in determinants of physical activity and screentime. BMC public health {[}Internet{]}. 2017 {[}cited 2017 May 27{]};17:144. Available from: \url{https://bmcpublichealth.biomedcentral.com/articles/10.1186/s12889-016-3880-5}
-
-\leavevmode\hypertarget{ref-hynynenSystematicReviewSchoolbased2016}{}%
-7. Hynynen S-T, van Stralen MM, Sniehotta FF, Ara\a'ujo-Soares V, Hardeman W, Chinapaw MJM, et al. A systematic review of school-based interventions targeting physical activity and sedentary behaviour among older adolescents. Int Rev Sport Exerc Psychol. 2016;9:22--44.
-
-\leavevmode\hypertarget{ref-mooreProcessEvaluationComplex2015}{}%
-8. Moore GF, Audrey S, Barker M, Bond L, Bonell C, Hardeman W, et al. Process evaluation of complex interventions: Medical Research Council guidance. BMJ. 2015;350:h1258.
-
-\leavevmode\hypertarget{ref-rogersUsingProgrammeTheory2008a}{}%
-9. Rogers PJ. Using Programme Theory to Evaluate Complicated and Complex Aspects of Interventions. Evaluation. 2008;14:29--48.
-
-\leavevmode\hypertarget{ref-hankonenRandomisedControlledFeasibility2017}{}%
-10. Hankonen N, Heino MTJ, Hynynen S-T, Laine H, Ara\a'ujo-Soares V, Sniehotta FF, et al. Randomised controlled feasibility study of a school-based multi-level intervention to increase physical activity and decrease sedentary behaviour among vocational school students. International Journal of Behavioral Nutrition and Physical Activity. 2017;14.
-
-\leavevmode\hypertarget{ref-koykkaCombiningReasonedAction2018}{}%
-11. Köykkä K, Absetz P, AraÃ\textordmasculinejo-Soares V, Knittle K, Sniehotta FF, Hankonen N. Combining the reasoned action approach and habit formation to reduce sitting time in classrooms: Outcome and process evaluation of the Let's Move It teacher intervention. Journal of Experimental Social Psychology. 2018;
-
-\leavevmode\hypertarget{ref-clevelandVisualizingData1993}{}%
-12. Cleveland WS. Visualizing data. Hobart Press; 1993.
-
-\leavevmode\hypertarget{ref-tukeyExploratoryDataAnalysis1977}{}%
-13. Tukey JW. Exploratory data analysis. Reading, Mass. 1977.
-
-\leavevmode\hypertarget{ref-saxonBarCharts2015}{}%
-14. Saxon E. Beyond bar charts. BMC Biology. 2015;13:60.
-
-\leavevmode\hypertarget{ref-weissgerberBarLineGraphs2015}{}%
-15. Weissgerber TL, Milic NM, Winham SJ, Garovic VD. Beyond Bar and Line Graphs: Time for a New Data Presentation Paradigm. PLOS Biology. 2015;13:e1002128.
-
-\leavevmode\hypertarget{ref-weissgerberStaticInteractiveTransforming2016}{}%
-16. Weissgerber TL, Garovic VD, Savic M, Winham SJ, Milic NM. From Static to Interactive: Transforming Data Visualization to Improve Transparency. PLOS Biology. 2016;14:e1002484.
-
-\leavevmode\hypertarget{ref-tayGraphicalDescriptivesWay2016}{}%
-17. Tay L, Parrigon S, Huang Q, LeBreton JM. Graphical Descriptives A Way to Improve Data Transparency and Methodological Rigor in Psychology. Perspectives on Psychological Science. 2016;11:692--701.
-
-\leavevmode\hypertarget{ref-chalmersAvoidableWasteProduction2009}{}%
-18. Chalmers I, Glasziou P. Avoidable waste in the production and reporting of research evidence. Lancet. 2009;374:86--9.
-
-\leavevmode\hypertarget{ref-boardofgovernorsofthefederalreservesystemEconomicsResearchReplicable2015}{}%
-19. Board of Governors of the Federal Reserve System, Chang AC, Li P. Is Economics Research Replicable? Sixty Published Papers from Thirteen Journals Say "Usually Not". Finance and Economics Discussion Series. 2015;2015:1--26.
-
-\leavevmode\hypertarget{ref-bondSadTruthHappiness2018}{}%
-20. Bond TN, Lang K. The Sad Truth About Happiness Scales: Empirical Results. National Bureau of Economic Research; 2018 Jul. Report No.: 24853.
-
-\leavevmode\hypertarget{ref-gigerenzerStatisticalRitualsReplication2018}{}%
-21. Gigerenzer G. Statistical Rituals: The Replication Delusion and How We Got There. Advances in Methods and Practices in Psychological Science. 2018;2515245918771329.
-
-\leavevmode\hypertarget{ref-kepesHowTrustworthyScientific2013}{}%
-22. Kepes S, McDaniel MA. How Trustworthy Is the Scientific Literature in Industrial and Organizational Psychology? Industrial and Organizational Psychology. 2013;6:252--68.
-
-\leavevmode\hypertarget{ref-nosekPreregistrationRevolution2018}{}%
-23. Nosek BA, Ebersole CR, DeHaven AC, Mellor DT. The preregistration revolution. Proceedings of the National Academy of Sciences. 2018;201708274.
-
-\leavevmode\hypertarget{ref-nosekScientificUtopiaII2012}{}%
-24. Nosek BA, Spies JR, Motyl M. Scientific Utopia II. Restructuring Incentives and Practices to Promote Truth Over Publishability. Perspectives on Psychological Science. 2012;7:615--31.
-
-\leavevmode\hypertarget{ref-simmonsFalsePositivePsychologyUndisclosed2011}{}%
-25. Simmons JP, Nelson LD, Simonsohn U. False-Positive Psychology Undisclosed Flexibility in Data Collection and Analysis Allows Presenting Anything as Significant. Psychological Science. 2011;22:1359--66.
-
-\leavevmode\hypertarget{ref-smaldinoNaturalSelectionBad2016}{}%
-26. Smaldino PE, McElreath R. The natural selection of bad science. Open Science. 2016;3:160384.
-
-\leavevmode\hypertarget{ref-stoddenEmpiricalAnalysisJournal2018}{}%
-27. Stodden V, Seiler J, Ma Z. An empirical analysis of journal policy effectiveness for computational reproducibility. Proceedings of the National Academy of Sciences. 2018;115:2584--9.
-
-\leavevmode\hypertarget{ref-nosekReproducibilityCancerBiology2017}{}%
-28. Nosek BA, Errington TM. Reproducibility in cancer biology: Making sense of replications. Elife. 2017;6:e23383.
-
-\leavevmode\hypertarget{ref-expertadvisorygroupondataaccessEAGDAReportGovernance2015}{}%
-29. Expert Advisory Group on Data Access. EAGDA Report: Governance of Data Access. the Wellcome Trust; 2015.
-
-\leavevmode\hypertarget{ref-vanpaemelAreWeWasting2015}{}%
-30. Vanpaemel W, Vermorgen M, Deriemaecker L, Storms G. Are We Wasting a Good Crisis? The Availability of Psychological Research Data after the Storm. Collabra: Psychology. 2015;1.
-
-\leavevmode\hypertarget{ref-hallgrenPathDiagramsEnhancing2018}{}%
-31. Hallgren KA, McCabe CJ, King KM, Atkins DC. Beyond path diagrams: Enhancing applied structural equation modeling research through data visualization. Addictive Behaviors. 2018;
-
-\leavevmode\hypertarget{ref-rcoreteamLanguageEnvironmentStatistical2017}{}%
-32. R Core Team. R: A Language and Environment for Statistical Computing. Vienna, Austria: R Foundation for Statistical Computing; 2017.
-
-\leavevmode\hypertarget{ref-hankonenLetMoveIt2016}{}%
-33. Hankonen N, Heino MTJ, Araujo-Soares V, Sniehotta FF, Sund R, Vasankari T, et al. ``Let's Move It'' a school-based multilevel intervention to increase physical activity and reduce sedentary behaviour among older adolescents in vocational secondary schools: A study protocol for a cluster-randomised trial. BMC Public Health. 2016;16:451--66.
-
-\leavevmode\hypertarget{ref-fagtNordicMonitoringDiet2012}{}%
-34. Fagt S, Andersen LF, Anderssen SA, Becker W, Borodulin K, Fogelholm M, et al. Nordic Monitoring of diet, physical activity and overweight : Validation of indicators. Nordic Council of Ministers; 2012.
-
-\leavevmode\hypertarget{ref-vaha-ypyaUniversalAccurateIntensitybased2015}{}%
-35. Vähä-Ypyä H, Vasankari T, Husu P, Suni J, Sievänen H. A universal, accurate intensity-based classification of different physical activities using raw data of accelerometer. Clinical physiology and functional imaging. 2015;35:64--70.
-
-\leavevmode\hypertarget{ref-vaha-ypyaValidationCutpointsEvaluating2015}{}%
-36. Vähä-Ypyä H, Vasankari T, Husu P, Mänttäri A, Vuorimaa T, Suni J, et al. Validation of cut-points for evaluating the intensity of physical activity with accelerometry-based mean amplitude deviation (MAD). PLoS One. 2015;10:e0134813.
-
-\leavevmode\hypertarget{ref-tremblaySedentaryBehaviorResearch2017}{}%
-37. Tremblay MS, Aubert S, Barnes JD, Saunders TJ, Carson V, Latimer-Cheung AE, et al. Sedentary Behavior Research Network (SBRN) process and outcome. International Journal of Behavioral Nutrition and Physical Activity. 2017;14:75.
-
-\leavevmode\hypertarget{ref-vaha-ypyaReliableRecognitionLying2018}{}%
-38. Vähä-Ypyä H, Husu P, Suni J, Vasankari T, Sievänen H. Reliable recognition of lying, sitting, and standing with a hip-worn accelerometer. Scandinavian Journal of Medicine \& Science in Sports. 2018;28:1092--102.
-
-\leavevmode\hypertarget{ref-rstudioteamRStudioIntegratedDevelopment2016}{}%
-39. RStudio Team. RStudio: Integrated Development Environment for R. Boston, MA: RStudio, Inc. 2016.
-
-\leavevmode\hypertarget{ref-R-base}{}%
-40. R Core Team. R: A language and environment for statistical computing {[}Internet{]}. Vienna, Austria: R Foundation for Statistical Computing; 2018. Available from: \url{https://www.R-project.org/}
-
-\leavevmode\hypertarget{ref-gardnerConfidenceIntervalsRather1986}{}%
-41. Gardner MJ, Altman DG. Confidence intervals rather than P values: Estimation rather than hypothesis testing. BMJ. 1986;292:746--50.
-
-\leavevmode\hypertarget{ref-sterneSiftingEvidenceWhat2001}{}%
-42. Sterne JAC. Sifting the evidence---what's wrong with significance tests? Another comment on the role of statistical methods. BMJ. 2001;322:226--31.
-
-\leavevmode\hypertarget{ref-wassersteinASAStatementPValues2016}{}%
-43. Wasserstein RL, Lazar NA. The ASA's Statement on p-Values: Context, Process, and Purpose. The American Statistician. 2016;70:129--33.
-
-\leavevmode\hypertarget{ref-haslbeckStructureEstimationMixed2015}{}%
-44. Haslbeck J, Waldorp LJ. Structure estimation for mixed graphical models in high-dimensional data. arXiv preprint arXiv:151005677. 2015;
-
-\leavevmode\hypertarget{ref-tibshiraniRegressionShrinkageSelection1996}{}%
-45. Tibshirani R. Regression shrinkage and selection via the lasso: A retrospective. Journal of the Royal Statistical Society: Series B (Statistical Methodology). 1996;73:273--82.
-
-\leavevmode\hypertarget{ref-epskampTutorialRegularizedPartial2018}{}%
-46. Epskamp S, Fried EI. A Tutorial on Regularized Partial Correlation Networks. Psychological Methods {[}Internet{]}. 2018; Available from: \url{http://arxiv.org/abs/1607.01367}
-
-\leavevmode\hypertarget{ref-friedMovingForwardChallenges2017}{}%
-47. Fried EI, Cramer AO. Moving forward: Challenges and directions for psychopathological network theory and methodology. Perspectives on Psychological Science. 2017;12:999--1020.
-
-\leavevmode\hypertarget{ref-dalegeFormalizedAccountAttitudes2016}{}%
-48. Dalege J, Borsboom D, van Harreveld F, van den Berg H, Conner M, van der Maas HLJ. Toward a formalized account of attitudes: The Causal Attitude Network (CAN) model. Psychological Review. 2016;123:2--22.
-
-\leavevmode\hypertarget{ref-dalegeNetworkStructureExplains2017}{}%
-49. Dalege J, Borsboom D, Harreveld F, Waldorp LJ, Maas HL. Network structure explains the impact of attitudes on voting decisions. Scientific reports. 2017;7:4909.
-
-\leavevmode\hypertarget{ref-mottusWhyTraitsCome2017}{}%
-50. Mõttus R, Allerhand M. Why do traits come together? The underlying trait and network approaches. SAGE handbook of personality and individual differences. 2017;1:1--22.
-
-\leavevmode\hypertarget{ref-vandermaasNetworkModelsCognitive2017}{}%
-51. Van Der Maas H, Kan K-J, Marsman M, Stevenson CE. Network Models for Cognitive Development and Intelligence. 2017.
-
-\leavevmode\hypertarget{ref-friedMentalDisordersNetworks2017}{}%
-52. Fried EI, van Borkulo CD, Cramer AO, Boschloo L, Schoevers RA, Borsboom D. Mental disorders as networks of problems: A review of recent insights. Social Psychiatry and Psychiatric Epidemiology. 2017;52:1--10.
+\leavevmode\hypertarget{ref-austPapajaPreparingAPA2019}{}%
+Aust, F. (2019). \emph{Papaja (Preparing APA Journal Articles) is an R package that provides document formats to produce complete APA manscripts from RMarkdown-files (PDF and Word documents) and helper functions that fac..} Retrieved from \url{https://github.com/crsh/papaja} (Original work published 2014)
 
 \leavevmode\hypertarget{ref-brigantiNetworkAnalysisEmpathy2018}{}%
-53. Briganti G, Kempenaers C, Braun S, Fried EI, Linkowski P. Network analysis of empathy items from the interpersonal reactivity index in 1973 young adults. Psychiatry Research. 2018;265:87--92.
+Briganti, G., Kempenaers, C., Braun, S., Fried, E. I., \& Linkowski, P. (2018). Network analysis of empathy items from the interpersonal reactivity index in 1973 young adults. \emph{Psychiatry Research}, \emph{265}, 87--92. \url{https://doi.org/10.1016/j.psychres.2018.03.082}
 
-\leavevmode\hypertarget{ref-dalegeNetworkAnalysisAttitudes2017}{}%
-54. Dalege J, Borsboom D, van Harreveld F, van der Maas HL. Network analysis on attitudes: A brief tutorial. Social psychological and personality science. 2017;8:528--37.
+\leavevmode\hypertarget{ref-bringmannHeatingMeasurementDebate2016}{}%
+Bringmann, L. F., \& Eronen, M. I. (2016). Heating up the measurement debate: What psychologists can learn from the history of physics. \emph{Theory \& Psychology}, \emph{26}(1), 27--43. \url{https://doi.org/10.1177/0959354315617253}
 
-\leavevmode\hypertarget{ref-epskampEstimatingPsychologicalNetworks2016}{}%
-55. Epskamp S, Borsboom D, Fried EI. Estimating Psychological Networks and their Stability: A Tutorial Paper. arXiv preprint arXiv:160408462. 2016;
+\leavevmode\hypertarget{ref-chalmersAvoidableWasteProduction2009}{}%
+Chalmers, I., \& Glasziou, P. (2009). Avoidable waste in the production and reporting of research evidence. \emph{Lancet}, \emph{374}(9683), 86--89. \url{https://doi.org/10.1016/S0140-6736(09)60329-9}
+
+\leavevmode\hypertarget{ref-clevelandVisualizingData1993}{}%
+Cleveland, W. S. (1993). \emph{Visualizing data}. Hobart Press.
 
 \leavevmode\hypertarget{ref-costantiniStateARtPersonality2015}{}%
-56. Costantini G, Epskamp S, Borsboom D, Perugini M, Mõttus R, Waldorp LJ, et al. State of the aRt personality research: A tutorial on network analysis of personality data in R. Journal of Research in Personality. 2015;54:13--29.
+Costantini, G., Epskamp, S., Borsboom, D., Perugini, M., Mõttus, R., Waldorp, L. J., \& Cramer, A. O. (2015). State of the aRt personality research: A tutorial on network analysis of personality data in R. \emph{Journal of Research in Personality}, \emph{54}, 13--29. \url{https://doi.org/10.1016/j.jrp.2014.07.003}
 
 \leavevmode\hypertarget{ref-costantiniStabilityVariabilityPersonality2017}{}%
-57. Costantini G, Richetin J, Preti E, Casini E, Epskamp S, Perugini M. Stability and variability of personality networks. A tutorial on recent developments in network psychometrics. Personality and Individual Differences. 2017;
+Costantini, G., Richetin, J., Preti, E., Casini, E., Epskamp, S., \& Perugini, M. (2017). Stability and variability of personality networks. A tutorial on recent developments in network psychometrics. \emph{Personality and Individual Differences}. \url{https://doi.org/10.1016/j.paid.2017.06.011}
 
-\leavevmode\hypertarget{ref-heveyNetworkAnalysisBrief2018}{}%
-58. Hevey D. Network analysis: A brief overview and tutorial. Health Psychology and Behavioral Medicine. 2018;6:301--28.
+\leavevmode\hypertarget{ref-dalegeNetworkStructureExplains2017}{}%
+Dalege, J., Borsboom, D., Harreveld, F., Waldorp, L. J., \& Maas, H. L. (2017a). Network structure explains the impact of attitudes on voting decisions. \emph{Scientific Reports}, \emph{7}(1), 4909.
 
-\leavevmode\hypertarget{ref-kievitSimpsonParadoxPsychological2013}{}%
-59. Kievit RA, Frankenhuis WE, Waldorp LJ, Borsboom D. Simpson's paradox in psychological science: A practical guide. Frontiers in Psychology. 2013;4.
+\leavevmode\hypertarget{ref-dalegeFormalizedAccountAttitudes2016}{}%
+Dalege, J., Borsboom, D., van Harreveld, F., van den Berg, H., Conner, M., \& van der Maas, H. L. J. (2016). Toward a formalized account of attitudes: The Causal Attitude Network (CAN) model. \emph{Psychological Review}, \emph{123}(1), 2--22. \url{https://doi.org/10.1037/a0039802}
 
-\leavevmode\hypertarget{ref-molenaarLatentVariableModels2010}{}%
-60. Molenaar PCM. Latent variable models are network models. Behavioral and Brain Sciences. 2010;33:166--6.
-
-\leavevmode\hypertarget{ref-husuObjectivelyMeasuredSedentary2016a}{}%
-61. Husu P, Suni J, VÃ\textcurrencyhÃ\textcurrency-YpyÃ\textcurrency H, Sievänen H, Tokola K, Valkeinen H, et al. Objectively measured sedentary behavior and physical activity in a sample of Finnish adults: A cross-sectional study. BMC Public Health. 2016;16.
-
-\leavevmode\hypertarget{ref-michieEffectiveTechniquesHealthy2009}{}%
-62. Michie S, Abraham C, Whittington C, McAteer J, Gupta S. Effective techniques in healthy eating and physical activity interventions: A meta-regression. Health Psychology. 2009;28:690--701.
-
-\leavevmode\hypertarget{ref-friedMentalDisordersNetworks2017a}{}%
-63. Fried EI, van Borkulo CD, Cramer AOJ, Boschloo L, Schoevers RA, Borsboom D. Mental disorders as networks of problems: A review of recent insights. Social Psychiatry and Psychiatric Epidemiology. 2017;52:1--10.
-
-\leavevmode\hypertarget{ref-guloksuzApplicationNetworkMethods2017}{}%
-64. Guloksuz S, Pries LK, Van Os J. Application of network methods for understanding mental disorders: Pitfalls and promise. Psychological medicine. 2017;47:2743--52.
-
-\leavevmode\hypertarget{ref-rohrerThinkingClearlyCorrelations2018}{}%
-65. Rohrer JM. Thinking Clearly About Correlations and Causation: Graphical Causal Models for Observational Data. Advances in Methods and Practices in Psychological Science. 2018;1:27--42.
+\leavevmode\hypertarget{ref-dalegeNetworkAnalysisAttitudes2017}{}%
+Dalege, J., Borsboom, D., van Harreveld, F., \& van der Maas, H. L. (2017b). Network analysis on attitudes: A brief tutorial. \emph{Social Psychological and Personality Science}, \emph{8}(5), 528--537.
 
 \leavevmode\hypertarget{ref-danielsAverageMan1952}{}%
-66. Daniels GS. The" Average Man"? AIR FORCE AEROSPACE MEDICAL RESEARCH LAB WRIGHT-PATTERSON AFB OH; 1952.
+Daniels, G. S. (1952). \emph{The" Average Man"?} AIR FORCE AEROSPACE MEDICAL RESEARCH LAB WRIGHT-PATTERSON AFB OH.
+
+\leavevmode\hypertarget{ref-dielemanTrendsFutureHealth2018}{}%
+Dieleman, J. L., Sadat, N., Chang, A. Y., Fullman, N., Abbafati, C., Acharya, P., \ldots{} Alizadeh-Navaei, R. (2018). Trends in future health financing and coverage: Future health spending and universal health coverage in 188 countries, 2016--40. \emph{The Lancet}, \emph{391}(10132), 1783--1798.
+
+\leavevmode\hypertarget{ref-elgarSocioeconomicInequalitiesAdolescent2015}{}%
+Elgar, F. J., Pförtner, T.-K., Moor, I., De Clercq, B., Stevens, G. W. J. M., \& Currie, C. (2015). Socioeconomic inequalities in adolescent health 2002--2010: A time-series analysis of 34 countries participating in the Health Behaviour in School-aged Children study. \emph{The Lancet}, \emph{385}(9982), 2088--2095. \url{https://doi.org/10.1016/S0140-6736(14)61460-4}
+
+\leavevmode\hypertarget{ref-epskampEstimatingPsychologicalNetworks2018}{}%
+Epskamp, S., Borsboom, D., \& Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. \emph{Behavior Research Methods}, \emph{50}(1), 195--212. \url{https://doi.org/10.3758/s13428-017-0862-1}
+
+\leavevmode\hypertarget{ref-epskampQgraphGraphPlotting2019}{}%
+Epskamp, S., Costantini, G., Haslbeck, J., Cramer, A. O. J., Waldorp, L. J., Schmittmann, V. D., \& Borsboom, D. (2019). Qgraph: Graph Plotting Methods, Psychometric Data Visualization and Graphical Model Estimation (Version 1.6.1). Retrieved from \url{https://CRAN.R-project.org/package=qgraph}
+
+\leavevmode\hypertarget{ref-epskampTutorialRegularizedPartial2018}{}%
+Epskamp, S., \& Fried, E. I. (2018). A Tutorial on Regularized Partial Correlation Networks. \emph{Psychological Methods}. \url{https://doi.org/10.1037/met0000167}
+
+\leavevmode\hypertarget{ref-expertadvisorygroupondataaccessEAGDAReportGovernance2015}{}%
+Expert Advisory Group on Data Access. (2015). \emph{EAGDA Report: Governance of Data Access}. Retrieved from \url{https://web.archive.org/web/20180914101149/https://wellcome.ac.uk/sites/default/files/governance-of-data-access-eagda-jun15.pdf}
+
+\leavevmode\hypertarget{ref-fagtNordicMonitoringDiet2012}{}%
+Fagt, S., Andersen, L. F., Anderssen, S. A., Becker, W., Borodulin, K., Fogelholm, M., \ldots{} Trolle, E. (2012). \emph{Nordic Monitoring of diet, physical activity and overweight : Validation of indicators}. Retrieved from \url{http://urn.kb.se/resolve?urn=urn:nbn:se:norden:org:diva-1639}
 
 \leavevmode\hypertarget{ref-fisherLackGrouptoindividualGeneralizability2018}{}%
-67. Fisher AJ, Medaglia JD, Jeronimus BF. Lack of group-to-individual generalizability is a threat to human subjects research. Proceedings of the National Academy of Sciences. 2018;201711978.
+Fisher, A. J., Medaglia, J. D., \& Jeronimus, B. F. (2018). Lack of group-to-individual generalizability is a threat to human subjects research. \emph{Proceedings of the National Academy of Sciences}, 201711978. \url{https://doi.org/10.1073/pnas.1711978115}
+
+\leavevmode\hypertarget{ref-flakeMeasurementSchmeasurementQuestionable2019}{}%
+Flake, J. K., \& Fried, E. I. (2019). \emph{Measurement Schmeasurement: Questionable Measurement Practices and How to Avoid Them}. \url{https://doi.org/10.31234/osf.io/hs7wm}
+
+\leavevmode\hypertarget{ref-friedMentalDisordersNetworks2017a}{}%
+Fried, E. I., Borkulo, C. D. van, Cramer, A. O. J., Boschloo, L., Schoevers, R. A., \& Borsboom, D. (2017). Mental disorders as networks of problems: A review of recent insights. \emph{Social Psychiatry and Psychiatric Epidemiology}, \emph{52}(1), 1--10. \url{https://doi.org/10.1007/s00127-016-1319-z}
+
+\leavevmode\hypertarget{ref-friedMovingForwardChallenges2017}{}%
+Fried, E. I., \& Cramer, A. O. (2017). Moving forward: Challenges and directions for psychopathological network theory and methodology. \emph{Perspectives on Psychological Science}, \emph{12}(6), 999--1020.
+
+\leavevmode\hypertarget{ref-gardnerConfidenceIntervalsRather1986}{}%
+Gardner, M. J., \& Altman, D. G. (1986). Confidence intervals rather than P values: Estimation rather than hypothesis testing. \emph{BMJ}, \emph{292}(6522), 746--750. \url{https://doi.org/10.1136/bmj.292.6522.746}
+
+\leavevmode\hypertarget{ref-gigerenzerStatisticalRitualsReplication2018}{}%
+Gigerenzer, G. (2018). Statistical Rituals: The Replication Delusion and How We Got There. \emph{Advances in Methods and Practices in Psychological Science}, 2515245918771329. \url{https://doi.org/10.1177/2515245918771329}
+
+\leavevmode\hypertarget{ref-guloksuzApplicationNetworkMethods2017}{}%
+Guloksuz, S., Pries, L. K., \& Van Os, J. (2017). Application of network methods for understanding mental disorders: Pitfalls and promise. \emph{Psychological Medicine}, \emph{47}(16), 2743--2752.
+
+\leavevmode\hypertarget{ref-hallgrenPathDiagramsEnhancing2018}{}%
+Hallgren, K. A., McCabe, C. J., King, K. M., \& Atkins, D. C. (2018). Beyond path diagrams: Enhancing applied structural equation modeling research through data visualization. \emph{Addictive Behaviors}. \url{https://doi.org/10.1016/j.addbeh.2018.08.030}
+
+\leavevmode\hypertarget{ref-hankonenParticipantsEnactmentBehavior2018}{}%
+Hankonen, N. (2018). \emph{Participants' enactment of behavior change techniques: A call for increased focus on what people do to manage their motivation and behaviour}. \url{https://doi.org/10.31234/osf.io/pa4wg}
+
+\leavevmode\hypertarget{ref-hankonenChangingActivityBehaviours2019}{}%
+Hankonen, N., Absetz, P., \& Araujo-Soares, V. (2019). \emph{Changing activity behaviours in vocational school students: The stepwise development and optimised content of the `Let's Move it' intervention}. \url{https://doi.org/10.31234/osf.io/ak68f}
+
+\leavevmode\hypertarget{ref-hankonenLetMoveIt2016}{}%
+Hankonen, N., Heino, M. T. J., Araujo-Soares, V., Sniehotta, F. F., Sund, R., Vasankari, T., \ldots{} Haukkala, A. (2016). `Let's Move It' -- a school-based multilevel intervention to increase physical activity and reduce sedentary behaviour among older adolescents in vocational secondary schools: A study protocol for a cluster-randomised trial. \emph{BMC Public Health}, \emph{16}, 451--466. \url{https://doi.org/10.1186/s12889-016-3094-x}
+
+\leavevmode\hypertarget{ref-hankonenRandomisedControlledFeasibility2017}{}%
+Hankonen, N., Heino, M. T. J., Hynynen, S.-T., Laine, H., Araújo-Soares, V., Sniehotta, F. F., \ldots{} Haukkala, A. (2017). Randomised controlled feasibility study of a school-based multi-level intervention to increase physical activity and decrease sedentary behaviour among vocational school students. \emph{International Journal of Behavioral Nutrition and Physical Activity}, \emph{14}(1). \url{https://doi.org/10.1186/s12966-017-0484-0}
+
+\leavevmode\hypertarget{ref-hankonenWhatExplainsSocioeconomic2017a}{}%
+Hankonen, N., Heino, M. T. J., Kujala, E., Hynynen, S.-T., Absetz, P., Araújo-Soares, V., \ldots{} Haukkala, A. (2017). What explains the socioeconomic status gap in activity? Educational differences in determinants of physical activity and screentime. \emph{BMC Public Health}, \emph{17}(1), 144. \url{https://doi.org/10.1186/s12889-016-3880-5}
+
+\leavevmode\hypertarget{ref-haslbeckMgmEstimatingTimeVarying2019}{}%
+Haslbeck, J. (2019). Mgm: Estimating Time-Varying k-Order Mixed Graphical Models (Version 1.2-6). Retrieved from \url{https://CRAN.R-project.org/package=mgm}
+
+\leavevmode\hypertarget{ref-haslbeckStructureEstimationMixed2015}{}%
+Haslbeck, J., \& Waldorp, L. J. (2015). Structure estimation for mixed graphical models in high-dimensional data. \emph{arXiv Preprint arXiv:1510.05677}.
+
+\leavevmode\hypertarget{ref-heinoSimpleRationaleprovidingSMS2018}{}%
+Heino, M. T. J., Knittle, K., Haukkala, A., Vasankari, T., \& Hankonen, N. (2018a). Simple and rationale-providing SMS reminders to promote accelerometer use: A within-trial randomised trial comparing persuasive messages. \emph{BMC Public Health}, \emph{18}(1), 1352. \url{https://doi.org/10.1186/s12889-018-6121-2}
+
+\leavevmode\hypertarget{ref-heinoSourceCodeVisualisation2019}{}%
+Heino, M. T. J., \& Sund, R. (2019). \emph{Source code: Visualisation and network analysis of physical activity and its determinants}. \url{https://doi.org/10.5281/zenodo.2628764}
+
+\leavevmode\hypertarget{ref-heinoBayesianEvaluationBehavior2018}{}%
+Heino, M. T. J., Vuorre, M., \& Hankonen, N. (2018b). Bayesian evaluation of behavior change interventions: A brief introduction and a practical example. \emph{Health Psychology and Behavioral Medicine}, \emph{6}(1), 49--78. \url{https://doi.org/10.1080/21642850.2018.1428102}
+
+\leavevmode\hypertarget{ref-heveyNetworkAnalysisBrief2018}{}%
+Hevey, D. (2018). Network analysis: A brief overview and tutorial. \emph{Health Psychology and Behavioral Medicine}, \emph{6}(1), 301--328. \url{https://doi.org/10.1080/21642850.2018.1521283}
+
+\leavevmode\hypertarget{ref-husuObjectivelyMeasuredSedentary2016a}{}%
+Husu, P., Suni, J., Vähä-Ypyä, H., Sievänen, H., Tokola, K., Valkeinen, H., \ldots{} Vasankari, T. (2016). Objectively measured sedentary behavior and physical activity in a sample of Finnish adults: A cross-sectional study. \emph{BMC Public Health}, \emph{16}(1). \url{https://doi.org/10.1186/s12889-016-3591-y}
+
+\leavevmode\hypertarget{ref-husuObjectivelyMeasuredSedentary2016}{}%
+Husu, P., Vähä-Ypyä, H., \& Vasankari, T. (2016). Objectively measured sedentary behavior and physical activity of Finnish 7-to 14-year-old children--associations with perceived health status: A cross-sectional study. \emph{BMC Public Health}, \emph{16}(1), 338.
+
+\leavevmode\hypertarget{ref-hynynenSystematicReviewSchoolbased2016}{}%
+Hynynen, S.-T., van Stralen, M. M., Sniehotta, F. F., Araújo-Soares, V., Hardeman, W., Chinapaw, M. J. M., \ldots{} Hankonen, N. (2016). A systematic review of school-based interventions targeting physical activity and sedentary behaviour among older adolescents. \emph{International Review of Sport and Exercise Psychology}, \emph{9}(1), 22--44. \url{https://doi.org/10.1080/1750984X.2015.1081706}
+
+\leavevmode\hypertarget{ref-kepesHowTrustworthyScientific2013}{}%
+Kepes, S., \& McDaniel, M. A. (2013). How Trustworthy Is the Scientific Literature in Industrial and Organizational Psychology? \emph{Industrial and Organizational Psychology}, \emph{6}(3), 252--268. \url{https://doi.org/10.1111/iops.12045}
+
+\leavevmode\hypertarget{ref-kievitSimpsonParadoxPsychological2013}{}%
+Kievit, R. A., Frankenhuis, W. E., Waldorp, L. J., \& Borsboom, D. (2013). Simpson's paradox in psychological science: A practical guide. \emph{Frontiers in Psychology}, \emph{4}. \url{https://doi.org/10.3389/fpsyg.2013.00513}
+
+\leavevmode\hypertarget{ref-koykkaCombiningReasonedAction2018}{}%
+Köykkä, K., Absetz, P., Araújo-Soares, V., Knittle, K., Sniehotta, F. F., \& Hankonen, N. (2018). Combining the reasoned action approach and habit formation to reduce sitting time in classrooms: Outcome and process evaluation of the Let's Move It teacher intervention. \emph{Journal of Experimental Social Psychology}. \url{https://doi.org/10.1016/j.jesp.2018.08.004}
+
+\leavevmode\hypertarget{ref-makelaPhysicalActivityScreen2016}{}%
+Mäkelä, K., Kokko, S., Kannas, L., Villberg, J., Vasankari, T., Heinonen, J. O., \ldots{} Selänne, H. (2016). Physical Activity, Screen Time and Sleep among Youth Participating and Non-Participating in Organized Sports: The Finnish Health Promoting Sports Club (FHPSC) Study. \emph{Advances in Physical Education}, \emph{6}.
+
+\leavevmode\hypertarget{ref-michieEffectiveTechniquesHealthy2009}{}%
+Michie, S., Abraham, C., Whittington, C., McAteer, J., \& Gupta, S. (2009). Effective techniques in healthy eating and physical activity interventions: A meta-regression. \emph{Health Psychology}, \emph{28}(6), 690--701. \url{https://doi.org/10.1037/a0016136}
+
+\leavevmode\hypertarget{ref-molenaarLatentVariableModels2010}{}%
+Molenaar, P. C. M. (2010). Latent variable models are network models. \emph{Behavioral and Brain Sciences}, \emph{33}(2-3), 166--166. \url{https://doi.org/10.1017/S0140525X10000798}
+
+\leavevmode\hypertarget{ref-mooreProcessEvaluationComplex2015}{}%
+Moore, G. F., Audrey, S., Barker, M., Bond, L., Bonell, C., Hardeman, W., \ldots{} Baird, J. (2015). Process evaluation of complex interventions: Medical Research Council guidance. \emph{BMJ}, \emph{350}, h1258. \url{https://doi.org/10.1136/bmj.h1258}
+
+\leavevmode\hypertarget{ref-mottusWhyTraitsCome2017}{}%
+Mõttus, R., \& Allerhand, M. (2017). Why do traits come together? The underlying trait and network approaches. \emph{SAGE Handbook of Personality and Individual Differences}, \emph{1}, 1--22. Retrieved from \url{https://www.researchgate.net/profile/Rene_Mttus/publication/312341252_Why_do_traits_come_together_The_underlying_trait_and_network_approaches/links/587de06808ae4445c06e16fb.pdf}
+
+\leavevmode\hypertarget{ref-nosekPreregistrationRevolution2018}{}%
+Nosek, B. A., Ebersole, C. R., DeHaven, A. C., \& Mellor, D. T. (2018). The preregistration revolution. \emph{Proceedings of the National Academy of Sciences}, 201708274. \url{https://doi.org/10.1073/pnas.1708274114}
+
+\leavevmode\hypertarget{ref-nosekScientificUtopiaII2012a}{}%
+Nosek, B. A., Spies, J. R., \& Motyl, M. (2012). Scientific Utopia II. Restructuring Incentives and Practices to Promote Truth Over Publishability. \emph{Perspectives on Psychological Science}, \emph{7}(6), 615--631. \url{https://doi.org/10.1177/1745691612459058}
+
+\leavevmode\hypertarget{ref-petersDiamondPlotsTutorial2018}{}%
+Peters, G.-J. (2018). \emph{Diamond Plots: A tutorial to introduce a visualisation tool that facilitates interpretation and comparison of multiple sample estimates while respecting their inaccuracy}. \url{https://doi.org/10.31234/osf.io/fzh6c}
+
+\leavevmode\hypertarget{ref-petersUfsQuantitativeAnalysis2019}{}%
+Peters, G.-J. (2019). Ufs: Quantitative Analysis Made Accessible (Version 0.2.0). Retrieved from \url{https://CRAN.R-project.org/package=ufs}
+
+\leavevmode\hypertarget{ref-petersUserfriendlyscienceQuantitativeAnalysis2018}{}%
+Peters, G.-J., Verboon, P., \& Green, J. (2018). Userfriendlyscience: Quantitative Analysis Made Accessible (Version 0.7.2). Retrieved from \url{https://CRAN.R-project.org/package=userfriendlyscience}
+
+\leavevmode\hypertarget{ref-rcoreteamLanguageEnvironmentStatistical2015}{}%
+R Core Team. (2015). R: A Language and Environment for Statistical Computing (Version 3.1.1). Vienna, Austria: R Foundation for Statistical Computing.
+
+\leavevmode\hypertarget{ref-R-base}{}%
+R Core Team. (2018). \emph{R: A language and environment for statistical computing}. Retrieved from \url{https://www.R-project.org/}
 
 \leavevmode\hypertarget{ref-ricklesCausalityComplexInterventions2009}{}%
-68. Rickles D. Causality in complex interventions. Medicine, Health Care, and Philosophy. 2009;12:77--90.
+Rickles, D. (2009). Causality in complex interventions. \emph{Medicine, Health Care, and Philosophy}, \emph{12}(1), 77--90. \url{https://doi.org/10.1007/s11019-008-9140-4}
+
+\leavevmode\hypertarget{ref-rogersUsingProgrammeTheory2008a}{}%
+Rogers, P. J. (2008). Using Programme Theory to Evaluate Complicated and Complex Aspects of Interventions. \emph{Evaluation}, \emph{14}(1), 29--48. \url{https://doi.org/10.1177/1356389007084674}
+
+\leavevmode\hypertarget{ref-rohrerThinkingClearlyCorrelations2018}{}%
+Rohrer, J. M. (2018). Thinking Clearly About Correlations and Causation: Graphical Causal Models for Observational Data. \emph{Advances in Methods and Practices in Psychological Science}, \emph{1}(1), 27--42. \url{https://doi.org/10.1177/2515245917745629}
+
+\leavevmode\hypertarget{ref-rousseletDifferencesMeansRobust2017}{}%
+Rousselet, G. A., Pernet, C. R., \& Wilcox, R. R. (2017). Beyond differences in means: Robust graphical methods to compare two groups in neuroscience. \emph{European Journal of Neuroscience}, \emph{46}(2), 1738--1748. \url{https://doi.org/10.1111/ejn.13610}
+
+\leavevmode\hypertarget{ref-rstudioteamRStudioIntegratedDevelopment2015}{}%
+RStudio Team. (2015). RStudio: Integrated Development Environment for R (Version 0.99.491). Retrieved from \url{http://www.rstudio.com/}
+
+\leavevmode\hypertarget{ref-saxonBarCharts2015}{}%
+Saxon, E. (2015). Beyond bar charts. \emph{BMC Biology}, \emph{13}(1), 60. \url{https://doi.org/10.1186/s12915-015-0169-6}
+
+\leavevmode\hypertarget{ref-simmonsFalsePositivePsychologyUndisclosed2011a}{}%
+Simmons, J. P., Nelson, L. D., \& Simonsohn, U. (2011). False-Positive Psychology Undisclosed Flexibility in Data Collection and Analysis Allows Presenting Anything as Significant. \emph{Psychological Science}, \emph{22}(11), 1359--1366. \url{https://doi.org/10.1177/0956797611417632}
+
+\leavevmode\hypertarget{ref-smaldinoNaturalSelectionBad2016}{}%
+Smaldino, P. E., \& McElreath, R. (2016). The natural selection of bad science. \emph{Open Science}, \emph{3}(9), 160384. \url{https://doi.org/10.1098/rsos.160384}
+
+\leavevmode\hypertarget{ref-sterneSiftingEvidenceWhat2001}{}%
+Sterne, J. A. C. (2001). Sifting the evidence---what's wrong with significance tests? Another comment on the role of statistical methods. \emph{BMJ}, \emph{322}(7280), 226--231. \url{https://doi.org/10.1136/bmj.322.7280.226}
+
+\leavevmode\hypertarget{ref-tayGraphicalDescriptivesWay2016}{}%
+Tay, L., Parrigon, S., Huang, Q., \& LeBreton, J. M. (2016). Graphical Descriptives A Way to Improve Data Transparency and Methodological Rigor in Psychology. \emph{Perspectives on Psychological Science}, \emph{11}(5), 692--701. Retrieved from \url{http://pps.sagepub.com/content/11/5/692.abstract}
+
+\leavevmode\hypertarget{ref-tibshiraniRegressionShrinkageSelection1996}{}%
+Tibshirani, R. (1996). Regression shrinkage and selection via the lasso: A retrospective. \emph{Journal of the Royal Statistical Society: Series B (Statistical Methodology)}, \emph{73}(3), 273--282. \url{https://doi.org/10.1111/j.1467-9868.2011.00771.x}
+
+\leavevmode\hypertarget{ref-trafimowMeansStandardDeviations2018}{}%
+Trafimow, D., Wang, T., \& Wang, C. (2018). Means and standard deviations, or locations and scales? That is the question! \emph{New Ideas in Psychology}, \emph{50}, 34--37. \url{https://doi.org/10.1016/j.newideapsych.2018.03.001}
+
+\leavevmode\hypertarget{ref-tukeyExploratoryDataAnalysis1977}{}%
+Tukey, J. W. (1977). \emph{Exploratory data analysis} (Vol. 2). Reading, Mass.
+
+\leavevmode\hypertarget{ref-vandermaasNetworkModelsCognitive2017a}{}%
+Van Der Maas, H. L. J., Kan, K.-J., Marsman, M., \& Stevenson, C. E. (2017). Network Models for Cognitive Development and Intelligence. \emph{Journal of Intelligence}, \emph{5}(2), 16. \url{https://doi.org/10.3390/jintelligence5020016}
+
+\leavevmode\hypertarget{ref-vanpaemelAreWeWasting2015}{}%
+Vanpaemel, W., Vermorgen, M., Deriemaecker, L., \& Storms, G. (2015). Are We Wasting a Good Crisis? The Availability of Psychological Research Data after the Storm. \emph{Collabra: Psychology}, \emph{1}(1). \url{https://doi.org/10.1525/collabra.13}
+
+\leavevmode\hypertarget{ref-vansluijsPhysicalActivityDietary2008}{}%
+van Sluijs, E. M., Skidmore, P. M., Mwanza, K., Jones, A. P., Callaghan, A. M., Ekelund, U., \ldots{} Wareham, N. J. (2008). Physical activity and dietary behaviour in a population-based sample of British 10-year old children: The SPEEDY study (Sport, Physical activity and Eating behaviour: Environmental Determinants in Young people). \emph{BMC Public Health}, \emph{8}(1), 388.
+
+\leavevmode\hypertarget{ref-wassersteinASAStatementPValues2016}{}%
+Wasserstein, R. L., \& Lazar, N. A. (2016). The ASA's Statement on p-Values: Context, Process, and Purpose. \emph{The American Statistician}, \emph{70}(2), 129--133. \url{https://doi.org/10.1080/00031305.2016.1154108}
+
+\leavevmode\hypertarget{ref-weissgerberStaticInteractiveTransforming2016}{}%
+Weissgerber, T. L., Garovic, V. D., Savic, M., Winham, S. J., \& Milic, N. M. (2016). From Static to Interactive: Transforming Data Visualization to Improve Transparency. \emph{PLOS Biology}, \emph{14}(6), e1002484. \url{https://doi.org/10.1371/journal.pbio.1002484}
+
+\leavevmode\hypertarget{ref-weissgerberBarLineGraphs2015}{}%
+Weissgerber, T. L., Milic, N. M., Winham, S. J., \& Garovic, V. D. (2015). Beyond Bar and Line Graphs: Time for a New Data Presentation Paradigm. \emph{PLOS Biology}, \emph{13}(4), e1002128. \url{https://doi.org/10.1371/journal.pbio.1002128}
+
+\leavevmode\hypertarget{ref-wickhamGgplot2CreateElegant2018}{}%
+Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., \ldots{} RStudio. (2018). Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics (Version 3.1.0). Retrieved from \url{https://CRAN.R-project.org/package=ggplot2}
+
+\leavevmode\hypertarget{ref-wilkeGgridgesRidgelinePlots2018}{}%
+Wilke, C. O., \& ggridges), R. (. for ggplot2 code copied to. (2018). Ggridges: Ridgeline Plots in 'ggplot2' (Version 0.5.1). Retrieved from \url{https://CRAN.R-project.org/package=ggridges}
 
 \endgroup
 

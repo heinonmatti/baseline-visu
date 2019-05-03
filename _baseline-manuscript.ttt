@@ -1,0 +1,88 @@
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:demographics-table}Baseline demographics of educational tracks. Omitted are 24 participants, who reported "other"
+                  as their track, as well as 81 participants from whom data is not available.
+                  Nur = Practical nurse, HRC = Hotel, restaurant and catering studies,
+                  BA = Business and administration, IT = Business information technology.}\\
+\toprule
+Variable & \multicolumn{1}{c}{Nur} & \multicolumn{1}{c}{HRC} & \multicolumn{1}{c}{BA} & \multicolumn{1}{c}{IT} & \multicolumn{1}{c}{Full sample}\\
+\midrule
+n & 402 & 213 & 282 & 163 & 1166\\
+Mean study year (sd, median) & 1.7 (0.9, 1.0) & 1.9 (0.7, 2.0) & 1.7 (0.9, 1.0) & 1.7 (0.9, 1.0) & 1.7 (0.9, 1.0)\\
+Mean age (range, median) & 18.8 (16.0-49.0, 17.0) & 18.5 (17.0-27.0, 18.0) & 18.0 (16.0-35.0, 17.0) & 18.5 (17.0-43.0, 17.0) & 18.5 (16.0-49.0, 18.0)\\
+Born in Finland (\%) & 80.1 & 88.3 & 89.7 & 86.7 & 84.4\\
+\% girl & 82.3 & 60.6 & 39.0 & 16.0 & 56.5\\
+\% allocated to intervention & 68.9 & 31.5 & 53.5 & 46.6 & 54.7\\
+\bottomrule
+\end{longtable}
+\end{lltable}
+\efloatseparator
+ 
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:primary-outcome-vars-table-total}Key variables with their class and school intra-class correlations (ICCs). Let's Move It trial's primary outcome variables marked with asterisks. Accelerometry data is missing from 435 participants, of whom 169 due to not meeting the cutoff of at least 10 hours of measurement time for at least four days. Survey data missing from 84 participants.}\\
+\toprule
+Variable & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{CI95} & \multicolumn{1}{c}{ICC class} & \multicolumn{1}{c}{ICC school} & \multicolumn{1}{c}{n}\\
+\midrule
+Daily moderate-to-vigorous PA time (accelerometer)* & 1h 5min & 0h 57min - 1h 13min & .089 & .062 & 731\\
+Daily light PA time (accelerometer) & 2h 51min & 2h 32min - 3h 9min & .111 & .110 & 731\\
+Daily standing time (accelerometer) & 1h 24min & 1h 15min - 1h 34min & .122 & .041 & 731\\
+Daily time spent sitting or lying down (accelerometer)* & 8h 44min & 8h 4min - 9h 24min & .115 & .138 & 731\\
+Daily number of times sitting was interrupted (accelerometer)* & \ \ 25.8 & \ \ 23.5\ \ -\ \ \ \ 28.0 & .047 & .080 & 731\\
+Number of days with >30 MVPA min previous week (self-report)* & \ \  2.8 & \ \  2.6\ \ -\ \ \ \  3.0 & .047 & < .001 & 1082\\
+\bottomrule
+\end{longtable}
+\end{lltable}
+\efloatseparator
+ 
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:mvpa-table}Statistics describing accelerometer-measured moderate-to-vigorous physical activity
+                    in different educational tracks. Values not corrected for effects of clustering.}\\
+\toprule
+Gender & \multicolumn{1}{c}{Arm} & \multicolumn{1}{c}{Nur} & \multicolumn{1}{c}{HRC} & \multicolumn{1}{c}{BA} & \multicolumn{1}{c}{IT}\\
+\midrule
+girl & control & M=73.0; SD=29.5; skewness=0.9; kurtosis= 0.6; n=104 & M=57.5; SD=22.3; skewness=0.8; kurtosis= 1.0; n=90 & M=61.2; SD=23.8; skewness=0.8; kurtosis= 1.0; n=53 & M=34.2; SD= 8.9; skewness=0.4; kurtosis=-0.8; n=14\\
+girl & intervention & M=71.8; SD=28.4; skewness=1.0; kurtosis= 1.6; n=227 & M=52.0; SD=23.6; skewness=0.8; kurtosis=-0.2; n=39 & M=58.7; SD=22.8; skewness=1.2; kurtosis= 0.7; n=57 & M=36.1; SD=22.1; skewness=0.2; kurtosis=-0.8; n=12\\
+boy & control & M=72.7; SD=28.9; skewness=0.3; kurtosis=-1.1; n=21 & M=56.1; SD=27.4; skewness=1.5; kurtosis= 2.0; n=56 & M=70.4; SD=27.3; skewness=0.7; kurtosis= 0.6; n=78 & M=55.2; SD=25.2; skewness=1.2; kurtosis= 2.8; n=73\\
+boy & intervention & M=89.6; SD=39.1; skewness=0.7; kurtosis= 0.2; n=50 & M=71.2; SD=43.9; skewness=0.9; kurtosis= 0.5; n=28 & M=72.1; SD=31.1; skewness=0.5; kurtosis=-0.8; n=94 & M=54.5; SD=25.3; skewness=1.2; kurtosis= 1.4; n=64\\
+\bottomrule
+\end{longtable}
+\end{lltable}
+\efloatseparator
+ 
+\begin{lltable}
+
+
+\begin{longtable}{llllll}\noalign{\getlongtablewidth\global\LTcapwidth=\longtablewidth}
+\caption{\label{tab:determinant-table}Main theoretical determinants of physical activity (PA) and sedentary behaviour (SB). Mean (CI95, taking into account school and class membership). Action and coping planning are evaluated on a scale from 1 to 4, autonomous / controlled regulation, amotivation and behaviour change technique (BCT) use on a scale from 1 to 6 -- all other variables from 1 to 7.}\\
+\toprule
+Variable  & \multicolumn{1}{c}{Girls (n = 603-611)} & \multicolumn{1}{c}{Boys (n = 459-467)} & \multicolumn{1}{c}{Intervention (n = 570-579)} & \multicolumn{1}{c}{Control (n = 492-499)} & \multicolumn{1}{c}{Total (n = 1062-1078)}\\
+\midrule
+PA intention & 5.3 (5.1 - 5.5) & 5.5 (5.2 - 5.7) & 5.4 (5.1 - 5.7) & 5.4 (5.1 - 5.7) & 5.4 (5.2 - 5.6)\\
+PA perceived behavioural control & 5.2 (5.1 - 5.3) & 5.5 (5.4 - 5.6) & 5.3 (5.1 - 5.5) & 5.3 (5.1 - 5.5) & 5.3 (5.2 - 5.5)\\
+PA self-efficacy & 5.1 (5.0 - 5.3) & 5.3 (5.2 - 5.5) & 5.2 (5.0 - 5.3) & 5.3 (5.1 - 5.4) & 5.2 (5.1 - 5.4)\\
+PA opportunities & 5.1 (5.0 - 5.1) & 5.2 (5.1 - 5.3) & 5.1 (5.0 - 5.2) & 5.2 (5.1 - 5.3) & 5.1 (5.1 - 5.2)\\
+PA descriptive norm & 4.3 (4.1 - 4.5) & 4.6 (4.4 - 4.7) & 4.3 (4.1 - 4.5) & 4.5 (4.3 - 4.7) & 4.4 (4.2 - 4.6)\\
+PA injunctive norm & 4.6 (4.4 - 4.8) & 4.8 (4.5 - 5.0) & 4.5 (4.3 - 4.7) & 4.8 (4.6 - 5.0) & 4.7 (4.5 - 4.8)\\
+PA outcome expectations & 5.4 (5.2 - 5.5) & 5.1 (5.0 - 5.3) & 5.2 (5.0 - 5.5) & 5.3 (5.1 - 5.5) & 5.3 (5.1 - 5.4)\\
+PA action planning & 2.7 (2.6 - 2.8) & 2.8 (2.7 - 2.9) & 2.7 (2.6 - 2.8) & 2.8 (2.7 - 2.9) & 2.8 (2.7 - 2.8)\\
+PA coping planning & 2.4 (2.4 - 2.5) & 2.6 (2.5 - 2.7) & 2.5 (2.4 - 2.6) & 2.5 (2.4 - 2.6) & 2.5 (2.4 - 2.6)\\
+PA autonomous regulation & 3.3 (3.2 - 3.5) & 3.6 (3.4 - 3.7) & 3.4 (3.2 - 3.5) & 3.5 (3.3 - 3.6) & 3.4 (3.3 - 3.5)\\
+PA controlled regulation & 1.9 (1.8 - 2.0) & 1.8 (1.7 - 1.8) & 1.8 (1.7 - 1.9) & 1.9 (1.8 - 1.9) & 1.8 (1.8 - 1.9)\\
+PA amotivation & 1.5 (1.4 - 1.5) & 1.6 (1.5 - 1.7) & 1.5 (1.4 - 1.6) & 1.5 (1.4 - 1.6) & 1.5 (1.5 - 1.6)\\
+PA agreement-BCTs & 3.1 (2.9 - 3.2) & 3.2 (3.0 - 3.3) & 3.0 (2.9 - 3.2) & 3.2 (3.0 - 3.4) & 3.1 (3.0 - 3.2)\\
+PA frequency-BCTs & 2.5 (2.4 - 2.6) & 2.6 (2.4 - 2.7) & 2.5 (2.4 - 2.6) & 2.6 (2.4 - 2.7) & 2.5 (2.4 - 2.6)\\
+SB intention & 3.8 (3.5 - 4.1) & 3.6 (3.3 - 3.9) & 3.7 (3.2 - 4.2) & 3.7 (3.3 - 4.2) & 3.7 (3.4 - 4.1)\\
+SB descriptive norm & 3.2 (3.0 - 3.4) & 3.4 (3.1 - 3.6) & 3.2 (3.0 - 3.4) & 3.3 (3.1 - 3.5) & 3.2 (3.1 - 3.4)\\
+SB injunctive norm & 4.0 (3.8 - 4.1) & 4.1 (3.9 - 4.3) & 3.9 (3.8 - 4.1) & 4.1 (4.0 - 4.2) & 4.0 (3.9 - 4.1)\\
+SB outcome expectations & 4.9 (4.8 - 5.0) & 4.5 (4.4 - 4.7) & 4.8 (4.5 - 5.0) & 4.8 (4.6 - 5.0) & 4.8 (4.6 - 4.9)\\
+\bottomrule
+\end{longtable}
+\end{lltable}

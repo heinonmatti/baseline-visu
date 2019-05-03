@@ -1,0 +1,42 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{_baseline-manuscript_files/figure-latex/average-day-activity-plot-1.pdf}
+\caption{\label{fig:average-day-activity-plot}Stacked bar plot drawn with R package \texttt{ggplot} (Wickham et al. (2018), code available at \url{https://git.io/fptlp}), showing proportions of accelerometer-measured physical activity (PA) in relation to measurement time, averaged over genders, arms and educational tracks. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{_baseline-manuscript_files/figure-latex/MVPA-accelerometer-plot-1.pdf}
+\caption{\label{fig:MVPA-accelerometer-plot}Raincloud ridge plot combined with a diamond plot, drawn with R packages \texttt{ggridges} (Wilke \& ggridges), 2018) and \texttt{userfriendlyscience} (Peters et al. (2018), code available at \url{https://git.io/fjLBG}), showing hours of accelerometer-measured moderate-to-vigorous physical activity for different educational tracks. Midpoints of diamonds indicate means, endpoints 95\% credible intervals (see (Heino et al., 2018b) for interpretation). Individual observations are presented under the density curves, with random scatter on the y-axis to ease inspection. Nur = Practical nurse, HRC = Hotel, restaurant and catering, BA = Business and administration, IT = Information and communications technology.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{_baseline-manuscript_files/figure-latex/determinant-diamondplot-manuscript-1.pdf}
+\caption{\label{fig:determinant-diamondplot-manuscript}Diamond comparison plot drawn with R package \texttt{ufs} (Peters (2019), code available at \url{https://git.io/fjLBB}), showing means (middle of diamonds), 99\% confidence intervals (endpoints of diamonds) and individual answers (dots) separated by gender and arm. Rightmost plots show heuristic effect sizes for differences in means (transformed to Pearson's r). ICC is not accounted for in any plot.}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{_baseline-manuscript_files/figure-latex/histogram-frequencyDependentBCTs-1.pdf}
+\caption{\label{fig:histogram-frequencyDependentBCTs}Histogram drawn with R package \texttt{ggridges} (Wilke and ggridges) (2018), code available at \url{https://git.io/fpOLj}), showing self-reported use of frequency-dependent BCTs (1 = Not once \ldots{} 6 = Daily).}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{_baseline-manuscript_files/figure-latex/histogram-agreementDependentBCTs-1.pdf}
+\caption{\label{fig:histogram-agreementDependentBCTs}Histogram drawn with R package \texttt{ggridges} (Wilke and ggridges) (2018), code available at \url{https://git.io/fjLBE}), showing self-reported use of agreement-dependent BCTs (1 = Not at all true \ldots{} 6 = Completely true).}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+\centering
+\includegraphics{_baseline-manuscript_files/figure-latex/network-plot-1.pdf}
+\caption{\label{fig:network-plot}Mixed graphical model with LASSO regularisation and model selection by EBIC. Network models estimated and drawn with packages \texttt{mgm} (Haslbeck, 2019) and \texttt{qgraph} (Epskamp et al. (2019), code available at \url{https://git.io/fpOXV}). Blue lines indicate positive relationships. Plot shows the conditional dependence relationships between the variables of interest (edges which connect nodes), which can be interpreted akin to partial correlations. Pies depict means as proportion of theoretical maximum (in the case of accelerometer-measured moderate-to-vigorous physical activity (MVPA), mean as proportion of highest observed value); behaviour change technique (BCT) use and controlled motivation are dichotomised (see Methods). Colours distinguish the three types of nodes; MPVA, motivation, and BCT use.}
+\end{figure*}
