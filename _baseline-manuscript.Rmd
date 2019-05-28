@@ -7,6 +7,9 @@ author:
     corresponding : yes    # Define only one corresponding author
     email         : "matti.tj.heino@gmail.com"
     address       : "Faculty of Social Sciences, University of Helsinki, PO Box 54, 00014 University of Helsinki, Finland"
+  - name          : "Keegan Knittle"
+    affiliation   : "1"
+    email         : "keegan.knittle@helsinki.fi"
   - name          : "Eiko Fried"
     affiliation   : "2"
     email         : "eiko.fried@gmail.com"
@@ -16,9 +19,6 @@ author:
   - name          : "Ari Haukkala"
     affiliation   : "1"
     email         : "ari.haukkala@helsinki.fi"
-  - name          : "Keegan Knittle"
-    affiliation   : "1"
-    email         : "keegan.knittle@helsinki.fi"
   - name          : "Katja Borodulin"
     affiliation   : "1" 
     email         : "katja.borodulin@thl.fi"
@@ -47,14 +47,14 @@ affiliation:
     institution   : "UKK institute for Health Promotion Research, Kaupinpuistonkatu 1, 33500 Tampere, Finland"
 note              : "Trial Registration Number: ISRCTN10979479. Registered retrospectively: 31.12.2015." # "Preprint submitted for publication"
 abstract: | 
-  Background: Let's Move It is a complex whole-school system intervention aiming to reduce sedentary behaviours (SB) and increase physical activity (PA) among adolescents in vocational schools, by targeting their environmental and psychosocial determinants. This paper describes participants' baseline characteristics in a cluster-randomised trial testing the Let's Move It intervention, and explores possibilities for visual data presentation, making use of recent developments in software and network analyses. We provide an example of a comprehensive research report with all analysis code and results in a readily accessible format, allowing other researchers to apply these tools to their own data. 
-
-  Methods: At baseline, 1166 adolescents in 57 classes at 6 school clusters, distributed across four educational tracks, participated the study. We measured PA and SB (with 7-day accelerometry), psychological and social constructs hypothesised to affect the intervention's effects on outcomes (with questionnaires), and body composition (with bioimpedance measurement). Data were visualised using various techniques, e.g., combining ridge plots and diamond plots. Network analysis was used to explore relations between psychological/social variables and outcomes. 
-
-  Results: Participants' mean age was 18.5 (Median = 18.0) years. On average, participants engaged in moderate-to-vigorous daily PA for 1h 5min	(CI95: 0h 57min - 1h 13min), SB for 8h 44min	(CI95: 8h 4min - 9h 24min), and interrupted their sitting 25.8 times (CI95: 23.5 - 28.0) per day on average. Cluster randomisation appeared to result in balanced distributions for baseline characteristics between intervention and control groups, but differences emerged across the four educational tracks. Self-reported behaviour change technique (BCT) use was low for many but not all techniques. A network analysis revealed direct relationships between PA and behavioural experiments, planning and autonomous motivation. Several BCTs were connected to PA via autonomous motivation. 
-
-  Conclusions: Data-visualisation and data exploration techniques (e.g. network analysis) can help reveal the dynamics involved in complex multi-causal systems -- a challenging task with traditional data presentations. The benefits of presenting complex data visually should encourage researchers to publish extensive analyses and descriptions as website supplements, which would increase the speed and quality of scientific communication, as well as help to address the crisis of reduced confidence in research findings.
-
+  Background: Visualisations and readily-accessible web-based supplementary files can improve data reporting and transparency. In this paper, we make use of recent developments in software and psychological network analysis to describe the baseline cohort of a trial testing the Let’s Move It intervention, which aimed to increase physical activity (PA) and reduce sedentary behaviours (SB) among vocational school students. 
+  
+  Methods: At baseline, 1166 adolescents, distributed across 6 school clusters and four educational tracks, completed measures of PA and SB, theoretical predictors of these behaviors, and body composition. Within a comprehensive website supplement, which includes all code and analyses, data were tabulated and visualised, and network analyses explored relations between predictor variables and outcomes.
+  
+  Results: Average daily moderate-to-vigorous PA was 65min (CI95:  57min-73min), and SB 8h44min (CI95: 8h04min-9h24min), with 25.8 (CI95: 23.5-28.0) interruptions to sitting. Cluster randomisation appeared to result in balanced distributions for baseline characteristics between intervention and control groups, but differences emerged across the four educational tracks. Self-reported behaviour change technique (BCT) use was low for many but not all techniques. A network analysis revealed direct relationships between PA and behavioural experiments, planning and autonomous motivation, and several BCTs were connected to PA via autonomous motivation. Visualisation uncovered a case of Simpson’s paradox. 
+  
+  Conclusions: Data-visualisation and data exploration techniques (e.g. network analysis) can help reveal the dynamics involved in complex multi-causal systems – a challenging task with traditional data presentations. The benefits of presenting complex data visually should encourage researchers to publish extensive analyses and descriptions as website supplements, which would increase the speed and quality of scientific communication, as well as help to address the crisis of reduced confidence in research findings. We hope that this example will serve as a template for other investigators to improve upon in the future.
+  
 keywords: "Exercise, physical activity, school-based intervention, behaviour change, sedentary behaviour"
 linenumbers       : yes
 figsintext        : yes
@@ -64,7 +64,7 @@ tablelist         : no
 footnotelist      : no
 lineno            : yes
 mask              : no
-csl               : apa.csl # https://tinyurl.com/apa6-no-disambiguation
+csl               : health-psychology-and-behavioral-medicine-an-open-access-journal.csl
 bibliography      : ["baseline-visu.bib", "r-and-packages.bib"]
 lang              : "en-GB"
 documentclass     : "apa6"
@@ -116,24 +116,6 @@ Data visualisations are crucial supplements to large numerical tables of descrip
 Three recent developments give impetus to a new approach. First, many journals now allow publication of supplementary online materials, which circumvents both word and figure restrictions of traditional manuscripts. Second, statistical software such as R [@rcoreteamLanguageEnvironmentStatistical2015] has recently become increasingly mainstream among applied researchers, with many free tutorials available online, opening the door for a variety of data visualisation techniques. Third, novel statistical methods in social and health psychology, such as psychological network analysis, may help to understand relationships between variables by making better use of visual representations of associations.
 
 The aims of this paper are to describe central characteristics of the Let's Move It trial baseline cohort, focusing on co-primary outcomes and other activity measures (as measured by accelerometry) of the trial both arms, genders and educational tracks in both trial arms. A further aim is to describe psychological and social correlates, as well as hypothesised determinants of the intervention's effect on moderate-to-vigorous PA (MVPA), with detailed visualisations of the dataset provided in an extensive supplementary website. As a sub-aim, we also investigate the network of relationships between MVPA, quality of motivation and BCT use at baseline. We provide all code as open source scripts, so that other researchers can use those scripts as templates to visualise their own datasets in a format that requires no special skills or tools to view.
-
-## Disclosures 
-
-### Preregistration 
-
-Trial Registration Number: ISRCTN10979479. Registered retrospectively: 31.12.2015.
-
-### Data, materials, and online resources
-
-The analysis data will be available at https://osf.io/jn9ax/ after the anonymisation process has been completed in August 2019. All analyses and code are available at https://git.io/fNHuf (permalink at @heinoSourceCodeVisualisation2019, GitHub repository at https://git.io/fjIQ6). The electronic questionnaire form is available at https://git.io/fjIP5.
-
-### Reporting 
-
-We report all data exclusions, all manipulations, and all measures in the study. Sample size determination is reported in Hankonen et al. [-@hankonenLetMoveIt2016]. 
-
-### Ethical approval
-
-The research proposal was reviewed by the Ethics Committee for Gynaecology and Obstetrics, Pediatrics and Psychiatry of the Hospital District of Helsinki and Uusimaa (decision number 367/13/03/03/2014).
 
 # Methods
 
@@ -1059,10 +1041,12 @@ node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for 
 
 ```{r network-plot, fig.width = 12, fig.height = 6, fig.cap = "Mixed graphical model with LASSO regularisation and model selection by EBIC. Network models estimated and drawn with packages `mgm` [@haslbeckMgmEstimatingTimeVarying2019] and `qgraph` (@epskampQgraphGraphPlotting2019, code available at https://git.io/fpOXV). Blue lines indicate positive relationships. Plot shows the conditional dependence relationships between the variables of interest (edges which connect nodes), which can be interpreted akin to partial correlations. Pies depict means as proportion of theoretical maximum (in the case of accelerometer-measured moderate-to-vigorous physical activity (MVPA), mean as proportion of highest observed value); behaviour change technique (BCT) use and controlled motivation are dichotomised (see Methods). Colours distinguish the three types of nodes; MPVA, motivation, and BCT use.", echo = FALSE}
 
+
+
 BCT_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
             layout = "spring",
             repulsion = 0.99, # To nudge the network from originally bad visual state
-            edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+            # edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
             pie = pies_T1,
             # pieColor = pie_colors_T1,
             pieColor = node_colors,
@@ -1073,8 +1057,13 @@ BCT_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj,
             edge.labels = FALSE,
             label.scale = FALSE)
 
-```
+# qgraph::smallworldness(BCT_mgm_T1)
+# qgraph::smallworldIndex(BCT_mgm_T1)
 
+# qgraph::centralityPlot(BCT_mgm_T1, orderBy = "Strength")
+# qgraph::clusteringPlot(BCT_mgm_T1, include = "Zhang", orderBy = "Zhang")
+
+```
 
 # Conclusions
 
@@ -1141,9 +1130,13 @@ IT = Business information technology
 
 ## Declarations  
 
-### Conflicts of interest
+### Acknowledgements
 
-The authors declared no conflicts of interest with respect to the authorship or the publication of this article.
+We would like to thank participating schools, their staff and students, as well as the numerous people who have helped in study design and data collection. We are also grateful to Frederik Aust for technical support in creating a reproducible manuscript, as well as Ruben Arslan in creating the codebook.
+
+### Disclosure of interest
+
+The authors report no conflict of interest.
 
 ### Authors' contributions
 
@@ -1157,11 +1150,21 @@ A pre-print has been uploaded to PsyArxiv (DOI: 10.31234/osf.io/46rzm).
 
 MH was supported by Academy of Finland (grant number 295765) and Ministry for Education and Culture, Sports Science projects (grant number OKM/81/626/2014). NH was supported by an Academy of Finland Research Fellowship (grant number 285283). The data were collected in a project funded by Ministry for Education and Culture, Sports Science projects (grant number OKM/81/626/2014).
 
-### Acknowledgements
+### Preregistration 
 
-We would like to thank participating schools, their staff and students, as well as the numerous people who have helped in study design and data collection. We are also grateful to Frederik Aust for technical support in creating a reproducible manuscript, as well as Ruben Arslan in creating the codebook.
+Trial Registration Number: ISRCTN10979479. Registered retrospectively: 31.12.2015.
 
+### Data, materials, and online resources
 
+The analysis data will be available at https://osf.io/jn9ax/ after the anonymisation process has been completed by the end of 2019. All analyses and code are available at https://git.io/fNHuf (permalink at @heinoSourceCodeVisualisation2019, GitHub repository at https://git.io/fjIQ6). The electronic questionnaire form is available at https://git.io/fjIP5.
+
+### Reporting 
+
+We report all data exclusions, all manipulations, and all measures in the study. Sample size determination is reported in Hankonen et al. [-@hankonenLetMoveIt2016]. 
+
+### Ethical approval
+
+The research proposal was reviewed by the Ethics Committee for Gynaecology and Obstetrics, Pediatrics and Psychiatry of the Hospital District of Helsinki and Uusimaa (decision number 367/13/03/03/2014).
 
 
 \newpage

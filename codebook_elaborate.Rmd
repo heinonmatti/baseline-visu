@@ -288,7 +288,8 @@ labelled::var_label(df_codebook) <- list(
   PA_integrated_T1 = "Integrated motivation sumscore",
   PA_identified_T1 = "Identified motivation sumscore",
   PA_introjected_T1 = "Introjected motivation sumscore",
-  PA_extrinsic_T1 = "Extrinsic motivation sumscore"
+  PA_extrinsic_T1 = "Extrinsic motivation sumscore",
+  IV_interventionSessionsAttended = "Intervention sessions attended"
 )
 
 ```

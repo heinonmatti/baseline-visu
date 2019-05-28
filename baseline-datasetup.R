@@ -419,8 +419,8 @@ d <- lmi %>% dplyr::select(id = ID,
                            PA_descriptiveNorm_01_T3 = Kys0106.3,
                            PA_descriptiveNorm_01_T4 = Kys0106.4,
                            PA_descriptiveNorm_02_T1 = Kys0107.1,
+                           PA_descriptiveNorm_02_T3 = Kys0107.3,
                            PA_descriptiveNorm_02_T4 = Kys0107.4,
-                           PA_descriptiveNormparents_02_T3 = Kys0107.3,
                            PA_frequencyDependentBCT_01_T1 = Kys0138.1,
                            PA_frequencyDependentBCT_01_T3 = Kys0138.3,
                            PA_frequencyDependentBCT_01_T4 = Kys0138.4,
@@ -701,7 +701,8 @@ d <- lmi %>% dplyr::select(id = ID,
                            numberOfDaysAccelerometerWasWornOver10h_T4 = Npv.4,
                            vpaAccelerometer_T1 = Ras1m_ka.1,
                            vpaAccelerometer_T3 = Ras1m_ka.3,
-                           vpaAccelerometer_T4 = Ras1m_ka.4
+                           vpaAccelerometer_T4 = Ras1m_ka.4,
+                           IV_interventionSessionsAttended = interventiotapaamiset
                            )
 
 # Delete acclerometer results from participants who wore the device for a fewer number of days (i.e. 4) than required
@@ -799,8 +800,8 @@ d <- d %>% dplyr::mutate(leisuretimeMvpaHoursLastweek_T1 = ((pahrsLastweek_T1 * 
 track <- lmi %>% dplyr::select(Kys0016.1, Kys0017.1) %>% dplyr::mutate(
   Kys0016.1 = as.character(Kys0016.1), # Because I had an Evaluation error: `x` and `labels` must be same type.
   Kys0017.1 = as.character(Kys0017.1),
-  Kys0016.1 = ifelse(Kys0017.1 == "Merkonomi" | Kys0017.1 == "merkonomi", 3,
-                     ifelse(Kys0017.1 == "Datanomi" | Kys0017.1 == "datanomi", 2, Kys0016.1)),
+  Kys0016.1 = ifelse(Kys0017.1 == "Merkonomi" | Kys0017.1 == "merkonomi", 2, # Changed 27.05.2019 from 3 to 2, due to coding error
+                     ifelse(Kys0017.1 == "Datanomi" | Kys0017.1 == "datanomi", 1, Kys0016.1)), # Changed 27.05.2019 from 2 to 1, due to coding error
   track = factor(Kys0016.1, # Fix track labels first
                  levels = c(0, 1, 2, 3, 4),
                  labels = c("Other", "IT", "BA", "HRC", "Nur"))) %>% 
@@ -946,7 +947,7 @@ scales_T4 <- list(
 newdf3 <- makeScales_NEW(dT4, scales_T4)
 
 # Take the demographic variables from d, combine with the variables with T1 or T3 in the name. 
-df <- cbind(d[ , c("id", "intervention", "group", "school", "girl", "track")], newdf[, ], newdf2[, ], newdf3[, ])
+df <- cbind(d[ , c("id", "intervention", "group", "school", "girl", "track", "IV_interventionSessionsAttended")], newdf[, ], newdf2[, ], newdf3[, ])
 
 # Create composite of self-efficacy and perceived behavioural control
 df <- df %>% rowwise %>%
@@ -1064,7 +1065,7 @@ save(df, file = "./data/df_T1-T4.Rdata")
 haven::write_sav(df, path = "./data/df_T1-T4.sav")
 
 # Remove change scores and other time points from the baseline data frame
-df <- df %>% dplyr::select(-contains("_diffT3T1"), -contains("_diffT4T1"), -contains("_T3"), -contains("_T4"))
+df <- df %>% dplyr::select(-contains("_diffT3T1"), -contains("_diffT4T1"), -contains("_T3"), -contains("_T4"), -IV_interventionSessionsAttended)
 
 save(df, file = "./data/df.Rdata")
 haven::write_sav(df, path = "./data/df.sav")

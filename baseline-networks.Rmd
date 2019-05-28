@@ -3826,20 +3826,20 @@ userfriendlyscience::diamondPlot(autEdges,
 
 ... in PA, autonomous motivation, and top-5 BCTs
 
-Variables are binarised:
-* If one reports not using the BCT, they get a zero, otherwise a 1
-* If one reports not having done no MVPA during the last week, they get a zero, otherwise a 1
-* On the autonomous motivation sum score, if one reports lower agreement than 3 (indicating "sometimes true for me") on average, they get a zero, otherwise a 1
+Variables are binarised:  
+* If one reports not using the BCT, they get a zero, otherwise a 1  
+* If one reports not having done any MVPA during the last week, they get a zero, otherwise a 1  
+* On the autonomous motivation sum score, if one reports lower agreement than 3 (indicating "sometimes true for me") on average, they get a zero, otherwise a 1  
 
 We include the top 5 BCTs according to their bivariate Spearman correlations with self-reported PA. Self-report instead of accelerometer due to higher sample size and accounting for e.g. gym.
 
-1. I have tried out new ways for me to be physically active.
-2. I have personally made a specific plan ("what, where, how") to implement my PA.
-3. I have a PA plan, which has been made by someone else, e.g. my sports club (e.g. a workout schedule).
-4. I have set PA goals for myself.
-5. I have broken down larger PA goals to smaller subgoals.
+1. I have tried out new ways for me to be physically active.  
+2. I have personally made a specific plan ("what, where, how") to implement my PA.  
+3. I have a PA plan, which has been made by someone else, e.g. my sports club (e.g. a workout schedule).  
+4. I have set PA goals for myself.  
+5. I have broken down larger PA goals to smaller subgoals.  
 
-When a person has tried out a new PA way to be physically active, they have almost (because question time scales don't overlap completely) by definition done MVPA lately. Therefore, we substitute this with:
+When a person has tried out a new PA way to be physically active, they have almost (because question time scales don't overlap completely) by definition done MVPA lately. Therefore, we substitute this with:  
 
 6. I have compared my actualized PA with the PA goal I have set.
 
