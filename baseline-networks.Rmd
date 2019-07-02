@@ -16,7 +16,7 @@ $~$
 $~$
 <a id="network"></a>
 
-As with all models, network analysis entails its own set of assumptions. Due to the similarity with regression models, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. In this regard, behaviour change technique use and the quality of one’s motivation (as posited by self-determination theory) seem less problematic. Hence, we start with those.
+As with all models, network analysis entails its own set of assumptions. Due to the similarity with regression models, it does not make sense to include variables which can be thought to be embedded in each other. For example, it is difficult to argue that there is no conceptual overlap between positive outcome expectations and autonomous motivation. In this regard, behaviour change technique use and the quality of oneâs motivation (as posited by self-determination theory) seem less problematic. Hence, we start with those.
 
 # Network featured in manuscript
 
@@ -164,7 +164,7 @@ plot(BCT_mgm_T1_circle)
 
 Tabs in this section show robustness diagnostics for the network. For details, see:
 
-Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195–212. https://doi.org/10.3758/s13428-017-0862-1
+Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195-212. https://doi.org/10.3758/s13428-017-0862-1
 
 ### Bootstrap stability {.tabset}
 
@@ -316,7 +316,7 @@ bctdf_ggm_T1 <- df %>% dplyr::select(
   dplyr::select('MVPA survey', 'MVPA accelerometer', everything()) %>% 
   mutate_all(as.numeric)
 
-nwBCT_ggm <- bootnet::estimateNetwork(bctdf_ggm_T1, default="EBICglasso")
+nwBCT_ggm <- bootnet::estimateNetwork(bctdf_ggm_T1, default="ggmModSelect")
 
 BCT_ggm <- plot(nwBCT_ggm, 
                 layout = BCT_mgm_T1$layout, 
@@ -351,6 +351,254 @@ g4 <- qgraph::qgraph(modSelect_0.5$graph,
                      color = node_colors, 
                      cut = 0)
 ```
+
+### Autonomous motivation as moderator
+
+Moderation analysis with mgm did not indicate autonomous motivation as a moderator for any edges. This may be due to lack of statistical power (or specificity), lack of a true effect, or e.g. the process taking place within and not between individuals.
+
+```{r}
+bctdf_mgm_T1 <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
+  'MVPA survey' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1, 'integrated' = PA_integrated_T1,
+  'controlled motivation' = PA_controlled_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+#  'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
+  'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
+  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+  'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+  'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+#  'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
+  'social support' = ifelse(`social support` == 1, 0, 1),
+  'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic, integrated), na.rm = T),
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = ifelse(`controlled motivation` < 3, 0, 1)) %>%  # If "at least partly" or more true, input 1. Normality otherwise a problem. 
+#  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, 
+                # -`plan by other`, -`own plan`, 
+                -identified, -intrinsic, -integrated,
+         -`analysing goal failure` # only concerns those who haven't reached goals
+         # -`barrier identification`, -`problem solving`, # closely related
+           ) %>% 
+#  dplyr::select(-controlled) %>% # Not really gaussian at all 
+  dplyr::select('MVPA survey', 'MVPA accelerometer', everything())
+
+bctdf_mgm_T1$`autonomous motivation`[is.nan(bctdf_mgm_T1$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm_T1)
+
+# mgm wants full data, see package missForest for imputation methods
+bctdf_mgm_T1 <- bctdf_mgm_T1 %>% na.omit(.)
+# bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 17), "g")
+mgm_variable_levels <- c("1", "1", rep("2", 17), "1")
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj_T1_moderated <- mgm::mgm(data = bctdf_mgm_T1,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "EBIC",
+  # lambdaFolds = 10,
+  moderators = 20,
+  verbatim = FALSE,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+mgm::FactorGraph(object = mgm_obj_T1_moderated,
+                 # pie = pies_T1,
+                 # pieColor = pie_colors_T1,
+                 # pieColor = node_colors,
+                 pieBorder = 1,
+                 label.cex = 0.85,
+                 PairwiseAsEdge = TRUE,
+                 edge.labels = TRUE,
+                 label.scale = FALSE,
+                 labels = names(bctdf_mgm_T1))
+```
+
+### Controlled motivation with nonparanormal transformation
+
+The nonparanormal transformation can alleviate normality issues, and the controlled motivation variable was heavily skewed. In our case, though, applying the non-paranormal transformation introduces a huge spike in the distribution, as it is not a skewed normal (results, not shown, introduced a positive edge between social support and controlled motivation). As the distribution resembles poisson, we treat controlled motivation variable as poisson below. Results do not change.
+
+```{r}
+bctdf_mgm_T1 <- df %>% dplyr::select(
+#  id,
+#  intervention,
+#  group,
+#  school,
+#  girl,
+  'goal setting' = PA_agreementDependentBCT_01_T1,
+  'own plan' = PA_agreementDependentBCT_02_T1,
+  'plan by other' = PA_agreementDependentBCT_03_T1,
+  'reminder of plan' = PA_agreementDependentBCT_04_T1,
+  'subgoals' = PA_agreementDependentBCT_05_T1,
+  'trying new PA' = PA_agreementDependentBCT_06_T1,
+  'barrier identification' = PA_agreementDependentBCT_07_T1,
+  'problem solving' = PA_agreementDependentBCT_08_T1,
+  'PA identity reflection' = PA_agreementDependentBCT_09_T1,
+  'aligning PA with life values' = PA_agreementDependentBCT_10_T1,
+  'remind of PA benefits' = PA_frequencyDependentBCT_01_T1,
+  'self-monitor (paper)' = PA_frequencyDependentBCT_02_T1,
+  'self-monitor (app)' = PA_frequencyDependentBCT_03_T1,
+#  'memory cues' = PA_frequencyDependentBCT_04_T1, # Issues with clarity of item wording 
+  'goal review' = PA_frequencyDependentBCT_05_T1,
+  'personal relevance reflection' = PA_frequencyDependentBCT_06_T1,
+  'environmental changes (home)' = PA_frequencyDependentBCT_07_T1,
+  'social support' = PA_frequencyDependentBCT_08_T1,
+  'analysing goal failure' = PA_frequencyDependentBCT_09_T1,
+  'MVPA survey' = padaysLastweek_T1,
+  'MVPA accelerometer' = mvpaAccelerometer_T1,
+  'intrinsic' = PA_intrinsic_T1,
+  'identified' = PA_identified_T1, 'integrated' = PA_integrated_T1,
+  PA_controlled_01_T1, PA_controlled_02_T1, PA_controlled_03_T1, PA_controlled_04_T1, PA_controlled_05_T1) %>%
+ rowwise() %>% 
+ mutate(
+  'goal setting' = ifelse(`goal setting` == 1, 0, 1),
+#  'has plan' = ifelse(`own plan` == 1 & `plan by other` == 1, 0, 1),
+  'own plan' = ifelse(`own plan` == 1, 0, 1),
+  'plan by other' = ifelse(`plan by other` == 1, 0, 1),
+  'reminder of plan' = ifelse(`reminder of plan` == 1, 0, 1),
+  'subgoals' = ifelse(`subgoals` == 1, 0, 1),
+  'trying new PA' = ifelse(`trying new PA` == 1, 0, 1),
+  'barrier identification' = ifelse(`barrier identification` == 1, 0, 1),
+  'problem solving' = ifelse(`problem solving` == 1, 0, 1),
+  # 'barriers identified or planned for' = ifelse(`problem solving` == 1 & `barrier identification` == 1, 0, 1),
+  'PA identity reflection' = ifelse(`PA identity reflection` == 1, 0, 1),
+  'aligning PA with life values' = ifelse(`aligning PA with life values` == 1, 0, 1),
+  # 'identity, life values' = ifelse(`PA identity reflection` == 1 & `aligning PA with life values` == 1, 0, 1),
+  'remind of PA benefits' = ifelse(`remind of PA benefits` == 1, 0, 1),
+  'monitoring PA' = ifelse(`self-monitor (paper)` == 1 & `self-monitor (app)` == 1, 0, 1),
+#  'memory cues' = ifelse(`memory cues` == 1, 0, 1),
+  'goal review' = ifelse(`goal review` == 1, 0, 1),
+  'personal relevance reflection' = ifelse(`personal relevance reflection` == 1, 0, 1),
+  'environmental changes (home)' = ifelse(`environmental changes (home)` == 1, 0, 1),
+  'social support' = ifelse(`social support` == 1, 0, 1),
+  'analysing goal failure' = ifelse(`analysing goal failure` == 1, 0, 1),
+  'autonomous motivation' = mean(c(identified, intrinsic, integrated), na.rm = T), 
+#  'girl' = ifelse(girl == "girl", 1, 0),
+  'controlled motivation' = PA_controlled_01_T1 + PA_controlled_02_T1 + PA_controlled_03_T1 + PA_controlled_04_T1 + PA_controlled_05_T1) %>%  # If "at least partly" or more true + input 1. Normality otherwise a problem.
+#  'intervention' = ifelse(intervention == "1", 1, 0)) %>% 
+  dplyr::select(-`self-monitor (paper)`, -`self-monitor (app)`, 
+                # -`plan by other`, -`own plan`, 
+                -identified, -intrinsic, -integrated,
+                -PA_controlled_01_T1, -PA_controlled_02_T1, -PA_controlled_03_T1, 
+                -PA_controlled_04_T1, -PA_controlled_05_T1,
+         -`analysing goal failure` # only concerns those who haven't reached goals
+         # -`barrier identification`, -`problem solving`, # closely related
+           ) %>% 
+#  dplyr::select(-controlled) %>% # Not really gaussian at all 
+  dplyr::select('MVPA survey', 'MVPA accelerometer', everything())
+
+# # Non-paranormal transformation introduces a huge spike in the distribution, as it is not a skewed normal.
+# bctdf_mgm_T1$`controlled motivation` <- huge::huge.npn(bctdf_mgm_T1$`controlled motivation` %>% data.matrix)
+bctdf_mgm_T1$`autonomous motivation`[is.nan(bctdf_mgm_T1$`autonomous motivation`)] <- NA
+
+labs <- names(bctdf_mgm_T1)
+
+# mgm wants full data, see package missForest for imputation methods
+bctdf_mgm_T1 <- bctdf_mgm_T1 %>% na.omit(.)
+# bctdf_mgm %>% names()
+mgm_variable_types <- c("g", "g", rep("c", 16), "g", "p")
+mgm_variable_levels <- c("1", "1", rep("2", 16), "1", "1")
+# data.frame(mgm_variable_types, mgm_variable_levels, names(bctdf_mgm))
+
+mgm_obj_T1 <- mgm::mgm(data = bctdf_mgm_T1,
+  type = mgm_variable_types,
+  level = mgm_variable_levels,
+  lambdaSel = "EBIC",
+  # lambdaFolds = 10,
+  verbatim = FALSE,
+  pbar = FALSE, 
+  binarySign = TRUE)
+
+# Node pies:
+pies_T1 <- bctdf_mgm_T1 %>% 
+  colMeans() # results in a series of means, which is ok for dichotomous vars
+pies_T1["MVPA survey"] <- pies_T1["MVPA survey"] / 7
+pies_T1["MVPA accelerometer"] <- pies_T1["MVPA accelerometer"] / max(bctdf_mgm_T1$`MVPA accelerometer`, na.rm = TRUE)
+pies_T1["autonomous motivation"] <- pies_T1["autonomous motivation"] / 5
+pies_T1["controlled motivation"] <- pies_T1["controlled motivation"] / max(bctdf_mgm_T1$`controlled motivation`, na.rm = TRUE)
+
+node_colors <- c(viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (questionnaire)
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[1], # Color 1 for MVPA (accelerometer)
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 15), # 11x Color 2 for BCTs
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[3], 1), # Color 3 for motivation (controlled)  
+                 rep(viridis::viridis(3, begin = 0.4, end = 0.99)[2], 1), # 1x Color 2 for BCTs
+                 viridis::viridis(3, begin = 0.4, end = 0.99)[3]) # Color 3 for motivation (autonomous) 
+
+BCT_mgm_T1 <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
+            layout = "spring",
+            repulsion = 0.99, # To nudge the network from originally bad visual state
+            edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+            pie = pies_T1,
+            # pieColor = pie_colors_T1,
+            pieColor = node_colors,
+            labels = names(bctdf_mgm_T1),
+            pieBorder = 1,
+            label.cex = 0.75,
+            cut = 0,
+            edge.labels = TRUE,
+            label.scale = FALSE,
+            DoNotPlot = TRUE)
+
+plot(BCT_mgm_T1)
+
+BCT_mgm_T1_circle <- qgraph::qgraph(mgm_obj_T1$pairwise$wadj, 
+            layout = "circle",
+            title = "Mixed graphical model: PA, BCTs & motivation",
+            edge.color = ifelse(mgm_obj_T1$pairwise$edgecolor == "darkgreen", "blue", mgm_obj_T1$pairwise$edgecolor),
+            pie = pies_T1,
+            pieColor = viridis::viridis(5, begin = 0.3, end = 0.8)[5],
+            color = node_colors,
+            labels = names(bctdf_mgm_T1),
+            label.cex = 0.75,
+            cut = 0,
+            label.scale = FALSE, 
+            DoNotPlot = TRUE)
+
+plot(BCT_mgm_T1_circle)
+```
+
 
 # Combined BCT chunks
 
@@ -444,11 +692,10 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
             label.scale = FALSE,
             node.width = 1.65)
 
-# adjacency_noAmotivation <- mgm_obj$pairwise$wadj
-# save(adjacency_noAmotivation, file = "./Rdata_files/adjacency_noAmotivation.Rdata")
-# signs_noAmotivation <- mgm_obj$pairwise$signs
-# save(signs_noAmotivation, file = "./Rdata_files/signs_noAmotivation.Rdata")
-
+adjacency_noAmotivation <- mgm_obj$pairwise$wadj
+save(adjacency_noAmotivation, file = "./Rdata_files/adjacency_noAmotivation.Rdata")
+signs_noAmotivation <- mgm_obj$pairwise$signs
+save(signs_noAmotivation, file = "./Rdata_files/signs_noAmotivation.Rdata")
 # BCT_mgm_noAmotivation_stability <- mgm::resample(object = mgm_obj, data = bctdf_mgm, nB = 100)
 # save(BCT_mgm_noAmotivation_stability, file = "./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
 load("./Rdata_files/BCT_mgm_noAmotivation_stability.Rdata")
@@ -712,7 +959,7 @@ bctdf_ggm$`BCT usage`[is.nan(bctdf_ggm$`BCT usage`)] <- NA
 
 # Network for all participants
 S.total_ggm <- bctdf_ggm
-nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="EBICglasso")
+nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="ggmModSelect")
 
 labs_ggm <- colnames(S.total_ggm)
 
@@ -955,7 +1202,7 @@ bctdf_ggm <- df %>% dplyr::select(
 
 # Network for all participants
 S.total_ggm <- bctdf_ggm
-nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="EBICglasso")
+nwBCT_ggm <- bootnet::estimateNetwork(S.total_ggm, default="ggmModSelect")
 
 labs_ggm <- colnames(S.total_ggm)
 
@@ -2529,7 +2776,7 @@ matrix_corLower_parcorUpper %>% corrgram::corrgram(
 
 # Estimate a network
 
-nwBCT_chunks <- bootnet::estimateNetwork(bctdf_chunks, default="EBICglasso")
+nwBCT_chunks <- bootnet::estimateNetwork(bctdf_chunks, default="ggmModSelect")
 
 bootnetgraph <- plot(nwBCT_chunks, edge.labels = TRUE)
 
@@ -2574,7 +2821,7 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_chunks), graph = "pcor",
 bootnetgraph <- plot(nwBCT_chunks, 
                      edge.labels = TRUE, 
                      layout = avlayout, 
-                     title = "partial correlation network, with LASSO regularisation and EBIC model selection",
+                     title = "ggmModSelect",
        maximum = max(c(bootnetgraph$graph$Graph$maximum,
                      pcorgraph$graph$Graph$maximum, 
                      corgraph$graph$Graph$maximum)))
@@ -2727,10 +2974,10 @@ BCT_mgm <- qgraph::qgraph(mgm_obj$pairwise$wadj,
 
 # Estimate a network
 
-individualAgreementBCTs <- bootnet::estimateNetwork(bctdf_pa_mgm, default="EBICglasso")
+individualAgreementBCTs <- bootnet::estimateNetwork(bctdf_pa_mgm, default="ggmModSelect")
 
 bootnetgraph <- plot(individualAgreementBCTs, edge.labels = TRUE, 
-       title = "partial correlation network, with LASSO regularisation and EBIC model selection")
+       title = "ggmModSelect")
 
 corgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_pa_mgm), graph = "cor",
        labels = names(bctdf_pa_mgm),
@@ -2773,7 +3020,7 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(bctdf_pa_mgm), graph = "pcor",
 bootnetgraph <- plot(individualAgreementBCTs, 
                      edge.labels = TRUE, 
                      layout = avlayout, 
-                     title = "partial correlation network, with LASSO regularisation and EBIC model selection",
+                     title = "ggmModSelect",
        maximum = max(c(bootnetgraph$graph$Graph$maximum,
                      pcorgraph$graph$Graph$maximum, 
                      corgraph$graph$Graph$maximum)),
@@ -2784,11 +3031,11 @@ bootnetgraph <- plot(individualAgreementBCTs,
 
 For interpretation, see:
 
-Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195–212. https://doi.org/10.3758/s13428-017-0862-1
+Epskamp, S., Borsboom, D., & Fried, E. I. (2018). Estimating psychological networks and their accuracy: A tutorial paper. Behavior Research Methods, 50(1), 195-212. https://doi.org/10.3758/s13428-017-0862-1
 
 For caveats to interpreting centrality, see:
 
-1) Bringmann, L. F., Elmer, T., Epskamp, S., Krause, R. W., Schoch, D., Wichers, M., … Bringmann, L. What do centrality measures measure in psychological networks? Preprint available: https://www.researchgate.net/publication/329129039_What_do_centrality_measures_measure_in_psychological_networks
+1) Bringmann, L. F., Elmer, T., Epskamp, S., Krause, R. W., Schoch, D., Wichers, M., & Bringmann, L. What do centrality measures measure in psychological networks? Preprint available: https://www.researchgate.net/publication/329129039_What_do_centrality_measures_measure_in_psychological_networks
 
 2) Hallquist, M., Wright, A. G. C., & Molenaar, P. C. M. (2019). Problems with centrality measures in psychopathology symptom networks: Why network psychometrics cannot escape psychometric theory. https://doi.org/10.31234/osf.io/pg4mf
 
@@ -2808,21 +3055,22 @@ qgraph::centrality(bootnetgraph)$Betweenness
 cor(qgraph::centrality(bootnetgraph)$InDegree, qgraph::centrality(bootnetgraph)$Betweenness, 
     method = "spearman") 
 
-# bootnet_stability_individualAgreementBcts <- bootnet::bootnet(individualAgreementBCTs, nBoots=1000)
+# bootnet_stability_individualAgreementBcts <- bootnet::bootnet(individualAgreementBCTs, stepwise = FALSE, nBoots=1000)
 # save(bootnet_stability_individualAgreementBcts, file = "./Rdata_files/bootnet_stability_individualAgreementBcts.Rdata")
 load("./Rdata_files/bootnet_stability_individualAgreementBcts.Rdata")
 
 plot(bootnet_stability_individualAgreementBcts, labels = TRUE, order = "sample") 
 plot(bootnet_stability_individualAgreementBcts, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
 
-# bootnet_centrality_stability_individualAgreementBcts <- bootnet::bootnet(individualAgreementBCTs, nBoots=1000,nCores=8, type="case")
+# # Failed to run
+# bootnet_centrality_stability_individualAgreementBcts <- bootnet::bootnet(individualAgreementBCTs, stepwise = FALSE, nBoots=1000, type="case")
 # save(bootnet_centrality_stability_individualAgreementBcts, file = "./Rdata_files/bootnet_centrality_stability_individualAgreementBcts.Rdata")
-load("./Rdata_files/bootnet_centrality_stability_individualAgreementBcts.Rdata")
-
-plot(bootnet_centrality_stability_individualAgreementBcts)
-plot(bootnet_centrality_stability_individualAgreementBcts, perNode=T, "strength")
-
-bootnet::corStability(bootnet_centrality_stability_individualAgreementBcts)
+# load("./Rdata_files/bootnet_centrality_stability_individualAgreementBcts.Rdata")
+# 
+# plot(bootnet_centrality_stability_individualAgreementBcts)
+# plot(bootnet_centrality_stability_individualAgreementBcts, perNode=T, "strength")
+# 
+# bootnet::corStability(bootnet_centrality_stability_individualAgreementBcts)
 ```
 
 # Combined agreement-related BCTs and PA
@@ -2963,10 +3211,10 @@ combinedAgreementBcts_ggm_df <- df %>% dplyr::select(
 ```{r combinedAgreementBcts-ggm, echo = FALSE, results = 'hide'}
 # Estimate a network
 
-combinedAgreementBcts_network <- bootnet::estimateNetwork(combinedAgreementBcts_ggm_df, default="EBICglasso")
+combinedAgreementBcts_network <- bootnet::estimateNetwork(combinedAgreementBcts_ggm_df, default="ggmModSelect")
 
 bootnetgraph <- plot(combinedAgreementBcts_network, edge.labels = TRUE,
-                     title = "partial correlation network, with LASSO regularisation and EBIC model selection")
+                     title = "ggmModSelect")
 
 corgraph <- qgraph::qgraph(qgraph::cor_auto(combinedAgreementBcts_ggm_df), graph = "cor",
        labels = names(combinedAgreementBcts_ggm_df),
@@ -3014,7 +3262,7 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(combinedAgreementBcts_ggm_df), grap
 bootnetgraph <- plot(combinedAgreementBcts_network, 
                      edge.labels = TRUE, 
                      layout = avlayout, 
-                     title = "partial correlation network, with LASSO regularisation and EBIC model selection",
+                     title = "ggmModSelect",
        maximum = max(c(bootnetgraph$graph$Graph$maximum,
                      pcorgraph$graph$Graph$maximum, 
                      corgraph$graph$Graph$maximum)),
@@ -3042,27 +3290,27 @@ qgraph::centrality(bootnetgraph)$Betweenness
 cor(qgraph::centrality(bootnetgraph)$InDegree, qgraph::centrality(bootnetgraph)$Betweenness, 
     method = "spearman") 
 
-# bootnet_stability_combinedAgreementBcts <- bootnet::bootnet(combinedAgreementBcts_network, nBoots=1000)
+# bootnet_stability_combinedAgreementBcts <- bootnet::bootnet(combinedAgreementBcts_network, stepwise = FALSE, nBoots=1000)
 # save(bootnet_stability_combinedAgreementBcts, file = "./Rdata_files/bootnet_stability_combinedAgreementBcts.Rdata")
 load("./Rdata_files/bootnet_stability_combinedAgreementBcts.Rdata")
 
 plot(bootnet_stability_combinedAgreementBcts, labels = TRUE, order = "sample") 
 plot(bootnet_stability_combinedAgreementBcts, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
 
-# bootnet_centrality_stability_combinedAgreementBcts <- bootnet::bootnet(combinedAgreementBcts_network, nBoots=1000,nCores=8, type="case")
+# bootnet_centrality_stability_combinedAgreementBcts <- bootnet::bootnet(combinedAgreementBcts_network, stepwise = FALSE, nBoots=1000,nCores=8, type="case")
 # save(bootnet_centrality_stability_combinedAgreementBcts, file = "./Rdata_files/bootnet_centrality_stability_combinedAgreementBcts.Rdata")
-load("./Rdata_files/bootnet_centrality_stability_combinedAgreementBcts.Rdata")
-
-plot(bootnet_centrality_stability_combinedAgreementBcts)
-plot(bootnet_centrality_stability_combinedAgreementBcts, perNode=T, "strength")
-
-bootnet::corStability(bootnet_centrality_stability_combinedAgreementBcts)
+# load("./Rdata_files/bootnet_centrality_stability_combinedAgreementBcts.Rdata")
+# 
+# plot(bootnet_centrality_stability_combinedAgreementBcts)
+# plot(bootnet_centrality_stability_combinedAgreementBcts, perNode=T, "strength")
+# 
+# bootnet::corStability(bootnet_centrality_stability_combinedAgreementBcts)
 
 ```
 
 ### Heterogeneity
 
-The smallest track (IT) has 163 observations. According to the heuristic sample size for p variables for Gaussian data, (p*(p-1)/2 + p), we could estimate about 7 variables. (based on [these slides](https://cvborkulo.files.wordpress.com/2014/09/winterschool2017.pdf) referring to this source: Bühlmann, P. & van de Geer, S. (2011). Statistics for High-Dimensional Data: Methods, Theory and Applications. Springer.)
+The smallest track (IT) has 163 observations. According to the heuristic sample size for p variables for Gaussian data, (p*(p-1)/2 + p), we could estimate about 7 variables. (based on [these slides](https://cvborkulo.files.wordpress.com/2014/09/winterschool2017.pdf) referring to this source: BĂźhlmann, P. & van de Geer, S. (2011). Statistics for High-Dimensional Data: Methods, Theory and Applications. Springer.)
 
 All tracks seem sufficiently similar on these BCTs.
 
@@ -3116,10 +3364,10 @@ heterogeneity_IT <- combinedAgreementBcts_tracks_df %>%
   na.omit() %>% 
   dplyr::select(-track)
 
-network_Nur <- bootnet::estimateNetwork(heterogeneity_Nur, default="EBICglasso")
-network_HRC <- bootnet::estimateNetwork(heterogeneity_HRC, default="EBICglasso")
-network_BA <- bootnet::estimateNetwork(heterogeneity_BA, default="EBICglasso")
-network_IT <- bootnet::estimateNetwork(heterogeneity_IT, default="EBICglasso")
+network_Nur <- bootnet::estimateNetwork(heterogeneity_Nur, default="ggmModSelect")
+network_HRC <- bootnet::estimateNetwork(heterogeneity_HRC, default="ggmModSelect")
+network_BA <- bootnet::estimateNetwork(heterogeneity_BA, default="ggmModSelect")
+network_IT <- bootnet::estimateNetwork(heterogeneity_IT, default="ggmModSelect")
 
 graph_Nur <- plot(network_Nur, layout="spring", cut=0, label.scale = FALSE, title = "Practical nurse")
 graph_HRC <- plot(network_HRC, layout="spring", cut=0, label.scale = FALSE, title = "HRC")
@@ -3271,14 +3519,14 @@ plot(nwBoys, layout = Layout, label.scale = FALSE, title = "Boys", label.cex = 0
 
 ```{r nctboysgirls, cache = TRUE, results = "asis"}
 
-# nct_results <- NetworkComparisonTest::NCT(S.boys, S.girls, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
+# nct_results2 <- NetworkComparisonTest::NCT(S.boys, S.girls, it=1000, binary.data=TRUE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
+# 
+# save(nct_results2, file = "./Rdata_files/nct_results2.Rdata")
+load("./Rdata_files/nct_results2.Rdata")
 
-# save(nct_results, file = "./Rdata_files/nct_results.Rdata")
-load("./Rdata_files/nct_results.Rdata")
-
-cat("P-value of network structure difference test:", nct_results$nwinv.pval)
-cat("P-value of global connectivity difference test:", nct_results$glstrinv.pval)
-nct_results$einv.pvals %>% 
+cat("P-value of network structure difference test:", nct_results2$nwinv.pval)
+cat("P-value of global connectivity difference test:", nct_results2$glstrinv.pval)
+nct_results2$einv.pvals %>% 
   dplyr::filter(`p-value` < 1) %>%      #p values testing diffs for all individual edges 
   knitr::kable(caption = "P-values for edge strength differences among boys and girls. Omitted edges where p = 1.")
 
@@ -3420,21 +3668,21 @@ qgraph::centrality(onlyCombinedBctsIsing)$Betweenness
 cor(qgraph::centrality(onlyCombinedBctsIsing)$InDegree, qgraph::centrality(onlyCombinedBctsIsing)$Betweenness, 
     method = "spearman") 
 
-# bootnet_stability_onlyCombinedBctsIsing <- bootnet::bootnet(onlyCombinedBctsIsing, nBoots=1000)
+# bootnet_stability_onlyCombinedBctsIsing <- bootnet::bootnet(onlyCombinedBctsIsing, stepwise = FALSE, nBoots=1000)
 # save(bootnet_stability_onlyCombinedBctsIsing, file = "./Rdata_files/bootnet_stability_onlyCombinedBctsIsing.Rdata")
 load("./Rdata_files/bootnet_stability_onlyCombinedBctsIsing.Rdata")
 
 plot(bootnet_stability_onlyCombinedBctsIsing, labels = FALSE, order = "sample") 
 plot(bootnet_stability_onlyCombinedBctsIsing, labels = FALSE, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
 
-# bootnet_centrality_stability_onlyCombinedBctsIsing <- bootnet::bootnet(onlyCombinedBctsIsing, nBoots=1000,nCores=8, type="case")
+# bootnet_centrality_stability_onlyCombinedBctsIsing <- bootnet::bootnet(onlyCombinedBctsIsing, stepwise = FALSE, nBoots=1000,nCores=8, type="case")
 # save(bootnet_centrality_stability_onlyCombinedBctsIsing, file = "./Rdata_files/bootnet_centrality_stability_onlyCombinedBctsIsing.Rdata")
-load("./Rdata_files/bootnet_centrality_stability_onlyCombinedBctsIsing.Rdata")
-
-plot(bootnet_centrality_stability_onlyCombinedBctsIsing)
-plot(bootnet_centrality_stability_onlyCombinedBctsIsing, perNode=T, "strength")
-
-bootnet::corStability(bootnet_centrality_stability_onlyCombinedBctsIsing)
+# load("./Rdata_files/bootnet_centrality_stability_onlyCombinedBctsIsing.Rdata")
+# 
+# plot(bootnet_centrality_stability_onlyCombinedBctsIsing)
+# plot(bootnet_centrality_stability_onlyCombinedBctsIsing, perNode=T, "strength")
+# 
+# bootnet::corStability(bootnet_centrality_stability_onlyCombinedBctsIsing)
 
 ```
 
@@ -3483,7 +3731,7 @@ bctdf <- df %>% dplyr::select(id,
 # Network for all participants
 
 S.total <- bctdf %>% dplyr::select(`Autonomous`:ncol(bctdf))
-nwBCT <- bootnet::estimateNetwork(S.total, default="EBICglasso")
+nwBCT <- bootnet::estimateNetwork(S.total, default="ggmModSelect")
 
 # Plot correlations (minmax crowds the diagonal as it plots the minimum and maximum values for each variable).
 labs <- colnames(S.total)
@@ -3531,7 +3779,7 @@ bctdf2 <- bctdf %>% rowwise %>%
   dplyr::select(-`goal setting`, -`own plan`, -`barrier identification`, -`problem solving`)
 
 S.total2 <- bctdf2 %>% dplyr::select(`Autonomous`:ncol(bctdf2))
-nwBCT2 <- bootnet::estimateNetwork(S.total2, default="EBICglasso")
+nwBCT2 <- bootnet::estimateNetwork(S.total2, default="ggmModSelect")
 
 # Create means for filling nodes
 piefill2 <- S.total2 %>%
@@ -3565,8 +3813,8 @@ qgraph::centralityPlot(nwBCT)
 print("Combined items:")
 qgraph::centralityPlot(nwBCT2)
 
-# BCTboot1 <- bootnet::bootnet(nwBCT, nBoots = 2500)
-# BCTboot2 <- bootnet::bootnet(nwBCT2, nBoots = 2500)
+# BCTboot1 <- bootnet::bootnet(nwBCT, stepwise = FALSE, nBoots = 2500)
+# BCTboot2 <- bootnet::bootnet(nwBCT2, stepwise = FALSE, nBoots = 2500)
 # save(BCTboot1, file = "./Rdata_files/BCTboot1.Rdata")
 # save(BCTboot2, file = "./Rdata_files/BCTboot2.Rdata")
 
@@ -3707,7 +3955,7 @@ bctdf_PA <- df %>% dplyr::select(id,
 # Network for all participants
 
 S.total_PA <- bctdf_PA %>% dplyr::select(`MVPA`:ncol(bctdf_PA))
-nwBCT_PA <- bootnet::estimateNetwork(S.total_PA, default="EBICglasso")
+nwBCT_PA <- bootnet::estimateNetwork(S.total_PA, default="ggmModSelect")
 
 labs <- colnames(S.total_PA)
 
@@ -3737,7 +3985,7 @@ bctdf_PA2 <- bctdf_PA %>% rowwise %>%
   data.frame
 
 S.total_PA2 <- bctdf_PA2 %>% dplyr::select(MVPA:ncol(bctdf_PA2))
-nwBCT_PA2 <- bootnet::estimateNetwork(S.total_PA2, default="EBICglasso")
+nwBCT_PA2 <- bootnet::estimateNetwork(S.total_PA2, default="ggmModSelect")
 
 # Create means for filling nodes
 piefill_PA2 <- S.total_PA2 %>% 
@@ -3764,7 +4012,7 @@ plot(nwBCT_PA2, layout = "spring", label.scale = FALSE, title = "GGM: Accelerome
 #### Centrality and stability
 
 ```{r}
-# BCTbootPA <- bootnet::bootnet(nwBCT_PA2, nBoots = 2500)
+# BCTbootPA <- bootnet::bootnet(nwBCT_PA2, stepwise = FALSE, nBoots = 2500)
 # save(BCTbootPA, file = "./Rdata_files/BCTbootPA.Rdata")
 
 load("./Rdata_files/BCTbootPA.Rdata")
@@ -3911,21 +4159,21 @@ qgraph::centrality(graph_Ising)$Betweenness
 cor(qgraph::centrality(graph_Ising)$InDegree, qgraph::centrality(graph_Ising)$Betweenness, 
     method = "spearman") 
 
-# bootnet_stability_top5Bcts <- bootnet::bootnet(network_all, nBoots=1000)
+# bootnet_stability_top5Bcts <- bootnet::bootnet(network_all, stepwise = FALSE, nBoots=1000)
 # save(bootnet_stability_top5Bcts, file = "./Rdata_files/bootnet_stability_top5Bcts.Rdata")
 load("./Rdata_files/bootnet_stability_top5Bcts.Rdata")
 
 plot(bootnet_stability_top5Bcts, labels = TRUE, order = "sample") 
 plot(bootnet_stability_top5Bcts, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
 
-# bootnet_centrality_stability_top5Bcts <- bootnet::bootnet(network_all, nBoots=1000,nCores=8, type="case")
+# bootnet_centrality_stability_top5Bcts <- bootnet::bootnet(network_all, stepwise = FALSE, nBoots=1000,nCores=8, type="case")
 # save(bootnet_centrality_stability_top5Bcts, file = "./Rdata_files/bootnet_centrality_stability_top5Bcts.Rdata")
-load("./Rdata_files/bootnet_centrality_stability_top5Bcts.Rdata")
-
-plot(bootnet_centrality_stability_top5Bcts)
-plot(bootnet_centrality_stability_top5Bcts, perNode=T, "strength")
-
-bootnet::corStability(bootnet_centrality_stability_top5Bcts) 
+# load("./Rdata_files/bootnet_centrality_stability_top5Bcts.Rdata")
+# 
+# plot(bootnet_centrality_stability_top5Bcts)
+# plot(bootnet_centrality_stability_top5Bcts, perNode=T, "strength")
+# 
+# bootnet::corStability(bootnet_centrality_stability_top5Bcts) 
 
 ```
 
@@ -4011,11 +4259,9 @@ graph_IT <- plot(network_IT, layout=L, cut=0, label.scale = FALSE, title = "IT",
                  maximum = maxedge, pie = ITMeans, pieBorder = 1)
 
 
-# nct_results_top5Bcts <- NetworkComparisonTest::NCT(heterogeneity_Nur, heterogeneity_IT, it=1000, binary.data=FALSE, paired=FALSE, test.edges=TRUE,
-# edges='all', progressbar=TRUE)
+# nct_results_top5Bcts <- NetworkComparisonTest::NCT(heterogeneity_Nur, heterogeneity_IT, it=1000, binary.data=FALSE, paired=FALSE, test.edges=TRUE, edges='all', progressbar=TRUE)
 # 
 # save(nct_results_top5Bcts, file = "./Rdata_files/nct_results_top5Bcts.Rdata")
-# alternatively, load 
 load("./Rdata_files/nct_results_top5Bcts.Rdata")
 
 ```
@@ -4537,10 +4783,10 @@ matrix_corLower_parcorUpper %>% corrgram::corrgram(
 
 # Estimate a network
 
-determinants_ggm_network <- bootnet::estimateNetwork(data, default="EBICglasso")
+determinants_ggm_network <- bootnet::estimateNetwork(data, default="ggmModSelect")
 
 bootnetgraph <- plot(determinants_ggm_network, edge.labels = TRUE, labels = names(data), label.scale = FALSE,
-       title = "partial correlation network, with LASSO regularisation and EBIC model selection")
+       title = "ggmModSelect")
 
 corgraph <- qgraph::qgraph(qgraph::cor_auto(data), graph = "cor",
        labels = names(data),
@@ -4587,7 +4833,7 @@ pcorgraph <- qgraph::qgraph(qgraph::cor_auto(data), graph = "pcor",
 bootnetgraph <- plot(determinants_ggm_network, 
                      edge.labels = TRUE, 
                      layout = avlayout, 
-                     title = "partial correlation network, with LASSO regularisation and EBIC model selection",
+                     title = "ggmModSelect",
        maximum = max(c(bootnetgraph$graph$Graph$maximum,
                      pcorgraph$graph$Graph$maximum, 
                      corgraph$graph$Graph$maximum)),
@@ -4656,21 +4902,21 @@ qgraph::centrality(bootnetgraph)$Betweenness
 cor(qgraph::centrality(bootnetgraph)$InDegree, qgraph::centrality(bootnetgraph)$Betweenness, 
     method = "spearman") 
 
-# bootnet_stability_determinants <- bootnet::bootnet(determinants_bootnet, nBoots=1000)
+# bootnet_stability_determinants <- bootnet::bootnet(determinants_ggm_network, stepwise = FALSE, nBoots=1000)
 # save(bootnet_stability_determinants, file = "./Rdata_files/bootnet_stability_determinants.Rdata")
 load("./Rdata_files/bootnet_stability_determinants.Rdata")
 
 plot(bootnet_stability_determinants, labels = TRUE, order = "sample") 
 plot(bootnet_stability_determinants, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
 
-# bootnet_centrality_stability_determinants <- bootnet::bootnet(determinants_bootnet, nBoots=1000,nCores=8, type="case")
+# bootnet_centrality_stability_determinants <- bootnet::bootnet(determinants_bootnet, stepwise = FALSE, nBoots=1000,nCores=8, type="case")
 # save(bootnet_centrality_stability_determinants, file = "./Rdata_files/bootnet_centrality_stability_determinants.Rdata")
-load("./Rdata_files/bootnet_centrality_stability_determinants.Rdata")
-
-plot(bootnet_centrality_stability_determinants)
-plot(bootnet_centrality_stability_determinants, perNode=T, "strength")
-
-bootnet::corStability(bootnet_centrality_stability_determinants)
+# load("./Rdata_files/bootnet_centrality_stability_determinants.Rdata")
+# 
+# plot(bootnet_centrality_stability_determinants)
+# plot(bootnet_centrality_stability_determinants, perNode=T, "strength")
+# 
+# bootnet::corStability(bootnet_centrality_stability_determinants)
 ```
 
 <!-- ### PA network without SDT motivations -->
@@ -4701,7 +4947,7 @@ group.spinglass<- list(c(1, 2, 3, 7),
 
 set.seed(2)
 
-network1 <- bootnet::estimateNetwork(data, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data, default="ggmModSelect")
 
 plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color=c("olivedrab2", "orange", "mediumpurple1", "lightblue"))
 
@@ -4737,7 +4983,7 @@ group.spinglass<- list(c(1, 2, 6),
                        c(5),
                        c(7, 8, 9))
 
-network1 <- bootnet::estimateNetwork(data, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data, default="ggmModSelect")
 
 piefill <- data %>%
   summarise_all(funs(mean(., na.rm = TRUE))) %>% 
@@ -4793,7 +5039,7 @@ group.spinglass<- list(c(1, 4:6),
 # Estimate and plot graph
 
 
-network1 <- bootnet::estimateNetwork(data, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data, default="ggmModSelect")
 
 piefill <- data %>%
   summarise_all(funs(mean(., na.rm = TRUE))) %>%
@@ -4816,19 +5062,19 @@ plot(network1, layout = "spring", labels = TRUE, groups = group.spinglass, color
 
 ```{r, include = FALSE, eval = FALSE}
 
-Network1 <- bootnet::estimateNetwork(data1, default = "EBICglasso")
+Network1 <- bootnet::estimateNetwork(data1, default = "ggmModSelect")
 plot(Network1, layout = "spring", labels = TRUE)
 
 qgraph::centralityPlot(Network1)
 
-boot1 <- bootnet::bootnet(Network1, nBoots = 2500, nCores = 2)
+boot1 <- bootnet::bootnet(Network1, stepwise = FALSE, nBoots = 2500, nCores = 2)
 
 plot(boot1, labels = TRUE, order = "sample")
 
 Network2 <- bootnet::estimateNetwork(data1, default = "pcor")
 plot(Network2, layout = "spring", labels = TRUE)
 
-boot2 <- bootnet::bootnet(Network2, nBoots = 2500, nCores = 2)
+boot2 <- bootnet::bootnet(Network2, stepwise = FALSE, nBoots = 2500, nCores = 2)
 
 qgraph::centralityPlot(Network)
 qgraph::centralityPlot(Network2)
@@ -4837,18 +5083,18 @@ qgraph::centralityPlot(Network2)
 <!-- ## Centrality stability -->
 
 ```{r, eval = FALSE}
-boot2 <- bootnet::bootnet(Network1, nBoots = 2500, type = "case", nCores = 2)
-bootnet::corStability(boot2)
-
-plot(boot2)
-
-differenceTest(boot1, "auton", "intent",  measure = c("strength", "closeness", "betweenness"))
-
-plot(boot1, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
-
-plot(boot1, "strength")
-plot(boot1, "betweenness")
-plot(boot1, "closeness")
+# boot2 <- bootnet::bootnet(Network1, stepwise = FALSE, nBoots = 2500, type = "case", nCores = 2)
+# bootnet::corStability(boot2)
+# 
+# plot(boot2)
+# 
+# differenceTest(boot1, "auton", "intent",  measure = c("strength", "closeness", "betweenness"))
+# 
+# plot(boot1, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
+# 
+# plot(boot1, "strength")
+# plot(boot1, "betweenness")
+# plot(boot1, "closeness")
 ```
 
 <!-- ## Network comparison test: girls and boys -->
@@ -4869,8 +5115,8 @@ data2 <- data %>% filter(girl == "boy") %>% dplyr::select(-girl) %>% as.data.fra
 
 
 ### estimate networks and compare visually; use averageLayout function, then plot via layout(t(1:2))
-network1 <- bootnet::estimateNetwork(data1, default="EBICglasso")
-network2 <- bootnet::estimateNetwork(data2, default="EBICglasso")
+network1 <- bootnet::estimateNetwork(data1, default="ggmModSelect")
+network2 <- bootnet::estimateNetwork(data2, default="ggmModSelect")
 
 bladibla <- qgraph::averageLayout(network1$graph, network2$graph)
 
@@ -4880,12 +5126,15 @@ graph2 <- plot(network2, layout=bladibla, cut=0)
 
 ### run NCT 
 
-nct_results <- NetworkComparisonTest::NCT(data1, data2, it=1000, binary.data=FALSE, paired=TRUE, test.edges=TRUE, edges='all', progressbar=TRUE)
+# nct_results3 <- NetworkComparisonTest::NCT(data1, data2, it=1000, binary.data=FALSE, paired=TRUE, test.edges=TRUE, edges='all', progressbar=TRUE)
+# 
+# save(nct_results3, file = "./Rdata_files/nct_results3.Rdata")
+load("./Rdata_files/nct_results3.Rdata")
 
-nct_results$nwinv.pval  # p value of network structure diff test
-nct_results$glstrinv.pval  # p value of global connectivity diff test
-nct_results$einv.pvals     #p values testing diffs for all individual edges
-sum(nct_results$einv.pvals$"p-value" < 0.05)  # how many edges are different
+nct_results3$nwinv.pval  # p value of network structure diff test
+nct_results3$glstrinv.pval  # p value of global connectivity diff test
+nct_results3$einv.pvals     #p values testing diffs for all individual edges
+sum(nct_results3$einv.pvals$"p-value" < 0.05)  # how many edges are different
 
 ```
 
@@ -4899,9 +5148,9 @@ data <- data %>% dplyr::select(BCT = agreementDependentBCT_T1,
     outcomeExpectations = outcomeExpectations_T1,
     descriptiveNorm = norm_T1)
 
-Network <- bootnet::estimateNetwork(data, default = "EBICglasso")
+Network <- bootnet::estimateNetwork(data, default = "ggmModSelect")
 
-boot1 <- bootnet::bootnet(Network, nBoots = 2500, nCores = 2)
+boot1 <- bootnet::bootnet(Network, stepwise = FALSE, nBoots = 2500, nCores = 2)
 
 plot(boot1, labels = TRUE, order = "sample")
 
@@ -4910,7 +5159,7 @@ plot(Network, layout = "spring", labels = TRUE)
 Network2 <- bootnet::estimateNetwork(data, default = "pcor")
 plot(Network2, layout = "spring", labels = TRUE)
 
-boot1 <- bootnet::bootnet(Network2, nBoots = 2500, nCores = 2)
+boot1 <- bootnet::bootnet(Network2, stepwise = FALSE, nBoots = 2500, nCores = 2)
 
 qgraph::centralityPlot(Network)
 qgraph::centralityPlot(Network2)
@@ -4919,18 +5168,18 @@ qgraph::centralityPlot(Network2)
 <!-- # Centrality stability -->
 
 ```{r, include = FALSE, eval = FALSE}
-boot2 <- bootnet::bootnet(Network, nBoots = 2500, type = "case", nCores = 2)
-bootnet::corStability(boot2)
-
-plot(boot2)
-
-differenceTest(boot1, "AUT", "Intn",  measure = c("strength", "closeness", "betweenness"))
-
-plot(boot1, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
-
-plot(boot1, "strength")
-plot(boot1, "betweenness")
-plot(boot1, "closeness")
+# boot2 <- bootnet::bootnet(Network, stepwise = FALSE, nBoots = 2500, type = "case", nCores = 2)
+# bootnet::corStability(boot2)
+# 
+# plot(boot2)
+# 
+# differenceTest(boot1, "AUT", "Intn",  measure = c("strength", "closeness", "betweenness"))
+# 
+# plot(boot1, "edge", plot = "difference", onlyNonZero = TRUE, order = "sample")
+# 
+# plot(boot1, "strength")
+# plot(boot1, "betweenness")
+# plot(boot1, "closeness")
 ```
 
 # PA motivation examined
@@ -5011,7 +5260,7 @@ corMatrix_motivations %>%
 ## Motivational regulations network
 
 ```{r sdt-network}
-## TEE TÄNNE PIEFILL? tummempi sama väri tai opacity?
+## TEE TĂNNE PIEFILL? tummempi sama vĂ¤ri tai opacity?
 
 # Was going to do fused graphical lasso, but the items not normal...
 
