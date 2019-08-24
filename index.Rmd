@@ -9,6 +9,7 @@ This site is a companion web page to the description of baseline characteristics
 * GitHub repository for the files can be found [here](https://github.com/heinonmatti/baseline-visu).  
 * Data setup code used in all the sections can be found [here](https://raw.githubusercontent.com/heinonmatti/baseline-visu/master/baseline-datasetup.R).  
 * A concise codebook for the variables can be accessed [here](codebook_concise.html) and a more elaborate one with scale properties [here](codebook_elaborate.html).  
+* The paper discussing these results is open access [here](https://www.tandfonline.com/doi/full/10.1080/21642850.2019.1646136)
 
 For issues, please contact matti.tj.heino@gmail.com. 
 
